@@ -357,4 +357,22 @@ function DBSimpleSubmissionHandler()
     $db->close();
 }
 
+function emberBackend() {
+fracturr3..
+	session_start();
+	if (isset($_REQUEST['emSession'])) {
+		session_id($_REQUEST['emSession']);
+	} else {
+	}
+	global $emUserName;
+	$emUserName = $_SESSION['emUserName'];
+	global $emUserPassword;
+	$emUserPassword = $_SESSION['emUserPassword'];
+	if ($emberActionId == 'emLogInExecute') {
+		$_SESSION['emUserName'] = $_POST['emUserName'];
+		$_SESSION['emUserPassword'] = $_POST['emUserPassword'];
+	} else {
+	}
+}
+
 ?>
