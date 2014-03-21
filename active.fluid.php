@@ -25,8 +25,21 @@ class FluidActive
 			}
 			return "#FluidBox"+id;
 		}
+		function showGroup(group) {
+			/* group is the parameter that was passed to the FluidBox when it was instantiated */
+			
+		}
+		
+		function Group(name) {
+			this.name = name;
+			this.showBox = function (element, index, array) {element.show(this.animation);};
+			this.show = function(animation) {this.animation = animation; this.boxes.foreach(showBox);};
+			var boxes = new Array();
+			this.add = function(box) {this.boxes[this.boxes.length+1] = box};
+		}
+
         function FluidBox(contents,background,blur,container,vpanchor,vpos,vposunit,hpanchor,
-        hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,zindex) {
+        hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
         /* ~Explanations of parameters~
         contents: HTML contents of the box. Should be the contents of a <svg> tag. This will be displayed on top of the bgcolor.
         background: Background. Can be any CSS background
@@ -45,6 +58,7 @@ class FluidActive
         heighth: Width of this box relative to the hanchor box.
         hunit: Units (%, or possibly rem?) of heighth
         crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
+        group: a class for the div to later be used for grouping divs
         zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
 		*/
 		this.contents = contents;
@@ -64,27 +78,43 @@ class FluidActive
 		this.heighth = heighth;
 		this.hunit = hunit;
 		this.crop = crop;
+		this.group = group;
 		this.zindex = zindex;
         console.log("Box instantiating. Contents = "+this.contents+", background = "+this.background
         +", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpos = "+this.vpos
         +", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpos = "+this.hpos
         +", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
         +", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
-        +", hunit = "+this.hunit+", crop = "+this.crop+", zindex = "+this.zindex);
+        +", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex);
 		/* console.log(getAnchor(this.vpanchor)); */
 		/* $(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\"background:"+this.background+";height:"+this.heighth+this.hunit";width:"+this.width+this.wunit+";position:relative;left:"+this.hpos+";top:"+this.vpos+"\">"+"</div>"); */
-		$(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\"><svg>"+this.contents+"</svg></div>");
+		$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;\"><svg>"+this.contents+"</svg></div>");
         $("#"+getId()).css('background',this.background);
+        $("#"+getId()).css('background-size','cover');
         $("#"+getId()).css('position','fixed');
-        $("#"+getId()).css('height',this.heighth+this.hunit);
-        $("#"+getId()).css('width',this.width+this.wunit);
+        //Calculate the heighth
+        computedHeighth = this.heighth+this.hunit;
+        if(this.hunit == '%') {
+        	tComputedHeighth = $(getAnchor(this.hanchor)).height() * (this.heighth / 100);
+			computedHeighth = tComputedHeighth+this.hunit;
+		}
+		//Calculate the width
+        computedWidth = this.width+this.wunit;
+        if(this.wunit == '%') {
+        	tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
+			computedWidth = tComputedWidth+this.wunit;
+		}
+        $("#"+getId()).css('height',computedHeighth);
+        $("#"+getId()).css('width',computedWidth);
         $("#"+getId()).css('left',this.hpos);
         $("#"+getId()).css('top',this.vpos);
-        
+        this.show = function(animation){
+        	$("#"+getId()).css('display','block');
+        	};
         }
          
-var Box1 = new FluidBox(0,"url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) center center no-repeat cover",0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
-
+var Box1 = new FluidBox(0,"url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) center center no-repeat",0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
+Box1.show('none');
 EOT;
         $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:7rem;height:7rem;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:3.5rem;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7b0b0;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->FluidJS;
     }
@@ -198,7 +228,8 @@ EOT;
             " ",
             '><',
         );
-        return trim(preg_replace('/\s+/', ' ', str_replace("\n", ' ', str_replace($univNeedles, $univHaystacks, $data))));
+        //return trim(preg_replace('/\s+/', ' ', str_replace("\n", ' ', str_replace($univNeedles, $univHaystacks, $data))));
+        return $data;
     }
     function getQueryCount($db)
     {
