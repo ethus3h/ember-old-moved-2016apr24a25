@@ -69,4 +69,9 @@ Add a URL:<br><form action="active.php"><input type="hidden" name="verd" value="
 Add a new project:<br><form action="active.php"><input type="hidden" name="verd" value="2"><input type="hidden" name="amtask" value="addProject"><input type="hidden" name="handlerNeeded" value="arcmaj3"><input type="hidden" name="handler" value="1">Filter pattern:<input type="text" name="amFilterPattern">Seed URL:<input type="text" name="amSeedUrl"><input type="submit"></form>');
     $main_console->close();
 }
+function fluid_demo()
+{
+    $main = new FluidActive('Fluid//Active Demo Page');
+    $main->close();
+}
 ?>

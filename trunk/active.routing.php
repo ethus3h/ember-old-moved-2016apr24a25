@@ -35,6 +35,9 @@ function runWints($wintNeeded)
         #print 'Welcome to Active.';
         arcmaj3_adm();
     }
+    if ($wintNeeded == 'fluid_demo') {
+        fluid_demo();
+    }
 }
 
 // function logAdd($text){
