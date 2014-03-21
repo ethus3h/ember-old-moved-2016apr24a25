@@ -6,14 +6,7 @@ class FluidActive
     {
         $this->globalIdsCounter = 1;
         $this->targetLocation   = '/d/r/active.php';
-        $this->page             = '<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<style type="text/css" media="all">table,tr,td{border:1px dotted maroon;}</style>
-<title>' . $title . '</title>
-</head>
-<body>';
+        $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:101px;height:101px;margin:auto;border-width:1px;border-style:solid;border-color:#444444 transparent transparent;border-radius:51px;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7a3a3;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">';
     }
     function newId()
     {
@@ -106,19 +99,8 @@ class FluidActive
 			xmlhttp.open("POST","' . $this->targetLocation . '",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); } </script>');
     }
     function filter_out($data)
-    {
-        global $websiteName;
-        global $cssFile;
-        global $serverUrl;
-        global $pageClass;
-        if ($pageClass == 'w') {
-            $tbl = '';
-        } else {
-            $tbl = '<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><h1>';
-        }
-        $pageVersionDirect = '2';
-        $univNeedles       = array(
-            'href="' . $serverUrl,
+    {       
+    	$univNeedles       = array(
             "\t",
             "\n",
             "\r",
@@ -126,21 +108,8 @@ class FluidActive
             "  ",
             "  ",
             "> <",
-            '@p1@',
-            '@p2@',
-            '@p3@',
-            '@p4@',
-            '@cssFile@',
-            '@websiteName@',
-            '@tbl@',
-            '@l@',
-            '@n@',
-            'https://futuramerlincom.fatcow.com',
-            '@greenhead@',
-            '.css";</style></title>'
         );
         $univHaystacks     = array(
-            'href="',
             " ",
             " ",
             " ",
@@ -148,18 +117,6 @@ class FluidActive
             " ",
             " ",
             '><',
-            resl('1.d' . $pageVersionDirect),
-            resl('2.d' . $pageVersionDirect),
-            resl('3.d' . $pageVersionDirect),
-            resl('4.d' . $pageVersionDirect),
-            $cssFile,
-            $websiteName,
-            $tbl,
-            '<a href="r.php?',
-            '">',
-            'http://localhost',
-            '<div class="greenpage"></div><div class="fh"><a href="/" id="tl"><i>futuramerlin</i></a></div>',
-            '.css";</style>'
         );
         return trim(preg_replace('/\s+/', ' ', str_replace("\n", ' ', str_replace($univNeedles, $univHaystacks, $data))));
     }
@@ -169,7 +126,7 @@ class FluidActive
     }
     function close()
     {
-        $this->append('</body></html>');
+        $this->append('</script></body></html>');
         
         $this->writeOut();
     }
