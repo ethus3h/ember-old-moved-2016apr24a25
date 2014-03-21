@@ -37,62 +37,65 @@ class FluidActive
 			var boxes = new Array();
 			this.add = function(box) {this.boxes[this.boxes.length+1] = box};
 		}
+		
+		var AllBoxes = new Array();
 
         function FluidBox(contents,background,blur,container,vpanchor,vpos,vposunit,hpanchor,
         hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
-        /* ~Explanations of parameters~
-        contents: HTML contents of the box. Should be the contents of a <svg> tag. This will be displayed on top of the bgcolor.
-        background: Background. Can be any CSS background
-        blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
-        container: ID of the container box into which this box should be inserted. ID 0 is the browser window.
-        vpanchor: ID of the box to which this box's vertical postion should be relative. ID 0 is the browser window.
-        vpos: Vertical position of this box relative to the vpanchor box.
-        vposunit: Units (%, or possibly rem?) of vpos
-        hpanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
-        hpos: Vertical position of this box relative to the hpanchor box.
-        hposunit: Units (%, or possibly rem?) of hpos
-        wanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
-        width: Width of this box relative to the wanchor box.
-        wunit: Units (%, or possibly rem?) of width
-        hanchor: ID of the box to which this box's heighth should be relative. ID 0 is the browser window.
-        heighth: Width of this box relative to the hanchor box.
-        hunit: Units (%, or possibly rem?) of heighth
-        crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
-        group: a class for the div to later be used for grouping divs
-        zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
-		*/
-		this.contents = contents;
-		this.background = background;
-		this.blur = blur;
-		this.container = container;
-		this.vpanchor = vpanchor;
-		this.vpos = vpos;
-		this.vposunit = vposunit;
-		this.hpanchor = hpanchor;
-		this.hpos = hpos;
-		this.hposunit = hposunit;
-		this.wanchor = wanchor;
-		this.width = width;
-		this.wunit = wunit;
-		this.hanchor = hanchor;
-		this.heighth = heighth;
-		this.hunit = hunit;
-		this.crop = crop;
-		this.group = group;
-		this.zindex = zindex;
-        console.log("Box instantiating. Contents = "+this.contents+", background = "+this.background
-        +", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpos = "+this.vpos
-        +", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpos = "+this.hpos
-        +", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
-        +", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
-        +", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex);
-		/* console.log(getAnchor(this.vpanchor)); */
-		/* $(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\"background:"+this.background+";height:"+this.heighth+this.hunit";width:"+this.width+this.wunit+";position:relative;left:"+this.hpos+";top:"+this.vpos+"\">"+"</div>"); */
-		$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;\"><svg>"+this.contents+"</svg></div>");
-        $("#"+getId()).css('background',this.background);
-        $("#"+getId()).css('background-size','cover');
-        $("#"+getId()).css('position','fixed');
-        this.compute = function() {
+        	AllBoxes[AllBoxes.length+1] = this;
+        	/* ~Explanations of parameters~
+        	contents: HTML contents of the box. Should be the contents of a <svg> tag. This will be displayed on top of the bgcolor.
+        	background: Background. Can be any CSS background
+        	blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
+        	container: ID of the container box into which this box should be inserted. ID 0 is the browser window.
+			vpanchor: ID of the box to which this box's vertical postion should be relative. ID 0 is the browser window.
+			vpos: Vertical position of this box relative to the vpanchor box.
+			vposunit: Units (%, or possibly rem?) of vpos
+			hpanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
+			hpos: Vertical position of this box relative to the hpanchor box.
+			hposunit: Units (%, or possibly rem?) of hpos
+			wanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
+			width: Width of this box relative to the wanchor box.
+			wunit: Units (%, or possibly rem?) of width
+			hanchor: ID of the box to which this box's heighth should be relative. ID 0 is the browser window.
+			heighth: Width of this box relative to the hanchor box.
+			hunit: Units (%, or possibly rem?) of heighth
+			crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
+			group: a class for the div to later be used for grouping divs
+			zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
+			*/
+			this.contents = contents;
+			this.background = background;
+			this.blur = blur;
+			this.container = container;
+			this.vpanchor = vpanchor;
+			this.vpos = vpos;
+			this.vposunit = vposunit;
+			this.hpanchor = hpanchor;
+			this.hpos = hpos;
+			this.hposunit = hposunit;
+			this.wanchor = wanchor;
+			this.width = width;
+			this.wunit = wunit;
+			this.hanchor = hanchor;
+			this.heighth = heighth;
+			this.hunit = hunit;
+			this.crop = crop;
+			this.group = group;
+			this.zindex = zindex;
+			console.log("Box instantiating. Contents = "+this.contents+", background = "+this.background
+			+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpos = "+this.vpos
+			+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpos = "+this.hpos
+			+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
+			+", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
+			+", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex);
+			/* console.log(getAnchor(this.vpanchor)); */
+			/* $(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\"background:"+this.background+";height:"+this.heighth+this.hunit";width:"+this.width+this.wunit+";position:relative;left:"+this.hpos+";top:"+this.vpos+"\">"+"</div>"); */
+			$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;\"><svg>"+this.contents+"</svg></div>");
+			$("#"+getId()).css('background',this.background);
+			$("#"+getId()).css('background-size','cover');
+			$("#"+getId()).css('position','fixed');
+			this.compute = function() {
         		//Calculate the heighth
         		computedHeighth = this.heighth+this.hunit;
         		if(this.hunit == '%') {
@@ -110,9 +113,9 @@ class FluidActive
         		$("#"+getId()).css('left',this.hpos);
         		$("#"+getId()).css('top',this.vpos);
         	}
-        this.compute();
-        this.show = function(animation){
-        	$("#"+getId()).css('display','block');
+        	this.compute();
+        	this.show = function(animation){
+        		$("#"+getId()).css('display','block');
         	};
         }
          
