@@ -71,7 +71,7 @@ Add a new project:<br><form action="active.php"><input type="hidden" name="verd"
 }
 function fluid_demo()
 {
-    $main = new FluidActive('Fluid//Active Demo Page');
+    $main = new FluidActive('Fluid//Active Demo Page. Background image: 4278145217_f6f7e5f871_o.jpg: by Casey Yee. CC Attribution Share-Alike 2.0.');
     $main->close();
 }
 ?>
