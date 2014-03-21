@@ -8,15 +8,56 @@ class FluidActive
         $this->targetLocation   = '/d/r/active.php';
         $this->FluidJS = <<<EOT
         /* JavaScript code for Fluid//Active */
-        function Box() {
-        alert("Box instantiated");
+        function Box(contents,bgcolor,blur,vpanchor,vpos,vposunit,hpanchor,
+        hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,zindex) {
+        /* ~Explanations of parameters~
+        contents: HTML contents of the box. Should be represented as a <svg> tag. This will be displayed on top of the bgcolor.
+        bgcolor: Background color. Can be any CSS background-color, see https://developer.mozilla.org/en-US/docs/Web/CSS/background-color
+        blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
+        vpanchor: ID of the box to which this box's vertical postion should be relative. ID 0 is the browser window.
+        vpos: Vertical position of this box relative to the vpanchor box.
+        vposunit: Units (%, or possibly rem?) of vpos
+        hpanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
+        hpos: Vertical position of this box relative to the hpanchor box.
+        hposunit: Units (%, or possibly rem?) of hpos
+        wanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
+        width: Width of this box relative to the wanchor box.
+        wunit: Units (%, or possibly rem?) of width
+        hanchor: ID of the box to which this box's heighth should be relative. ID 0 is the browser window.
+        heighth: Width of this box relative to the hanchor box.
+        hunit: Units (%, or possibly rem?) of heighth
+        crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
+        zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
+		*/
+		this.contents = contents;
+		this.bgcolor = bgcolor;
+		this.blur = blur;
+		this.vpanchor = vpanchor;
+		this.vpos = vpos;
+		this.vposunit = vposunit;
+		this.hpanchor = hpanchor;
+		this.hpos = hpos;
+		this.hposunit = hposunit;
+		this.wanchor = wanchor;
+		this.width = width;
+		this.wunit = wunit;
+		this.hanchor = hanchor;
+		this.heighth = heighth;
+		this.hunit = hunit;
+		this.crop = crop;
+		this.zindex = zindex;
+        alert("Box instantiated. Contents = "+this.contents+", bgcolor = "+this.bgcolor+", blur = "+this.blur+", 
+        vpanchor = "+this.vpanchor+", vpos = "+this.vpos+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", 
+        hpos = "+this.hpos+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width+", 
+        wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth+", hunit = "+this.hunit+",
+        crop = "+this.crop+", zindex = "+this.zindex;);
          }
          
-var Box1 = new Box();
+var Box1 = new Box(0,0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
 var Box2 = new Box();
 
 EOT;
-        $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:101px;height:101px;margin:auto;border-width:1px;border-style:solid;border-color:#444444 transparent transparent;border-radius:51px;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7a3a3;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->FluidJS;
+        $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:101px;height:101px;margin:auto;border-width:1px;border-style:solid;border-color:#444444 transparent transparent;border-radius:51px;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7b0b0;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->FluidJS;
     }
     function newId()
     {
