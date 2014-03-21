@@ -33,9 +33,15 @@ class FluidActive
 		function Group(name) {
 			this.name = name;
 			this.showBox = function (element, index, array) {element.show(this.animation);};
-			this.show = function(animation) {this.animation = animation; this.boxes.foreach(showBox);};
+			this.show = function(animation) {this.animation = animation; this.boxes.foreach(showBox());};
 			var boxes = new Array();
 			this.add = function(box) {this.boxes[this.boxes.length+1] = box};
+		}
+		
+		function RecomputeMetrics() {
+			reviseBox = function (element, index, array) {element.compute();};
+			revise = function() {AllBoxes.foreach(this.reviseBox());};
+			revise();
 		}
 		
 		var AllBoxes = new Array();
