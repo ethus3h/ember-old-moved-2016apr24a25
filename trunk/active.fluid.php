@@ -139,7 +139,7 @@ class FluidActive
         			$("#"+getId()).css('display','block');
         		}
         		if(animation == "default") {
-        			$("#"+getId()).show();
+        			$("#"+getId()).show('slow');
         		}
         	};
         }
