@@ -37,18 +37,20 @@ class FluidActive
 			var boxes = new Array();
 			this.add = function(box) {this.boxes[this.boxes.length+1] = box};
 		}
-		
-		function RecomputeMetrics() {
-			reviseBox = function (element, index, array) {element.compute();};
-			revise = function() {AllBoxes.foreach(this.reviseBox());};
-			revise();
-		}
-		
 		var AllBoxes = new Array();
+
+		function RecomputeMetrics() {
+			for (var i = 1; i < AllBoxes.length; i = i + 1 ) {
+				AllBoxes[i].compute();
+			}
+		};
+
+		
 
         function FluidBox(contents,background,blur,container,vpanchor,vpos,vposunit,hpanchor,
         hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
         	AllBoxes[AllBoxes.length+1] = this;
+        	console.debug(AllBoxes);
         	/* ~Explanations of parameters~
         	contents: HTML contents of the box. Should be the contents of a <svg> tag. This will be displayed on top of the bgcolor.
         	background: Background. Can be any CSS background
@@ -114,10 +116,22 @@ class FluidActive
         			tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
 					computedWidth = tComputedWidth+'px';
 				}
+				//Calculate the vpos
+        		computedVpos = this.vpos+this.vposunit;
+        		if(this.vposunit == '%') {
+        			tComputedVpos = $(getAnchor(this.vpanchor)).top() * (this.vpos / 100);
+					computedVpos = tComputedVpos+'px';
+				}
+				//Calculate the hpos
+        		computedHpos = this.hpos+this.hposunit;
+        		if(this.hposunit == '%') {
+        			tComputedHpos = $(getAnchor(this.hpanchor)).left() * (this.hpos / 100);
+					computedHpos = tComputedHpos+'px';
+				}
 			    $("#"+getId()).css('height',computedHeighth);
      	  		$("#"+getId()).css('width',computedWidth);
-        		$("#"+getId()).css('left',this.hpos);
-        		$("#"+getId()).css('top',this.vpos);
+        		$("#"+getId()).css('top',computedVpos);
+        		$("#"+getId()).css('left',computedHpos);
         	}
         	this.compute();
         	this.show = function(animation){
@@ -249,14 +263,11 @@ EOT;
     }
     function close()
     {
-        $this->append('</script><script type="text/javascript">$(document).ready(function()
-{
-    $(document).on("change",function()
-    {
+        $this->append('</script><script type="text/javascript">$(window).resize(function(){
+        $("#main-content")
         // repaint all Boxes
         RecomputeMetrics();
-    });
-});</script></body></html>');
+    });</script></body></html>');
         
         $this->writeOut();
     }
