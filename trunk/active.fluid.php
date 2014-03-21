@@ -92,22 +92,25 @@ class FluidActive
         $("#"+getId()).css('background',this.background);
         $("#"+getId()).css('background-size','cover');
         $("#"+getId()).css('position','fixed');
-        //Calculate the heighth
-        computedHeighth = this.heighth+this.hunit;
-        if(this.hunit == '%') {
-        	tComputedHeighth = $(getAnchor(this.hanchor)).height() * (this.heighth / 100);
-			computedHeighth = tComputedHeighth+this.hunit;
-		}
-		//Calculate the width
-        computedWidth = this.width+this.wunit;
-        if(this.wunit == '%') {
-        	tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
-			computedWidth = tComputedWidth+this.wunit;
-		}
-        $("#"+getId()).css('height',computedHeighth);
-        $("#"+getId()).css('width',computedWidth);
-        $("#"+getId()).css('left',this.hpos);
-        $("#"+getId()).css('top',this.vpos);
+        this.compute = function() {
+        		//Calculate the heighth
+        		computedHeighth = this.heighth+this.hunit;
+        		if(this.hunit == '%') {
+        			tComputedHeighth = $(getAnchor(this.hanchor)).height() * (this.heighth / 100);
+					computedHeighth = tComputedHeighth+'px';
+				}
+				//Calculate the width
+        		computedWidth = this.width+this.wunit;
+        		if(this.wunit == '%') {
+        			tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
+					computedWidth = tComputedWidth+'px';
+				}
+			    $("#"+getId()).css('height',computedHeighth);
+     	  		$("#"+getId()).css('width',computedWidth);
+        		$("#"+getId()).css('left',this.hpos);
+        		$("#"+getId()).css('top',this.vpos);
+        	}
+        this.compute();
         this.show = function(animation){
         	$("#"+getId()).css('display','block');
         	};
@@ -116,7 +119,13 @@ class FluidActive
 var Box1 = new FluidBox(0,"url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) center center no-repeat",0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
 Box1.show('none');
 EOT;
-        $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:7rem;height:7rem;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:3.5rem;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7b0b0;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->FluidJS;
+        $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:7rem;height:7rem;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:3.5rem;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7b0b0;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><script type="text/javascript">$(document).ready(function()
+{
+    $(document).on("onchange",function()
+    {
+        // repaint all Boxes
+    });
+});</script><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->FluidJS;
     }
     function newId()
     {
