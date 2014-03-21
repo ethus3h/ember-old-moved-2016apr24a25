@@ -14,12 +14,23 @@ return d||(f=$b[b],$b[b]=e,e=null!=c(a,b,d)?b.toLowerCase():null,$b[b]=f),e}});v
 EOT;
         $this->FluidJS = <<<EOT
         /* JavaScript code for Fluid//Active */
-        function Box(contents,bgcolor,blur,vpanchor,vpos,vposunit,hpanchor,
+        globalIdsCounter = 1;
+		function newId()
+		{
+        	globalIdsCounter++;
+        	return 'FluidBox'+globalIdsCounter;
+		}
+		function getId()
+		{
+			return 'FluidBox'+globalIdsCounter;
+		}
+        function FluidBox(contents,background,blur,container,vpanchor,vpos,vposunit,hpanchor,
         hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,zindex) {
         /* ~Explanations of parameters~
         contents: HTML contents of the box. Should be the contents of a <svg> tag. This will be displayed on top of the bgcolor.
-        bgcolor: Background color. Can be any CSS background-color, see https://developer.mozilla.org/en-US/docs/Web/CSS/background-color
+        background: Background. Can be any CSS background
         blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
+        container: ID of the container box into which this box should be inserted. ID 0 is the browser window.
         vpanchor: ID of the box to which this box's vertical postion should be relative. ID 0 is the browser window.
         vpos: Vertical position of this box relative to the vpanchor box.
         vposunit: Units (%, or possibly rem?) of vpos
@@ -36,8 +47,9 @@ EOT;
         zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
 		*/
 		this.contents = contents;
-		this.bgcolor = bgcolor;
+		this.background = background;
 		this.blur = blur;
+		this.container = container;
 		this.vpanchor = vpanchor;
 		this.vpos = vpos;
 		this.vposunit = vposunit;
@@ -52,16 +64,19 @@ EOT;
 		this.hunit = hunit;
 		this.crop = crop;
 		this.zindex = zindex;
-        alert("Box instantiated. Contents = "+this.contents+", bgcolor = "+this.bgcolor
-        +", blur = "+this.blur+", vpanchor = "+this.vpanchor+", vpos = "+this.vpos
+        alert("Box instantiating. Contents = "+this.contents+", background = "+this.background
+        +", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpos = "+this.vpos
         +", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpos = "+this.hpos
         +", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
         +", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
         +", hunit = "+this.hunit+", crop = "+this.crop+", zindex = "+this.zindex);
-         }
+        }
          
-var Box1 = new Box(0,0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
-var Box2 = new Box();
+		$("#fluidFragment"+this.vpanchor).append("<div id=\"+newId()+\" style=\"++\">"+"</div>");
+
+         
+var Box1 = new FluidBox(0,"url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) no-repeat center center fixed cover",0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
+var Box2 = new FluidBox();
 
 EOT;
         $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:101px;height:101px;margin:auto;border-width:1px;border-style:solid;border-color:#444444 transparent transparent;border-radius:51px;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7b0b0;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->jQuery.'</script><script type="text/javascript">'.$this->FluidJS;
