@@ -71,14 +71,19 @@ class FluidActive
         +", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
         +", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
         +", hunit = "+this.hunit+", crop = "+this.crop+", zindex = "+this.zindex);
+		/* console.log(getAnchor(this.vpanchor)); */
+		/* $(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\"background:"+this.background+";height:"+this.heighth+this.hunit";width:"+this.width+this.wunit+";position:relative;left:"+this.hpos+";top:"+this.vpos+"\">"+"</div>"); */
+		$(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\"><svg>"+this.contents+"</svg></div>");
+        $("#"+getId()).css('background',this.background);
+        $("#"+getId()).css('position','fixed');
+        $("#"+getId()).css('height',this.heighth+this.hunit);
+        $("#"+getId()).css('width',this.width+this.wunit);
+        $("#"+getId()).css('left',this.hpos);
+        $("#"+getId()).css('top',this.vpos);
+        
         }
-        $('body').append('<p>Hello World!</p>');
-        console.log(getAnchor(this.vpanchor));
-		$(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\""+this.background+"\">"+"</div>");
-
          
-var Box1 = new FluidBox(0,"url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) no-repeat center center fixed cover",0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
-var Box2 = new FluidBox();
+var Box1 = new FluidBox(0,"url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) center center no-repeat cover",0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
 
 EOT;
         $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:7rem;height:7rem;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:3.5rem;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7b0b0;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->FluidJS;
