@@ -46,11 +46,12 @@ class FluidActive
 		this.hunit = hunit;
 		this.crop = crop;
 		this.zindex = zindex;
-        alert("Box instantiated. Contents = "+this.contents+", bgcolor = "+this.bgcolor+", blur = "+this.blur+", 
-        vpanchor = "+this.vpanchor+", vpos = "+this.vpos+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", 
-        hpos = "+this.hpos+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width+", 
-        wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth+", hunit = "+this.hunit+",
-        crop = "+this.crop+", zindex = "+this.zindex;);
+        alert("Box instantiated. Contents = "+this.contents+", bgcolor = "+this.bgcolor
+        +", blur = "+this.blur+", vpanchor = "+this.vpanchor+", vpos = "+this.vpos
+        +", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpos = "+this.hpos
+        +", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
+        +", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
+        +", hunit = "+this.hunit+", crop = "+this.crop+", zindex = "+this.zindex);
          }
          
 var Box1 = new Box(0,0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
