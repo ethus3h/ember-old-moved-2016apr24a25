@@ -74,4 +74,11 @@ function fluid_demo()
     $main = new FluidActive('Fluid//Active Demo Page. Background image: 4278145217_f6f7e5f871_o.jpg: by Casey Yee. CC Attribution Share-Alike 2.0.');
     $main->close();
 }
+function ember()
+{
+
+    $main = new FluidActive('Ember');
+    
+    $main->close();
+}
 ?>

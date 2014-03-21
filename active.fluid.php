@@ -140,29 +140,31 @@ class FluidActive
         			$("#"+getId()).css('display','block');
         		}
         		if(animation == "zoom") {
-        			$("#"+getId()).css('top',($(body).height()/4)+'px');
-        			$("#"+getId()).css('left',($(body).width()/4)+'px');
-        			$("#"+getId()).css('width',($(body).height()/2)+'px');
-        			$("#"+getId()).css('height',($(body).width()/2)+'px');
+        			$("#"+getId()).css('top',($('body').height()/4)+'px');
+        			$("#"+getId()).css('left',($('body').width()/4)+'px');
+        			$("#"+getId()).css('width',($('body').width()/2)+'px');
+        			$("#"+getId()).css('height',($('body').height()/2)+'px');
         			$("#"+getId()).css('opacity','0');
         			$("#"+getId()).show();
-        			$("#"+getId().animate({
+        			bodyWidth = $('body').width();
+        			bodyHeighth = $('body').height();
+        			$("#"+getId()).animate({
         				opacity: 1,
-        				left: "-=0",
-        				top: "-=0",
-        				width: "+=$(body).width(),
-        				height: "+=$(body).height(),        				
-        			});
+        				left: "0px",
+        				top: "0px",
+        				width: bodyWidth+"px",
+        				height: bodyHeighth+"px"
+        			}, 500, "linear");
         		}
         	};
         }
-         
+$.getScript("/d/r/active.phpanother_script.js");
 var Box1 = new FluidBox(0,"url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) center center no-repeat",0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
 $(window).load(function() {
 	Box1.show("zoom");
 });
 EOT;
-        $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><script src="/d/jquery.zoomooz.min.js" type="text/javascript"></script><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:7rem;height:7rem;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:3.5rem;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7b0b0;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->FluidJS;
+        $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:7rem;height:7rem;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:3.5rem;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7b0b0;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->FluidJS;
     }
     function newId()
     {
