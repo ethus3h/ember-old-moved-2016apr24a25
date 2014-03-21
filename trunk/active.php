@@ -16,52 +16,52 @@
 GENERAL CONFIGURATION
 *************/
 
-include('config.php');
+include('active.config.php');
 
 /*************
 GENERAL-USE CLASSES
 *************/
 
 //FluidActive is the class implementing the Fluid//Active web UI toolkit
-include('fluid.php');
+include('active.fluid.php');
 
 //FractureDB is the class that implements the FractureDB data management system.
-include('fracturedb.php');
+include('active.fracturedb.php');
 
 /*************
 GENERAL-USE FUNCTIONS
 *************/
 
-include('functions.php');
+include('active.functions.php');
 
 /*************
 ADDITIONAL CLASSES
 *************/
 
-include('classes.extra.php');
+include('active.classes.extra.php');
 
 /*************
 APPLICATION-SPECIFIC FUNCTIONS
 *************/
 
-include('functions.extra.php');
+include('active.functions.extra.php');
 
 /*************
 REQUEST RESPONDERS
 *************/
 
-include('responders.php');
+include('active.responders.php');
 
 /*************
 WEB INTERFACE RESPONDERS
 *************/
 
-include('responders.www.php');
+include('active.responders.www.php');
 
 /*************
 REQUEST ROUTING CODE
 *************/
 
-include('routing.php');
+include('active.routing.php');
 
 ?> 
