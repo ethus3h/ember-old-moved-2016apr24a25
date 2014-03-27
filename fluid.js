@@ -11,6 +11,7 @@ function getId()
 }
 function getAnchor(id)
 {
+	id = String(id).replace("FluidBox","");
 	if(id==0) {
 		return "body";
 	}
@@ -62,7 +63,7 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	wunit: Units (%, or possibly rem?) of width
 	hanchor: ID of the box to which this box's heighth should be relative. ID 0 is the browser window.
 	heighth: Width of this box relative to the hanchor box.
-	hunit: Units (%, relative, or possibly rem?) of heighth. The value "relative" will set the heighth equal to the width regardless of the heighth parameter's value.
+	hunit: Units (%, relative, or possibly rem?) of heighth. The value "relative" will set the heighth equal to the specified percentage of the computed width.
 	crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
 	group: a class for the div to later be used for grouping divs
 	zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
@@ -104,6 +105,7 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	/* $(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\"background:"+this.background+";height:"+this.heighth+this.hunit";width:"+this.width+this.wunit+";position:relative;left:"+this.hpos+";top:"+this.vpos+"\">"+"</div>"); */
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;\"><svg>"+this.contents+"</svg></div>");
 	this.id=getId();
+	this.anchor = getAnchor(this.id);
 	$("#"+getId()).css('background',this.background);
 	$("#"+getId()).css('background-size','cover');
 	$("#"+getId()).css('position','fixed');
@@ -121,7 +123,7 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 			computedHeighth = tComputedHeighth+'px';
 		}
 		if(this.hunit == 'relative') {
-			tComputedHeighth = tComputedWidth;
+			tComputedHeighth = tComputedWidth * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+'px';
 		}
 		//Calculate the vpos
@@ -169,34 +171,63 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	}
 	this.compute();
 	this.show = function(animation){
+		//console.log("Displaying box "+this.id+"; ID #"+getId());
+		targetElement = this.anchor;
+		//console.debug($("#"+getId()));
 		if(animation == "none") {
-			$("#"+getId()).css('display','block');
+			//console.log("Animation: none");
+			//console.debug($("#"+getId()));
+			$(targetElement).css('display','block');
+			//console.debug($("#"+getId()));
 		}
 		if(animation == "zoom") {
-			$("#"+getId()).css('top',($('body').height()/4)+'px');
-			$("#"+getId()).css('left',($('body').width()/4)+'px');
-			$("#"+getId()).css('width',($('body').width()/2)+'px');
-			$("#"+getId()).css('height',($('body').height()/2)+'px');
-			$("#"+getId()).css('opacity','0');
-			$("#"+getId()).show();
+			//console.log("Animation: zoom");
+			$(targetElement).css('top',($('body').height()/4)+'px');
+			$(targetElement).css('left',($('body').width()/4)+'px');
+			$(targetElement).css('width',($('body').width()/2)+'px');
+			$(targetElement).css('height',($('body').height()/2)+'px');
+			$(targetElement).css('opacity','0');
+			$(targetElement).show();
 			bodyWidth = $('body').width();
 			bodyHeighth = $('body').height();
-			$("#"+getId()).animate({
+			$(targetElement).animate({
 				opacity: 1,
 				left: computedHpos,
 				top: computedVpos,
 				width: bodyWidth+"px",
 				height: bodyHeighth+"px"
 			}, 500, "linear");
+			//console.debug($("#"+getId()));
+			//$(targetElement).css('display','block');
+			//console.debug($("#"+getId()));
 		}
 		if(animation == "fade") {
-			$("#"+getId()).css('opacity','0');
-			$("#"+getId()).show();
-			$("#"+getId()).animate({
+			//console.log("Animation: fade");
+			
+
+			$(targetElement).css('opacity','0');
+			$(targetElement).show();
+			$(targetElement).animate({
 				opacity: 1,
 			}, 250, "linear");
+			//console.debug($("#"+getId()));
+			//$(targetElement).css('display','block');
+			//console.debug($("#"+getId()));
 		}
+		//console.debug($("#"+getId()));
+		//$(targetElement).css('display','block');
+		//$(targetElement).show();
+		//console.debug($("#"+getId()));
+		//console.log(targetElement);
+
 	};
 }
-var LoadingBox = new FluidBox("", "rgba(0,0,0,0)",0,0,0,50,"%",50,"%",0,50,"%",50,"%",0,10,"%",0,null,"relative","loadingContainer",null);
-LoadingBox.show("fade"); 
+function LoadingScreen(container) {
+	var LoadingBg = new FluidBox("","#b7b0b0",0,0,0,0,"%",0,"%",0,0,"%",0,"%",0,100,"%",0,100,"%",0,null);
+	var LoadingBox = new FluidBox("</svg>Loading...", "rgba(0,0,0,0)",0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",LoadingBg.id,50,"%",50,"%",0,10,"%",0,110,"relative","loadingContainer",null);
+	var LoadingSpinner = new FluidBox("</svg>Spinner", "rgba(0,0,0,0)",0,LoadingBox.id,LoadingBox.id,0,"%",110,"%",LoadingBox.id,0,"%",100,"%",LoadingBg.id,10,"%",LoadingBg.id,100,"relative","loadingSpinner",null);
+	LoadingSpinner.show("none"); 
+	LoadingBox.show("none"); 
+	LoadingBg.show("zoom"); 
+}
+LoadingScreen(0);
