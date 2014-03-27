@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 //ini_set("display_errors", 0);
-$displayDebugMessages = False;
+$displayDebugMessages = True;
 include('authData.php');
 //Important variables
 if ($_SERVER["HTTP_HOST"] == '127.0.0.1') {

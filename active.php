@@ -11,7 +11,6 @@
 #
 #SHOW FULL PROCESSLIST
 
-
 /*************
 GENERAL CONFIGURATION
 *************/
@@ -24,6 +23,7 @@ GENERAL-USE CLASSES
 
 //FluidActive is the class implementing the Fluid//Active web UI toolkit
 include('active.fluid.php');
+
 
 //FractureDB is the class that implements the FractureDB data management system.
 include('active.fracturedb.php');
