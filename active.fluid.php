@@ -158,11 +158,6 @@ class FluidActive
         		}
         	};
         }
-$.getScript("/d/r/active.phpanother_script.js");
-var Box1 = new FluidBox(0,"url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) center center no-repeat",0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
-$(window).load(function() {
-	Box1.show("zoom");
-});
 EOT;
         $this->page             = '<!doctype html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>' . $title . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><style>@font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.loading{margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:7rem;height:7rem;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:3.5rem;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite}html{background-color:#b7b0b0;height:100%;font-size:100%;}body{display:flex;align-items:center;justify-content:center;margin:0;height:100%;width:100%;flex-flow:column;text-align:center}#loadingbox{font-size:3rem;font-family:"Lato",sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column}#bgloading{margin-bottom:3rem;}</style></head><body><div id="loadingbox"><div id="bgloading">Loading…</div><br><div class="loading"></div></div><script type="text/javascript">'.$this->FluidJS;
     }
@@ -285,7 +280,7 @@ EOT;
     }
     function close()
     {
-        $this->append('</script><script type="text/javascript">$(window).resize(function(){
+        $this->write('</script><script type="text/javascript">$(window).resize(function(){
         $("#main-content")
         // repaint all Boxes
         RecomputeMetrics();
@@ -294,6 +289,10 @@ EOT;
         $this->writeOut();
     }
     function append($data)
+    {
+        $this->page = $this->page . "</script>".$data;
+    }
+    function write($data)
     {
         $this->page = $this->page . $data;
     }
