@@ -38,7 +38,6 @@ function runWints($wintNeeded)
         fluid_demo();
     }
 	if ($wintNeeded == 'ember') {
-        print 'Welcome to Ember.';
         ember();
     }
 }
