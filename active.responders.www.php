@@ -78,14 +78,8 @@ function ember()
 {
 
     $main = new FluidActive('Ember');
-    $main->write(<<<EOT
-    $.getScript("/d/r/active.phpanother_script.js");
-var Box1 = new FluidBox(0,"url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) center center no-repeat",0,0,0,0,"%",0,0,"%",0,100,"%",0,100,"%",0,101);
-$(window).load(function() {
-	Box1.show("zoom");
-});
-EOT
-);
+    include("active.ember.php");
     $main->close();
+
 }
 ?>
