@@ -62,7 +62,7 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	wunit: Units (%, or possibly rem?) of width
 	hanchor: ID of the box to which this box's heighth should be relative. ID 0 is the browser window.
 	heighth: Width of this box relative to the hanchor box.
-	hunit: Units (%, or possibly rem?) of heighth
+	hunit: Units (%, relative, or possibly rem?) of heighth. The value "relative" will set the heighth equal to the width regardless of the heighth parameter's value.
 	crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
 	group: a class for the div to later be used for grouping divs
 	zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
@@ -108,17 +108,21 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	$("#"+getId()).css('background-size','cover');
 	$("#"+getId()).css('position','fixed');
 	this.compute = function() {
+		//Calculate the width
+		computedWidth = this.width+this.wunit;
+		if(this.wunit == '%') {
+			tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
+			computedWidth = tComputedWidth+'px';
+		}
 		//Calculate the heighth
 		computedHeighth = this.heighth+this.hunit;
 		if(this.hunit == '%') {
 			tComputedHeighth = $(getAnchor(this.hanchor)).height() * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+'px';
 		}
-		//Calculate the width
-		computedWidth = this.width+this.wunit;
-		if(this.wunit == '%') {
-			tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
-			computedWidth = tComputedWidth+'px';
+		if(this.hunit == 'relative') {
+			tComputedHeighth = tComputedWidth;
+			computedHeighth = tComputedHeighth+'px';
 		}
 		//Calculate the vpos
 		computedVpos = this.vpos+this.vposunit;
@@ -134,19 +138,19 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 		}
 		$("#"+getId()).css('height',computedHeighth);
 		$("#"+getId()).css('width',computedWidth);
-		$("#"+getId()).css('top',computedVpos);
-		$("#"+getId()).css('left',computedHpos);
+		//$("#"+getId()).css('top',computedVpos);
+		//$("#"+getId()).css('left',computedHpos);
 		//Calculate the vertical attach point
 		computedVpa = this.vpattach;
 		if(this.vpattunit == '%') {
 			tComputedVpa = $("#"+getId()).height() * (this.vpattach / 100);
-			computedVpa = $("#"+getId()).position().top - tComputedVpa;
+			computedVpa = tComputedVpos - tComputedVpa;
 		}
 		//Calculate the horizontal attach point
 		computedHpa = this.hpattach;
 		if(this.hpattunit == '%') {
 			tComputedHpa = $("#"+getId()).width() * (this.hpattach / 100);
-			computedHpa = $("#"+getId()).position().left - tComputedHpa;
+			computedHpa = tComputedHpos - tComputedHpa;
 		}
 		$("#"+getId()).css('top',computedVpa+"px");
 		$("#"+getId()).css('left',computedHpa+"px");
@@ -156,6 +160,12 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 		console.log("Set hpos: "+this.hpos);
 		console.log("Partial hpos: "+tComputedHpos);
 		console.log("Computed hpos: "+computedHpos);
+		console.log("Set vpa: "+this.vpattach);
+		console.log("Partial vpa: "+tComputedVpa);
+		console.log("Computed vpa: "+computedVpa);
+		console.log("Set vpa: "+this.hpattach);
+		console.log("Partial vpa: "+tComputedHpa);
+		console.log("Computed vpa: "+computedHpa);
 	}
 	this.compute();
 	this.show = function(animation){
@@ -188,5 +198,5 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 		}
 	};
 }
-var LoadingBox = new FluidBox("", "rgba(0,0,0,0)",0,0,0,50,"%",50,"%",0,50,"%",50,"%",0,10,"%",0,10,"%","loadingContainer",null);
+var LoadingBox = new FluidBox("", "rgba(0,0,0,0)",0,0,0,50,"%",50,"%",0,50,"%",50,"%",0,10,"%",0,null,"relative","loadingContainer",null);
 LoadingBox.show("fade"); 
