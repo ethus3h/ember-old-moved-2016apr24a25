@@ -38,6 +38,9 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'fluid_demo') {
         fluid_demo();
     }
+	if ($wintNeeded == 'ember') {
+        ember();
+    }
 }
 
 // function logAdd($text){
