@@ -358,7 +358,6 @@ function DBSimpleSubmissionHandler()
 }
 
 function emberBackend() {
-fracturr3..
 	session_start();
 	if (isset($_REQUEST['emSession'])) {
 		session_id($_REQUEST['emSession']);

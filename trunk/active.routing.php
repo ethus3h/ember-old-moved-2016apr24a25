@@ -3,7 +3,6 @@
 //This script handles requests in the correct manner.
 
 
-
 function runHandlers($handlerNeeded)
 {
     //     echo 'Executing handler: ';
@@ -39,6 +38,7 @@ function runWints($wintNeeded)
         fluid_demo();
     }
 	if ($wintNeeded == 'ember') {
+        print 'Welcome to Ember.';
         ember();
     }
 }
