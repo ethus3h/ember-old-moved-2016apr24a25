@@ -45,13 +45,14 @@ function RecomputeMetrics() {
 };
 
 
-
+//TODO: Constrained boxes currently don't work.
+//TODO: blur, crop, and zindex are unimplemented.
 function FluidBox(contents,background,opacity,blur,container,vpanchor,vpattach,vpattunit,vpos,vposunit,vconattach,vconstrain,hpanchor,hpattach,hpattunit,
-hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
+hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex,css) {
 	AllBoxes[AllBoxes.length+1] = this;
 	//console.debug(AllBoxes);
 	/* ~Explanations of parameters~
-	contents: HTML contents of the box. Should be the contents of a <svg> tag. This will be displayed on top of the bgcolor.
+	contents: HTML contents of the box. Generally a <svg> tag. This will be displayed on top of the bgcolor.
 	background: Background. Can be any CSS background
 	blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
 	opacity: CSS opacity value
@@ -79,6 +80,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
 	group: a class for the div to later be used for grouping divs
 	zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
+	css: Any other arbitrary CSS to specify for this box
 	*/
 	this.contents = contents;
 	this.background = background;
@@ -112,15 +114,16 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	this.crop = crop;
 	this.group = group;
 	this.zindex = zindex;
+	this.css = css;
 	console.log("Box instantiating. Contents = "+this.contents+", background = "+this.background
 	+", opacity = "+this.opacity+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpattach = "+this.vpattach+", vpattunit = "+this.vpattunit+", vpos = "+this.vpos
 	+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpattach = "+this.hpattach+", hpattunit = "+this.hpattunit+", hpos = "+this.hpos
 	+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
 	+", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
-	+", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex);
+	+", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex+", css = "+this.css);
 	/* //console.log(getAnchor(this.vpanchor)); */
 	/* $(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\"background:"+this.background+";height:"+this.heighth+this.hunit";width:"+this.width+this.wunit+";position:relative;left:"+this.hpos+";top:"+this.vpos+"\">"+"</div>"); */
-	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;\"><svg>"+this.contents+"</svg></div>");
+	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
 	$(this.anchor).css('background',this.background);
@@ -174,6 +177,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 			tComputedHpa = $(this.anchor).width() * (this.hpattach / 100);
 			computedHpa = (tComputedHpos - tComputedHpa)+"px";
 		}
+		//TODO: Actually get this working
 		if(this.vconstrain == true) {
 			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top) + $(getAnchor(this.hconattach)).height) {
 				tComputedHeighth = $(getAnchor(this.hconattach)).height;
@@ -269,11 +273,11 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	};
 }
 function LoadingScreen(container) {
-	var LoadingBg = new FluidBox("","#b7b0b0",1,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",0,true,0,100,"%",0,100,"%",null,null,null);
+	var LoadingBg = new FluidBox("","#b7b0b0",1,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",0,true,0,100,"%",0,100,"%",null,null,null,null);
 	////console.log("LoadingBg id = "+LoadingBg.anchor);
-	var LoadingBox = new FluidBox("", "#b7b0b0",1,0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"%",0,110,"relative",null,null,null);
+	var LoadingBox = new FluidBox("Loading…", "rgba(0,0,0,0)",1,0,LoadingBg.id,LoadingBg.id,50,"%",25,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"rem",0,3,"rem",null,"loadingMessageContainer",null,"font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column");
 	////console.log("LoadingBox id = "+LoadingBox.anchor);
-	var LoadingSpinner = new FluidBox("", "#b7b0b0",1,0,LoadingBox.id,LoadingBg.id,50,"%",60,"%",0,true,LoadingBox.id,0,"%",0,"%",null,false,LoadingBox.id,100,"%",LoadingBox.id,100,"relative",null,null,null);
+	var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite");
 	////console.log("LoadingSpinner id = "+LoadingSpinner.anchor);
 	LoadingSpinner.show("none"); 
 	LoadingBox.show("none"); 
