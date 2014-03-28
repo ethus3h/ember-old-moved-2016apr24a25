@@ -1,4 +1,87 @@
 /* JavaScript code for Fluid//Active. */
+
+/* Args function by theshock, from https://github.com/theshock/args-js */
+var Args = new function () {
+
+	var slice = [].slice;
+	
+	var check = function (object) {
+		return typeof object !== 'undefined';
+	};
+	
+	var countRequired = function (values) {
+		for (var c = 0, i = values.length; i--;) {
+			if (values[i] === required) c++;
+		}
+		return c;
+	};
+
+	var Args = function (args) {
+		if (this instanceof Args) {
+			this.args = args;
+		} else return new Args(args);
+	};
+	Args.prototype = {
+		allRequired: function () {
+			var a = this.args;
+			if (a.length != a.callee.length) {
+				throw new TypeError(a.callee.length + ' args required, ' + a.length + ' given');
+			}
+			return this;
+		},
+		defaults: function () {
+			var values = arguments,
+			    args   = this.args,
+			    a      = args.length,
+			    v      = values.length,
+			    rCount = countRequired(values),
+			    params = slice.call(args, 0);
+			if (a < rCount) throw new TypeError(rCount + ' args required, ' + a + ' given');
+			
+			for (var iV = 0, iA = 0; iV < v; iV++) {
+				if (a > rCount) {
+					args[iV] = check(params[iA]) ? params[iA] : values[iV];
+					a--; iA++;
+				} else if (values[iV] === required) {
+					args[iV] = params[iA];
+					rCount--;
+					a--; iA++;
+				} else {
+					args[iV] = values[iV];
+				}
+			}
+			
+			args.length = values.length;
+			
+			return this;
+		},
+		cast: function () {
+			var types = arguments, a = this.args, i = a.length;
+			while (i--) {
+				if (check(a[i]) && check(types[i])) {
+					a[i] = types[i](a[i]);
+				}
+			}
+			
+			return this;
+		},
+		hinting: function () {
+			var types = arguments, a = this.args, i = a.length;
+			while (i--) {
+				if (check(types[i])) {
+					if (!a[i] || !(a[i] instanceof types[i])) {
+						throw new TypeError('Wrong type of ' + (typeof a[i]) + ' ' + a[i] + '. Should be instance of ' + types[i]);
+					}
+				}
+			}
+			return this;
+		}
+	};
+	
+	var required = Args.required = { toString: function () { return '[object Required]'; }};
+	return Args;
+};
+
 globalIdsCounter = 1;
 function newId()
 {
@@ -232,13 +315,16 @@ function FluidBox() {
 	$(this.anchor).css('position','fixed');
 	this.compute = function() {
 		//Calculate the width
-		computedWidth = this.width+this.wunit;
+		tComputedWidth = this.width+this.wunit;
+		computedWidth=tComputedWidth+"px";
 		if(this.wunit == '%') {
 			tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
 			computedWidth = tComputedWidth+'px';
 		}
 		//Calculate the heighth
-		computedHeighth = this.heighth+this.hunit;
+		tComputedHeighth = this.heighth+this.hunit;
+		computedHeighth = tComputedHeighth+"px";
+
 		if(this.hunit == '%') {
 			tComputedHeighth = $(getAnchor(this.hanchor)).height() * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+'px';
@@ -266,13 +352,17 @@ function FluidBox() {
 		$(this.anchor).css('height',computedHeighth);
 		$(this.anchor).css('width',computedWidth);
 		//Calculate the vertical attach point
-		computedVpa = this.vpattach;
+		tComputedVpa = this.vpattach;
+		computedVpa=tComputedVpa+"px";
 		if(this.vpattunit == '%') {
 			tComputedVpa = $(this.anchor).height() * (this.vpattach / 100);
 			computedVpa = (tComputedVpos - tComputedVpa)+"px";
 		}
+		console.log(tComputedVpa);
+
 		//Calculate the horizontal attach point
-		computedHpa = this.hpattach;
+		tComputedHpa = this.hpattach;
+		computedHpa=tComputedHpa+"px";
 		if(this.hpattunit == '%') {
 			tComputedHpa = $(this.anchor).width() * (this.hpattach / 100);
 			computedHpa = (tComputedHpos - tComputedHpa)+"px";
