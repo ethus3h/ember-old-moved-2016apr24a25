@@ -178,6 +178,37 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 			computedHpa = (tComputedHpos - tComputedHpa)+"px";
 		}
 		//TODO: Actually get this working
+		/*Spec:
+		~~~~
+		Vertical constraining:
+		~~~~
+		Top of box is above top of clip target -> Move to top of clip target
+		Bottom of box is below bottom of clip target -> Change heighth to (the top of the clip target + the heighth of the clip target)
+		~~~~
+		Horizontal constraining:
+		~~~~
+		Left of box is to the left of left of clip target -> Move to left of clip target
+		Right of box is to the right of clip target -> Change width to (the left of the clip target + the width of the clip target)
+		Width of clip target minus the difference between left of clip target and left of box
+		*/
+		if(this.vconstrain==true) {
+			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
+				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
+			}
+			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height)) {
+				tComputedHeighth = $(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height;
+			}
+		}
+		if(this.hconstrain==true) {
+			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
+				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
+			}
+			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width)) {
+				tComputedWidth = $(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width;
+			}
+		}
+		//Previous implementation
+		/*
 		if(this.vconstrain == true) {
 			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top) + $(getAnchor(this.hconattach)).height) {
 				tComputedHeighth = $(getAnchor(this.hconattach)).height;
@@ -200,7 +231,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 				computedHpa = (tComputedHpos - tComputedHpa)+"px";
 				$(this.anchor).css('width',computedWidth);
 			}
-		}
+		}*/
 		$(this.anchor).css('top',computedVpa);
 		$(this.anchor).css('left',computedHpa);
 		//console.log("Set vpos: "+this.vpos);
