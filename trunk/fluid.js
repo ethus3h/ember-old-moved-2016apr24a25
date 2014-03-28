@@ -46,7 +46,7 @@ function RecomputeMetrics() {
 
 
 
-function FluidBox(contents,background,blur,container,vpanchor,vpattach,vpattunit,vpos,vposunit,vconattach,vconstrain,hpanchor,hpattach,hpattunit,
+function FluidBox(contents,background,opacity,blur,container,vpanchor,vpattach,vpattunit,vpos,vposunit,vconattach,vconstrain,hpanchor,hpattach,hpattunit,
 hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	AllBoxes[AllBoxes.length+1] = this;
 	console.debug(AllBoxes);
@@ -54,6 +54,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	contents: HTML contents of the box. Should be the contents of a <svg> tag. This will be displayed on top of the bgcolor.
 	background: Background. Can be any CSS background
 	blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
+	opacity: CSS opacity value
 	container: ID of the container box into which this box should be inserted. ID 0 is the browser window.
 	vpanchor: ID of the box to which this box's vertical postion should be relative. ID 0 is the browser window.
 	vpattach: The vertical position at which to attach this box to the anchor box.
@@ -81,6 +82,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	*/
 	this.contents = contents;
 	this.background = background;
+	this.opacity = opacity;
 	this.blur = blur;
 	this.container = container;
 	this.vpanchor = vpanchor;
@@ -111,7 +113,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	this.group = group;
 	this.zindex = zindex;
 	console.log("Box instantiating. Contents = "+this.contents+", background = "+this.background
-	+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpattach = "+this.vpattach+", vpattunit = "+this.vpattunit+", vpos = "+this.vpos
+	+", opacity = "+this.opacity+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpattach = "+this.vpattach+", vpattunit = "+this.vpattunit+", vpos = "+this.vpos
 	+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpattach = "+this.hpattach+", hpattunit = "+this.hpattunit+", hpos = "+this.hpos
 	+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
 	+", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
@@ -122,6 +124,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
 	$(this.anchor).css('background',this.background);
+	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
 	this.compute = function() {
@@ -144,7 +147,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 		//Calculate the vpos
 		computedVpos = this.vpos+this.vposunit;
 		if(this.vposunit == '%') {
-			console.log("vpanchor top: "+$(getAnchor(this.vpanchor)).position().top);
+			console.log("vpanchor "+getAnchor(this.vpanchor)+" top: "+$(getAnchor(this.vpanchor)).position().top);
 			console.log("vpanchor heighth: " + $(getAnchor(this.vpanchor)).height());
 			tComputedVpos = ($(getAnchor(this.vpanchor)).position().top + ($(getAnchor(this.vpanchor)).height() * (this.vpos / 100)));
 			computedVpos = tComputedVpos+'px';
@@ -207,6 +210,8 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 		console.log("Set hpa: "+this.hpattach);
 		console.log("Partial hpa: "+tComputedHpa);
 		console.log("Computed hpa: "+computedHpa);
+		$(this.anchor).css('opacity',"0");
+		$(this.anchor).css('display',"block");
 	};
 	this.compute();
 	this.show = function(animation){
@@ -217,6 +222,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 			//console.log("Animation: none");
 			//console.debug($(this.anchor));
 			$(targetElement).css('display','block');
+			$(targetElement).css('opacity',this.opacity);
 			//console.debug($(this.anchor));
 		}
 		if(animation == "zoom") {
@@ -230,7 +236,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 			bodyWidth = $('body').width();
 			bodyHeighth = $('body').height();
 			$(targetElement).animate({
-				opacity: 1,
+				opacity: this.opacity,
 				left: computedHpa,
 				top: computedVpa,
 				width: tComputedWidth+"px",
@@ -247,7 +253,7 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 			$(targetElement).css('opacity','0');
 			$(targetElement).show();
 			$(targetElement).animate({
-				opacity: 1,
+				opacity: this.opacity,
 			}, 250, "linear");
 			//console.debug($(this.anchor));
 			//$(targetElement).css('display','block');
@@ -262,11 +268,11 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	};
 }
 function LoadingScreen(container) {
-	var LoadingBg = new FluidBox("","#b7b0b0",0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",null,false,0,100,"%",0,100,"%",null,null,null);
+	var LoadingBg = new FluidBox("","#b7b0b0",0,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",null,false,0,100,"%",0,100,"%",null,null,null);
 	console.log("LoadingBg id = "+LoadingBg.anchor);
-	var LoadingBox = new FluidBox("", "rgba(255,0,0,1)",0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",null,false,LoadingBg.id,50,"%",50,"%",null,false,0,10,"%",0,110,"relative",null,null,null);
+	var LoadingBox = new FluidBox("", "rgba(255,0,0,1)",0,0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",null,false,LoadingBg.id,50,"%",50,"%",null,false,0,10,"%",0,110,"relative",null,null,null);
 	console.log("LoadingBox id = "+LoadingBox.anchor);
-	var LoadingSpinner = new FluidBox("", "rgba(255,255,0,1)",0,LoadingBox.id,LoadingBox.id,0,"%",110,"%",null,false,LoadingBox.id,0,"%",100,"%",null,false,LoadingBox.id,10,"%",LoadingBox.id,100,"relative",null,null,null);
+	var LoadingSpinner = new FluidBox("", "rgba(255,255,0,1)",0,0,LoadingBox.id,LoadingBox.id,0,"%",0,"%",null,false,LoadingBox.id,0,"%",0,"%",null,false,LoadingBox.id,100,"%",LoadingBox.id,100,"relative",null,null,null);
 	console.log("LoadingSpinner id = "+LoadingSpinner.anchor);
 	LoadingSpinner.show("none"); 
 	LoadingBox.show("none"); 
