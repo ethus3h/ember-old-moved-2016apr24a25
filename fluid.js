@@ -145,14 +145,14 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 		computedVpos = this.vpos+this.vposunit;
 		if(this.vposunit == '%') {
 			console.log("vpanchor top: "+$(getAnchor(this.vpanchor)).position().top);
-			tComputedVpos = ($(getAnchor((this.vpanchor)).position().top + $(getAnchor(this.vpanchor)).height()) * (this.vpos / 100));
+			tComputedVpos = ($(getAnchor(this.vpanchor)).position().top + ($(getAnchor(this.vpanchor)).height() * (this.vpos / 100)));
 			computedVpos = tComputedVpos+'px';
 		}
 		//Calculate the hpos
 		computedHpos = this.hpos+this.hposunit;
 		if(this.hposunit == '%') {
 			console.log("hpanchor top: "+$(getAnchor(this.hpanchor)).position().top);
-			tComputedHpos = ($(getAnchor(this.hpanchor)).position().left + ($(getAnchor(this.hpanchor)).width()) * (this.hpos / 100));
+			tComputedHpos = ($(getAnchor(this.hpanchor)).position().left + ($(getAnchor(this.hpanchor)).width() * (this.hpos / 100)));
 			computedHpos = tComputedHpos+'px';
 		}
 		$(this.anchor).css('height',computedHeighth);
