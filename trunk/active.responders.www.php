@@ -78,7 +78,7 @@ function ember()
 {
 
     $main = new FluidActive('Ember');
-	$main->write(file_get_contents("ember.js"));
+	$main->write(file_get_contents("ember.fluidScriptedUI"));
     $main->close();
 
 }
