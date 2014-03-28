@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.911, 27 March 2014.
+#Futuramerlin Active Scripting Library. Version 0.911, 27 March 2014 and 28 March 2014 a.mn..
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #

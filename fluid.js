@@ -15,6 +15,7 @@ function getAnchor(id)
 	if(id==0) {
 		return "body";
 	}
+	console.log("ID " + id + " requested");
 	return "#FluidBox"+id;
 }
 function showGroup(group) {
@@ -32,15 +33,21 @@ function Group(name) {
 var AllBoxes = new Array();
 
 function RecomputeMetrics() {
+	console.log("Recomputing metrics");
+	console.debug(AllBoxes);
 	for (var i = 1; i < AllBoxes.length; i = i + 1 ) {
-		AllBoxes[i].compute();
+		if(AllBoxes[i]!=undefined) {
+			console.log("Recomputing metrics for: ");
+			console.debug(AllBoxes[i]);
+			AllBoxes[i].compute();
+		}
 	}
 };
 
 
 
-function FluidBox(contents,background,blur,container,vpanchor,vpattach,vpattunit,vpos,vposunit,hpanchor,hpattach,hpattunit,
-hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
+function FluidBox(contents,background,blur,container,vpanchor,vpattach,vpattunit,vpos,vposunit,vconattach,vconstrain,hpanchor,hpattach,hpattunit,
+hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	AllBoxes[AllBoxes.length+1] = this;
 	console.debug(AllBoxes);
 	/* ~Explanations of parameters~
@@ -53,11 +60,15 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	vpattunit: The units of vpattach. Only % or px allowed.
 	vpos: Vertical position of this box relative to the vpanchor box.
 	vposunit: Units (%, or possibly rem?) of vpos
+	vconattach: The box to constrain this box's vertical size to.
+	vconstrain: Whether to keep the box's vertical size within the box specified in vconattach.
 	hpanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
 	hpattach: The horizontal position at which to attach this box to the anchor box.
 	hpattunit: The units of hpattach. Only % or px allowed.
 	hpos: Vertical position of this box relative to the hpanchor box.
 	hposunit: Units (%, or possibly rem?) of hpos
+	hconattach: The box to constrain this box's horizontal size to.
+	hconstrain: Whether to keep the box's horizontal size within the box specified in hconattach.
 	wanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
 	width: Width of this box relative to the wanchor box.
 	wunit: Units (%, or possibly rem?) of width
@@ -79,6 +90,8 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	console.log("Sent vpos: "+vpos);
 	console.log("New vpos: "+this.vpos);
 	this.vposunit = vposunit;
+	this.vconattach = vconattach;
+	this.vconstrain = vconstrain;
 	this.hpanchor = hpanchor;
 	this.hpattach = hpattach;
 	this.hpattunit = hpattunit;
@@ -86,6 +99,8 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	console.log("Sent hpos: "+hpos);
 	console.log("New hpos: "+this.hpos);
 	this.hposunit = hposunit;
+	this.hconattach = hconattach;
+	this.hconstrain = hconstrain;
 	this.wanchor = wanchor;
 	this.width = width;
 	this.wunit = wunit;
@@ -126,36 +141,74 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 			tComputedHeighth = tComputedWidth * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+'px';
 		}
+		if(this.vpanchor == 0) {
+			vtopanchorpos = 0;
+			vleftanchorpos = 0;
+		}
+		else {
+			vtopanchorpos = $(getAnchor(this.vpanchor)).position().top;
+			vleftanchorpos = $(getAnchor(this.vpanchor)).position().left;
+		}
 		//Calculate the vpos
 		computedVpos = this.vpos+this.vposunit;
 		if(this.vposunit == '%') {
-			tComputedVpos = ($(getAnchor(this.vpanchor)).position().top + $(getAnchor(this.vpanchor)).height()) * (this.vpos / 100);
+			console.log("vpanchor top: "+vtopanchorpos);
+			tComputedVpos = (vtopanchorpos + $(getAnchor(this.vpanchor)).height()) * (this.vpos / 100));
 			computedVpos = tComputedVpos+'px';
+		}
+		if(this.hpanchor == 0) {
+			htopanchorpos = 0;
+			hleftanchorpos = 0;
+		}
+		else {
+			htopanchorpos = $(getAnchor(this.hpanchor)).position().top;
+			hleftanchorpos = $(getAnchor(this.hpanchor)).position().left;
 		}
 		//Calculate the hpos
 		computedHpos = this.hpos+this.hposunit;
 		if(this.hposunit == '%') {
-			tComputedHpos = ($(getAnchor(this.hpanchor)).position().left + $(getAnchor(this.hpanchor)).width()) * (this.hpos / 100);
+			console.log("hpanchor left: "+hleftanchorpos);
+			tComputedHpos = (hleftanchorpos + ($(getAnchor(this.hpanchor)).width()) * (this.hpos / 100));
 			computedHpos = tComputedHpos+'px';
 		}
 		$(this.anchor).css('height',computedHeighth);
 		$(this.anchor).css('width',computedWidth);
-		//$(this.anchor).css('top',computedVpos);
-		//$(this.anchor).css('left',computedHpos);
 		//Calculate the vertical attach point
 		computedVpa = this.vpattach;
 		if(this.vpattunit == '%') {
-			tComputedVpa = $(this.anchor).height() * (this.vpattach / 100);
-			computedVpa = tComputedVpos - tComputedVpa;
+			tComputedVpa = $(this.vpanchor).height() * (this.vpattach / 100);
+			computedVpa = (tComputedVpos - tComputedVpa)+"px";
 		}
 		//Calculate the horizontal attach point
 		computedHpa = this.hpattach;
 		if(this.hpattunit == '%') {
-			tComputedHpa = $(this.anchor).width() * (this.hpattach / 100);
-			computedHpa = tComputedHpos - tComputedHpa;
+			tComputedHpa = $(this.hpanchor).width() * (this.hpattach / 100);
+			computedHpa = (tComputedHpos - tComputedHpa)+"px";
 		}
-		$(this.anchor).css('top',computedVpa+"px");
-		$(this.anchor).css('left',computedHpa+"px");
+		if(this.vconstrain == true) {
+			if((tComputedVpa + tComputedHeighth) > ($(this.vconattach).position().top) + $(this.hconattach).height) {
+				tComputedHeighth = $(this.hconattach).height;
+				computedHeighth = tComputedHeighth+'px';
+				if((tComputedVpa < $(this.vconattach).position().top) | (tComputedVpa > ($(this.vconattach).position().top + $(this.vconattach).heigth()))) {
+					tComputedVpa = $(this.vconattach).position().top;
+				}
+				computedVpa = (tComputedVpos - tComputedVpa)+"px";
+				$(this.anchor).css('height',computedHeighth);
+			}
+		}
+		if(this.hconstrain == true) {
+			if((tComputedHpa + tComputedWidth) > ($(this.hconattach).position().left) + $(this.hconattach).width) {
+				tComputedWidth = $(this.hconattach).width;
+				computedWidth = tComputedWidth+'px';
+				if((tComputedHpa < $(this.hconattach).position().left) | (tComputedHpa > ($(this.hconattach).position().left + $(this.hconattach).width()))) {
+					tComputedHpa = $(this.hconattach).position().left;
+				}
+				computedHpa = (tComputedHpos - tComputedHpa)+"px";
+				$(this.anchor).css('width',computedWidth);
+			}
+		}
+		$(this.anchor).css('top',computedVpa);
+		$(this.anchor).css('left',computedHpa);
 		console.log("Set vpos: "+this.vpos);
 		console.log("Partial vpos: "+tComputedVpos);
 		console.log("Computed vpos: "+computedVpos);
@@ -165,10 +218,10 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 		console.log("Set vpa: "+this.vpattach);
 		console.log("Partial vpa: "+tComputedVpa);
 		console.log("Computed vpa: "+computedVpa);
-		console.log("Set vpa: "+this.hpattach);
-		console.log("Partial vpa: "+tComputedHpa);
-		console.log("Computed vpa: "+computedHpa);
-	}
+		console.log("Set hpa: "+this.hpattach);
+		console.log("Partial hpa: "+tComputedHpa);
+		console.log("Computed hpa: "+computedHpa);
+	};
 	this.compute();
 	this.show = function(animation){
 		//console.log("Displaying box "+this.id+"; ID #"+getId());
@@ -182,20 +235,20 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 		}
 		if(animation == "zoom") {
 			//console.log("Animation: zoom");
-			$(targetElement).css('top',($('body').height()/4)+'px');
-			$(targetElement).css('left',($('body').width()/4)+'px');
-			$(targetElement).css('width',($('body').width()/2)+'px');
-			$(targetElement).css('height',($('body').height()/2)+'px');
+			$(targetElement).css('top',(tComputedHeighth/4)+'px');
+			$(targetElement).css('left',(tComputedWidth/4)+'px');
+			$(targetElement).css('width',(tComputedWidth/2)+'px');
+			$(targetElement).css('height',(tComputedHeighth/2)+'px');
 			$(targetElement).css('opacity','0');
 			$(targetElement).show();
 			bodyWidth = $('body').width();
 			bodyHeighth = $('body').height();
 			$(targetElement).animate({
 				opacity: 1,
-				left: computedHpos,
-				top: computedVpos,
-				width: bodyWidth+"px",
-				height: bodyHeighth+"px"
+				left: computedHpa,
+				top: computedVpa,
+				width: tComputedWidth+"px",
+				height: tComputedHeighth+"px"
 			}, 500, "linear");
 			//console.debug($(this.anchor));
 			//$(targetElement).css('display','block');
@@ -223,14 +276,14 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	};
 }
 function LoadingScreen(container) {
-	var LoadingBg = new FluidBox("","#b7b0b0",0,0,0,0,"%",0,"%",0,0,"%",0,"%",0,100,"%",0,100,"%",0,null);
+	var LoadingBg = new FluidBox("","#b7b0b0",0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",null,false,0,100,"%",0,100,"%",null,null,null);
 	console.log("LoadingBg id = "+LoadingBg.anchor);
-	var LoadingBox = new FluidBox("</svg>Loading...", "rgba(0,0,0,0)",0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",LoadingBg.id,50,"%",50,"%",0,10,"%",0,110,"relative","loadingContainer",null);
+	var LoadingBox = new FluidBox("", "rgba(255,0,0,1)",0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",null,false,LoadingBg.id,50,"%",50,"%",null,false,0,10,"%",0,110,"relative",null,null,null);
 	console.log("LoadingBox id = "+LoadingBox.anchor);
-	var LoadingSpinner = new FluidBox("</svg>Spinner", "rgba(0,0,0,0)",0,LoadingBox.id,LoadingBox.id,0,"%",110,"%",LoadingBox.id,0,"%",100,"%",LoadingBox.id,10,"%",LoadingBox.id,100,"relative","loadingSpinner",null);
+	var LoadingSpinner = new FluidBox("", "rgba(255,255,0,1)",0,LoadingBox.id,LoadingBox.id,0,"%",110,"%",null,false,LoadingBox.id,0,"%",100,"%",null,false,LoadingBox.id,10,"%",LoadingBox.id,100,"relative",null,null,null);
 	console.log("LoadingSpinner id = "+LoadingSpinner.anchor);
 	LoadingSpinner.show("none"); 
 	LoadingBox.show("none"); 
-	LoadingBg.show("zoom"); 
+	LoadingBg.show("fade"); 
 }
 LoadingScreen(0);
