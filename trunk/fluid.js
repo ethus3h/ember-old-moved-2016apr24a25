@@ -106,9 +106,9 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;\"><svg>"+this.contents+"</svg></div>");
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
-	$("#"+getId()).css('background',this.background);
-	$("#"+getId()).css('background-size','cover');
-	$("#"+getId()).css('position','fixed');
+	$(this.anchor).css('background',this.background);
+	$(this.anchor).css('background-size','cover');
+	$(this.anchor).css('position','fixed');
 	this.compute = function() {
 		//Calculate the width
 		computedWidth = this.width+this.wunit;
@@ -138,24 +138,24 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 			tComputedHpos = ($(getAnchor(this.hpanchor)).position().left + $(getAnchor(this.hpanchor)).width()) * (this.hpos / 100);
 			computedHpos = tComputedHpos+'px';
 		}
-		$("#"+getId()).css('height',computedHeighth);
-		$("#"+getId()).css('width',computedWidth);
-		//$("#"+getId()).css('top',computedVpos);
-		//$("#"+getId()).css('left',computedHpos);
+		$(this.anchor).css('height',computedHeighth);
+		$(this.anchor).css('width',computedWidth);
+		//$(this.anchor).css('top',computedVpos);
+		//$(this.anchor).css('left',computedHpos);
 		//Calculate the vertical attach point
 		computedVpa = this.vpattach;
 		if(this.vpattunit == '%') {
-			tComputedVpa = $("#"+getId()).height() * (this.vpattach / 100);
+			tComputedVpa = $(this.anchor).height() * (this.vpattach / 100);
 			computedVpa = tComputedVpos - tComputedVpa;
 		}
 		//Calculate the horizontal attach point
 		computedHpa = this.hpattach;
 		if(this.hpattunit == '%') {
-			tComputedHpa = $("#"+getId()).width() * (this.hpattach / 100);
+			tComputedHpa = $(this.anchor).width() * (this.hpattach / 100);
 			computedHpa = tComputedHpos - tComputedHpa;
 		}
-		$("#"+getId()).css('top',computedVpa+"px");
-		$("#"+getId()).css('left',computedHpa+"px");
+		$(this.anchor).css('top',computedVpa+"px");
+		$(this.anchor).css('left',computedHpa+"px");
 		console.log("Set vpos: "+this.vpos);
 		console.log("Partial vpos: "+tComputedVpos);
 		console.log("Computed vpos: "+computedVpos);
@@ -173,12 +173,12 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 	this.show = function(animation){
 		//console.log("Displaying box "+this.id+"; ID #"+getId());
 		targetElement = this.anchor;
-		//console.debug($("#"+getId()));
+		//console.debug($(this.anchor));
 		if(animation == "none") {
 			//console.log("Animation: none");
-			//console.debug($("#"+getId()));
+			//console.debug($(this.anchor));
 			$(targetElement).css('display','block');
-			//console.debug($("#"+getId()));
+			//console.debug($(this.anchor));
 		}
 		if(animation == "zoom") {
 			//console.log("Animation: zoom");
@@ -197,9 +197,9 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 				width: bodyWidth+"px",
 				height: bodyHeighth+"px"
 			}, 500, "linear");
-			//console.debug($("#"+getId()));
+			//console.debug($(this.anchor));
 			//$(targetElement).css('display','block');
-			//console.debug($("#"+getId()));
+			//console.debug($(this.anchor));
 		}
 		if(animation == "fade") {
 			//console.log("Animation: fade");
@@ -210,22 +210,25 @@ hpos,hposunit,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex) {
 			$(targetElement).animate({
 				opacity: 1,
 			}, 250, "linear");
-			//console.debug($("#"+getId()));
+			//console.debug($(this.anchor));
 			//$(targetElement).css('display','block');
-			//console.debug($("#"+getId()));
+			//console.debug($(this.anchor));
 		}
-		//console.debug($("#"+getId()));
+		//console.debug($(this.anchor));
 		//$(targetElement).css('display','block');
 		//$(targetElement).show();
-		//console.debug($("#"+getId()));
+		//console.debug($(this.anchor));
 		//console.log(targetElement);
 
 	};
 }
 function LoadingScreen(container) {
 	var LoadingBg = new FluidBox("","#b7b0b0",0,0,0,0,"%",0,"%",0,0,"%",0,"%",0,100,"%",0,100,"%",0,null);
+	console.log("LoadingBg id = "+LoadingBg.anchor);
 	var LoadingBox = new FluidBox("</svg>Loading...", "rgba(0,0,0,0)",0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",LoadingBg.id,50,"%",50,"%",0,10,"%",0,110,"relative","loadingContainer",null);
-	var LoadingSpinner = new FluidBox("</svg>Spinner", "rgba(0,0,0,0)",0,LoadingBox.id,LoadingBox.id,0,"%",110,"%",LoadingBox.id,0,"%",100,"%",LoadingBg.id,10,"%",LoadingBg.id,100,"relative","loadingSpinner",null);
+	console.log("LoadingBox id = "+LoadingBox.anchor);
+	var LoadingSpinner = new FluidBox("</svg>Spinner", "rgba(0,0,0,0)",0,LoadingBox.id,LoadingBox.id,0,"%",110,"%",LoadingBox.id,0,"%",100,"%",LoadingBox.id,10,"%",LoadingBox.id,100,"relative","loadingSpinner",null);
+	console.log("LoadingSpinner id = "+LoadingSpinner.anchor);
 	LoadingSpinner.show("none"); 
 	LoadingBox.show("none"); 
 	LoadingBg.show("zoom"); 
