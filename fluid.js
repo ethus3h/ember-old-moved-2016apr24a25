@@ -141,34 +141,18 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 			tComputedHeighth = tComputedWidth * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+'px';
 		}
-		if(this.vpanchor == 0) {
-			vtopanchorpos = 0;
-			vleftanchorpos = 0;
-		}
-		else {
-			vtopanchorpos = $(getAnchor(this.vpanchor)).position().top;
-			vleftanchorpos = $(getAnchor(this.vpanchor)).position().left;
-		}
 		//Calculate the vpos
 		computedVpos = this.vpos+this.vposunit;
 		if(this.vposunit == '%') {
-			console.log("vpanchor top: "+vtopanchorpos);
-			tComputedVpos = (vtopanchorpos + ($(getAnchor(this.vpanchor).height()) * (this.vpos / 100)));
+			console.log("vpanchor top: "+$(getAnchor(this.vpanchor)).position().top);
+			tComputedVpos = ($(getAnchor((this.vpanchor)).position().top + $(getAnchor(this.vpanchor)).height()) * (this.vpos / 100));
 			computedVpos = tComputedVpos+'px';
-		}
-		if(this.hpanchor == 0) {
-			htopanchorpos = 0;
-			hleftanchorpos = 0;
-		}
-		else {
-			htopanchorpos = $(getAnchor(this.hpanchor)).position().top;
-			hleftanchorpos = $(getAnchor(this.hpanchor)).position().left;
 		}
 		//Calculate the hpos
 		computedHpos = this.hpos+this.hposunit;
 		if(this.hposunit == '%') {
-			console.log("hpanchor left: "+hleftanchorpos);
-			tComputedHpos = (hleftanchorpos + ($(getAnchor(this.hpanchor).width()) * (this.hpos / 100)));
+			console.log("hpanchor top: "+$(getAnchor(this.hpanchor)).position().top);
+			tComputedHpos = ($(getAnchor(this.hpanchor)).position().left + ($(getAnchor(this.hpanchor)).width()) * (this.hpos / 100));
 			computedHpos = tComputedHpos+'px';
 		}
 		$(this.anchor).css('height',computedHeighth);
