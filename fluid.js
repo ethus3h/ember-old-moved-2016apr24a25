@@ -268,11 +268,11 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	};
 }
 function LoadingScreen(container) {
-	var LoadingBg = new FluidBox("","#b7b0b0",0,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",null,false,0,100,"%",0,100,"%",null,null,null);
+	var LoadingBg = new FluidBox("","#b7b0b0",1,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",null,false,0,100,"%",0,100,"%",null,null,null);
 	console.log("LoadingBg id = "+LoadingBg.anchor);
-	var LoadingBox = new FluidBox("", "rgba(255,0,0,1)",0,0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",null,false,LoadingBg.id,50,"%",50,"%",null,false,0,10,"%",0,110,"relative",null,null,null);
+	var LoadingBox = new FluidBox("", "rgba(255,0,0,1)",1,0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",null,false,LoadingBg.id,50,"%",50,"%",null,false,0,10,"%",0,110,"relative",null,null,null);
 	console.log("LoadingBox id = "+LoadingBox.anchor);
-	var LoadingSpinner = new FluidBox("", "rgba(255,255,0,1)",0,0,LoadingBox.id,LoadingBox.id,0,"%",0,"%",null,false,LoadingBox.id,0,"%",0,"%",null,false,LoadingBox.id,100,"%",LoadingBox.id,100,"relative",null,null,null);
+	var LoadingSpinner = new FluidBox("", "rgba(255,255,0,1)",1,0,LoadingBox.id,LoadingBox.id,0,"%",0,"%",null,false,LoadingBox.id,0,"%",0,"%",null,false,LoadingBox.id,100,"%",LoadingBox.id,100,"relative",null,null,null);
 	console.log("LoadingSpinner id = "+LoadingSpinner.anchor);
 	LoadingSpinner.show("none"); 
 	LoadingBox.show("none"); 
