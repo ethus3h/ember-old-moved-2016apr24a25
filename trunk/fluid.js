@@ -162,13 +162,13 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 		//Calculate the vertical attach point
 		computedVpa = this.vpattach;
 		if(this.vpattunit == '%') {
-			tComputedVpa = $(this.vpanchor).height() * (this.vpattach / 100);
+			tComputedVpa = $(this.anchor).height() * (this.vpattach / 100);
 			computedVpa = (tComputedVpos - tComputedVpa)+"px";
 		}
 		//Calculate the horizontal attach point
 		computedHpa = this.hpattach;
 		if(this.hpattunit == '%') {
-			tComputedHpa = $(this.hpanchor).width() * (this.hpattach / 100);
+			tComputedHpa = $(this.anchor).width() * (this.hpattach / 100);
 			computedHpa = (tComputedHpos - tComputedHpa)+"px";
 		}
 		if(this.vconstrain == true) {
