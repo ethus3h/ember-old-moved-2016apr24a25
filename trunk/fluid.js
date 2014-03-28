@@ -1,87 +1,4 @@
 /* JavaScript code for Fluid//Active. */
-
-/* Args function by theshock, from https://github.com/theshock/args-js */
-var Args = new function () {
-
-	var slice = [].slice;
-	
-	var check = function (object) {
-		return typeof object !== 'undefined';
-	};
-	
-	var countRequired = function (values) {
-		for (var c = 0, i = values.length; i--;) {
-			if (values[i] === required) c++;
-		}
-		return c;
-	};
-
-	var Args = function (args) {
-		if (this instanceof Args) {
-			this.args = args;
-		} else return new Args(args);
-	};
-	Args.prototype = {
-		allRequired: function () {
-			var a = this.args;
-			if (a.length != a.callee.length) {
-				throw new TypeError(a.callee.length + ' args required, ' + a.length + ' given');
-			}
-			return this;
-		},
-		defaults: function () {
-			var values = arguments,
-			    args   = this.args,
-			    a      = args.length,
-			    v      = values.length,
-			    rCount = countRequired(values),
-			    params = slice.call(args, 0);
-			if (a < rCount) throw new TypeError(rCount + ' args required, ' + a + ' given');
-			
-			for (var iV = 0, iA = 0; iV < v; iV++) {
-				if (a > rCount) {
-					args[iV] = check(params[iA]) ? params[iA] : values[iV];
-					a--; iA++;
-				} else if (values[iV] === required) {
-					args[iV] = params[iA];
-					rCount--;
-					a--; iA++;
-				} else {
-					args[iV] = values[iV];
-				}
-			}
-			
-			args.length = values.length;
-			
-			return this;
-		},
-		cast: function () {
-			var types = arguments, a = this.args, i = a.length;
-			while (i--) {
-				if (check(a[i]) && check(types[i])) {
-					a[i] = types[i](a[i]);
-				}
-			}
-			
-			return this;
-		},
-		hinting: function () {
-			var types = arguments, a = this.args, i = a.length;
-			while (i--) {
-				if (check(types[i])) {
-					if (!a[i] || !(a[i] instanceof types[i])) {
-						throw new TypeError('Wrong type of ' + (typeof a[i]) + ' ' + a[i] + '. Should be instance of ' + types[i]);
-					}
-				}
-			}
-			return this;
-		}
-	};
-	
-	var required = Args.required = { toString: function () { return '[object Required]'; }};
-	return Args;
-};
-
 globalIdsCounter = 1;
 function newId()
 {
@@ -127,118 +44,18 @@ function RecomputeMetrics() {
 	}
 };
 
-function BoxCfg(contents,background,opacity,blur,container,vpanchor,vpattach,vpattunit,vpos,vposunit,vconattach,vconstrain,hpanchor,hpattach,hpattunit,
-hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex,css) {
-	this.contents = contents;
-	this.background = background;
-	this.opacity = opacity;
-	this.blur = blur;
-	this.container = container;
-	this.vpanchor = vpanchor;
-	this.vpattach = vpattach;
-	this.vpattunit = vpattunit;
-	this.vpos = vpos;
-	this.vposunit = vposunit;
-	this.vconattach = vconattach;
-	this.vconstrain = vconstrain;
-	this.hpanchor = hpanchor;
-	this.hpattach = hpattach;
-	this.hpattunit = hpattunit;
-	this.hpos = hpos;
-	this.hposunit = hposunit;
-	this.hconattach = hconattach;
-	this.hconstrain = hconstrain;
-	this.wanchor = wanchor;
-	this.width = width;
-	this.wunit = wunit;
-	this.hanchor = hanchor;
-	this.heighth = heighth;
-	this.hunit = hunit;
-	this.crop = crop;
-	this.group = group;
-	this.zindex = zindex;
-	this.css = css;
-}
 
 //TODO: Constrained boxes currently don't work.
 //TODO: blur, crop, and zindex are unimplemented.
-function FluidBox() {
-	var args = Args([
-		{contents: Args.STRING | Args.Optional,
-			_default: ""},
-		{background: Args.STRING    | Args.Optional,
-			_default: "rgba(0,0,0,0)"},
-		{opacity: Args.INT    | Args.Optional,
-			_default: 1},
-		{blur: Args.INT    | Args.Optional,
-			_default: 0},
-		{container: Args.INT    | Args.Optional,
-			_default: 0},
-		{vpanchor: Args.INT    | Args.Optional,
-			_default: 0},
-		{vpattach: Args.INT    | Args.Optional,
-			_default: 0},
-		{vpattunit: Args.STRING    | Args.Optional,
-			_default: "%"},
-		{vpos: Args.INT    | Args.Optional,
-			_default: 0},
-		{vposunit: Args.STRING    | Args.Optional,
-			_default: "%"},
-		{vconattach: Args.INT    | Args.Optional,
-			_default: 0},
-		{vconstrain: Args.BOOL    | Args.Optional,
-			_default: true},
-		{hpanchor: Args.INT    | Args.Optional,
-			_default: 0},
-		{hpattach: Args.INT    | Args.Optional,
-			_default: 0},
-		{hpattunit: Args.STRING    | Args.Optional,
-			_default: "%"},
-		{hpos: Args.INT    | Args.Optional,
-			_default: 0},
-		{hposunit: Args.STRING    | Args.Optional,
-			_default: "%"},
-		{hconattach: Args.INT    | Args.Optional,
-			_default: 0},
-		{hconstrain: Args.BOOL    | Args.Optional,
-			_default: true},
-		{wanchor: Args.INT    | Args.Optional,
-			_default: 0},
-		{width: Args.INT    | Args.Optional,
-			_default: 100},
-		{wunit: Args.STRING    | Args.Optional,
-			_default: "%"},
-		{hanchor: Args.INT    | Args.Optional,
-			_default: 0},
-		{heighth: Args.INT    | Args.Optional,
-			_default: 100},
-		{hunit: Args.STRING    | Args.Optional,
-			_default: "%"},
-		{crop: Args.INT    | Args.Optional,
-			_default: 0},
-		{group: Args.STRING    | Args.Optional,
-			_default: ""},
-		{zindex: Args.INT    | Args.Optional,
-			_default: 0},
-		{css: Args.STRING    | Args.Optional,
-			_default: ""},
-				], arguments);
-
-/* Usage:
-	exampleBox = new FluidBox({contents: "", background: "rgba(0,0,0,0)", opacity: 1, blur: 0,
-		container: 0, vpanchor: 0, vpattach: 0, vpattunit: "%", vpos: 0, vposunit: "%",
-		vconattach: 0, vconstrain: true, hpanchor: 0, hpattach: 0, hpattunit: "%",
-		hpos: 0, hposunit: "%", hconattach: 0, hconstrain: true, wanchor: 0, width: 100,
-		wunit: "%", hanchor: 0, heighth: 100, hunit: "%", crop: 0, group: "", zindex: 0,
-		css: ""});
-		*/
+function FluidBox(contents,background,opacity,blur,container,vpanchor,vpattach,vpattunit,vpos,vposunit,vconattach,vconstrain,hpanchor,hpattach,hpattunit,
+hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex,css) {
 	AllBoxes[AllBoxes.length+1] = this;
 	//console.debug(AllBoxes);
 	/* ~Explanations of parameters~
 	contents: HTML contents of the box. Generally a <svg> tag. This will be displayed on top of the bgcolor.
 	background: Background. Can be any CSS background
-	opacity: CSS opacity value
 	blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
+	opacity: CSS opacity value
 	container: ID of the container box into which this box should be inserted. ID 0 is the browser window.
 	vpanchor: ID of the box to which this box's vertical postion should be relative. ID 0 is the browser window.
 	vpattach: The vertical position at which to attach this box to the anchor box.
@@ -265,7 +82,7 @@ function FluidBox() {
 	zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
 	css: Any other arbitrary CSS to specify for this box
 	*/
-	/* this.contents = contents;
+	this.contents = contents;
 	this.background = background;
 	this.opacity = opacity;
 	this.blur = blur;
@@ -297,11 +114,11 @@ function FluidBox() {
 	this.crop = crop;
 	this.group = group;
 	this.zindex = zindex;
-	this.css = css; */
+	this.css = css;
 	console.log("Box instantiating. Contents = "+this.contents+", background = "+this.background
 	+", opacity = "+this.opacity+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpattach = "+this.vpattach+", vpattunit = "+this.vpattunit+", vpos = "+this.vpos
-	+", vposunit = "+this.vposunit+", vconattach = "+this.vconattach+", vconstrain = "+this.vconstrain+", hpanchor = "+this.hpanchor+", hpattach = "+this.hpattach+", hpattunit = "+this.hpattunit+", hpos = "+this.hpos
-	+", hposunit = "+this.hposunit+", hconattach = "+this.hconattach+", hconstrain = "+this.hconstrain+", wanchor = "+this.wanchor+", width = "+this.width
+	+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpattach = "+this.hpattach+", hpattunit = "+this.hpattunit+", hpos = "+this.hpos
+	+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
 	+", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
 	+", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex+", css = "+this.css);
 	/* //console.log(getAnchor(this.vpanchor)); */
@@ -315,16 +132,13 @@ function FluidBox() {
 	$(this.anchor).css('position','fixed');
 	this.compute = function() {
 		//Calculate the width
-		tComputedWidth = this.width+this.wunit;
-		computedWidth=tComputedWidth+"px";
+		computedWidth = this.width+this.wunit;
 		if(this.wunit == '%') {
 			tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
 			computedWidth = tComputedWidth+'px';
 		}
 		//Calculate the heighth
-		tComputedHeighth = this.heighth+this.hunit;
-		computedHeighth = tComputedHeighth+"px";
-
+		computedHeighth = this.heighth+this.hunit;
 		if(this.hunit == '%') {
 			tComputedHeighth = $(getAnchor(this.hanchor)).height() * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+'px';
@@ -352,17 +166,13 @@ function FluidBox() {
 		$(this.anchor).css('height',computedHeighth);
 		$(this.anchor).css('width',computedWidth);
 		//Calculate the vertical attach point
-		tComputedVpa = this.vpattach;
-		computedVpa=tComputedVpa+"px";
+		computedVpa = this.vpattach;
 		if(this.vpattunit == '%') {
 			tComputedVpa = $(this.anchor).height() * (this.vpattach / 100);
 			computedVpa = (tComputedVpos - tComputedVpa)+"px";
 		}
-		console.log(tComputedVpa);
-
 		//Calculate the horizontal attach point
-		tComputedHpa = this.hpattach;
-		computedHpa=tComputedHpa+"px";
+		computedHpa = this.hpattach;
 		if(this.hpattunit == '%') {
 			tComputedHpa = $(this.anchor).width() * (this.hpattach / 100);
 			computedHpa = (tComputedHpos - tComputedHpa)+"px";
@@ -381,27 +191,21 @@ function FluidBox() {
 		Right of box is to the right of clip target -> Change width to (width of clip target - (left of box - left of clip target))
 		*/
 		if(this.vconstrain==true) {
-			console.log("vconstrain enabled");
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
-				console.log("Upper constraint condition failed: "+tComputedVpa+" is less than "+$(getAnchor(this.vconattach)).position().top);
 				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
 				console.log("Setting vpos of "+this.anchor+" to "+tComputedVpa);
 			}
 			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height)) {
-				console.log("Lower constraint condition failed: "+(tComputedVpa + tComputedHeighth)+" is greater than "+($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height));
 				tComputedHeighth = $(getAnchor(this.vconattach)).height - (tComputedVpa - $(getAnchor(this.vconattach)).position().top);
 				console.log("Setting heighth of "+this.anchor+" to "+tComputedHeighth);
 			}
 		}
 		if(this.hconstrain==true) {
-			console.log("hconstrain enabled");
 			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
-				console.log("Left constraint condition failed: "+tComputedHpa+" is less than "+$(getAnchor(this.hconattach)).position().left);
 				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
 				console.log("Setting hpos of "+this.anchor+" to "+tComputedHpa);
 			}
 			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width)) {
-				console.log("Right constraint condition failed: "+(tComputedHpa + tComputedWidth)+" is greater than "+($(getAnchor(this.hconattach)).position().width + $(getAnchor(this.hconattach)).width));
 				tComputedWidth = $(getAnchor(this.hconattach)).width - (tComputedHpa - $(getAnchor(this.hconattach)).position().left);
 				console.log("Setting width of "+this.anchor+" to "+tComputedWidth);
 			}
@@ -510,17 +314,11 @@ function FluidBox() {
 	};
 }
 function LoadingScreen(container) {
-	//var LoadingBg = new FluidBox("","#b7b0b0",1,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",0,true,0,100,"%",0,100,"%",null,null,null,null);
-	LoadingBg = new FluidBox({contents: "", background: "#b7b0b0", opacity: 1, blur: 0,
-		container: 0, vpanchor: 0, vpattach: 0, vpattunit: "%", vpos: 0, vposunit: "%",
-		vconattach: 0, vconstrain: true, hpanchor: 0, hpattach: 0, hpattunit: "%",
-		hpos: 0, hposunit: "%", hconattach: 0, hconstrain: true, wanchor: 0, width: 100,
-		wunit: "%", hanchor: 0, heighth: 100, hunit: "%", crop: 0, group: null, zindex: null,
-		css: ""});
+	var LoadingBg = new FluidBox("","#b7b0b0",1,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",0,true,0,100,"%",0,100,"%",null,null,null,null);
 	////console.log("LoadingBg id = "+LoadingBg.anchor);
-	var LoadingBox = new FluidBox("Loading…", "rgba(0,0,0,0)",1,0,LoadingBg.id,LoadingBg.id,50,"%",25,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"rem",0,3,"rem",null,"loadingMessageContainer",null,"font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column");
+	var LoadingBox = new FluidBox("Loadingâ€¦", "rgba(0,0,0,0)",1,0,LoadingBg.id,LoadingBg.id,50,"%",25,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"rem",0,3,"rem",null,"loadingMessageContainer",null,"font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column");
 	////console.log("LoadingBox id = "+LoadingBox.anchor);
-	var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite");
+	var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite");
 	////console.log("LoadingSpinner id = "+LoadingSpinner.anchor);
 	LoadingSpinner.show("none"); 
 	LoadingBox.show("none"); 
