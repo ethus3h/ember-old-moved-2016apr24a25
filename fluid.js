@@ -175,22 +175,23 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 			computedHpa = (tComputedHpos - tComputedHpa)+"px";
 		}
 		if(this.vconstrain == true) {
-			if((tComputedVpa + tComputedHeighth) > ($(this.vconattach).position().top) + $(this.hconattach).height) {
-				tComputedHeighth = $(this.hconattach).height;
+			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top) + $(getAnchor(this.hconattach)).height) {
+				tComputedHeighth = $(getAnchor(this.hconattach)).height;
 				computedHeighth = tComputedHeighth+'px';
-				if((tComputedVpa < $(this.vconattach).position().top) | (tComputedVpa > ($(this.vconattach).position().top + $(this.vconattach).heigth()))) {
-					tComputedVpa = $(this.vconattach).position().top;
+				if((tComputedVpa < $(getAnchor(this.vconattach)).position().top) | (tComputedVpa > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).heigth()))) {
+					tComputedVpa = $(getAnchor(this.vconattach)).position().top;
 				}
 				computedVpa = (tComputedVpos - tComputedVpa)+"px";
 				$(this.anchor).css('height',computedHeighth);
 			}
 		}
 		if(this.hconstrain == true) {
-			if((tComputedHpa + tComputedWidth) > ($(this.hconattach).position().left) + $(this.hconattach).width) {
-				tComputedWidth = $(this.hconattach).width;
+			//console.debug(getAnchor(this.hconattach));
+			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left) + $(getAnchor(this.hconattach)).width) {
+				tComputedWidth = $(getAnchor(this.hconattach)).width;
 				computedWidth = tComputedWidth+'px';
-				if((tComputedHpa < $(this.hconattach).position().left) | (tComputedHpa > ($(this.hconattach).position().left + $(this.hconattach).width()))) {
-					tComputedHpa = $(this.hconattach).position().left;
+				if((tComputedHpa < $(getAnchor(this.hconattach)).position().left) | (tComputedHpa > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width()))) {
+					tComputedHpa = $(getAnchor(this.hconattach)).position().left;
 				}
 				computedHpa = (tComputedHpos - tComputedHpa)+"px";
 				$(this.anchor).css('width',computedWidth);
@@ -268,11 +269,11 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	};
 }
 function LoadingScreen(container) {
-	var LoadingBg = new FluidBox("","#b7b0b0",1,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",null,false,0,100,"%",0,100,"%",null,null,null);
+	var LoadingBg = new FluidBox("","#b7b0b0",1,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",0,true,0,100,"%",0,100,"%",null,null,null);
 	////console.log("LoadingBg id = "+LoadingBg.anchor);
-	var LoadingBox = new FluidBox("", "#b7b0b0",1,0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",null,false,LoadingBg.id,50,"%",50,"%",null,false,0,10,"%",0,110,"relative",null,null,null);
+	var LoadingBox = new FluidBox("", "#b7b0b0",1,0,LoadingBg.id,LoadingBg.id,50,"%",50,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"%",0,110,"relative",null,null,null);
 	////console.log("LoadingBox id = "+LoadingBox.anchor);
-	var LoadingSpinner = new FluidBox("", "#b7b0b0",1,0,LoadingBox.id,LoadingBg.id,50,"%",60,"%",null,false,LoadingBox.id,0,"%",0,"%",null,false,LoadingBox.id,100,"%",LoadingBox.id,100,"relative",null,null,null);
+	var LoadingSpinner = new FluidBox("", "#b7b0b0",1,0,LoadingBox.id,LoadingBg.id,50,"%",60,"%",0,true,LoadingBox.id,0,"%",0,"%",null,false,LoadingBox.id,100,"%",LoadingBox.id,100,"relative",null,null,null);
 	////console.log("LoadingSpinner id = "+LoadingSpinner.anchor);
 	LoadingSpinner.show("none"); 
 	LoadingBox.show("none"); 
