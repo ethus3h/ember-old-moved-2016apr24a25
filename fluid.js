@@ -193,19 +193,28 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 		if(this.vconstrain==true) {
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
 				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
+				console.log("Setting vpos of "+this.anchor+" to "+tComputedVpa);
 			}
 			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height)) {
 				tComputedHeighth = $(getAnchor(this.vconattach)).height - (tComputedVpa - $(getAnchor(this.vconattach)).position().top);
+				console.log("Setting heighth of "+this.anchor+" to "+tComputedHeighth);
 			}
 		}
 		if(this.hconstrain==true) {
 			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
 				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
+				console.log("Setting hpos of "+this.anchor+" to "+tComputedHpa);
 			}
 			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width)) {
 				tComputedWidth = $(getAnchor(this.hconattach)).width - (tComputedHpa - $(getAnchor(this.hconattach)).position().left);
+				console.log("Setting width of "+this.anchor+" to "+tComputedWidth);
 			}
 		}
+		computedVpa = tComputedVpa+"px";
+		computedHeighth = tComputedHeighth+"px";
+		computedHpa = tComputedHpa+"px";
+		computedWidth = tComputedWidth+"px";
+		
 		//Previous implementation
 		/*
 		if(this.vconstrain == true) {
@@ -233,6 +242,8 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 		}*/
 		$(this.anchor).css('top',computedVpa);
 		$(this.anchor).css('left',computedHpa);
+		$(this.anchor).css('height',computedHeighth);
+		$(this.anchor).css('width',computedWidth);
 		//console.log("Set vpos: "+this.vpos);
 		//console.log("Partial vpos: "+tComputedVpos);
 		//console.log("Computed vpos: "+computedVpos);
