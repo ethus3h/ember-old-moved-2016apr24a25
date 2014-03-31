@@ -214,7 +214,10 @@ function FluidBox(set) {
 		Left of box is to the left of left of clip target -> Move to left of clip target
 		Right of box is to the right of clip target -> Change width to (width of clip target - (left of box - left of clip target))
 		*/
+		console.debug(this.vconstrain);
+		console.debug(this.hconstrain);
 		if(this.vconstrain==true) {
+			console.log("vconstrain evaluated as true");
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
 				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
 				console.log("Setting vpos of "+this.anchor+" to "+tComputedVpa);
@@ -225,6 +228,7 @@ function FluidBox(set) {
 			}
 		}
 		if(this.hconstrain==true) {
+			console.log("hconstrain evaluated as true");
 			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
 				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
 				console.log("Setting hpos of "+this.anchor+" to "+tComputedHpa);
