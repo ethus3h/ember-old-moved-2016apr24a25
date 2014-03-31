@@ -383,6 +383,11 @@ function LoadingScreen(container) {
 	set["vpos"] = 50;
 	set["hpanchor"] = LoadingBg.id;
 	set["hpos"] = 50;
+	set["width"] = 10;
+	set["wunit"] = "rem";
+	set["heighth"] = 3;
+	set["hunit"] = "rem";
+	set["css"] = "font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column";
 	LoadingBox = new FluidBox(set);
 	////console.log("LoadingBg id = "+LoadingBg.anchor);
 	//var LoadingBox = new FluidBox("Loading…", "rgba(0,0,0,0)",1,0,LoadingBg.id,LoadingBg.id,50,"%",25,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"rem",0,3,"rem",null,"loadingMessageContainer",null,"font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column");
