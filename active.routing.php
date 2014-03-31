@@ -40,6 +40,9 @@ function runWints($wintNeeded)
 	if ($wintNeeded == 'ember') {
         ember();
     }
+    if ($wintNeeded == 'ember_dev') {
+        ember_dev();
+    }
 }
 
 // function logAdd($text){

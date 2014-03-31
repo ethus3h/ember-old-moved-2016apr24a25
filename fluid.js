@@ -115,17 +115,17 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	this.group = group;
 	this.zindex = zindex;
 	this.css = css;
-	console.log("Box instantiating. Contents = "+this.contents+", background = "+this.background
-	+", opacity = "+this.opacity+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpattach = "+this.vpattach+", vpattunit = "+this.vpattunit+", vpos = "+this.vpos
-	+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpattach = "+this.hpattach+", hpattunit = "+this.hpattunit+", hpos = "+this.hpos
-	+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
-	+", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
-	+", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex+", css = "+this.css);
 	/* //console.log(getAnchor(this.vpanchor)); */
 	/* $(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\"background:"+this.background+";height:"+this.heighth+this.hunit";width:"+this.width+this.wunit+";position:relative;left:"+this.hpos+";top:"+this.vpos+"\">"+"</div>"); */
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
+	console.log("Box " + this.anchor + "instantiating. Contents = "+this.contents+", background = "+this.background
+	+", opacity = "+this.opacity+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpattach = "+this.vpattach+", vpattunit = "+this.vpattunit+", vpos = "+this.vpos
+	+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpattach = "+this.hpattach+", hpattunit = "+this.hpattunit+", hpos = "+this.hpos
+	+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
+	+", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
+	+", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex+", css = "+this.css);
 	$(this.anchor).css('background',this.background);
 	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
