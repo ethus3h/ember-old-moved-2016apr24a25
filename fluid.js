@@ -47,9 +47,41 @@ function RecomputeMetrics() {
 
 //TODO: Constrained boxes currently don't work.
 //TODO: blur, crop, and zindex are unimplemented.
-function FluidBox(contents,background,opacity,blur,container,vpanchor,vpattach,vpattunit,vpos,vposunit,vconattach,vconstrain,hpanchor,hpattach,hpattunit,
-hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,crop,group,zindex,css) {
+function FluidBox(set) {
 	AllBoxes[AllBoxes.length+1] = this;
+	/* HOW TO CREATE A FLUIDBOX (options can be omitted if desired; default values shown):
+	var set = new Object();
+	set["contents"] = "";
+	set["background"] = "rgba(0,0,0,0)";
+	set["opacity"] = 1;
+	set["blur"] = 0;
+	set["container"] = 0;
+	set["vpanchor"] = 0;
+	set["vpattach"] = 0;
+	set["vpattunit"] = "%";
+	set["vpos"] = 0;
+	set["vposunit"] = "%";
+	set["vconattach"] = 0;
+	set["vconstrain"] = true;
+	set["hpanchor"] = 0;
+	set["hpattach"] = 0;
+	set["hpattunit"] = "%";
+	set["hpos"] = 0;
+	set["hposunit"] = "%";
+	set["hconattach"] = 0;
+	set["hconstrain"] = true;
+	set["wanchor"] = 0;
+	set["width"] = 100;
+	set["wunit"] = "%";
+	set["hanchor"] = 0;
+	set["heighth"] = 100;
+	set["hunit"] = "%";
+	set["crop"] = 0;
+	set["group"] = "";
+	set["zindex"] = undefined;
+	set["css"] = "";
+	NewFluidBox = new FluidBox(set); */
+	
 	//console.debug(AllBoxes);
 	/* ~Explanations of parameters~
 	contents: HTML contents of the box. Generally a <svg> tag. This will be displayed on top of the bgcolor.
@@ -82,45 +114,72 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
 	css: Any other arbitrary CSS to specify for this box
 	*/
-	this.contents = contents;
-	this.background = background;
-	this.opacity = opacity;
-	this.blur = blur;
-	this.container = container;
-	this.vpanchor = vpanchor;
-	this.vpattach = vpattach;
-	this.vpattunit = vpattunit;
-	this.vpos = vpos;
-	//console.log("Sent vpos: "+vpos);
-	//console.log("New vpos: "+this.vpos);
-	this.vposunit = vposunit;
-	this.vconattach = vconattach;
-	this.vconstrain = vconstrain;
-	this.hpanchor = hpanchor;
-	this.hpattach = hpattach;
-	this.hpattunit = hpattunit;
-	this.hpos = hpos;
-	//console.log("Sent hpos: "+hpos);
-	//console.log("New hpos: "+this.hpos);
-	this.hposunit = hposunit;
-	this.hconattach = hconattach;
-	this.hconstrain = hconstrain;
-	this.wanchor = wanchor;
-	this.width = width;
-	this.wunit = wunit;
-	this.hanchor = hanchor;
-	this.heighth = heighth;
-	this.hunit = hunit;
-	this.crop = crop;
-	this.group = group;
-	this.zindex = zindex;
-	this.css = css;
+	//Default values
+	this.contents = "";
+	this.background = "rgba(0,0,0,0)";
+	this.opacity = 1;
+	this.blur = 0;
+	this.container = 0;
+	this.vpanchor = 0;
+	this.vpattach = 0;
+	this.vpattunit = "%";
+	this.vpos = 0;
+	this.vposunit = "%";
+	this.vconattach = 0;
+	this.vconstrain = true;
+	this.hpanchor = 0;
+	this.hpattach = 0;
+	this.hpattunit = "%";
+	this.hpos = 0;
+	this.hposunit = "%";
+	this.hconattach = 0;
+	this.hconstrain = true;
+	this.wanchor = 0;
+	this.width = 100;
+	this.wunit = "%";
+	this.hanchor = 0;
+	this.heighth = 100;
+	this.hunit = "%";
+	this.crop = 0;
+	this.group = "";
+	this.zindex = undefined;
+	this.css = "";
+	//Override values if provided
+	if(typeof set["contents"] !== "undefined") { this.contents = set["contents"];}
+	if(typeof set["background"] !== "undefined") { this.background = set["background"];}
+	if(typeof set["opacity"] !== "undefined") { this.opacity = set["opacity"];}
+	if(typeof set["blur"] !== "undefined") { this.blur = set["blur"];}
+	if(typeof set["container"] !== "undefined") { this.container = set["container"];}
+	if(typeof set["vpanchor"] !== "undefined") { this.vpanchor = set["vpanchor"];}
+	if(typeof set["vpattach"] !== "undefined") { this.vpattach = set["vpattach"];}
+	if(typeof set["vpattunit"] !== "undefined") { this.vpattunit = set["vpattunit"];}
+	if(typeof set["vpos"] !== "undefined") { this.vpos = set["vpos"];}
+	if(typeof set["vposunit"] !== "undefined") { this.vposunit = set["vposunit"];}
+	if(typeof set["vconattach"] !== "undefined") { this.vconattach = set["vconattach"];}
+	if(typeof set["vconstrain"] !== "undefined") { this.vconstrain = set["vconstrain"];}
+	if(typeof set["hpanchor"] !== "undefined") { this.hpanchor = set["hpanchor"];}
+	if(typeof set["hpattach"] !== "undefined") { this.hpattach = set["hpattach"];}
+	if(typeof set["hpattunit"] !== "undefined") { this.hpattunit = set["hpattunit"];}
+	if(typeof set["hpos"] !== "undefined") { this.hpos = set["hpos"];}
+	if(typeof set["hposunit"] !== "undefined") { this.hposunit = set["hposunit"];}
+	if(typeof set["hconattach"] !== "undefined") { this.hconattach = set["hconattach"];}
+	if(typeof set["hconstrain"] !== "undefined") { this.hconstrain = set["hconstrain"];}
+	if(typeof set["wanchor"] !== "undefined") { this.wanchor = set["wanchor"];}
+	if(typeof set["width"] !== "undefined") { this.width = set["width"];}
+	if(typeof set["wunit"] !== "undefined") { this.wunit = set["wunit"];}
+	if(typeof set["hanchor"] !== "undefined") { this.hanchor = set["hanchor"];}
+	if(typeof set["heighth"] !== "undefined") { this.heighth = set["heighth"];}
+	if(typeof set["hunit"] !== "undefined") { this.hunit = set["hunit"];}
+	if(typeof set["crop"] !== "undefined") { this.crop = set["crop"];}
+	if(typeof set["group"] !== "undefined") { this.group = set["group"];}
+	if(typeof set["zindex"] !== "undefined") { this.zindex = set["zindex"];}
+	if(typeof set["css"] !== "undefined") { this.css = set["css"];}
 	/* //console.log(getAnchor(this.vpanchor)); */
 	/* $(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\"background:"+this.background+";height:"+this.heighth+this.hunit";width:"+this.width+this.wunit+";position:relative;left:"+this.hpos+";top:"+this.vpos+"\">"+"</div>"); */
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
-	console.log("Box " + this.anchor + "instantiating. Contents = "+this.contents+", background = "+this.background
+	console.log("Box " + this.anchor + " instantiating. Contents = "+this.contents+", background = "+this.background
 	+", opacity = "+this.opacity+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpattach = "+this.vpattach+", vpattunit = "+this.vpattunit+", vpos = "+this.vpos
 	+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpattach = "+this.hpattach+", hpattunit = "+this.hpattunit+", hpos = "+this.hpos
 	+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
@@ -314,14 +373,51 @@ hpos,hposunit,hconattach,hconstrain,wanchor,width,wunit,hanchor,heighth,hunit,cr
 	};
 }
 function LoadingScreen(container) {
+	var set = new Object();
+	set["contents"] = "";
+	set["background"] = "rgba(0,0,0,0)";
+	set["opacity"] = 1;
+	set["blur"] = 0;
+	set["container"] = 0;
+	set["vpanchor"] = 0;
+	set["vpattach"] = 0;
+	set["vpattunit"] = "%";
+	set["vpos"] = 0;
+	set["vposunit"] = "%";
+	set["vconattach"] = 0;
+	set["vconstrain"] = true;
+	set["hpanchor"] = 0;
+	set["hpattach"] = 0;
+	set["hpattunit"] = "%";
+	set["hpos"] = 0;
+	set["hposunit"] = "%";
+	set["hconattach"] = 0;
+	set["hconstrain"] = true;
+	set["wanchor"] = 0;
+	set["width"] = 100;
+	set["wunit"] = "%";
+	set["hanchor"] = 0;
+	set["heighth"] = 100;
+	set["hunit"] = "%";
+	set["crop"] = 0;
+	set["group"] = "";
+	set["zindex"] = undefined;
+	set["css"] = "";
+	LoadingBg = new FluidBox(set);
+	
+	
 	var LoadingBg = new FluidBox("","#b7b0b0",1,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",0,true,0,100,"%",0,100,"%",null,null,null,null);
+	var set = new Object();
+	set["background"] = "#b7b0b0";
+	set["opacity"] = 1;
+	LoadingBg = new FluidBox(set);
 	////console.log("LoadingBg id = "+LoadingBg.anchor);
-	var LoadingBox = new FluidBox("Loading…", "rgba(0,0,0,0)",1,0,LoadingBg.id,LoadingBg.id,50,"%",25,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"rem",0,3,"rem",null,"loadingMessageContainer",null,"font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column");
+	//var LoadingBox = new FluidBox("Loading…", "rgba(0,0,0,0)",1,0,LoadingBg.id,LoadingBg.id,50,"%",25,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"rem",0,3,"rem",null,"loadingMessageContainer",null,"font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column");
 	////console.log("LoadingBox id = "+LoadingBox.anchor);
-	var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite");
+	//var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite");
 	////console.log("LoadingSpinner id = "+LoadingSpinner.anchor);
-	LoadingSpinner.show("none"); 
-	LoadingBox.show("none"); 
+	//LoadingSpinner.show("none"); 
+	//LoadingBox.show("none"); 
 	LoadingBg.show("fade"); 
 }
 LoadingScreen(0);
