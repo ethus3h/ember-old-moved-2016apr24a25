@@ -234,6 +234,8 @@ function FluidBox(set) {
 				console.log("Setting width of "+this.anchor+" to "+tComputedWidth);
 			}
 		}
+		console.log("tComputedWidth stage 2: "+tComputedWidth);
+		console.log("tComputedHeighth stage 2: "+tComputedHeighth);
 		computedVpa = tComputedVpa+"px";
 		computedHeighth = tComputedHeighth+"px";
 		computedHpa = tComputedHpa+"px";
@@ -286,12 +288,12 @@ function LoadingScreen(container) {
 	this.LoadingBg = new FluidBox(set);
 	var set = new Object();
 	set["contents"] = "Loading...";
-	set["container"] = LoadingBg.id;
+	set["container"] = this.LoadingBg.id;
 	set["hconstrain"] = false;
 	set["vconstrain"] = false;
-	set["vpanchor"] = LoadingBg.id;
+	set["vpanchor"] = this.LoadingBg.id;
 	set["vpos"] = 50;
-	set["hpanchor"] = LoadingBg.id;
+	set["hpanchor"] = this.LoadingBg.id;
 	set["hpos"] = 50;
 	set["width"] = 10;
 	set["wunit"] = "rem";
@@ -301,8 +303,8 @@ function LoadingScreen(container) {
 	this.LoadingBox = new FluidBox(set);
 	//var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite");
 	this.show = function() {
-		this.LoadingSpinner.show("none");
-		this.LoadingBox.show("none");
+		//this.LoadingSpinner.show("none");
+		//this.LoadingBox.show("none");
 		this.LoadingBg.show("fade");
 	}
 }
