@@ -374,40 +374,6 @@ function FluidBox(set) {
 }
 function LoadingScreen(container) {
 	var set = new Object();
-	set["contents"] = "";
-	set["background"] = "rgba(0,0,0,0)";
-	set["opacity"] = 1;
-	set["blur"] = 0;
-	set["container"] = 0;
-	set["vpanchor"] = 0;
-	set["vpattach"] = 0;
-	set["vpattunit"] = "%";
-	set["vpos"] = 0;
-	set["vposunit"] = "%";
-	set["vconattach"] = 0;
-	set["vconstrain"] = true;
-	set["hpanchor"] = 0;
-	set["hpattach"] = 0;
-	set["hpattunit"] = "%";
-	set["hpos"] = 0;
-	set["hposunit"] = "%";
-	set["hconattach"] = 0;
-	set["hconstrain"] = true;
-	set["wanchor"] = 0;
-	set["width"] = 100;
-	set["wunit"] = "%";
-	set["hanchor"] = 0;
-	set["heighth"] = 100;
-	set["hunit"] = "%";
-	set["crop"] = 0;
-	set["group"] = "";
-	set["zindex"] = undefined;
-	set["css"] = "";
-	LoadingBg = new FluidBox(set);
-	
-	
-	var LoadingBg = new FluidBox("","#b7b0b0",1,0,0,0,0,"%",0,"%",null,false,0,0,"%",0,"%",0,true,0,100,"%",0,100,"%",null,null,null,null);
-	var set = new Object();
 	set["background"] = "#b7b0b0";
 	set["opacity"] = 1;
 	LoadingBg = new FluidBox(set);
