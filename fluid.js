@@ -15,12 +15,17 @@ function getAnchor(id)
 	if(id==0) {
 		return "body";
 	}
-	//console.log("ID " + id + " requested");
 	return "#FluidBox"+id;
 }
-function showGroup(group) {
+function showGroup(group,animation) {
 	/* group is the parameter that was passed to the FluidBox when it was instantiated */
-	
+	for (var i = 1; i < AllBoxes.length; i = i + 1 ) {
+		if(AllBoxes[i]!=undefined) {
+			if(AllBoxes[i].group == group) {
+				AllBoxes[i].show(animation);
+			}
+		}
+	}
 }
 
 function Group(name) {
@@ -33,12 +38,8 @@ function Group(name) {
 var AllBoxes = new Array();
 
 function RecomputeMetrics() {
-	//console.log("Recomputing metrics");
-	//console.debug(AllBoxes);
 	for (var i = 1; i < AllBoxes.length; i = i + 1 ) {
 		if(AllBoxes[i]!=undefined) {
-			//console.log("Recomputing metrics for: ");
-			//console.debug(AllBoxes[i]);
 			AllBoxes[i].compute();
 		}
 	}
@@ -51,38 +52,8 @@ function FluidBox(set) {
 	AllBoxes[AllBoxes.length+1] = this;
 	/* HOW TO CREATE A FLUIDBOX (options can be omitted if desired; default values shown):
 	var set = new Object();
-	set["contents"] = "";
-	set["background"] = "rgba(0,0,0,0)";
-	set["opacity"] = 1;
-	set["blur"] = 0;
-	set["container"] = 0;
-	set["vpanchor"] = 0;
-	set["vpattach"] = 0;
-	set["vpattunit"] = "%";
-	set["vpos"] = 0;
-	set["vposunit"] = "%";
-	set["vconattach"] = 0;
-	set["vconstrain"] = true;
-	set["hpanchor"] = 0;
-	set["hpattach"] = 0;
-	set["hpattunit"] = "%";
-	set["hpos"] = 0;
-	set["hposunit"] = "%";
-	set["hconattach"] = 0;
-	set["hconstrain"] = true;
-	set["wanchor"] = 0;
-	set["width"] = 100;
-	set["wunit"] = "%";
-	set["hanchor"] = 0;
-	set["heighth"] = 100;
-	set["hunit"] = "%";
-	set["crop"] = 0;
-	set["group"] = "";
-	set["zindex"] = undefined;
-	set["css"] = "";
+	set["property"] = "value";
 	NewFluidBox = new FluidBox(set); */
-	
-	//console.debug(AllBoxes);
 	/* ~Explanations of parameters~
 	contents: HTML contents of the box. Generally a <svg> tag. This will be displayed on top of the bgcolor.
 	background: Background. Can be any CSS background
@@ -174,17 +145,9 @@ function FluidBox(set) {
 	if(typeof set["group"] !== "undefined") { this.group = set["group"];}
 	if(typeof set["zindex"] !== "undefined") { this.zindex = set["zindex"];}
 	if(typeof set["css"] !== "undefined") { this.css = set["css"];}
-	/* //console.log(getAnchor(this.vpanchor)); */
-	/* $(getAnchor(this.vpanchor)).append("<div id=\""+newId()+"\" style=\"background:"+this.background+";height:"+this.heighth+this.hunit";width:"+this.width+this.wunit+";position:relative;left:"+this.hpos+";top:"+this.vpos+"\">"+"</div>"); */
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
-	/* console.log("Box " + this.anchor + " instantiating. Contents = "+this.contents+", background = "+this.background
-	+", opacity = "+this.opacity+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpattach = "+this.vpattach+", vpattunit = "+this.vpattunit+", vpos = "+this.vpos
-	+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpattach = "+this.hpattach+", hpattunit = "+this.hpattunit+", hpos = "+this.hpos
-	+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
-	+", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
-	+", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex+", css = "+this.css); */
 	console.debug(this);
 	$(this.anchor).css('background',this.background);
 	$(this.anchor).css('opacity',this.opacity);
@@ -239,7 +202,6 @@ function FluidBox(set) {
 			computedHpa = tComputedHpa+"px";
 			console.log("computedHpa: "+computedHpa);
 		}
-		//TODO: Actually get this working
 		/*Spec:
 		~~~~
 		Vertical constraining:
@@ -278,65 +240,21 @@ function FluidBox(set) {
 		computedWidth = tComputedWidth+"px";
 		console.log("computedWidth: "+computedWidth);
 		console.log("computedHeighth: "+computedHeighth);
-		
-		//Previous implementation
-		/*
-		if(this.vconstrain == true) {
-			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top) + $(getAnchor(this.hconattach)).height) {
-				tComputedHeighth = $(getAnchor(this.hconattach)).height;
-				computedHeighth = tComputedHeighth+'px';
-				if((tComputedVpa < $(getAnchor(this.vconattach)).position().top) | (tComputedVpa > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).heigth()))) {
-					tComputedVpa = $(getAnchor(this.vconattach)).position().top;
-				}
-				computedVpa = (tComputedVpos - tComputedVpa)+"px";
-				$(this.anchor).css('height',computedHeighth);
-			}
-		}
-		if(this.hconstrain == true) {
-			//console.debug(getAnchor(this.hconattach));
-			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left) + $(getAnchor(this.hconattach)).width) {
-				tComputedWidth = $(getAnchor(this.hconattach)).width;
-				computedWidth = tComputedWidth+'px';
-				if((tComputedHpa < $(getAnchor(this.hconattach)).position().left) | (tComputedHpa > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width()))) {
-					tComputedHpa = $(getAnchor(this.hconattach)).position().left;
-				}
-				computedHpa = (tComputedHpos - tComputedHpa)+"px";
-				$(this.anchor).css('width',computedWidth);
-			}
-		}*/
 		$(this.anchor).css('top',computedVpa);
 		$(this.anchor).css('left',computedHpa);
 		$(this.anchor).css('height',computedHeighth);
 		$(this.anchor).css('width',computedWidth);
-		//console.log("Set vpos: "+this.vpos);
-		//console.log("Partial vpos: "+tComputedVpos);
-		//console.log("Computed vpos: "+computedVpos);
-		//console.log("Set hpos: "+this.hpos);
-		//console.log("Partial hpos: "+tComputedHpos);
-		//console.log("Computed hpos: "+computedHpos);
-		//console.log("Set vpa: "+this.vpattach);
-		//console.log("Partial vpa: "+tComputedVpa);
-		//console.log("Computed vpa: "+computedVpa);
-		//console.log("Set hpa: "+this.hpattach);
-		//console.log("Partial hpa: "+tComputedHpa);
-		//console.log("Computed hpa: "+computedHpa);
 	};
 	$(this.anchor).css('opacity',"0");
 	$(this.anchor).css('display',"block");
 	this.compute();
 	this.show = function(animation){
-		////console.log("Displaying box "+this.id+"; ID #"+getId());
 		targetElement = this.anchor;
-		//console.debug($(this.anchor));
 		if(animation == "none") {
-			////console.log("Animation: none");
-			//console.debug($(this.anchor));
 			$(targetElement).css('display','block');
 			$(targetElement).css('opacity',this.opacity);
-			//console.debug($(this.anchor));
 		}
-		if(animation == "zoom") {
-			////console.log("Animation: zoom");
+		if(animation == "zoomhalffade") {
 			$(targetElement).css('top',(tComputedHeighth/4)+'px');
 			$(targetElement).css('left',(tComputedWidth/4)+'px');
 			$(targetElement).css('width',(tComputedWidth/2)+'px');
@@ -352,35 +270,20 @@ function FluidBox(set) {
 				width: tComputedWidth+"px",
 				height: tComputedHeighth+"px"
 			}, 500, "linear");
-			//console.debug($(this.anchor));
-			//$(targetElement).css('display','block');
-			//console.debug($(this.anchor));
 		}
 		if(animation == "fade") {
-			////console.log("Animation: fade");
-			
-
 			$(targetElement).css('opacity','0');
 			$(targetElement).show();
 			$(targetElement).animate({
 				opacity: this.opacity,
 			}, 250, "linear");
-			//console.debug($(this.anchor));
-			//$(targetElement).css('display','block');
-			//console.debug($(this.anchor));
 		}
-		//console.debug($(this.anchor));
-		//$(targetElement).css('display','block');
-		//$(targetElement).show();
-		//console.debug($(this.anchor));
-		////console.log(targetElement);
-
 	};
 }
 function LoadingScreen(container) {
 	var set = new Object();
 	set["background"] = "#b7b0b0";
-	LoadingBg = new FluidBox(set);
+	this.LoadingBg = new FluidBox(set);
 	var set = new Object();
 	set["contents"] = "Loading...";
 	set["container"] = LoadingBg.id;
@@ -395,14 +298,13 @@ function LoadingScreen(container) {
 	set["heighth"] = 3;
 	set["hunit"] = "rem";
 	set["css"] = "font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column";
-	LoadingBox = new FluidBox(set);
-	////console.log("LoadingBg id = "+LoadingBg.anchor);
-	//var LoadingBox = new FluidBox("Loading…", "rgba(0,0,0,0)",1,0,LoadingBg.id,LoadingBg.id,50,"%",25,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"rem",0,3,"rem",null,"loadingMessageContainer",null,"font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column");
-	////console.log("LoadingBox id = "+LoadingBox.anchor);
+	this.LoadingBox = new FluidBox(set);
 	//var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite");
-	////console.log("LoadingSpinner id = "+LoadingSpinner.anchor);
-	//LoadingSpinner.show("none"); 
-	//LoadingBox.show("none"); 
-	LoadingBg.show("fade"); 
+	this.show = function() {
+		this.LoadingSpinner.show("none");
+		this.LoadingBox.show("none");
+		this.LoadingBg.show("fade");
+	}
 }
-LoadingScreen(0);
+MainLoadingScreen = new LoadingScreen(0);
+MainLoadingScreen.show(); 
