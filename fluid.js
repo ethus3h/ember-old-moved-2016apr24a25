@@ -184,53 +184,34 @@ function FluidBox(set) {
 		tComputedVpos = this.vpos;
 		tComputedHpa = tComputedHpos;
 		tComputedVpa = tComputedVpos;
-		//console.log("computedWidth pre: "+computedWidth);
-		//console.log("computedHeighth pre: "+computedHeighth);
-		//console.debug(tComputedWidth);
-		//console.debug(tComputedHeighth);
 		//Calculate the width
 		computedWidth = this.width+wunitA;
 		if(this.wunit == '%') {
-			console.log("wunit % computations");
 			tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
 			computedWidth = tComputedWidth+wunitA;
 		}
 		//Calculate the heighth
 		computedHeighth = this.heighth+hunitA;
 		if(this.hunit == '%') {
-			console.log("hunit % computations");
 			tComputedHeighth = $(getAnchor(this.hanchor)).height() * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+hunitA;
 		}
-		console.log("computedWidth medial: "+computedWidth);
-		console.log("computedHeighth medial: "+computedHeighth);
-		console.log("tComputedWidth medial: "+tComputedWidth);
-		console.log("tComputedHeighth medial: "+tComputedHeighth);
 		if(this.hunit == 'relative') {
-			console.log("heighth relative unit evaluation");
 			tComputedHeighth = tComputedWidth * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+hunitA;
 		}
 		//Calculate the vpos
 		computedVpos = this.vpos+vposunitA;
-		console.log("computedVpos: "+computedVpos);
 		if(this.vposunit == '%') {
-			console.log("vpos % unit evaluation");
 			tComputedVpos = ($(getAnchor(this.vpanchor)).position().top + ($(getAnchor(this.vpanchor)).height() * (this.vpos / 100)));
 			computedVpos = tComputedVpos+vposunitA;
 		}
 		//Calculate the hpos
 		computedHpos = this.hpos+hposunitA;
-		console.log("computedHpos: "+computedHpos);
 		if(this.hposunit == '%') {
-			console.log("hpos % unit evaluation");
 			tComputedHpos = ($(getAnchor(this.hpanchor)).position().left + ($(getAnchor(this.hpanchor)).width() * (this.hpos / 100)));
 			computedHpos = tComputedHpos+hposunitA;
 		}
-		console.log("computedWidth before 1st set: "+computedWidth);
-		console.log("computedHeighth before 1st set: "+computedHeighth);
-		console.log("tComputedWidth before 1st set: "+tComputedWidth);
-		console.log("tComputedHeighth before 1st set: "+tComputedHeighth);
 		$(this.anchor).css('height',computedHeighth);
 		$(this.anchor).css('width',computedWidth);
 		//Calculate the vertical attach point
@@ -238,19 +219,13 @@ function FluidBox(set) {
 		if(this.vpattunit == '%') {
 			tComputedVpa = tComputedVpos - ($(this.anchor).height() * (this.vpattach / 100));
 			computedVpa = tComputedVpa+vpattunitA;
-			console.log("computedVpa: "+computedVpa);
 		}
 		//Calculate the horizontal attach point
 		computedHpa = this.hpattach;
 		if(this.hpattunit == '%') {
 			tComputedHpa = tComputedHpos - ($(this.anchor).width() * (this.hpattach / 100));
 			computedHpa = tComputedHpa+vpattunitA;
-			console.log("computedHpa: "+computedHpa);
 		}
-		console.log("computedWidth 1b: "+computedWidth);
-		console.log("computedHeighth 1b: "+computedHeighth);
-		console.log("tComputedWidth 1b: "+tComputedWidth);
-		console.log("tComputedHeighth 1b: "+tComputedHeighth);
 		/*Spec:
 		~~~~
 		Vertical constraining:
@@ -263,8 +238,6 @@ function FluidBox(set) {
 		Left of box is to the left of left of clip target -> Move to left of clip target
 		Right of box is to the right of clip target -> Change width to (width of clip target - (left of box - left of clip target))
 		*/
-		console.debug(this.vconstrain);
-		console.debug(this.hconstrain);
 		if(this.vconstrain==true) {
 			console.log("vconstrain evaluated as true");
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
@@ -276,11 +249,6 @@ function FluidBox(set) {
 				console.log("Setting heighth of "+this.anchor+" to "+tComputedHeighth);
 			}
 		}
-		console.log("computedWidth intermediate: "+computedWidth);
-		console.log("computedHeighth intermediate: "+computedHeighth);
-		console.log("tComputedWidth intermediate: "+tComputedWidth);
-		console.log("tComputedHeighth intermediate: "+tComputedHeighth);
-
 		if(this.hconstrain==true) {
 			console.log("hconstrain evaluated as true");
 			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
@@ -292,14 +260,10 @@ function FluidBox(set) {
 				console.log("Setting width of "+this.anchor+" to "+tComputedWidth);
 			}
 		}
-		console.log("tComputedWidth stage 2: "+tComputedWidth);
-		console.log("tComputedHeighth stage 2: "+tComputedHeighth);
 		computedVpa = tComputedVpa+vposunitA;
 		computedHeighth = tComputedHeighth+hunitA;
 		computedHpa = tComputedHpa+hposunitA;
 		computedWidth = tComputedWidth+wunitA;
-		console.log("computedWidth: "+computedWidth);
-		console.log("computedHeighth: "+computedHeighth);
 		$(this.anchor).css('top',computedVpa);
 		$(this.anchor).css('left',computedHpa);
 		$(this.anchor).css('height',computedHeighth);
