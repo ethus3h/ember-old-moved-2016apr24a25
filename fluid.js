@@ -314,21 +314,23 @@ function LoadingScreen(container) {
 	set["hconstrain"] = false;
 	set["vconstrain"] = false;
 	set["vpanchor"] = this.LoadingBg.id;
-	set["vpos"] = 50;
+	set["vpos"] = 30;
 	set["hpanchor"] = this.LoadingBg.id;
 	set["hpos"] = 50;
 	set["width"] = 10;
 	set["wunit"] = "rem";
 	set["heighth"] = 3;
 	set["hunit"] = "rem";
+	set["vpattach"] = 50;
+	set["hpattach"] = 50;
 	set["css"] = "font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column";
 	this.LoadingBox = new FluidBox(set);
 	//var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite");
 	this.show = function() {
 		//this.LoadingSpinner.show("none");
-		//this.LoadingBox.show("none");
+		this.LoadingBox.show("none");
 		this.LoadingBg.show("fade");
 	}
 }
 MainLoadingScreen = new LoadingScreen(0);
-MainLoadingScreen.show(); 
+MainLoadingScreen.show();
