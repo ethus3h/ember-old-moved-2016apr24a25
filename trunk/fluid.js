@@ -155,28 +155,31 @@ function FluidBox(set) {
 	$(this.anchor).css('position','fixed');
 	this.compute = function() {
 		wunitA = this.wunit;
-		if((this.wunit == "%") | (this.wunit == "relative")) {
+		if(this.wunit == "%") {
 			wunitA = "px";
 		}
 		hunitA = this.hunit;
-		if((this.hunit == "%") | (this.hunit == "relative")) {
+		if(this.hunit == "%") {
 			hunitA = "px";
 		}
 		hposunitA = this.hposunit;
-		if((this.hposunit == "%") | (this.hposunit == "relative")) {
+		if(this.hposunit == "%") {
 			hposunitA = "px";
 		}
 		vposunitA = this.vposunit;
-		if((this.vposunit == "%") | (this.vposunit == "relative")) {
+		if(this.vposunit == "%") {
 			vposunitA = "px";
 		}
 		hpattunitA = this.hpattunit;
-		if((this.hpattunit == "%") | (this.hpattunit == "relative")) {
+		if(this.hpattunit == "%") {
 			hpattunitA = "px";
 		}
 		vpattunitA = this.vpattunit;
-		if((this.vpattunit == "%") | (this.vpattunit == "relative")) {
+		if(this.vpattunit == "%") {
 			vpattunitA = "px";
+		}
+		if(this.hunit == "relative") {
+			hunitA = wunitA;
 		}
 		tComputedWidth = this.width;
 		tComputedHeighth = this.heighth;
@@ -325,9 +328,43 @@ function LoadingScreen(container) {
 	set["hpattach"] = 50;
 	set["css"] = "font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column";
 	this.LoadingBox = new FluidBox(set);
-	//var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite");
+	var set = new Object();
+	set["container"] = this.LoadingBox.id;
+	set["hconstrain"] = false;
+	set["vconstrain"] = false;
+	set["vpanchor"] = this.LoadingBox.id;
+	set["vpos"] = 100;
+	set["vposunit"] = "%";
+	set["hpanchor"] = this.LoadingBg.id;
+	set["hpos"] = 50;
+	set["width"] = 3;
+	set["wunit"] = "rem";
+	set["heighth"] = 100;
+	set["hunit"] = "relative";
+	set["vpattach"] = 0;
+	set["hpattach"] = 50;
+	this.LoadingCase = new FluidBox(set);
+	var set = new Object();
+	set["container"] = this.LoadingBg.id;
+	set["hconstrain"] = false;
+	set["vconstrain"] = false;
+	set["vpanchor"] = this.LoadingCase.id;
+	set["vpos"] = 1;
+	set["vposunit"] = "rem";
+	set["hpanchor"] = this.LoadingBg.id;
+	set["hpos"] = 50;
+	set["width"] = 3;
+	set["wunit"] = "rem";
+	set["heighth"] = 100;
+	set["hunit"] = "relative";
+	set["vpattach"] = 0;
+	set["hpattach"] = 50;
+	set["css"] = "margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite";
+	this.LoadingSpinner = new FluidBox(set);
+	//var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"");
 	this.show = function() {
-		//this.LoadingSpinner.show("none");
+		this.LoadingSpinner.show("none");
+		this.LoadingCase.show("none");
 		this.LoadingBox.show("none");
 		this.LoadingBg.show("fade");
 	}
