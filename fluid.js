@@ -208,17 +208,15 @@ function FluidBox(set) {
 		}
 		//Calculate the vpos
 		computedVpos = this.vpos+this.vposunit;
+		console.log("computedVpos: "+computedVpos);
 		if(this.vposunit == '%') {
-			//console.log("vpanchor "+getAnchor(this.vpanchor)+" top: "+$(getAnchor(this.vpanchor)).position().top);
-			//console.log("vpanchor heighth: " + $(getAnchor(this.vpanchor)).height());
 			tComputedVpos = ($(getAnchor(this.vpanchor)).position().top + ($(getAnchor(this.vpanchor)).height() * (this.vpos / 100)));
 			computedVpos = tComputedVpos+'px';
 		}
 		//Calculate the hpos
 		computedHpos = this.hpos+this.hposunit;
+		console.log("computedHpos: "+computedHpos);
 		if(this.hposunit == '%') {
-			//console.log("hpanchor left: "+$(getAnchor(this.hpanchor)).position().left);
-			//console.log("hpanchor width: "+$(getAnchor(this.hpanchor)).width());
 			tComputedHpos = ($(getAnchor(this.hpanchor)).position().left + ($(getAnchor(this.hpanchor)).width() * (this.hpos / 100)));
 			computedHpos = tComputedHpos+'px';
 		}
@@ -227,14 +225,16 @@ function FluidBox(set) {
 		//Calculate the vertical attach point
 		computedVpa = this.vpattach;
 		if(this.vpattunit == '%') {
-			tComputedVpa = $(this.anchor).height() * (this.vpattach / 100);
-			computedVpa = (tComputedVpos - tComputedVpa)+"px";
+			tComputedVpa = tComputedVpos - ($(this.anchor).height() * (this.vpattach / 100));
+			computedVpa = tComputedVpa+"px";
+			console.log("computedVpa: "+computedVpa);
 		}
 		//Calculate the horizontal attach point
 		computedHpa = this.hpattach;
 		if(this.hpattunit == '%') {
-			tComputedHpa = $(this.anchor).width() * (this.hpattach / 100);
-			computedHpa = (tComputedHpos - tComputedHpa)+"px";
+			tComputedHpa = tComputedHpos - ($(this.anchor).width() * (this.hpattach / 100));
+			computedHpa = tComputedHpa+"px";
+			console.log("computedHpa: "+computedHpa);
 		}
 		//TODO: Actually get this working
 		/*Spec:
@@ -375,8 +375,15 @@ function FluidBox(set) {
 function LoadingScreen(container) {
 	var set = new Object();
 	set["background"] = "#b7b0b0";
-	set["opacity"] = 1;
 	LoadingBg = new FluidBox(set);
+	var set = new Object();
+	set["contents"] = "Loading...";
+	set["container"] = LoadingBg.id;
+	set["vpanchor"] = LoadingBg.id;
+	set["vpos"] = 50;
+	set["hpanchor"] = LoadingBg.id;
+	set["hpos"] = 50;
+	LoadingBox = new FluidBox(set);
 	////console.log("LoadingBg id = "+LoadingBg.anchor);
 	//var LoadingBox = new FluidBox("Loading…", "rgba(0,0,0,0)",1,0,LoadingBg.id,LoadingBg.id,50,"%",25,"%",0,true,LoadingBg.id,50,"%",50,"%",null,false,0,10,"rem",0,3,"rem",null,"loadingMessageContainer",null,"font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column");
 	////console.log("LoadingBox id = "+LoadingBox.anchor);
