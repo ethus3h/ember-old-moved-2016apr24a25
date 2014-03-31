@@ -179,12 +179,13 @@ function FluidBox(set) {
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
-	console.log("Box " + this.anchor + " instantiating. Contents = "+this.contents+", background = "+this.background
+	/* console.log("Box " + this.anchor + " instantiating. Contents = "+this.contents+", background = "+this.background
 	+", opacity = "+this.opacity+", blur = "+this.blur+", container = "+this.container+", vpanchor = "+this.vpanchor+", vpattach = "+this.vpattach+", vpattunit = "+this.vpattunit+", vpos = "+this.vpos
 	+", vposunit = "+this.vposunit+", hpanchor = "+this.hpanchor+", hpattach = "+this.hpattach+", hpattunit = "+this.hpattunit+", hpos = "+this.hpos
 	+", hposunit = "+this.hposunit+", wanchor = "+this.wanchor+", width = "+this.width
 	+", wunit = "+this.wunit+", hanchor = "+this.hanchor+", heighth = "+this.heighth
-	+", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex+", css = "+this.css);
+	+", hunit = "+this.hunit+", crop = "+this.crop+", group = "+this.group+", zindex = "+this.zindex+", css = "+this.css); */
+	console.debug(this);
 	$(this.anchor).css('background',this.background);
 	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
@@ -220,6 +221,8 @@ function FluidBox(set) {
 			tComputedHpos = ($(getAnchor(this.hpanchor)).position().left + ($(getAnchor(this.hpanchor)).width() * (this.hpos / 100)));
 			computedHpos = tComputedHpos+'px';
 		}
+		console.log("computedWidth before 1st set: "+computedWidth);
+		console.log("computedHeighth before 1st set: "+computedHeighth);
 		$(this.anchor).css('height',computedHeighth);
 		$(this.anchor).css('width',computedWidth);
 		//Calculate the vertical attach point
@@ -273,6 +276,8 @@ function FluidBox(set) {
 		computedHeighth = tComputedHeighth+"px";
 		computedHpa = tComputedHpa+"px";
 		computedWidth = tComputedWidth+"px";
+		console.log("computedWidth: "+computedWidth);
+		console.log("computedHeighth: "+computedHeighth);
 		
 		//Previous implementation
 		/*
@@ -379,6 +384,8 @@ function LoadingScreen(container) {
 	var set = new Object();
 	set["contents"] = "Loading...";
 	set["container"] = LoadingBg.id;
+	set["hconstrain"] = false;
+	set["vconstrain"] = false;
 	set["vpanchor"] = LoadingBg.id;
 	set["vpos"] = 50;
 	set["hpanchor"] = LoadingBg.id;
