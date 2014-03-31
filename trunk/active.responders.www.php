@@ -82,4 +82,12 @@ function ember()
     $main->close();
 
 }
+function ember_dev()
+{
+
+    $main = new FluidActive('Ember (development version)');
+	$main->write(file_get_contents("ember.dev.fluidScriptedUI"));
+    $main->close();
+
+}
 ?>
