@@ -306,21 +306,25 @@ function FluidBox(set) {
 		*/
 		if(this.vconstrain==true) {
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
+				console.log("top constrained");
 				vDelta = $(getAnchor(this.vconattach)).position().top - tComputedVpa;
 				tComputedHeighth = tComputedHeighth - vDelta;
 				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
 			}
 			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height())) {
+				console.log("bottom constrained");
 				tComputedHeighth = $(getAnchor(this.vconattach)).height() - (tComputedVpa - $(getAnchor(this.vconattach)).position().top);
 			}
 		}
 		if(this.hconstrain==true) {
 			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
+				console.log("left constrained");
 				hDelta = $(getAnchor(this.hconattach)).position().left - tComputedHpa;
 				tComputedWidth = tComputedWidth - hDelta;
 				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
 			}
 			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width())) {
+				console.log("right constrained");
 				tComputedWidth = $(getAnchor(this.hconattach)).width() - (tComputedHpa - $(getAnchor(this.hconattach)).position().left);
 			}
 		}
@@ -331,6 +335,9 @@ function FluidBox(set) {
 				tComputedWidth = tComputedHeighth;
 				tComputedHpa = tComputedHpa + hDifference;
 			}
+		}
+		if(tComputedHeighth < 3 * getRootElementEmSize()) {
+			$(this.anchor).css("font-size",tComputedHeighth);
 		}
 		computedVpa = tComputedVpa+vposunitA;
 		computedHeighth = tComputedHeighth+hunitA;
@@ -385,57 +392,58 @@ function LoadingScreen(container) {
 	var set = new Object();
 	set["vptattach"] = 100;
 	set["vpattach"] = 100;
-	set["heighth"] = 1;
+	set["heighth"] = 0;
 	set["hunit"] = "rem";
 	this.Loadingremc = new FluidBox(set);
 	var set = new Object();
 	set["vpattach"] = 100;
 	set["vpanchor"] = this.Loadingremc.id;
 	this.LoadingConstraint = new FluidBox(set);
-	var compute
+	var set = new Object();
+	set["heighth"] = 75;
+	this.LoadingConstraintB = new FluidBox(set);
+	var set = new Object();
+	set["vptattach"] = 50;
+	set["vpos"] = 1;
+	set["vposunit"] = "rem";
+	set["vconattach"] = this.LoadingConstraintB.id;
+	this.LoadingConstraintC = new FluidBox(set);
 	var set = new Object();
 	set["contents"] = "Loading...";
 	set["container"] = this.LoadingBg.id;
-	set["hconstrain"] = false;
-	set["vconstrain"] = false;
 	set["vpanchor"] = this.LoadingBg.id;
-	set["vpos"] = 30;
+	set["vpos"] = 25;
 	set["hpanchor"] = this.LoadingBg.id;
 	set["hpos"] = 50;
-	set["width"] = 10;
-	set["wunit"] = "rem";
-	set["heighth"] = 3;
-	set["hunit"] = "rem";
-	set["vpattach"] = 50;
+	set["width"] = 100;
+	set["wunit"] = "%";
+	set["heighth"] = 25;
+	set["vpattach"] = 0;
 	set["hpattach"] = 50;
 	set["css"] = "font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column";
 	this.LoadingBox = new FluidBox(set);
 	var set = new Object();
 	set["container"] = this.LoadingBox.id;
-	set["hconstrain"] = false;
-	set["vconstrain"] = false;
 	set["vpanchor"] = this.LoadingBox.id;
 	set["vpos"] = 100;
 	set["vposunit"] = "%";
 	set["hpanchor"] = this.LoadingBg.id;
 	set["hpos"] = 50;
-	set["width"] = 3;
-	set["wunit"] = "rem";
 	set["heighth"] = 100;
+	set["width"] = 100;
 	set["hunit"] = "relative";
 	set["vpattach"] = 0;
 	set["hpattach"] = 50;
 	this.LoadingCase = new FluidBox(set);
 	var set = new Object();
-	set["container"] = this.LoadingCase.id;
-	set["hconstrain"] = false;
-	set["vconattach"] = this.LoadingConstraint.id;
-	set["vpanchor"] = this.LoadingCase.id;
-	set["vpos"] = 1;
-	set["vposunit"] = "rem";
-	set["hpanchor"] = this.LoadingCase.id;
+	set["container"] = this.LoadingBox.id;
+	set["vpanchor"] = this.LoadingBox.id;
+	set["vpos"] = 100;
+	set["vconattach"] = this.LoadingConstraintC.id;
+	set["hpanchor"] = this.LoadingBox.id;
 	set["hpos"] = 50;
-	set["width"] = 10;
+	set["wanchor"] = this.LoadingBox.id;
+	set["width"] = 100;
 	set["wunit"] = "%";
 	set["heighth"] = 100;
 	set["hunit"] = "relative";
