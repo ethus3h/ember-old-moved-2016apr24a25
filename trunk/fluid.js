@@ -17,6 +17,10 @@ function getAnchor(id)
 	}
 	return "#FluidBox"+id;
 }
+//from http://tzi.fr/js/snippet/convert-em-in-px
+
+
+function getRootElementEmSize(){return parseFloat(getComputedStyle(document.documentElement).fontSize);}
 function showGroup(group,animation) {
 	/* group is the parameter that was passed to the FluidBox when it was instantiated */
 	for (var i = 1; i < AllBoxes.length; i = i + 1 ) {
@@ -27,7 +31,6 @@ function showGroup(group,animation) {
 		}
 	}
 }
-
 function Group(name) {
 	this.name = name;
 	this.showBox = function (element, index, array) {element.show(this.animation);};
@@ -63,6 +66,8 @@ function FluidBox(set) {
 	vpanchor: ID of the box to which this box's vertical postion should be relative. ID 0 is the browser window.
 	vpattach: The vertical position at which to attach this box to the anchor box.
 	vpattunit: The units of vpattach. Only % or px allowed.
+	vptattach: The vertical position on the anchor box at which to attach this box to the anchor box.
+	vptattunit: The units of vptattach. Only % or px allowed.
 	vpos: Vertical position of this box relative to the vpanchor box.
 	vposunit: Units (%, or possibly rem?) of vpos
 	vconattach: The box to constrain this box's vertical size to.
@@ -70,6 +75,8 @@ function FluidBox(set) {
 	hpanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
 	hpattach: The horizontal position at which to attach this box to the anchor box.
 	hpattunit: The units of hpattach. Only % or px allowed.
+	hptattach: The horizontal position on the anchor box at which to attach this box to the anchor box.
+	hptattunit: The units of hptattach. Only % or px allowed.
 	hpos: Vertical position of this box relative to the hpanchor box.
 	hposunit: Units (%, or possibly rem?) of hpos
 	hconattach: The box to constrain this box's horizontal size to.
@@ -94,6 +101,8 @@ function FluidBox(set) {
 	this.vpanchor = 0;
 	this.vpattach = 0;
 	this.vpattunit = "%";
+	this.vptattach = 0;
+	this.vptattunit = "%";
 	this.vpos = 0;
 	this.vposunit = "%";
 	this.vconattach = 0;
@@ -101,6 +110,8 @@ function FluidBox(set) {
 	this.hpanchor = 0;
 	this.hpattach = 0;
 	this.hpattunit = "%";
+	this.hptattach = 0;
+	this.hptattunit = "%";
 	this.hpos = 0;
 	this.hposunit = "%";
 	this.hconattach = 0;
@@ -124,6 +135,8 @@ function FluidBox(set) {
 	if(typeof set["vpanchor"] !== "undefined") { this.vpanchor = set["vpanchor"];}
 	if(typeof set["vpattach"] !== "undefined") { this.vpattach = set["vpattach"];}
 	if(typeof set["vpattunit"] !== "undefined") { this.vpattunit = set["vpattunit"];}
+	if(typeof set["vptattach"] !== "undefined") { this.vptattach = set["vptattach"];}
+	if(typeof set["vptattunit"] !== "undefined") { this.vptattunit = set["vptattunit"];}
 	if(typeof set["vpos"] !== "undefined") { this.vpos = set["vpos"];}
 	if(typeof set["vposunit"] !== "undefined") { this.vposunit = set["vposunit"];}
 	if(typeof set["vconattach"] !== "undefined") { this.vconattach = set["vconattach"];}
@@ -131,6 +144,8 @@ function FluidBox(set) {
 	if(typeof set["hpanchor"] !== "undefined") { this.hpanchor = set["hpanchor"];}
 	if(typeof set["hpattach"] !== "undefined") { this.hpattach = set["hpattach"];}
 	if(typeof set["hpattunit"] !== "undefined") { this.hpattunit = set["hpattunit"];}
+	if(typeof set["hptattach"] !== "undefined") { this.hpattach = set["hptattach"];}
+	if(typeof set["hptattunit"] !== "undefined") { this.hpattunit = set["hptattunit"];}
 	if(typeof set["hpos"] !== "undefined") { this.hpos = set["hpos"];}
 	if(typeof set["hposunit"] !== "undefined") { this.hposunit = set["hposunit"];}
 	if(typeof set["hconattach"] !== "undefined") { this.hconattach = set["hconattach"];}
@@ -154,6 +169,38 @@ function FluidBox(set) {
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
 	this.compute = function() {
+		if(this.wunit == "rem") {
+			this.width = this.width * getRootElementEmSize();
+			this.wunit = "px";
+		}
+		if(this.hunit == "rem") {
+			this.heighth = this.heighth * getRootElementEmSize();
+			this.hunit = "px";
+		}
+		if(this.hposunit == "rem") {
+			this.hpos = this.hpos * getRootElementEmSize();
+			this.hposunit = "px";
+		}
+		if(this.vposunit == "rem") {
+			this.vpos = this.vpos * getRootElementEmSize();
+			this.vposunit = "px";
+		}
+		if(this.hpattunit == "rem") {
+			this.hpattach = this.hpattach * getRootElementEmSize();
+			this.hpattunit = "px";
+		}
+		if(this.vpattunit == "rem") {
+			this.vpattach = this.vpattach * getRootElementEmSize();
+			this.vpattunit = "px";
+		}
+		if(this.hptattunit == "rem") {
+			this.hptattach = this.hptattach * getRootElementEmSize();
+			this.hptattunit = "px";
+		}
+		if(this.vptattunit == "rem") {
+			this.vptattach = this.vptattach * getRootElementEmSize();
+			this.vptattunit = "px";
+		}
 		wunitA = this.wunit;
 		if(this.wunit == "%") {
 			wunitA = "px";
@@ -178,13 +225,21 @@ function FluidBox(set) {
 		if(this.vpattunit == "%") {
 			vpattunitA = "px";
 		}
+		hptattunitA = this.hptattunit;
+		if(this.hptattunit == "%") {
+			hptattunitA = "px";
+		}
+		vptattunitA = this.vptattunit;
+		if(this.vptattunit == "%") {
+			vptattunitA = "px";
+		}
 		if(this.hunit == "relative") {
 			hunitA = wunitA;
 		}
 		tComputedWidth = this.width;
 		tComputedHeighth = this.heighth;
-		tComputedHpos = this.hpos;
-		tComputedVpos = this.vpos;
+		tComputedHpos = $(getAnchor(this.hpanchor)).position().left + this.hpos;
+		tComputedVpos = $(getAnchor(this.vpanchor)).position().top + this.vpos;
 		tComputedHpa = tComputedHpos;
 		tComputedVpa = tComputedVpos;
 		//Calculate the width
@@ -204,13 +259,13 @@ function FluidBox(set) {
 			computedHeighth = tComputedHeighth+hunitA;
 		}
 		//Calculate the vpos
-		computedVpos = this.vpos+vposunitA;
+		computedVpos = tComputedVpos + vposunitA;
 		if(this.vposunit == '%') {
 			tComputedVpos = ($(getAnchor(this.vpanchor)).position().top + ($(getAnchor(this.vpanchor)).height() * (this.vpos / 100)));
 			computedVpos = tComputedVpos+vposunitA;
 		}
 		//Calculate the hpos
-		computedHpos = this.hpos+hposunitA;
+		computedHpos = tComputedHpos + hposunitA;
 		if(this.hposunit == '%') {
 			tComputedHpos = ($(getAnchor(this.hpanchor)).position().left + ($(getAnchor(this.hpanchor)).width() * (this.hpos / 100)));
 			computedHpos = tComputedHpos+hposunitA;
@@ -221,13 +276,22 @@ function FluidBox(set) {
 		computedVpa = this.vpattach;
 		if(this.vpattunit == '%') {
 			tComputedVpa = tComputedVpos - ($(this.anchor).height() * (this.vpattach / 100));
-			computedVpa = tComputedVpa+vpattunitA;
+			computedVpa = tComputedVpa+vposunitA;
+		}
+		if(this.vptattunit == '%') {
+			console.log('doom');
+			tComputedVpa = tComputedVpa - ($(getAnchor(this.vpanchor)).height() * (this.vptattach / 100));
+			computedVpa = tComputedVpa+vposunitA;
 		}
 		//Calculate the horizontal attach point
 		computedHpa = this.hpattach;
 		if(this.hpattunit == '%') {
 			tComputedHpa = tComputedHpos - ($(this.anchor).width() * (this.hpattach / 100));
-			computedHpa = tComputedHpa+vpattunitA;
+			computedHpa = tComputedHpa+hposunitA;
+		}
+		if(this.hptattunit == '%') {
+			tComputedHpa = tComputedHpa - ($(getAnchor(this.hpanchor)).width() * (this.hptattach / 100));
+			computedHpa = tComputedHpa+hposunitA;
 		}
 		/*Spec:
 		~~~~
@@ -242,13 +306,14 @@ function FluidBox(set) {
 		Right of box is to the right of clip target -> Change width to (width of clip target - (left of box - left of clip target))
 		*/
 		if(this.vconstrain==true) {
-			console.log("vconstrain evaluated as true");
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
+				console.log("above top");
 				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
 				console.log("Setting vpos of "+this.anchor+" to "+tComputedVpa);
 			}
-			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height)) {
-				tComputedHeighth = $(getAnchor(this.vconattach)).height - (tComputedVpa - $(getAnchor(this.vconattach)).position().top);
+			console.log((tComputedVpa + tComputedHeighth) + "below bottom" + ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height()));
+			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height())) {
+				tComputedHeighth = $(getAnchor(this.vconattach)).height() - (tComputedVpa - $(getAnchor(this.vconattach)).position().top);
 				console.log("Setting heighth of "+this.anchor+" to "+tComputedHeighth);
 			}
 		}
@@ -258,9 +323,17 @@ function FluidBox(set) {
 				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
 				console.log("Setting hpos of "+this.anchor+" to "+tComputedHpa);
 			}
-			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width)) {
-				tComputedWidth = $(getAnchor(this.hconattach)).width - (tComputedHpa - $(getAnchor(this.hconattach)).position().left);
+			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width())) {
+				tComputedWidth = $(getAnchor(this.hconattach)).width() - (tComputedHpa - $(getAnchor(this.hconattach)).position().left);
 				console.log("Setting width of "+this.anchor+" to "+tComputedWidth);
+			}
+		}
+		//recompute relative heighth for constrained boxes
+		if(this.hunit == 'relative') {
+			if(tComputedWidth > tComputedHeighth) {
+				hDifference = (tComputedWidth-tComputedHeighth) / 2;
+				tComputedWidth = tComputedHeighth;
+				tComputedHpa = tComputedHpa + hDifference;
 			}
 		}
 		computedVpa = tComputedVpa+vposunitA;
@@ -274,9 +347,11 @@ function FluidBox(set) {
 	};
 	$(this.anchor).css('opacity',"0");
 	$(this.anchor).css('display',"block");
+	//$(this.anchor).css('z-index',"-1");
 	this.compute();
 	this.show = function(animation){
 		targetElement = this.anchor;
+		$(this.anchor).css('z-index',this.zindex);
 		if(animation == "none") {
 			$(targetElement).css('display','block');
 			$(targetElement).css('opacity',this.opacity);
@@ -312,6 +387,17 @@ function LoadingScreen(container) {
 	set["background"] = "#b7b0b0";
 	this.LoadingBg = new FluidBox(set);
 	var set = new Object();
+	set["vptattach"] = 100;
+	set["vpattach"] = 100;
+	set["heighth"] = 1;
+	set["hunit"] = "rem";
+	this.Loadingremc = new FluidBox(set);
+	var set = new Object();
+	set["vpattach"] = 100;
+	set["vpanchor"] = this.Loadingremc.id;
+	this.LoadingConstraint = new FluidBox(set);
+	var compute
+	var set = new Object();
 	set["contents"] = "Loading...";
 	set["container"] = this.LoadingBg.id;
 	set["hconstrain"] = false;
@@ -345,16 +431,16 @@ function LoadingScreen(container) {
 	set["hpattach"] = 50;
 	this.LoadingCase = new FluidBox(set);
 	var set = new Object();
-	set["container"] = this.LoadingBg.id;
+	set["container"] = this.LoadingCase.id;
 	set["hconstrain"] = false;
-	set["vconstrain"] = false;
+	set["vconattach"] = this.LoadingConstraint.id;
 	set["vpanchor"] = this.LoadingCase.id;
 	set["vpos"] = 1;
 	set["vposunit"] = "rem";
-	set["hpanchor"] = this.LoadingBg.id;
+	set["hpanchor"] = this.LoadingCase.id;
 	set["hpos"] = 50;
-	set["width"] = 3;
-	set["wunit"] = "rem";
+	set["width"] = 10;
+	set["wunit"] = "%";
 	set["heighth"] = 100;
 	set["hunit"] = "relative";
 	set["vpattach"] = 0;
