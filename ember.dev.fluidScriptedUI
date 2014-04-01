@@ -10,7 +10,6 @@ set=null;
 
 var set = new Object();
 set["container"] = this.Ember.id;
-console.debug(set["container"]);
 set["background"] = "#ff00ff";
 set["blur"] = "10";
 set["width"] = 50;
