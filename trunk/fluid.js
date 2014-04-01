@@ -306,25 +306,25 @@ function FluidBox(set) {
 		*/
 		if(this.vconstrain==true) {
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
-				console.log("top constrained");
+				//console.log("top constrained");
 				vDelta = $(getAnchor(this.vconattach)).position().top - tComputedVpa;
 				tComputedHeighth = tComputedHeighth - vDelta;
 				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
 			}
 			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height())) {
-				console.log("bottom constrained");
+				//console.log("bottom constrained");
 				tComputedHeighth = $(getAnchor(this.vconattach)).height() - (tComputedVpa - $(getAnchor(this.vconattach)).position().top);
 			}
 		}
 		if(this.hconstrain==true) {
 			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
-				console.log("left constrained");
+				//console.log("left constrained");
 				hDelta = $(getAnchor(this.hconattach)).position().left - tComputedHpa;
 				tComputedWidth = tComputedWidth - hDelta;
 				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
 			}
 			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width())) {
-				console.log("right constrained");
+				//console.log("right constrained");
 				tComputedWidth = $(getAnchor(this.hconattach)).width() - (tComputedHpa - $(getAnchor(this.hconattach)).position().left);
 			}
 		}
