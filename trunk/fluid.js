@@ -168,6 +168,30 @@ function FluidBox(set) {
 	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
+	if(this.blur != 0) {
+		var tcset = new Object();
+		tcset = set;
+		tcset["blur"] = 0;
+		tcset["contents"] = "";
+		tcset["background"] = "rgba(0,0,0,0)";
+		tcset["css"] = "";
+		tcset["group"] = "blurcontainer";
+		this.blurredContainer = new FluidBox(tcset);
+		var tset = new Object();
+		tset = set;
+		tset["container"] = this.blurredContainer.id;
+		tset["blur"] = 0;
+		tset["contents"] = "";
+		tset["background"] = "rgba(0,0,0,0)";
+		tset["css"] = "filter:blur("+this.blur+"px);";
+		tset["group"] = "blurrybox";
+		$(this.anchor).appendTo(this.blurredContainer.anchor);
+/* 		this.blurBox = new FluidBox(tset);
+		blurPtA='<svg id="';
+		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="f1" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
+		blurPtC='" /></filter></defs></svg>';
+		compiledBlur = blurPtA+newId()+blurPtB+this.blur+blurPtC; */
+	}
 	this.compute = function() {
 		if(this.wunit == "rem") {
 			this.width = this.width * getRootElementEmSize();
