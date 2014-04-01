@@ -83,11 +83,13 @@ function RecomputeMetrics() {
 //TODO: Constrained boxes currently don't work.
 //TODO: blur, crop, and zindex are unimplemented.
 function FluidBox(set) {
+	console.log("Set container: "+set["container"]);
 	AllBoxes[AllBoxes.length+1] = this;
 	/* HOW TO CREATE A FLUIDBOX (options can be omitted if desired; default values shown):
 	var set = new Object();
 	set["property"] = "value";
-	NewFluidBox = new FluidBox(set); */
+	NewFluidBox = new FluidBox(set);
+	set=null; */
 	/* ~Explanations of parameters~
 	contents: HTML contents of the box. Generally a <svg> tag. This will be displayed on top of the bgcolor.
 	background: Background. Can be any CSS background
@@ -191,6 +193,7 @@ function FluidBox(set) {
 	if(typeof set["group"] !== "undefined") { this.group = set["group"];}
 	if(typeof set["zindex"] !== "undefined") { this.zindex = set["zindex"];}
 	if(typeof set["css"] !== "undefined") { this.css = set["css"];}
+	console.log("Container: "+getAnchor(this.container));
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
@@ -218,12 +221,13 @@ function FluidBox(set) {
 		tcset["css"] = "";
 		tcset["group"] = "blurcontainer";
 		this.blurredContainer = new FluidBox(tcset);
+		tcset=null;
 		var tset = new Object();
 		tset = clone(set);
 		tset["container"] = this.blurredContainer.id;
 		tset["blur"] = 0;
 		tset["contents"] = "";
-		tset["background"] = "rgba(0,0,0,0)";
+		tset["background"] = "-moz-element(#fluidBox10) no-repeat fixed";
 		tDataA="filter:url(#blur";
 		tDataB=blurId+");";
 		tDataC=tDataA+tDataB;
@@ -231,8 +235,10 @@ function FluidBox(set) {
 		tset["css"] = tDataC;
 		tset["group"] = "blurrybox";
 		this.blurryBox = new FluidBox(tset);
+		tset=null;
 		$(this.anchor).appendTo(this.blurredContainer.anchor);
- 		this.blurredContainer.show();
+ 		this.blurryBox.show("none");
+ 		this.blurredContainer.show("none");
 	}
 	this.compute = function() {
 		if(this.wunit == "rem") {
@@ -419,6 +425,8 @@ function FluidBox(set) {
 	//$(this.anchor).css('z-index',"-1");
 	this.compute();
 	this.show = function(animation){
+		console.log("Showing "+this.anchor+" to opacity "+this.opacity+" with animation "+animation+"...");
+		this.compute();
 		if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
 		targetElement = this.anchor;
 		$(this.anchor).css('z-index',this.zindex);
@@ -457,6 +465,7 @@ function LoadingScreen(container) {
 	set["container"] = container;
 	set["background"] = "#b7b0b0";
 	this.LoadingBg = new FluidBox(set);
+	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBg.id;
 	set["vptattach"] = 100;
@@ -464,15 +473,18 @@ function LoadingScreen(container) {
 	set["heighth"] = 0;
 	set["hunit"] = "rem";
 	this.Loadingremc = new FluidBox(set);
+	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBg.id;
 	set["vpattach"] = 100;
 	set["vpanchor"] = this.Loadingremc.id;
 	this.LoadingConstraint = new FluidBox(set);
+	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBg.id;
 	set["heighth"] = 75;
 	this.LoadingConstraintB = new FluidBox(set);
+	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBg.id;
 	set["vptattach"] = 50;
@@ -480,6 +492,7 @@ function LoadingScreen(container) {
 	set["vposunit"] = "rem";
 	set["vconattach"] = this.LoadingConstraintB.id;
 	this.LoadingConstraintC = new FluidBox(set);
+	set=null;
 	var set = new Object();
 	set["contents"] = "Loading...";
 	set["container"] = this.LoadingBg.id;
@@ -494,6 +507,7 @@ function LoadingScreen(container) {
 	set["hpattach"] = 50;
 	set["css"] = "font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column";
 	this.LoadingBox = new FluidBox(set);
+	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBox.id;
 	set["vpanchor"] = this.LoadingBox.id;
@@ -507,6 +521,7 @@ function LoadingScreen(container) {
 	set["vpattach"] = 0;
 	set["hpattach"] = 50;
 	this.LoadingCase = new FluidBox(set);
+	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBox.id;
 	set["vpanchor"] = this.LoadingBox.id;
@@ -523,6 +538,7 @@ function LoadingScreen(container) {
 	set["hpattach"] = 50;
 	set["css"] = "margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite";
 	this.LoadingSpinner = new FluidBox(set);
+	set=null;
 	this.show = function() {
 		this.LoadingSpinner.show("none");
 		this.LoadingCase.show("none");

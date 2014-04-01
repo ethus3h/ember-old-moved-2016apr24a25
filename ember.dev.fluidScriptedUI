@@ -6,10 +6,17 @@ MainLoadingScreen.show();
 var set = new Object();
 set["background"] = "url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) center center no-repeat";
 this.Ember = new FluidBox(set);
+set=null;
+
 var set = new Object();
 set["container"] = this.Ember.id;
+console.debug(set["container"]);
+set["background"] = "#ff00ff";
 set["blur"] = "10";
+set["width"] = 50;
+set["heighth"] = 50;
 this.blurBox = new FluidBox(set);
+set=null;
 $(window).load(function() {
 	blurBox.show("none");
 	Ember.show("zoomhalffade");
