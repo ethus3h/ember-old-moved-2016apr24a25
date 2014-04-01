@@ -10,10 +10,12 @@ set=null;
 
 var set = new Object();
 set["container"] = this.Ember.id;
-set["background"] = "#ff00ff";
+set["background"] = "url('http://upload.wikimedia.org/wikipedia/commons/9/9c/Image-Porkeri_001.jpg')";
 set["blur"] = "10";
 set["width"] = 50;
 set["heighth"] = 50;
+set["vpos"] = 25;
+set["hpos"] = 25;
 this.blurBox = new FluidBox(set);
 set=null;
 $(window).load(function() {
