@@ -17,10 +17,61 @@ function getAnchor(id)
 	}
 	return "#FluidBox"+id;
 }
+blur = function (amount,target) {
+/*
+Amount: amount to blur
+Target: area to blur
+*/
+	var w = $(getAnchor(target)).width();
+	var h = $(getAnchor(target)).height();
+	html2canvas(document.body, {
+		onrendered: function (canvas) {
+			document.body.appendChild(canvas);
+			$('canvas').wrap(getAnchor(target));
+		},
+		width: w,
+		height: h
+	});
+	$('canvas, #partial-overlay, #cover').hide();
+	$('#canvas').css('filter',amount);
+	$('#cover').fadeIn('slow', function () {
+		$('#partial-overlay').fadeIn('slow');
+	});
+};
 //from http://tzi.fr/js/snippet/convert-em-in-px
-
-
 function getRootElementEmSize(){return parseFloat(getComputedStyle(document.documentElement).fontSize);}
+//from http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object
+function clone(obj) {
+    // Handle the 3 simple types, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+
+    // Handle Date
+    if (obj instanceof Date) {
+        var copy = new Date();
+        copy.setTime(obj.getTime());
+        return copy;
+    }
+
+    // Handle Array
+    if (obj instanceof Array) {
+        var copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+            copy[i] = clone(obj[i]);
+        }
+        return copy;
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+        var copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+        }
+        return copy;
+    }
+
+    throw new Error("Unable to copy obj! Its type isn't supported.");
+}
 function showGroup(group,animation) {
 	/* group is the parameter that was passed to the FluidBox when it was instantiated */
 	for (var i = 1; i < AllBoxes.length; i = i + 1 ) {
@@ -169,28 +220,39 @@ function FluidBox(set) {
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
 	if(this.blur != 0) {
+		blurPtA='<svg id="blur';
+		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="blur';
+		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
+		blurPtD='" /></filter></defs></svg>';
+		compiledBlur = blurPtA+newId()+blurPtB+newId()+blurPtC+this.blur+blurPtD;
+		console.log(compiledBlur);
+		blurId = getId();
+		$('body').append(compiledBlur);
 		var tcset = new Object();
-		tcset = set;
+		tcset = clone(set);
 		tcset["blur"] = 0;
+		tcset["container"] = 0;
 		tcset["contents"] = "";
 		tcset["background"] = "rgba(0,0,0,0)";
 		tcset["css"] = "";
 		tcset["group"] = "blurcontainer";
 		this.blurredContainer = new FluidBox(tcset);
 		var tset = new Object();
-		tset = set;
+		tset = clone(set);
 		tset["container"] = this.blurredContainer.id;
 		tset["blur"] = 0;
 		tset["contents"] = "";
 		tset["background"] = "rgba(0,0,0,0)";
-		tset["css"] = "filter:blur("+this.blur+"px);";
+		tDataA="filter:url(#blur";
+		tDataB=blurId+");";
+		tDataC=tDataA+tDataB;
+		console.log(tDataC);
+		tset["css"] = tDataC;
 		tset["group"] = "blurrybox";
+		this.blurryBox = new FluidBox(tset);
+		blur(this.blur,this.blurredContainer.id);
 		$(this.anchor).appendTo(this.blurredContainer.anchor);
-/* 		this.blurBox = new FluidBox(tset);
-		blurPtA='<svg id="';
-		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="f1" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
-		blurPtC='" /></filter></defs></svg>';
-		compiledBlur = blurPtA+newId()+blurPtB+this.blur+blurPtC; */
+ 		this.blurredContainer.show();
 	}
 	this.compute = function() {
 		if(this.wunit == "rem") {
@@ -377,6 +439,7 @@ function FluidBox(set) {
 	//$(this.anchor).css('z-index',"-1");
 	this.compute();
 	this.show = function(animation){
+		if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
 		targetElement = this.anchor;
 		$(this.anchor).css('z-index',this.zindex);
 		if(animation == "none") {
