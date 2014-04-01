@@ -395,21 +395,21 @@ function FluidBox(set) {
 			$(targetElement).css('opacity',this.opacity);
 		}
 		if(animation == "zoomhalffade") {
-			$(targetElement).css('top',(tComputedHeighth/4)+'px');
-			$(targetElement).css('left',(tComputedWidth/4)+'px');
+			//$(targetElement).css('top',(tComputedHeighth/4)+'px');
+			//$(targetElement).css('left',(tComputedWidth/4)+'px');
 /*			$(targetElement).css('width',(tComputedWidth/2)+'px');
 			$(targetElement).css('height',(tComputedHeighth/2)+'px'); */
-			$(targetElement).animate({ zoom: 0.5 }, 0);
+			$(targetElement).animate({ scale: 0.5 }, 0);
 			$(targetElement).css('opacity','0');
 			$(targetElement).show();
 			bodyWidth = $('body').width();
 			bodyHeighth = $('body').height();
 			$(targetElement).animate({
 				opacity: this.opacity,
-				left: computedHpa,
-				top: computedVpa,
-				zoom: 1
-			}, 5000, "linear");
+				//left: computedHpa,
+				//top: computedVpa,
+				scale: 1
+			}, 500, "linear");
 /*				width: tComputedWidth+"px",
 				height: tComputedHeighth+"px" */
 		}
