@@ -83,7 +83,6 @@ function RecomputeMetrics() {
 //TODO: Constrained boxes currently don't work.
 //TODO: blur, crop, and zindex are unimplemented.
 function FluidBox(set) {
-	console.log("Set container: "+set["container"]);
 	AllBoxes[AllBoxes.length+1] = this;
 	/* HOW TO CREATE A FLUIDBOX (options can be omitted if desired; default values shown):
 	var set = new Object();
@@ -193,7 +192,6 @@ function FluidBox(set) {
 	if(typeof set["group"] !== "undefined") { this.group = set["group"];}
 	if(typeof set["zindex"] !== "undefined") { this.zindex = set["zindex"];}
 	if(typeof set["css"] !== "undefined") { this.css = set["css"];}
-	console.log("Container: "+getAnchor(this.container));
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
@@ -202,44 +200,6 @@ function FluidBox(set) {
 	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
-	if(this.blur != 0) {
-		//Hi! I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #fluidBox15 at http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=ember_dev What am I doing wrong? Thanks!
-		blurPtA='<svg id="blur';
-		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="blur';
-		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
-		blurPtD='" /></filter></defs></svg>';
-		compiledBlur = blurPtA+newId()+blurPtB+newId()+blurPtC+this.blur+blurPtD;
-		console.log(compiledBlur);
-		blurId = getId();
-		$('body').append(compiledBlur);
-		var tcset = new Object();
-		tcset = clone(set);
-		tcset["blur"] = 0;
-		tcset["container"] = 0;
-		tcset["contents"] = "";
-		tcset["background"] = "rgba(0,0,0,0)";
-		tcset["css"] = "";
-		tcset["group"] = "blurcontainer";
-		this.blurredContainer = new FluidBox(tcset);
-		tcset=null;
-		var tset = new Object();
-		tset = clone(set);
-		tset["container"] = this.blurredContainer.id;
-		tset["blur"] = 0;
-		tset["contents"] = "";
-		tset["background"] = "-moz-element(#fluidBox10) no-repeat fixed";
-		tDataA="filter:url(#blur";
-		tDataB=blurId+");";
-		tDataC=tDataA+tDataB;
-		console.log(tDataC);
-		tset["css"] = tDataC;
-		tset["group"] = "blurrybox";
-		this.blurryBox = new FluidBox(tset);
-		tset=null;
-		$(this.anchor).appendTo(this.blurredContainer.anchor);
- 		this.blurryBox.show("none");
- 		this.blurredContainer.show("none");
-	}
 	this.compute = function() {
 		if(this.wunit == "rem") {
 			this.width = this.width * getRootElementEmSize();
@@ -459,6 +419,44 @@ function FluidBox(set) {
 			}, 250, "linear");
 		}
 	};
+	if(this.blur != 0) {
+		//Hi! I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #fluidBox15 at http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=ember_dev What am I doing wrong? Thanks!
+		blurPtA='<svg id="blur';
+		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="blur';
+		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
+		blurPtD='" /></filter></defs></svg>';
+		compiledBlur = blurPtA+newId()+blurPtB+newId()+blurPtC+this.blur+blurPtD;
+		console.log(compiledBlur);
+		blurId = getId();
+		$('body').append(compiledBlur);
+		var tcset = new Object();
+		tcset = clone(set);
+		tcset["blur"] = 0;
+		tcset["container"] = this.container;
+		tcset["contents"] = "";
+		tcset["background"] = "rgba(0,0,0,0)";
+		tcset["css"] = "";
+		tcset["group"] = "blurcontainer";
+		this.blurredContainer = new FluidBox(tcset);
+		tcset=null;
+		var tset = new Object();
+		tset = clone(set);
+		tset["container"] = this.blurredContainer.id;
+		tset["blur"] = 0;
+		tset["contents"] = "";
+		tset["background"] = "-moz-element(#fluidBox10) no-repeat fixed";
+		tDataA="filter:url(#blur";
+		tDataB=blurId+");";
+		tDataC=tDataA+tDataB;
+		console.log(tDataC);
+		tset["css"] = tDataC;
+		tset["group"] = "blurrybox";
+		this.blurryBox = new FluidBox(tset);
+		tset=null;
+		$(this.anchor).appendTo(this.blurredContainer.anchor);
+ 		this.blurryBox.show("none");
+ 		this.blurredContainer.show("none");
+	}
 }
 function LoadingScreen(container) {
 	var set = new Object();
