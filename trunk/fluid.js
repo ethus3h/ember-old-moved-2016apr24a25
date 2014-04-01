@@ -422,7 +422,7 @@ function FluidBox(set) {
 		}
 	};
 	if(this.blur != 0) {
-		//Not working. I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #fluidBox15 at http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=ember_dev
+		//Not working. I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #fluidBox15
 		blurPtA='<svg id="blur';
 		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="blur';
 		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
