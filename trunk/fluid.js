@@ -397,8 +397,9 @@ function FluidBox(set) {
 		if(animation == "zoomhalffade") {
 			$(targetElement).css('top',(tComputedHeighth/4)+'px');
 			$(targetElement).css('left',(tComputedWidth/4)+'px');
-			$(targetElement).css('width',(tComputedWidth/2)+'px');
-			$(targetElement).css('height',(tComputedHeighth/2)+'px');
+/*			$(targetElement).css('width',(tComputedWidth/2)+'px');
+			$(targetElement).css('height',(tComputedHeighth/2)+'px'); */
+			$(targetElement).animate({ zoom: 0.5 }, 0);
 			$(targetElement).css('opacity','0');
 			$(targetElement).show();
 			bodyWidth = $('body').width();
@@ -407,9 +408,10 @@ function FluidBox(set) {
 				opacity: this.opacity,
 				left: computedHpa,
 				top: computedVpa,
-				width: tComputedWidth+"px",
-				height: tComputedHeighth+"px"
-			}, 500, "linear");
+				zoom: 1
+			}, 5000, "linear");
+/*				width: tComputedWidth+"px",
+				height: tComputedHeighth+"px" */
 		}
 		if(animation == "fade") {
 			$(targetElement).css('opacity','0');
@@ -420,7 +422,7 @@ function FluidBox(set) {
 		}
 	};
 	if(this.blur != 0) {
-		//Hi! I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #fluidBox15 at http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=ember_dev What am I doing wrong? Thanks!
+		//Not working. I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #fluidBox15 at http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=ember_dev
 		blurPtA='<svg id="blur';
 		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="blur';
 		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
