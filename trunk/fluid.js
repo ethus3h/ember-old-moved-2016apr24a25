@@ -279,8 +279,7 @@ function FluidBox(set) {
 			computedVpa = tComputedVpa+vposunitA;
 		}
 		if(this.vptattunit == '%') {
-			console.log('doom');
-			tComputedVpa = tComputedVpa - ($(getAnchor(this.vpanchor)).height() * (this.vptattach / 100));
+			tComputedVpa = tComputedVpa + ($(getAnchor(this.vpanchor)).height() * (this.vptattach / 100));
 			computedVpa = tComputedVpa+vposunitA;
 		}
 		//Calculate the horizontal attach point
@@ -290,7 +289,7 @@ function FluidBox(set) {
 			computedHpa = tComputedHpa+hposunitA;
 		}
 		if(this.hptattunit == '%') {
-			tComputedHpa = tComputedHpa - ($(getAnchor(this.hpanchor)).width() * (this.hptattach / 100));
+			tComputedHpa = tComputedHpa + ($(getAnchor(this.hpanchor)).width() * (this.hptattach / 100));
 			computedHpa = tComputedHpa+hposunitA;
 		}
 		/*Spec:
@@ -307,25 +306,22 @@ function FluidBox(set) {
 		*/
 		if(this.vconstrain==true) {
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
-				console.log("above top");
+				vDelta = $(getAnchor(this.vconattach)).position().top - tComputedVpa;
+				tComputedHeighth = tComputedHeighth - vDelta;
 				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
-				console.log("Setting vpos of "+this.anchor+" to "+tComputedVpa);
 			}
-			console.log((tComputedVpa + tComputedHeighth) + "below bottom" + ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height()));
 			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height())) {
 				tComputedHeighth = $(getAnchor(this.vconattach)).height() - (tComputedVpa - $(getAnchor(this.vconattach)).position().top);
-				console.log("Setting heighth of "+this.anchor+" to "+tComputedHeighth);
 			}
 		}
 		if(this.hconstrain==true) {
-			console.log("hconstrain evaluated as true");
 			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
+				hDelta = $(getAnchor(this.hconattach)).position().left - tComputedHpa;
+				tComputedWidth = tComputedWidth - hDelta;
 				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
-				console.log("Setting hpos of "+this.anchor+" to "+tComputedHpa);
 			}
 			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width())) {
 				tComputedWidth = $(getAnchor(this.hconattach)).width() - (tComputedHpa - $(getAnchor(this.hconattach)).position().left);
-				console.log("Setting width of "+this.anchor+" to "+tComputedWidth);
 			}
 		}
 		//recompute relative heighth for constrained boxes
@@ -395,6 +391,7 @@ function LoadingScreen(container) {
 	var set = new Object();
 	set["vpattach"] = 100;
 	set["vpanchor"] = this.Loadingremc.id;
+	//set["vconattach"] = this.Loadingremc.id;
 	this.LoadingConstraint = new FluidBox(set);
 	var compute
 	var set = new Object();
