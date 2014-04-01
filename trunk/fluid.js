@@ -17,27 +17,7 @@ function getAnchor(id)
 	}
 	return "#FluidBox"+id;
 }
-blur = function (amount,target) {
-/*
-Amount: amount to blur
-Target: area to blur
-*/
-	var w = $(getAnchor(target)).width();
-	var h = $(getAnchor(target)).height();
-	html2canvas(document.body, {
-		onrendered: function (canvas) {
-			document.body.appendChild(canvas);
-			$('canvas').wrap(getAnchor(target));
-		},
-		width: w,
-		height: h
-	});
-	$('canvas, #partial-overlay, #cover').hide();
-	$('#canvas').css('filter',amount);
-	$('#cover').fadeIn('slow', function () {
-		$('#partial-overlay').fadeIn('slow');
-	});
-};
+
 //from http://tzi.fr/js/snippet/convert-em-in-px
 function getRootElementEmSize(){return parseFloat(getComputedStyle(document.documentElement).fontSize);}
 //from http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object
@@ -250,7 +230,6 @@ function FluidBox(set) {
 		tset["css"] = tDataC;
 		tset["group"] = "blurrybox";
 		this.blurryBox = new FluidBox(tset);
-		blur(this.blur,this.blurredContainer.id);
 		$(this.anchor).appendTo(this.blurredContainer.anchor);
  		this.blurredContainer.show();
 	}
