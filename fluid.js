@@ -391,7 +391,6 @@ function LoadingScreen(container) {
 	var set = new Object();
 	set["vpattach"] = 100;
 	set["vpanchor"] = this.Loadingremc.id;
-	//set["vconattach"] = this.Loadingremc.id;
 	this.LoadingConstraint = new FluidBox(set);
 	var compute
 	var set = new Object();
@@ -444,7 +443,6 @@ function LoadingScreen(container) {
 	set["hpattach"] = 50;
 	set["css"] = "margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite";
 	this.LoadingSpinner = new FluidBox(set);
-	//var LoadingSpinner = new FluidBox("", "rgba(0,0,0,0)",1,0,LoadingBox.id,LoadingBox.id,0,"%",135,"%",0,true,LoadingBox.id,50,"%",50,"%",null,false,LoadingBox.id,75,"%",LoadingBox.id,100,"relative",null,"loadingSpinnerContainer",null,"");
 	this.show = function() {
 		this.LoadingSpinner.show("none");
 		this.LoadingCase.show("none");
