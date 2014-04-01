@@ -119,8 +119,8 @@ class FluidActive
             " ",
             '><',
         );
-        return trim(preg_replace('/\s+/', ' ', str_replace("\n", ' ', str_replace($univNeedles, $univHaystacks, $data))));
-        //return $data;
+        //return trim(preg_replace('/\s+/', ' ', str_replace("\n", ' ', str_replace($univNeedles, $univHaystacks, $data))));
+        return $data;
     }
     function getQueryCount($db)
     {
