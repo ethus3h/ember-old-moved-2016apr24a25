@@ -387,6 +387,7 @@ function FluidBox(set) {
 }
 function LoadingScreen(container) {
 	var set = new Object();
+	set["container"] = container;
 	set["background"] = "#b7b0b0";
 	this.LoadingBg = new FluidBox(set);
 	var set = new Object();
@@ -462,5 +463,3 @@ function LoadingScreen(container) {
 		this.LoadingBg.show("fade");
 	}
 }
-MainLoadingScreen = new LoadingScreen(0);
-MainLoadingScreen.show();
