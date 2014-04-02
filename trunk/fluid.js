@@ -445,8 +445,13 @@ function FluidBox(set) {
 		tset = clone(set);
 		tset["container"] = this.blurredContainer.id;
 		tset["blur"] = 0;
+		tset["wanchor"] = this.blurredContainer.id;
+		tset["width"] = 50;
+		tset["hpanchor"] = this.blurredContainer.id;
+		tset["hpos"] = 25;
 		tset["contents"] = "";
-		tset["background"] = "-moz-element(#fluidBox10) no-repeat fixed";
+		tset["background"] = "-moz-element(#FluidBox10) no-repeat fixed";
+		//tset["background"] = "rgba(255,0,255,0.5)";
 		tDataA="filter:url(#blur";
 		tDataB=blurId+");";
 		tDataC=tDataA+tDataB;
