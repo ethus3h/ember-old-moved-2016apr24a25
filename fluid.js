@@ -268,6 +268,9 @@ function FluidBox(set) {
 		if(this.hunit == "relative") {
 			hunitA = wunitA;
 		}
+		if(this.wunit == "relative") {
+			wunitA = hunitA;
+		}
 		tComputedWidth = this.width;
 		tComputedHeighth = this.heighth;
 		tComputedHpos = $(getAnchor(this.hpanchor)).position().left + this.hpos;
@@ -289,6 +292,10 @@ function FluidBox(set) {
 		if(this.hunit == 'relative') {
 			tComputedHeighth = tComputedWidth * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+hunitA;
+		}
+		if(this.wunit == 'relative') {
+			tComputedWidth = tComputedHeighth * (this.heighth / 100);
+			computedWidth = tComputedWidth+wunitA;
 		}
 		//Calculate the vpos
 		computedVpos = tComputedVpos + vposunitA;
