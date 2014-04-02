@@ -451,7 +451,6 @@ function FluidBox(set) {
 		tcset["contents"] = "";
 		tcset["background"] = "rgba(0,0,0,0)";
 		tcset["border"] = "";
-		tcset["shadow"] = "";
 		tcset["css"] = "";
 		tcset["group"] = "blurcontainer";
 		this.blurredContainer = new FluidBox(tcset);
@@ -459,8 +458,7 @@ function FluidBox(set) {
 		var tset = new Object();
 		tset = clone(set);
 		tset["container"] = this.blurredContainer.id;
-		tcset["border"] = "";
-		tcset["shadow"] = "";
+		tset["border"] = "";
 		tset["blur"] = 0;
 		tset["wanchor"] = this.blurredContainer.id;
 		tset["width"] = 100;
