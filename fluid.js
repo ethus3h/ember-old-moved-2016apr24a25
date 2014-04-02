@@ -161,6 +161,8 @@ function FluidBox(set) {
 	//Override values if provided
 	if(typeof set["contents"] !== "undefined") { this.contents = set["contents"];}
 	if(typeof set["background"] !== "undefined") { this.background = set["background"];}
+	if(typeof set["border"] !== "undefined") { this.background = set["border"];}
+	if(typeof set["shadow"] !== "undefined") { this.background = set["shadow"];}
 	if(typeof set["opacity"] !== "undefined") { this.opacity = set["opacity"];}
 	if(typeof set["blur"] !== "undefined") { this.blur = set["blur"];}
 	if(typeof set["container"] !== "undefined") { this.container = set["container"];}
@@ -197,6 +199,8 @@ function FluidBox(set) {
 	this.anchor = getAnchor(this.id);
 	console.debug(this);
 	$(this.anchor).css('background',this.background);
+	$(this.anchor).css('border',this.border);
+	$(this.anchor).css('box-shadow',this.shadow);
 	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
@@ -453,9 +457,9 @@ function FluidBox(set) {
 		tset["container"] = this.blurredContainer.id;
 		tset["blur"] = 0;
 		tset["wanchor"] = this.blurredContainer.id;
-		tset["width"] = 50;
+		tset["width"] = 100;
 		tset["hpanchor"] = this.blurredContainer.id;
-		tset["hpos"] = 25;
+		//tset["hpos"] = 100;
 		tset["contents"] = "";
 		tset["background"] = "-moz-element(#FluidBox10) no-repeat fixed";
 		//tset["background"] = "rgba(255,0,255,0.5)";
@@ -475,6 +479,10 @@ function FluidBox(set) {
 function LoadingScreen(container) {
 	var set = new Object();
 	set["container"] = container;
+	set["wanchor"] = container;
+	set["hanchor"] = container;
+	set["vpanchor"] = container;
+	set["hpanchor"] = container;
 	set["background"] = "#b7b0b0";
 	this.LoadingBg = new FluidBox(set);
 	set=null;
