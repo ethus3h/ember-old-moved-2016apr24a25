@@ -13,7 +13,7 @@ function getAnchor(id)
 {
 	id = String(id).replace("FluidBox","");
 	if(id==0) {
-		return "body";
+		return "#pageContents";
 	}
 	return "#FluidBox"+id;
 }
@@ -402,8 +402,8 @@ function FluidBox(set) {
 			$(targetElement).animate({ scale: 0.5 }, 0);
 			$(targetElement).css('opacity','0');
 			$(targetElement).show();
-			bodyWidth = $('body').width();
-			bodyHeighth = $('body').height();
+			bodyWidth = $('#pageContents').width();
+			bodyHeighth = $('#pageContents').height();
 			$(targetElement).animate({
 				opacity: this.opacity,
 				//left: computedHpa,
@@ -430,7 +430,7 @@ function FluidBox(set) {
 		compiledBlur = blurPtA+newId()+blurPtB+newId()+blurPtC+this.blur+blurPtD;
 		console.log(compiledBlur);
 		blurId = getId();
-		$('body').append(compiledBlur);
+		$('#pageContents').append(compiledBlur);
 		var tcset = new Object();
 		tcset = clone(set);
 		tcset["blur"] = 0;
