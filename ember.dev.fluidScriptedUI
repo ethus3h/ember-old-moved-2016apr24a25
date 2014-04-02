@@ -68,6 +68,7 @@ var set = new Object();
 set["container"] = this.Ember.id;
 set["group"] = "loginContainer";
 set["background"] = "rgba(151,87,255,0.25)";
+set["border"] = "1px dotted white";
 set["blur"] = 10;
 set["width"] = 50;
 set["wunit"] = '%';
