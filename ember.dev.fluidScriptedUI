@@ -67,10 +67,10 @@ set=null;
 var set = new Object();
 set["container"] = this.Ember.id;
 set["group"] = "loginContainer";
-set["background"] = "rgba(206,190,232,0.4)";
-set["border"] = "1px solid rgba(255,255,255,0.75)";
-set["shadow"] = "0px 0px 2px #FFFFFF";
-set["blur"] = 10;
+//set["background"] = "rgba(206,190,232,0.4)";
+//set["border"] = "1px solid rgba(255,255,255,0.75)";
+//set["shadow"] = "0px 0px 2px #FFFFFF";
+//set["blur"] = 10;
 set["width"] = 50;
 set["wunit"] = '%';
 set["vconattach"] = this.vLoginConstraintC.id;
@@ -81,6 +81,27 @@ set["hpos"] = 50;
 set["hpattach"] = 50;
 this.loginContainer = new FluidBox(set);
 set=null;
+
+this.loginPanel = new Panel(this.loginContainer.id);
+
+var set = new Object();
+set["container"] = this.loginContainer.id;
+set["vconattach"] = this.loginContainer.id;
+set["hconattach"] = this.loginContainer.id;
+set["wanchor"] = this.loginContainer.id;
+set["width"] = 33.3333;
+set["wunit"] = "%";
+this.loginLabels = new FluidBox(set);
+set = null;
+
+var set = new Object();
+set["container"] = this.loginContainer.id;
+set["hpanchor"] = this.loginContainer.id;
+set["hpos"] = 33.3333;
+set["wanchor"] = this.loginContainer.id;
+set["width"] = 66.6666;
+this.loginEntry = new FluidBox(set);
+set = null;
 
 /* LoginLoadingScreen = new LoadingScreen(this.loginContainer.id);
 LoginLoadingScreen.show(); */
@@ -115,6 +136,7 @@ $(window).load(function() {
 	hLoginConstraintB.show("none");
 	hLoginConstraintC.show("none");
 	loginContainer.show("none");
+	loginPanel.show("none");
 	Ember.show("zoomhalffade");
 });
 

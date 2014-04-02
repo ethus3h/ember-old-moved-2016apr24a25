@@ -175,6 +175,7 @@ function FluidBox(set) {
 	if(typeof set["vptattunit"] !== "undefined") { this.vptattunit = set["vptattunit"];}
 	if(typeof set["vpos"] !== "undefined") { this.vpos = set["vpos"];}
 	if(typeof set["vposunit"] !== "undefined") { this.vposunit = set["vposunit"];}
+	this.vconattach = this.container;
 	if(typeof set["vconattach"] !== "undefined") { this.vconattach = set["vconattach"];}
 	if(typeof set["vconstrain"] !== "undefined") { this.vconstrain = set["vconstrain"];}
 	if(typeof set["hpanchor"] !== "undefined") { this.hpanchor = set["hpanchor"];}
@@ -184,6 +185,7 @@ function FluidBox(set) {
 	if(typeof set["hptattunit"] !== "undefined") { this.hpattunit = set["hptattunit"];}
 	if(typeof set["hpos"] !== "undefined") { this.hpos = set["hpos"];}
 	if(typeof set["hposunit"] !== "undefined") { this.hposunit = set["hposunit"];}
+	this.hconattach = this.container;
 	if(typeof set["hconattach"] !== "undefined") { this.hconattach = set["hconattach"];}
 	if(typeof set["hconstrain"] !== "undefined") { this.hconstrain = set["hconstrain"];}
 	if(typeof set["wanchor"] !== "undefined") { this.wanchor = set["wanchor"];}
@@ -353,7 +355,9 @@ function FluidBox(set) {
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
 				//console.log("top constrained");
 				vDelta = $(getAnchor(this.vconattach)).position().top - tComputedVpa;
-				tComputedHeighth = tComputedHeighth - vDelta;
+				if((tComputedHeighth - vDelta) > 0) {
+					tComputedHeighth = tComputedHeighth - vDelta;
+				}
 				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
 			}
 			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height())) {
@@ -363,13 +367,16 @@ function FluidBox(set) {
 		}
 		if(this.hconstrain==true) {
 			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
-				//console.log("left constrained");
+				console.log("left constrained");
+				console.log(tComputedHpa + "<" + $(getAnchor(this.hconattach)).position().left);
 				hDelta = $(getAnchor(this.hconattach)).position().left - tComputedHpa;
-				tComputedWidth = tComputedWidth - hDelta;
+				if((tComputedWidth - hDelta) > 0) {
+					tComputedWidth = tComputedWidth - hDelta;
+				}
 				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
 			}
 			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width())) {
-				//console.log("right constrained");
+				console.log("right constrained");
 				tComputedWidth = $(getAnchor(this.hconattach)).width() - (tComputedHpa - $(getAnchor(this.hconattach)).position().left);
 			}
 		}
@@ -570,5 +577,20 @@ function LoadingScreen(container) {
 		this.LoadingCase.show("none");
 		this.LoadingBox.show("none");
 		this.LoadingBg.show("fade");
+	}
+}
+function Panel(container) {
+	var set = new Object();
+	set["container"] = container;
+	set["background"] = "rgba(206,190,232,0.4)";
+	set["border"] = "1px solid rgba(255,255,255,0.75)";
+	set["shadow"] = "0px 0px 2px #FFFFFF";
+	set["blur"] = 10;
+	set["vconattach"] = container;
+	set["hconattach"] = container;
+	this.panelBox = new FluidBox(set);
+	set=null;
+	this.show = function(animation) {
+		this.panelBox.show(animation);
 	}
 }
