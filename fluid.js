@@ -161,8 +161,6 @@ function FluidBox(set) {
 	//Override values if provided
 	if(typeof set["contents"] !== "undefined") { this.contents = set["contents"];}
 	if(typeof set["background"] !== "undefined") { this.background = set["background"];}
-	if(typeof set["border"] !== "undefined") { this.background = set["border"];}
-	if(typeof set["shadow"] !== "undefined") { this.background = set["shadow"];}
 	if(typeof set["opacity"] !== "undefined") { this.opacity = set["opacity"];}
 	if(typeof set["blur"] !== "undefined") { this.blur = set["blur"];}
 	if(typeof set["container"] !== "undefined") { this.container = set["container"];}
@@ -199,8 +197,6 @@ function FluidBox(set) {
 	this.anchor = getAnchor(this.id);
 	console.debug(this);
 	$(this.anchor).css('background',this.background);
-	$(this.anchor).css('border',this.border);
-	$(this.anchor).css('box-shadow',this.shadow);
 	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
