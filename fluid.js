@@ -202,6 +202,7 @@ function FluidBox(set) {
 	console.debug(this);
 	$(this.anchor).css('background',this.background);
 	$(this.anchor).css('border',this.border);
+	$(this.anchor).css('box-shadow',this.shadow);
 	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
