@@ -127,6 +127,8 @@ function FluidBox(set) {
 	//Default values
 	this.contents = "";
 	this.background = "rgba(0,0,0,0)";
+	this.border = "";
+	this.shadow = "";
 	this.opacity = 1;
 	this.blur = 0;
 	this.container = 0;
@@ -161,6 +163,8 @@ function FluidBox(set) {
 	//Override values if provided
 	if(typeof set["contents"] !== "undefined") { this.contents = set["contents"];}
 	if(typeof set["background"] !== "undefined") { this.background = set["background"];}
+	if(typeof set["border"] !== "undefined") { this.background = set["border"];}
+	if(typeof set["shadow"] !== "undefined") { this.background = set["shadow"];}
 	if(typeof set["opacity"] !== "undefined") { this.opacity = set["opacity"];}
 	if(typeof set["blur"] !== "undefined") { this.blur = set["blur"];}
 	if(typeof set["container"] !== "undefined") { this.container = set["container"];}
