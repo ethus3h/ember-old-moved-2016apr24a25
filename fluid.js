@@ -551,3 +551,6 @@ function LoadingScreen(container) {
 		this.LoadingBg.show("fade");
 	}
 }
+var set = new Object();
+this.globalBox = new FluidBox(set);
+set = null;
