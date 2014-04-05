@@ -567,9 +567,10 @@ function LoadingScreen(container) {
 	set["wunit"] = "%";
 	set["heighth"] = 100;
 	set["hunit"] = "relative";
+	set["border"] =  "0.1rem solid #444444 transparent transparent !important";
 	set["vpattach"] = 0;
 	set["hpattach"] = 50;
-	set["css"] = "margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem;border-style:solid;border-color:#444444 transparent transparent;border-radius:50%;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite";
+	set["css"] = "margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem !important;border-style:solid !important;border: 0.1rem solid #444444 transparent transparent !important;border-color:#444444 transparent transparent !important;border-radius:50% !important;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite";
 	this.LoadingSpinner = new FluidBox(set);
 	set=null;
 	this.show = function() {
