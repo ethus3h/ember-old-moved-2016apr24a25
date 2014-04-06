@@ -1,4 +1,12 @@
 /* JavaScript code for Fluid//Active. */
+
+/* TODO:
+
+* FluidArea: 
+* FluidRow: Row of boxes in a specific order (have it take care of setting the positions relative to each other). Pass a list of FluidBox config arrays to the constructor. This will need to understand layout element progression order of the configured language. Be able to specify widths and heighths for the inner boxes to override those computed by the automatic layout.
+* FluidGrid: Set of dynamically created FluidRows. Move FluidBoxes between FluidRows and adjust the heighths and widths of the rows to fit nicely in a given area. Pass a list of FluidBox config arrays to the constructor. This will need to understand layout element progression order of the configured language. Be able to specify widths and heighths for the inner boxes to override those computed by the automatic layout.
+
+*/
 globalIdsCounter = 1;
 function newId()
 {
@@ -91,6 +99,8 @@ function FluidBox(set) {
 	set=null; */
 	/* ~Explanations of parameters~
 	contents: HTML contents of the box. Generally a <svg> tag. This will be displayed on top of the bgcolor.
+	boxes: Array of FluidBox config arrays to use to create more boxes within this one if this has a FluidRow or FluidGrid behavior.
+	behavior: Can be box, row, or grid. Box is default. Row and grid are more complex layout systems to be used with the boxes property.
 	background: Background. Can be any CSS background
 	blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
 	opacity: CSS opacity value
@@ -127,7 +137,7 @@ function FluidBox(set) {
 	//Default values
 	this.contents = "";
 	this.background = "rgba(0,0,0,0)";
-	this.border = "";
+	this.border = undefined;
 	this.shadow = "";
 	this.opacity = 1;
 	this.blur = 0;
@@ -157,9 +167,18 @@ function FluidBox(set) {
 	this.heighth = 100;
 	this.hunit = "%";
 	this.crop = 0;
+	this.lmar = 0;
+	this.rmar = 0;
+	this.tmar = 0;
+	this.bmar = 0;
+	this.lmarunit = "%";
+	this.rmarunit = "%";
+	this.tmarunit = "%";
+	this.bmarunit = "%";
 	this.group = "";
 	this.zindex = undefined;
 	this.css = "";
+	this.bordercolor = undefined;
 	//Override values if provided
 	if(typeof set["contents"] !== "undefined") { this.contents = set["contents"];}
 	if(typeof set["background"] !== "undefined") { this.background = set["background"];}
@@ -195,15 +214,26 @@ function FluidBox(set) {
 	if(typeof set["heighth"] !== "undefined") { this.heighth = set["heighth"];}
 	if(typeof set["hunit"] !== "undefined") { this.hunit = set["hunit"];}
 	if(typeof set["crop"] !== "undefined") { this.crop = set["crop"];}
+	if(typeof set["lmar"] !== "undefined") { this.lmar = set["lmar"];}
+	if(typeof set["rmar"] !== "undefined") { this.rmar = set["rmar"];}
+	if(typeof set["tmar"] !== "undefined") { this.tmar = set["tmar"];}
+	if(typeof set["bmar"] !== "undefined") { this.bmar = set["bmar"];}
+	if(typeof set["lmarunit"] !== "undefined") { this.lmarunit = set["lmarunit"];}
+	if(typeof set["rmarunit"] !== "undefined") { this.rmarunit = set["rmarunit"];}
+	if(typeof set["tmarunit"] !== "undefined") { this.tmarunit = set["tmarunit"];}
+	if(typeof set["bmarunit"] !== "undefined") { this.bmarunit = set["bmarunit"];}
 	if(typeof set["group"] !== "undefined") { this.group = set["group"];}
 	if(typeof set["zindex"] !== "undefined") { this.zindex = set["zindex"];}
 	if(typeof set["css"] !== "undefined") { this.css = set["css"];}
+	if(typeof set["bordercolor"] !== "undefined") { this.bordercolor = set["bordercolor"];}
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.anchor = getAnchor(this.id);
 	console.debug(this);
 	$(this.anchor).css('background',this.background);
-	$(this.anchor).css('border',this.border);
+	if(typeof this.border !== "undefined") {
+		$(this.anchor).css('border',this.border);
+	}
 	$(this.anchor).css('box-shadow',this.shadow);
 	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
@@ -241,6 +271,22 @@ function FluidBox(set) {
 			this.vptattach = this.vptattach * getRootElementEmSize();
 			this.vptattunit = "px";
 		}
+		if(this.lmarunit == "rem") {
+			this.lmar = this.lmar * getRootElementEmSize();
+			this.lmarunit = "px";
+		}
+		if(this.rmarunit == "rem") {
+			this.rmar = this.rmar * getRootElementEmSize();
+			this.rmarunit = "px";
+		}
+		if(this.tmarunit == "rem") {
+			this.tmar = this.tmar * getRootElementEmSize();
+			this.tmarunit = "px";
+		}
+		if(this.bmarunit == "rem") {
+			this.bmar = this.bmar * getRootElementEmSize();
+			this.bmarunit = "px";
+		}
 		wunitA = this.wunit;
 		if(this.wunit == "%") {
 			wunitA = "px";
@@ -272,6 +318,22 @@ function FluidBox(set) {
 		vptattunitA = this.vptattunit;
 		if(this.vptattunit == "%") {
 			vptattunitA = "px";
+		}
+		lmarunitA = this.lmarunit;
+		if(this.lmarunit == "%") {
+			lmarunitA = "px";
+		}
+		rmarunitA = this.rmarunit;
+		if(this.rmarunit == "%") {
+			rmarunitA = "px";
+		}
+		tmarunitA = this.tmarunit;
+		if(this.tmarunit == "%") {
+			tmarunitA = "px";
+		}
+		bmarunitA = this.bmarunit;
+		if(this.bmarunit == "%") {
+			bmarunitA = "px";
 		}
 		if(this.hunit == "relative") {
 			hunitA = wunitA;
@@ -488,6 +550,9 @@ function FluidBox(set) {
  		this.blurryBox.show("none");
  		this.blurredContainer.show("none");
 	}
+	if(typeof this.bordercolor !== "undefined") {
+		$(this.anchor).css('border-color',this.bordercolor);		
+	}
 }
 function LoadingScreen(container) {
 	var set = new Object();
@@ -567,13 +632,18 @@ function LoadingScreen(container) {
 	set["wunit"] = "%";
 	set["heighth"] = 100;
 	set["hunit"] = "relative";
-	set["border"] =  "0.1rem solid #444444 transparent transparent !important";
+	//set["border"] =  "0.1rem solid #444444";
+	set["bordercolor"] = "#444444 transparent transparent";
 	set["vpattach"] = 0;
 	set["hpattach"] = 50;
-	set["css"] = "margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem !important;border-style:solid !important;border: 0.1rem solid #444444 transparent transparent !important;border-color:#444444 transparent transparent !important;border-radius:50% !important;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite";
+	set["css"] = "margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem !important;border-style:solid !important;border-color:#444444 transparent transparent !important;border-radius:50% !important;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite";
 	this.LoadingSpinner = new FluidBox(set);
 	set=null;
 	this.show = function() {
+		this.Loadingremc.show("none");
+		this.LoadingConstraint.show("none");
+		this.LoadingConstraintB.show("none");
+		this.LoadingConstraintC.show("none");
 		this.LoadingSpinner.show("none");
 		this.LoadingCase.show("none");
 		this.LoadingBox.show("none");
@@ -586,7 +656,7 @@ function Panel(container) {
 	set["background"] = "rgba(206,190,232,0.4)";
 	set["border"] = "1px solid rgba(255,255,255,0.75)";
 	set["shadow"] = "0px 0px 2px #FFFFFF";
-	set["blur"] = 10;
+	set["blur"] = 2;
 	set["vconattach"] = container;
 	set["hconattach"] = container;
 	this.panelBox = new FluidBox(set);
