@@ -5,6 +5,7 @@
 * FluidArea: 
 * FluidRow: Row of boxes in a specific order (have it take care of setting the positions relative to each other). Pass a list of FluidBox config arrays to the constructor. This will need to understand layout element progression order of the configured language. Be able to specify widths and heighths for the inner boxes to override those computed by the automatic layout.
 * FluidGrid: Set of dynamically created FluidRows. Move FluidBoxes between FluidRows and adjust the heighths and widths of the rows to fit nicely in a given area. Pass a list of FluidBox config arrays to the constructor. This will need to understand layout element progression order of the configured language. Be able to specify widths and heighths for the inner boxes to override those computed by the automatic layout.
+* ComputedValue: an object representing a number to be computed
 
 */
 globalIdsCounter = 1;
@@ -80,6 +81,11 @@ function Group(name) {
 var AllBoxes = new Array();
 
 function RecomputeMetrics() {
+	for (var i = 1; i < AllNumbers.length; i = i + 1 ) {
+		if(AllNumbers[i]!=undefined) {
+			AllNumbers[i].compute();
+		}
+	}
 	for (var i = 1; i < AllBoxes.length; i = i + 1 ) {
 		if(AllBoxes[i]!=undefined) {
 			AllBoxes[i].compute();
@@ -87,7 +93,15 @@ function RecomputeMetrics() {
 	}
 };
 
-
+function ComputedValue(rule) {
+	AllNumbers[AllNumbers.length+1] = this;
+	//this.rule = 'return ' + rule + ';';
+	this.compute = function() {
+		//eval(this.rule);
+		return this.rule();
+	};
+	this.compute();
+}
 //TODO: Constrained boxes currently don't work.
 //TODO: blur, crop, and zindex are unimplemented.
 function FluidBox(set) {
@@ -100,7 +114,7 @@ function FluidBox(set) {
 	/* ~Explanations of parameters~
 	contents: HTML contents of the box. Generally a <svg> tag. This will be displayed on top of the bgcolor.
 	boxes: Array of FluidBox config arrays to use to create more boxes within this one if this has a FluidRow or FluidGrid behavior.
-	behavior: Can be box, row, or grid. Box is default. Row and grid are more complex layout systems to be used with the boxes property.
+	behaviour: Can be box, row, or grid. Box is default. Row and grid are more complex layout systems to be used with the boxes property.
 	background: Background. Can be any CSS background
 	blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
 	opacity: CSS opacity value
@@ -136,6 +150,8 @@ function FluidBox(set) {
 	*/
 	//Default values
 	this.contents = "";
+	this.boxes = undefined;
+	this.behaviour = "box";
 	this.background = "rgba(0,0,0,0)";
 	this.border = undefined;
 	this.shadow = "";
@@ -175,12 +191,18 @@ function FluidBox(set) {
 	this.rmarunit = "%";
 	this.tmarunit = "%";
 	this.bmarunit = "%";
+	this.lmarl = 0;
+	this.rmarl = 0;
+	this.tmarl = 0;
+	this.bmarl = 0;
 	this.group = "";
 	this.zindex = undefined;
 	this.css = "";
 	this.bordercolor = undefined;
 	//Override values if provided
 	if(typeof set["contents"] !== "undefined") { this.contents = set["contents"];}
+	if(typeof set["boxes"] !== "undefined") { this.boxes = set["boxes"];}
+	if(typeof set["behaviour"] !== "undefined") { this.behaviour = set["behaviour"];}
 	if(typeof set["background"] !== "undefined") { this.background = set["background"];}
 	if(typeof set["border"] !== "undefined") { this.border = set["border"];}
 	if(typeof set["shadow"] !== "undefined") { this.shadow = set["shadow"];}
@@ -222,6 +244,14 @@ function FluidBox(set) {
 	if(typeof set["rmarunit"] !== "undefined") { this.rmarunit = set["rmarunit"];}
 	if(typeof set["tmarunit"] !== "undefined") { this.tmarunit = set["tmarunit"];}
 	if(typeof set["bmarunit"] !== "undefined") { this.bmarunit = set["bmarunit"];}
+	this.lmarl = this.container;
+	this.rmarl = this.container;
+	this.tmarl = this.container;
+	this.bmarl = this.container;
+	if(typeof set["lmarl"] !== "undefined") { this.lmarl = set["lmarl"];}
+	if(typeof set["rmarl"] !== "undefined") { this.rmarl = set["rmarl"];}
+	if(typeof set["tmarl"] !== "undefined") { this.tmarl = set["tmarl"];}
+	if(typeof set["bmarl"] !== "undefined") { this.bmarl = set["bmarl"];}
 	if(typeof set["group"] !== "undefined") { this.group = set["group"];}
 	if(typeof set["zindex"] !== "undefined") { this.zindex = set["zindex"];}
 	if(typeof set["css"] !== "undefined") { this.css = set["css"];}
@@ -322,18 +352,22 @@ function FluidBox(set) {
 		lmarunitA = this.lmarunit;
 		if(this.lmarunit == "%") {
 			lmarunitA = "px";
+			this.lmar = $(getAnchor(this.lmarl)).width() * (this.lmar / 100);
 		}
 		rmarunitA = this.rmarunit;
 		if(this.rmarunit == "%") {
 			rmarunitA = "px";
+			this.rmar = $(getAnchor(this.rmarl)).width() * (this.rmar / 100);
 		}
 		tmarunitA = this.tmarunit;
 		if(this.tmarunit == "%") {
 			tmarunitA = "px";
+			this.tmar = $(getAnchor(this.tmarl)).height() * (this.tmar / 100);
 		}
 		bmarunitA = this.bmarunit;
 		if(this.bmarunit == "%") {
 			bmarunitA = "px";
+			this.bmar = $(getAnchor(this.bmarl)).height() * (this.bmar / 100);
 		}
 		if(this.hunit == "relative") {
 			hunitA = wunitA;
@@ -453,14 +487,16 @@ function FluidBox(set) {
 		if(tComputedHeighth < 3 * getRootElementEmSize()) {
 			$(this.anchor).css("font-size",tComputedHeighth);
 		}
-		computedVpa = tComputedVpa+vposunitA;
-		computedHeighth = tComputedHeighth+hunitA;
-		computedHpa = tComputedHpa+hposunitA;
-		computedWidth = tComputedWidth+wunitA;
+		computedVpa = (tComputedVpa+vposunitA) + this.tmar;
+		computedHeighth = (tComputedHeighth+hunitA) - this.bmar;
+		computedHpa = (tComputedHpa+hposunitA) + this.lmar;
+		computedWidth = (tComputedWidth+wunitA) - this.rmar;
 		$(this.anchor).css('top',computedVpa);
 		$(this.anchor).css('left',computedHpa);
 		$(this.anchor).css('height',computedHeighth);
 		$(this.anchor).css('width',computedWidth);
+		if(this.behaviour == "row") {
+		}
 	};
 	$(this.anchor).css('opacity',"0");
 	$(this.anchor).css('display',"block");
