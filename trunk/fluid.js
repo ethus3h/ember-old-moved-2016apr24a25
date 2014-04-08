@@ -79,6 +79,7 @@ function Group(name) {
 	this.add = function(box) {this.boxes[this.boxes.length+1] = box};
 }
 var AllBoxes = new Array();
+var AllNumbers = new Array();
 
 function RecomputeMetrics() {
 	for (var i = 1; i < AllNumbers.length; i = i + 1 ) {
@@ -369,6 +370,10 @@ function FluidBox(set) {
 			bmarunitA = "px";
 			this.bmar = $(getAnchor(this.bmarl)).height() * (this.bmar / 100);
 		}
+		/* console.log("lmar: "+this.lmar);
+		console.log("rmar: "+this.rmar);
+		console.log("tmar: "+this.tmar);
+		console.log("bmar: "+this.bmar); */
 		if(this.hunit == "relative") {
 			hunitA = wunitA;
 		}
@@ -487,10 +492,18 @@ function FluidBox(set) {
 		if(tComputedHeighth < 3 * getRootElementEmSize()) {
 			$(this.anchor).css("font-size",tComputedHeighth);
 		}
-		computedVpa = (tComputedVpa+vposunitA) + this.tmar;
-		computedHeighth = (tComputedHeighth+hunitA) - this.bmar;
-		computedHpa = (tComputedHpa+hposunitA) + this.lmar;
-		computedWidth = (tComputedWidth+wunitA) - this.rmar;
+		/* console.log("lmar: "+this.lmar);
+		console.log("rmar: "+this.rmar);
+		console.log("tmar: "+this.tmar);
+		console.log("bmar: "+this.bmar); */
+		computedVpa = ((tComputedVpa + parseInt(this.tmar,10))+vposunitA);
+		computedHeighth = ((tComputedHeighth - parseInt(this.bmar,10))+hunitA);
+		computedHpa = ((tComputedHpa + parseInt(this.lmar,10))+hposunitA);
+		computedWidth = ((tComputedWidth - parseInt(this.rmar,10))+wunitA);
+		//console.log((tComputedVpa+vposunitA) - computedVpa);
+		//console.log((tComputedHeighth+hunitA) - computedHeighth);
+		/* console.log(computedVpa);
+		console.log(computedHeighth); */
 		$(this.anchor).css('top',computedVpa);
 		$(this.anchor).css('left',computedHpa);
 		$(this.anchor).css('height',computedHeighth);
