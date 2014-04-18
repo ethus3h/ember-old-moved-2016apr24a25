@@ -139,14 +139,14 @@ function Box(set) {
 
 
 	~~COMPLEX BEHAVIOR~~
+	UNIMPLEMENTED behaviour: Can be box, row, flow, grid, vpack, or hpack. Box is default. Row, flow, grid, vpack, and hpack are more complex layout systems to be used with the boxes property.
 	UNIMPLEMENTED boxes: Array of Box config arrays to use to create more boxes within this one if this has a Row or Grid behavior.
-	UNIMPLEMENTED behaviour: Can be box, row, or grid. Box is default. Row and grid are more complex layout systems to be used with the boxes property.
 	
 	
 	~~STYLING~~
 	AVAILABLE     background: Background. Can be any CSS background property
 	PARTIAL       blur: Use a blur effect on whatever's behind this box. Specify -1 for iOS 7 effect. s(This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
-	UNIMPLEMENTED bluratt: element to use as the blur background
+	UNTESTED      bluratt: element to use as the blur background
 	AVAILABLE     opacity: CSS opacity value
 	AVAILABLE     css: Any other arbitrary CSS to specify for this box
 	
@@ -210,6 +210,7 @@ function Box(set) {
 	this.shadow = "";
 	this.opacity = 1;
 	this.blur = 0;
+	this.bluratt = 10;
 	this.container = 0;
 	this.vpanchor = 0;
 	this.vpattach = 0;
@@ -261,6 +262,7 @@ function Box(set) {
 	if(typeof set["shadow"] !== "undefined") { this.shadow = set["shadow"];}
 	if(typeof set["opacity"] !== "undefined") { this.opacity = set["opacity"];}
 	if(typeof set["blur"] !== "undefined") { this.blur = set["blur"];}
+	if(typeof set["bluratt"] !== "undefined") { this.bluratt = set["bluratt"];}
 	if(typeof set["container"] !== "undefined") { this.container = set["container"];}
 	if(typeof set["vpanchor"] !== "undefined") { this.vpanchor = set["vpanchor"];}
 	if(typeof set["vpattach"] !== "undefined") { this.vpattach = set["vpattach"];}
@@ -637,7 +639,7 @@ function Box(set) {
 		tset["hpanchor"] = this.blurredContainer.id;
 		//tset["hpos"] = 100;
 		tset["contents"] = "";
-		tset["background"] = "-moz-element(#Box10) no-repeat fixed";
+		tset["background"] = "-moz-element(#"+this.bluratt+") no-repeat fixed";
 		//tset["background"] = "rgba(255,0,255,0.5)";
 		tDataA="filter:url(#blur";
 		tDataB=blurId+");";
