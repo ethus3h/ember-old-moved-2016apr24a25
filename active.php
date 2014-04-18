@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set("display_errors", true);
+$displayDebugMessages = True;
 #Futuramerlin Active Scripting Library. Version 0.9181, 18 April 2014.
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
