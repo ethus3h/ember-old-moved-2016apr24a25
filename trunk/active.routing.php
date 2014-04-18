@@ -43,6 +43,9 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'ember_dev') {
         ember_dev();
     }
+    if ($wintNeeded == 'calendarsync') {
+        calendarsync();
+    }
 }
 
 // function logAdd($text){

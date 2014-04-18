@@ -90,4 +90,17 @@ function ember_dev()
     $main->close();
 
 }
+function calendarsync()
+{
+
+    $main = new FluidActive('Schedule');
+        $db           = new FractureDB('futuqiur_calendarsync');
+    $table  = $db->getTable('data');
+	$main.append('</script>');
+	$main.DBTableEntry($db, $table);
+	$main.append('<script type="text/javascript">');
+	$main->write(file_get_contents("calendarsync.fluidScriptedUI"));
+    $main->close();
+
+}
 ?>
