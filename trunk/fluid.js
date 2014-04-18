@@ -106,7 +106,7 @@ function ComputedValue(rule) {
 //TODO: Constrained boxes currently don't work.
 function Box(set) {
 	AllBoxes[AllBoxes.length+1] = this;
-	/* HOW TO CREATE A Box (options can be omitted if desired; default values shown):
+	/* HOW TO CREATE A BOX (options can be omitted if desired; default values shown):
 	var set = new Object();
 	set["property"] = "value";
 	NewBox = new Box(set);
