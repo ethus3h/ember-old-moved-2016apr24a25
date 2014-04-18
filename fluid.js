@@ -3,8 +3,8 @@
 /* TODO:
 
 * FluidArea: 
-* FluidRow: Row of boxes in a specific order (have it take care of setting the positions relative to each other). Pass a list of FluidBox config arrays to the constructor. This will need to understand layout element progression order of the configured language. Be able to specify widths and heighths for the inner boxes to override those computed by the automatic layout.
-* FluidGrid: Set of dynamically created FluidRows. Move FluidBoxes between FluidRows and adjust the heighths and widths of the rows to fit nicely in a given area. Pass a list of FluidBox config arrays to the constructor. This will need to understand layout element progression order of the configured language. Be able to specify widths and heighths for the inner boxes to override those computed by the automatic layout.
+* Row: Row of boxes in a specific order (have it take care of setting the positions relative to each other). Pass a list of Box config arrays to the constructor. This will need to understand layout element progression order of the configured language. Be able to specify widths and heighths for the inner boxes to override those computed by the automatic layout.
+* Grid: Set of dynamically created Rows. Move Boxes between Rows and adjust the heighths and widths of the rows to fit nicely in a given area. Pass a list of Box config arrays to the constructor. This will need to understand layout element progression order of the configured language. Be able to specify widths and heighths for the inner boxes to override those computed by the automatic layout.
 * ComputedValue: an object representing a number to be computed
 
 */
@@ -12,19 +12,19 @@ globalIdsCounter = 1;
 function newId()
 {
 	globalIdsCounter++;
-	return 'FluidBox'+globalIdsCounter;
+	return 'Box'+globalIdsCounter;
 }
 function getId()
 {
-	return 'FluidBox'+globalIdsCounter;
+	return 'Box'+globalIdsCounter;
 }
 function getAnchor(id)
 {
-	id = String(id).replace("FluidBox","");
+	id = String(id).replace("Box","");
 	if(id==0) {
 		return "#pageContents";
 	}
-	return "#FluidBox"+id;
+	return "#Box"+id;
 }
 
 //from http://tzi.fr/js/snippet/convert-em-in-px
@@ -62,7 +62,7 @@ function clone(obj) {
     throw new Error("Unable to copy obj! Its type isn't supported.");
 }
 function showGroup(group,animation) {
-	/* group is the parameter that was passed to the FluidBox when it was instantiated */
+	/* group is the parameter that was passed to the Box when it was instantiated */
 	for (var i = 1; i < AllBoxes.length; i = i + 1 ) {
 		if(AllBoxes[i]!=undefined) {
 			if(AllBoxes[i].group == group) {
@@ -104,50 +104,102 @@ function ComputedValue(rule) {
 	this.compute();
 }
 //TODO: Constrained boxes currently don't work.
-//TODO: blur, crop, and zindex are unimplemented.
-function FluidBox(set) {
+function Box(set) {
 	AllBoxes[AllBoxes.length+1] = this;
-	/* HOW TO CREATE A FLUIDBOX (options can be omitted if desired; default values shown):
+	/* HOW TO CREATE A Box (options can be omitted if desired; default values shown):
 	var set = new Object();
 	set["property"] = "value";
-	NewFluidBox = new FluidBox(set);
+	NewBox = new Box(set);
 	set=null; */
 	/* ~Explanations of parameters~
-	contents: HTML contents of the box. Generally a <svg> tag. This will be displayed on top of the bgcolor.
-	boxes: Array of FluidBox config arrays to use to create more boxes within this one if this has a FluidRow or FluidGrid behavior.
-	behaviour: Can be box, row, or grid. Box is default. Row and grid are more complex layout systems to be used with the boxes property.
-	background: Background. Can be any CSS background
-	blur: Use a blur effect on whatever's behind this box. (This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
-	opacity: CSS opacity value
-	container: ID of the container box into which this box should be inserted. ID 0 is the browser window.
-	vpanchor: ID of the box to which this box's vertical postion should be relative. ID 0 is the browser window.
-	vpattach: The vertical position at which to attach this box to the anchor box.
-	vpattunit: The units of vpattach. Only % or px allowed.
-	vptattach: The vertical position on the anchor box at which to attach this box to the anchor box.
-	vptattunit: The units of vptattach. Only % or px allowed.
-	vpos: Vertical position of this box relative to the vpanchor box.
-	vposunit: Units (%, or possibly rem?) of vpos
-	vconattach: The box to constrain this box's vertical size to.
-	vconstrain: Whether to keep the box's vertical size within the box specified in vconattach.
-	hpanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
-	hpattach: The horizontal position at which to attach this box to the anchor box.
-	hpattunit: The units of hpattach. Only % or px allowed.
-	hptattach: The horizontal position on the anchor box at which to attach this box to the anchor box.
-	hptattunit: The units of hptattach. Only % or px allowed.
-	hpos: Vertical position of this box relative to the hpanchor box.
-	hposunit: Units (%, or possibly rem?) of hpos
-	hconattach: The box to constrain this box's horizontal size to.
-	hconstrain: Whether to keep the box's horizontal size within the box specified in hconattach.
-	wanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
-	width: Width of this box relative to the wanchor box.
-	wunit: Units (%, or possibly rem?) of width
-	hanchor: ID of the box to which this box's heighth should be relative. ID 0 is the browser window.
-	heighth: Width of this box relative to the hanchor box.
-	hunit: Units (%, relative, or possibly rem?) of heighth. The value "relative" will set the heighth equal to the specified percentage of the computed width.
-	crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
-	group: a class for the div to later be used for grouping divs
-	zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
-	css: Any other arbitrary CSS to specify for this box
+	
+	~~~~~~~~~~~~~~~~~~~~~~~
+	~~~~ DOCUMENTATION ~~~~
+	~~~~~~~~~~~~~~~~~~~~~~~
+	
+	~~CONTENTS~~
+	UNTESTED      contents: HTML contents of the box. Generally a <svg> tag. This will be displayed on top of the bgcolor.
+	
+	
+	~~GENERAL LAYOUT AND GROUPING~~
+	AVAILABLE     container: ID of the container box into which this box should be inserted. ID 0 is the browser window.
+	UNTESTED      zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
+	UNIMPLEMENTED crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
+
+	
+	~~SCRIPTING~~
+	AVAILABLE     group: a class for the div to later be used for grouping divs
+	
+	
+	~~INTERACTION~~
+	UNIMPLEMENTED autoexp: Boolean. Automatically expand the box to fill autoexpatt on hover.
+	UNIMPLEMENTED autoexpatt: ID of the container box this box should expand to fill on hover if autoexp is true.
+	UNIMPLEMENTED autoexpbackdrop: Backdrop to draw behind this box, filling the autoexpbackdropatt box. This can be a boolean, a string (css background property), or a box config array.
+	UNIMPLEMENTED autoexpbackdropatt: ID of the container box to clip the autoexpbackdrop to. ID 0 is the browser window.
+
+
+	~~COMPLEX BEHAVIOR~~
+	UNIMPLEMENTED boxes: Array of Box config arrays to use to create more boxes within this one if this has a Row or Grid behavior.
+	UNIMPLEMENTED behaviour: Can be box, row, or grid. Box is default. Row and grid are more complex layout systems to be used with the boxes property.
+	
+	
+	~~STYLING~~
+	AVAILABLE     background: Background. Can be any CSS background property
+	PARTIAL       blur: Use a blur effect on whatever's behind this box. Specify -1 for iOS 7 effect. s(This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
+	UNIMPLEMENTED bluratt: element to use as the blur background
+	AVAILABLE     opacity: CSS opacity value
+	AVAILABLE     css: Any other arbitrary CSS to specify for this box
+	
+	
+	~~BACKDROPS (e. g., for modals)~~
+	UNIMPLEMENTED backdrop: Backdrop to draw behind this box, filling the backdropatt box. This can be a boolean, a string (css background property), or a box config array.
+	UNIMPLEMENTED backdropatt: ID of the container box to clip the backdrop to. ID 0 is the browser window.
+	
+	
+	~~VERTICAL POSITIONING~~
+	AVAILABLE     vpanchor: ID of the box to which this box's vertical postion should be relative. ID 0 is the browser window.
+	AVAILABLE     vpattach: The vertical position at which to attach this box to the anchor box.
+	UNTESTED      vpattunit: The units of vpattach. Only % or px allowed.
+	UNTESTED      vptattach: The vertical position on the anchor box at which to attach this box to the anchor box.
+	UNTESTED      vptattunit: The units of vptattach. Only % or px allowed.
+	AVAILABLE     vpos: Vertical position of this box relative to the vpanchor box.
+	AVAILABLE     vposunit: Units (%, or possibly rem?) of vpos
+	UNTESTED      vconattach: The box to constrain this box's vertical size to.
+	UNTESTED      vconstrain: Whether to keep the box's vertical size within the box specified in vconattach.
+	UNTESTED      hanchor: ID of the box to which this box's heighth should be relative. ID 0 is the browser window.
+	AVAILABLE     heighth: Width of this box relative to the hanchor box.
+	AVAILABLE     hunit: Units (%, relative, or possibly rem?) of heighth. The value "relative" will set the heighth equal to the specified percentage of the computed width.
+	
+	
+	~~HORIZONTAL POSITIONING~~
+	AVAILABLE     hpanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
+	UNTESTED      hpattach: The horizontal position at which to attach this box to the anchor box.
+	UNTESTED      hpattunit: The units of hpattach. Only % or px allowed.
+	UNTESTED      hptattach: The horizontal position on the anchor box at which to attach this box to the anchor box.
+	UNTESTED      hptattunit: The units of hptattach. Only % or px allowed.
+	AVAILABLE     hpos: Vertical position of this box relative to the hpanchor box.
+	AVAILABLE     hposunit: Units (%, or possibly rem?) of hpos
+	UNTESTED      hconattach: The box to constrain this box's horizontal size to.
+	UNTESTED      hconstrain: Whether to keep the box's horizontal size within the box specified in hconattach.
+	UNTESTED      wanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
+	AVAILABLE     width: Width of this box relative to the wanchor box.
+	AVAILABLE     wunit: Units (%, or possibly rem?) of width
+	
+	
+	~~MARGINS~~
+	UNTESTED      lmar: Left margin width
+	UNTESTED      rmar: Right margin width
+	UNTESTED      tmar: Top margin heighth
+	UNTESTED      bmar: Bottom margin heighth
+	UNTESTED      lmarunit: Left margin width unit
+	UNTESTED      rmarunit: Right margin width unit
+	UNTESTED      tmarunit: Top margin heighth unit
+	UNTESTED      bmarunit: Bottom margin heighth unit
+	UNTESTED      lmarl: ID of the box to which this box's left margin width should be relative. ID 0 is the browser window.
+	UNTESTED      rmarl: ID of the box to which this box's right margin width should be relative. ID 0 is the browser window.
+	UNTESTED      tmarl: ID of the box to which this box's top margin heighth should be relative. ID 0 is the browser window.
+	UNTESTED      bmarl: ID of the box to which this box's bottom margin heighth should be relative. ID 0 is the browser window.
+	
 	*/
 	//Default values
 	this.contents = "";
@@ -553,7 +605,7 @@ function FluidBox(set) {
 		}
 	};
 	if(this.blur != 0) {
-		//Not working. I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #fluidBox15
+		//Not working. I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #Box15
 		blurPtA='<svg id="blur';
 		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="blur';
 		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
@@ -572,7 +624,7 @@ function FluidBox(set) {
 		tcset["shadow"] = "";
 		tcset["css"] = "";
 		tcset["group"] = "blurcontainer";
-		this.blurredContainer = new FluidBox(tcset);
+		this.blurredContainer = new Box(tcset);
 		tcset=null;
 		var tset = new Object();
 		tset = clone(set);
@@ -585,7 +637,7 @@ function FluidBox(set) {
 		tset["hpanchor"] = this.blurredContainer.id;
 		//tset["hpos"] = 100;
 		tset["contents"] = "";
-		tset["background"] = "-moz-element(#FluidBox10) no-repeat fixed";
+		tset["background"] = "-moz-element(#Box10) no-repeat fixed";
 		//tset["background"] = "rgba(255,0,255,0.5)";
 		tDataA="filter:url(#blur";
 		tDataB=blurId+");";
@@ -593,7 +645,7 @@ function FluidBox(set) {
 		console.log(tDataC);
 		tset["css"] = tDataC;
 		tset["group"] = "blurrybox";
-		this.blurryBox = new FluidBox(tset);
+		this.blurryBox = new Box(tset);
 		tset=null;
 		$(this.anchor).appendTo(this.blurredContainer.anchor);
  		this.blurryBox.show("none");
@@ -611,7 +663,7 @@ function LoadingScreen(container) {
 	set["vpanchor"] = container;
 	set["hpanchor"] = container;
 	set["background"] = "#b7b0b0";
-	this.LoadingBg = new FluidBox(set);
+	this.LoadingBg = new Box(set);
 	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBg.id;
@@ -619,18 +671,18 @@ function LoadingScreen(container) {
 	set["vpattach"] = 100;
 	set["heighth"] = 0;
 	set["hunit"] = "rem";
-	this.Loadingremc = new FluidBox(set);
+	this.Loadingremc = new Box(set);
 	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBg.id;
 	set["vpattach"] = 100;
 	set["vpanchor"] = this.Loadingremc.id;
-	this.LoadingConstraint = new FluidBox(set);
+	this.LoadingConstraint = new Box(set);
 	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBg.id;
 	set["heighth"] = 75;
-	this.LoadingConstraintB = new FluidBox(set);
+	this.LoadingConstraintB = new Box(set);
 	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBg.id;
@@ -638,7 +690,7 @@ function LoadingScreen(container) {
 	set["vpos"] = 1;
 	set["vposunit"] = "rem";
 	set["vconattach"] = this.LoadingConstraintB.id;
-	this.LoadingConstraintC = new FluidBox(set);
+	this.LoadingConstraintC = new Box(set);
 	set=null;
 	var set = new Object();
 	set["contents"] = "Loading...";
@@ -653,7 +705,7 @@ function LoadingScreen(container) {
 	set["vpattach"] = 0;
 	set["hpattach"] = 50;
 	set["css"] = "font-size:3rem;font-family:'Lato',sans-serif;color:#444444;display:flex;align-items:center;flex-flow:column";
-	this.LoadingBox = new FluidBox(set);
+	this.LoadingBox = new Box(set);
 	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBox.id;
@@ -667,7 +719,7 @@ function LoadingScreen(container) {
 	set["hunit"] = "relative";
 	set["vpattach"] = 0;
 	set["hpattach"] = 50;
-	this.LoadingCase = new FluidBox(set);
+	this.LoadingCase = new Box(set);
 	set=null;
 	var set = new Object();
 	set["container"] = this.LoadingBox.id;
@@ -686,7 +738,7 @@ function LoadingScreen(container) {
 	set["vpattach"] = 0;
 	set["hpattach"] = 50;
 	set["css"] = "margin-left:auto;margin-right:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;display:block;width:100%;height:100%;margin:auto;border-width:0.1rem !important;border-style:solid !important;border-color:#444444 transparent transparent !important;border-radius:50% !important;-webkit-animation:spin 2.2s linear infinite;animation:spin 2.2s linear infinite";
-	this.LoadingSpinner = new FluidBox(set);
+	this.LoadingSpinner = new Box(set);
 	set=null;
 	this.show = function() {
 		this.Loadingremc.show("none");
@@ -708,7 +760,7 @@ function Panel(container) {
 	set["blur"] = 2;
 	set["vconattach"] = container;
 	set["hconattach"] = container;
-	this.panelBox = new FluidBox(set);
+	this.panelBox = new Box(set);
 	set=null;
 	this.show = function(animation) {
 		this.panelBox.show(animation);
