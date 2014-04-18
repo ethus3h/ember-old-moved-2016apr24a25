@@ -21,7 +21,7 @@ class FluidActive
     }
     function DBTableEntry($db, $table)
     {
-        $this->append('<div style="background-color:#A8FFEC;left:20px;top:20px;bottom:20px;right:20px;position:fixed;overflow-x:scroll;overflow-y:scroll;z-index:2000;text-align:center;"><table><thead><tr>');
+        $this->append('<div style="background-color:#A8FFEC;left:50px;top:50px;bottom:50px;right:50px;position:fixed;overflow-x:scroll;overflow-y:scroll;z-index:2000;text-align:center;"><table><thead><tr>');
     	$this->state = 0;
         $idList = $db->listIds($table);
         if(strlen($idList) < 1) {

@@ -93,7 +93,8 @@ function ember_dev()
 function calendarsync()
 {
     $main = new FluidActive('calendarsync','Schedule');
-    $main->append('what: What the event/project is. begin: When it begins. end: When it ends or is due. location: Where it happens. notes: e.g. assignment details.');
+    //$main->append('what: What the event/project is. begin: When it begins. end: When it ends or is due. location: Where it happens. notes: e.g. assignment details.');
+    print('what: What the event/project is. begin: When it begins. end: When it ends or is due. location: Where it happens. notes: e.g. assignment details.');
     $db = new FractureDB('futuqiur_calendarsync');
     $table  = $db->getTable('data');
 
