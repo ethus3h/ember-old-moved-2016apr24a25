@@ -609,7 +609,7 @@ function Box(set) {
 	if(this.blur != 0) {
 		//Not working. I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #Box15
 		blurPtA='<svg id="blur';
-		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="blur';
+		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="';
 		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
 		blurPtD='" /></filter></defs></svg>';
 		compiledBlur = blurPtA+newId()+blurPtB+newId()+blurPtC+this.blur+blurPtD;
@@ -639,9 +639,9 @@ function Box(set) {
 		tset["hpanchor"] = this.blurredContainer.id;
 		//tset["hpos"] = 100;
 		tset["contents"] = "";
-		tset["background"] = "-moz-element(#"+this.bluratt+") no-repeat fixed";
+		tset["background"] = "-moz-element(#Box"+String(this.bluratt)+") no-repeat fixed";
 		//tset["background"] = "rgba(255,0,255,0.5)";
-		tDataA="filter:url(#blur";
+		tDataA="filter:url(#";
 		tDataB=blurId+");";
 		tDataC=tDataA+tDataB;
 		console.log(tDataC);
