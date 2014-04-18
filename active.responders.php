@@ -352,9 +352,11 @@ function DBSimpleSubmissionHandler()
     $dataTargetField  = $_REQUEST['dataTargetField'];
     $dataTargetRowId  = $_REQUEST['dataTargetRowId'];
     $dataValue        = $_REQUEST['dataValue'];
-    $db               = new FractureDB($dbName);
-    $db->setField($dataTargetTable, $dataTargetField, $dataValue, $dataTargetRowId);
-    $db->close();
+    if($authorizationKey == $generalAuthKey) {
+		$db               = new FractureDB($dbName);
+		$db->setField($dataTargetTable, $dataTargetField, $dataValue, $dataTargetRowId);
+		$db->close(); 
+    }
 }
 
 function emberBackend() {
