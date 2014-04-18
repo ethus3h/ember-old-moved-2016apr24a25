@@ -127,6 +127,12 @@ function Box(set) {
 	UNIMPLEMENTED crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
 
 	
+	~~LAYOUT~~
+	UNIMPLEMENTED rotation: Rotation in degrees. Can be 0, 90, 180, or 270. Most useful set on the main container box (as opposed to enclosed boxes).
+	UNIMPLEMENTED hmirroring: Whether or not to mirror the box horizontally. Boolean.
+	UNIMPLEMENTED vmirroring: Whether or not to mirror the box vertically. Boolean.	
+	
+	
 	~~SCRIPTING~~
 	AVAILABLE     group: a class for the div to later be used for grouping divs
 	
@@ -139,9 +145,22 @@ function Box(set) {
 
 
 	~~COMPLEX BEHAVIOR~~
-	UNIMPLEMENTED behaviour: Can be box, row, flow, grid, vpack, or hpack. Box is default. Row, flow, grid, vpack, and hpack are more complex layout systems to be used with the boxes property.
+	UNIMPLEMENTED behaviour: Can be box, flexrow, row, flow, grid, table, vpack, or hpack.
+							 Box is default. Row, flow, grid, and pack are more complex layout systems to be used with the boxes property.
+							 Flexrow is a single line of boxes, aligned based on their size.
+							 Row is a single line of boxes, aligned equidistantly.
+							 Flow is analogous to text in a word processing document, with boxes being reallocated to new lines when a line becomes too long for the flow layout box.
+							 Grid is an equidistant grid layout (à la graph paper).
+							 Table is a grid with dynamically adjusted box widths and box heights (but constant box widths within columns and constant box heighths within rows).
+							 Vpack is a grid with dynamically adjusted box heighths (but constant box widths within columns).
+							 Hpack is a grid with dynamically adjusted box widths (but constant box heighths within rows).
 	UNIMPLEMENTED boxes: Array of Box config arrays to use to create more boxes within this one if this has a Row or Grid behavior.
-	
+	UNIMPLEMENTED blockprogression: //may be used in the future for a flexbox layout system?
+	UNIMPLEMENTED lineprogression: In a flow, grid, table, vpack or hpack layout, the order in which lines should be layed out relative to each other. Can be "l", "r", "u", or "d" (left, right, up, or down).
+	UNIMPLEMENTED boxprogression: In a flexrow, row, flow, grid, vpack or hpack layout, this is the direction in which the individual boxes should be layed out relative to each other. Can be "l", "r", "u", or "d" (left, right, up, or down).
+	UNIMPLEMENTED boxrotation: Rotation in degrees. Can be 0, 90, 180, or 270.
+	UNIMPLEMENTED justify: In a row or flow layout, how to position the contents within a line, analogous to justification of characters in a word processing document. Can be "l", "c", "f", or "r" (left, center, full, or right).
+
 	
 	~~STYLING~~
 	AVAILABLE     background: Background. Can be any CSS background property
