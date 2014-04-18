@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set("display_errors", true);
+$displayDebugMessages = True;
 //FractureDB is the class that implements the FractureDB data management system.
 class FractureDB
 {
@@ -13,8 +16,14 @@ class FractureDB
         $username = $db_data[$this->name][0];
         $password = $db_data[$this->name][1];
         $host     = $db_data[$this->name][2];
-        $this->db = new Database('mysql:host=' . $host . ';dbname=' . $this->name . ';charset=utf8', $username, $password);
-        $dbh      = $this->db;
+        try {
+	        $this->db = new Database('mysql:host=' . $host . ';dbname=' . $this->name . ';charset=utf8', $username, $password);
+	    }
+	    catch(PDOException $e)
+		{
+			throw new Exception($e->getMessage());
+		}
+		$dbh      = $this->db;
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $dbh->beginTransaction();
     }
@@ -126,6 +135,13 @@ class FractureDB
         #return $this->query('SELECT GROUP_CONCAT(COLUMN_NAME) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name=\''.$table.'\'');
         return $this->query('SELECT COLUMN_NAME,DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name=\'' . $table . '\'');
     }
+    function getSimpleRowList($table)
+    {
+        #explain extended select * from am_urls; show warnings;
+        #return $this->query('SHOW columns FROM '.$table);
+        #return $this->query('SELECT GROUP_CONCAT(COLUMN_NAME) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name=\''.$table.'\'');
+        return $this->query('SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name=\'' . $table . '\'');
+    }
     function getRowType($table, $key)
     {
         #explain extended select * from am_urls; show warnings;
@@ -165,6 +181,7 @@ class FractureDB
     function listIds($table)
     {
         $query      = 'SELECT GROUP_CONCAT(id) FROM ' . $table . ';';
+        //echo $query;
         $qResLevel1 = $this->query($query);
         $qResLevel2 = $qResLevel1[0];
         #print_r($qResLevel2);
@@ -174,7 +191,17 @@ class FractureDB
     {
         $query    = 'SELECT * FROM ' . $table . ' WHERE ' . $field . ' = \'' . $value . '\';';
         $rowData  = $this->query($query);
-        $rowDataP = $rowData[0];
+        //print_r($rowData);
+        if(isset($rowData[0])) {
+        	$rowDataP = $rowData[0];
+        }
+        else {
+        	//row is empty
+        	$rowDataP = $this->getSimpleRowList($table);
+        }
+       //  echo "\n\n~~~~\n\n";
+//         print_r($rowDataP);
+//         echo "\n\n~~~~\n\n";
         return $rowDataP;
     }
     function getRows($table, $field, $value)
@@ -245,10 +272,15 @@ class FractureDB
     {
         $query    = 'SELECT ' . $field . ' FROM ' . $table . ' WHERE id = ' . $id . ';';
         $rowData  = $this->query($query);
-        $rowDataP = $rowData[0];
-        #print_r($rowDataP);
-        #echo $rowDataP[$field];
-        return $rowDataP[$field];
+        if(isset($rowData[0])) {
+        	$rowDataP = $rowData[0];
+			#print_r($rowDataP);
+			#echo $rowDataP[$field];
+			return $rowDataP[$field];
+		}
+		else {
+			return "";
+		}
     }
     function getColumn($table, $field, $filterField = '', $filterValue = '')
     {
@@ -273,7 +305,15 @@ class FractureDB
     function setField($table, $field, $value, $id = '')
     {
         $query = 'INSERT INTO ' . $table . ' (id, ' . $field . ') VALUES (' . $id . ',\'' . $value . '\') ON DUPLICATE KEY UPDATE ' . $field . ' = \'' . $value . '\';';
+        //echo $query;
         $this->query($query);
+    }
+    function getPrimaryKey($table) {
+		$query = "SHOW KEYS FROM " . $table . " WHERE key_name = 'PRIMARY'";
+		//echo $query;
+		$data = $this->query($query);
+		//print_r($data);
+		return $data[0]['Column_name'];
     }
     function addRow($table, $fields, $values)
     {
