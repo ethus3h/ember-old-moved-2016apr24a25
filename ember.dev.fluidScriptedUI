@@ -5,7 +5,7 @@ MainLoadingScreen.show();
 
 var set = new Object();
 set["background"] = "url(\"/d/4278145217_f6f7e5f871_o.jpg\") rgba(0,0,0,0) center center no-repeat";
-this.Ember = new FluidBox(set);
+this.Ember = new Box(set);
 set=null;
 
 var set = new Object();
@@ -16,7 +16,7 @@ set["vpos"] = 100;
 set["heighth"] = 1;
 set["hunit"] = "rem";
 set["vconattach"] = this.Ember.id;
-this.vLoginConstraintA = new FluidBox(set);
+this.vLoginConstraintA = new Box(set);
 set=null;
 
 var set = new Object();
@@ -24,7 +24,7 @@ set["container"] = this.Ember.id;
 set["group"] = "vLoginConstraintB";
 set["vpos"] = 1;
 set["vposunit"] = "rem";
-this.vLoginConstraintB = new FluidBox(set);
+this.vLoginConstraintB = new Box(set);
 set=null;
 
 var set = new Object();
@@ -33,7 +33,7 @@ set["group"] = "vLoginConstraintC";
 set["vpanchor"] = this.vLoginConstraintA.id;
 set["vpattach"] = 100;
 set["vconattach"] = this.vLoginConstraintB.id;
-this.vLoginConstraintC = new FluidBox(set);
+this.vLoginConstraintC = new Box(set);
 set=null;
 
 var set = new Object();
@@ -44,7 +44,7 @@ set["hpos"] = 100;
 set["width"] = 1;
 set["wunit"] = "rem";
 set["hconattach"] = this.Ember.id;
-this.hLoginConstraintA = new FluidBox(set);
+this.hLoginConstraintA = new Box(set);
 set=null;
 
 var set = new Object();
@@ -52,7 +52,7 @@ set["container"] = this.Ember.id;
 set["group"] = "hLoginConstraintB";
 set["hpos"] = 1;
 set["hposunit"] = "rem";
-this.hLoginConstraintB = new FluidBox(set);
+this.hLoginConstraintB = new Box(set);
 set=null;
 
 var set = new Object();
@@ -61,7 +61,7 @@ set["group"] = "hLoginConstraintC";
 set["hpanchor"] = this.hLoginConstraintA.id;
 set["hpattach"] = 100;
 set["hconattach"] = this.hLoginConstraintB.id;
-this.hLoginConstraintC = new FluidBox(set);
+this.hLoginConstraintC = new Box(set);
 set=null;
 
 var set = new Object();
@@ -79,7 +79,7 @@ set["heighth"] = 50;
 set["vpos"] = 25;
 set["hpos"] = 50;
 set["hpattach"] = 50;
-this.loginContainer = new FluidBox(set);
+this.loginContainer = new Box(set);
 set=null;
 
 this.loginPanel = new Panel(this.loginContainer.id);
@@ -91,7 +91,7 @@ set["hconattach"] = this.loginContainer.id;
 set["wanchor"] = this.loginContainer.id;
 set["width"] = 33.3333;
 set["wunit"] = "%";
-this.loginLabels = new FluidBox(set);
+this.loginLabels = new Box(set);
 set = null;
 
 var set = new Object();
@@ -100,7 +100,7 @@ set["hpanchor"] = this.loginContainer.id;
 set["hpos"] = 33.3333;
 set["wanchor"] = this.loginContainer.id;
 set["width"] = 66.6666;
-this.loginEntry = new FluidBox(set);
+this.loginEntry = new Box(set);
 set = null;
 
 /* LoginLoadingScreen = new LoadingScreen(this.loginContainer.id);
@@ -113,7 +113,7 @@ set["width"] = 50;
 set["heighth"] = 50;
 set["vpos"] = 25;
 set["hpos"] = 25;
-this.bgBox = new FluidBox(set);
+this.bgBox = new Box(set);
 set=null;
 
 var set = new Object();
@@ -123,7 +123,7 @@ set["width"] = 50;
 set["heighth"] = 50;
 set["vpos"] = 25;
 set["hpos"] = 25;
-this.blurBox = new FluidBox(set);
+this.blurBox = new Box(set);
 set=null; */
 
 $(window).load(function() {
