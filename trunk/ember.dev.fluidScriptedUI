@@ -104,32 +104,7 @@ set["width"] = (100 / 3) * 2;
 this.loginEntry = new Box(set);
 set = null;
 
-/* LoginLoadingScreen = new LoadingScreen(this.loginContainer.id);
-LoginLoadingScreen.show(); */
-
-/* var set = new Object();
-set["container"] = this.Ember.id;
-set["background"] = "url('http://upload.wikimedia.org/wikipedia/commons/9/9c/Image-Porkeri_001.jpg')";
-set["width"] = 50;
-set["heighth"] = 50;
-set["vpos"] = 25;
-set["hpos"] = 25;
-this.bgBox = new Box(set);
-set=null;
-
-var set = new Object();
-set["container"] = this.Ember.id;
-set["blur"] = "10";
-set["width"] = 50;
-set["heighth"] = 50;
-set["vpos"] = 25;
-set["hpos"] = 25;
-this.blurBox = new Box(set);
-set=null; */
-
 $(window).load(function() {
-	//bgBox.show("none");
-	//blurBox.show("none");
 	vLoginConstraintA.show("none");
 	vLoginConstraintB.show("none");
 	vLoginConstraintC.show("none");
@@ -169,9 +144,6 @@ set["width"] = 10;
 set["hpattach"] = 100;
 set["wanchor"] = this.Ember.id;
 this.loginEntry = new Box(set);
-// console.log("DOOM!")
-// console.debug(set);
-// console.debug(this.loginEntry);
 set = null;
 
 this.loginEntry.show("none");
