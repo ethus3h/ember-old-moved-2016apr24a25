@@ -176,6 +176,10 @@ function Box(set) {
 	
 	~~STYLING~~
 	AVAILABLE     background: Background. Can be any CSS background property
+	AVAILABLE     border: Border. Can be any CSS border property
+	AVAILABLE     borderstyle: Border style. Can be any CSS border-style property
+	AVAILABLE     borderwidth: Border width. Can be any CSS border-width property
+	AVAILABLE     bordercolor: Border color. Can be any CSS border-color property
 	PARTIAL       blur: Use a blur effect on whatever's behind this box. Specify -1 for iOS 7 effect. s(This could actually create another box object below the current one with the content as the blurry SVG?) Result should be like this http://jsfiddle.net/3z6ns/ or this http://jsfiddle.net/YgHA8/1/
 	UNTESTED      bluratt: element to use as the blur background
 	AVAILABLE     opacity: CSS opacity value
@@ -245,6 +249,9 @@ function Box(set) {
 	this.background = "rgba(0,0,0,0)";
 	this.backdrop = false;
 	this.border = undefined;
+	this.borderstyle = undefined;
+	this.borderwidth = undefined;
+	this.bordercolor = undefined;
 	this.shadow = "";
 	this.opacity = 1;
 	this.blur = 0;
@@ -310,6 +317,11 @@ function Box(set) {
 	if(typeof set["background"] !== "undefined") { this.background = set["background"];}
 	if(typeof set["backdrop"] !== "undefined") { this.backdrop = set["backdrop"];}
 	if(typeof set["border"] !== "undefined") { this.border = set["border"];}
+	if(typeof set["borderstyle"] !== "undefined") { this.borderstyle = set["borderstyle"];}
+	if(typeof set["borderwidth"] !== "undefined") { this.borderwidth = set["borderwidth"];}
+	console.debug("SETBORDERWIDTH: "+set["borderwidth"]);
+	console.debug("BORDERWIDTH: "+this.borderwidth);
+	if(typeof set["bordercolor"] !== "undefined") { this.bordercolor = set["border"];}
 	if(typeof set["shadow"] !== "undefined") { this.shadow = set["shadow"];}
 	if(typeof set["opacity"] !== "undefined") { this.opacity = set["opacity"];}
 	if(typeof set["blur"] !== "undefined") { this.blur = set["blur"];}
@@ -384,6 +396,17 @@ function Box(set) {
 	$(this.anchor).css('background',this.background);
 	if(typeof this.border !== "undefined") {
 		$(this.anchor).css('border',this.border);
+	}
+	if(typeof this.borderstyle !== "undefined") {
+		console.debug("Setting borderstyle to "+this.borderstyle);
+		$(this.anchor).css('border-style',this.borderstyle);
+	}
+	if(typeof this.borderwidth !== "undefined") {
+		console.debug("Setting borderwidth to "+this.borderwidth);
+		$(this.anchor).css('border-width',this.borderwidth);
+	}
+	if(typeof this.bordercolor !== "undefined") {
+		$(this.anchor).css('border-color',this.bordercolor);
 	}
 	$(this.anchor).css('box-shadow',this.shadow);
 	$(this.anchor).css('opacity',this.opacity);
@@ -975,17 +998,19 @@ function Panel(container,style,backdrop) {
 	if(style == "white") {
 		set["background"] = "rgba(255,255,255,0.7)";
 		//set["border"] = "1px solid rgba(130,130,255,1)";
-		set["border"] = "1px solid rgba(0,179,255,1)";
+		set["border"] = "0.1rem solid rgba(0,179,255,1)";
 		set["blur"] = 2;
 	}
 	else if(style == "solidwhite") {
 		set["background"] = "rgba(255,255,255,1)";
 		//set["border"] = "1px solid rgba(130,130,255,1)";
-		set["border"] = "1px solid rgba(0,179,255,1)";
+		set["border"] = "0.1rem solid rgba(0,179,255,1)";
 	}
 	else if(style == "solidwhitevert") {
 		set["background"] = "rgba(255,255,255,1)";
-		set["border"] = "none 1px none 1px rgba(0,179,255,1) rgba(0,179,255,1) rgba(0,179,255,1) rgba(0,179,255,1)";
+		set["borderstyle"] = "solid";
+		set["borderwidth"] = "0rem 0.1rem 0rem 0.1rem";
+		set["bordercolor"] =  "rgba(0,179,255,1)";
 	}
 	else if(style == "modalbg") {
 		set["background"] = "rgba(0,0,0,0.8)";
@@ -1000,14 +1025,15 @@ function Panel(container,style,backdrop) {
 	}
 	else {
 		set["background"] = "rgba(206,190,232,0.4)";
-		set["border"] = "1px solid rgba(255,255,255,0.75)";
-		set["shadow"] = "0px 0px 2px #FFFFFF";
+		set["border"] = "0.1rem solid rgba(255,255,255,0.75)";
+		set["shadow"] = "0rem 0rem 0.2rem #FFFFFF";
 		set["blur"] = 2;
 	}
 	set["vconattach"] = container;
 	set["hconattach"] = container;
 	this.panelBox = new Box(set);
 	console.debug(set);
+	console.debug("NEW PANEL CREATED: "+this.panelBox.anchor);
 	this.id = this.panelBox.id;
 	this.anchor = this.panelBox.anchor;
 	set=null;
