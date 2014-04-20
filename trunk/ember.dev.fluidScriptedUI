@@ -144,6 +144,15 @@ $(window).load(function() {
 /* Load user data */
 //$.getScript("/d/r/active.phpanother_script.js");
 
+this.emberCredits = new Panel(this.loginContainer.id);
+
+var set = new Object();
+set["container"] = this.emberCredits.id;
+set["contents"] = "Credits!";
+this.emberCreditsText = new Box(set);
+set = null;
+this.emberCreditsText.show("none");
+
 var set = new Object();
 set["container"] = this.loginContainer.id;
 set["contents"] = "Credits";
@@ -154,12 +163,15 @@ set["vconstrain"] = false;
 set["hpos"] = 100;
 set["vpos"] = 0;
 set["vpattach"] = 0;
-set["hover"] = emberCredits.show("none");
-set["leave"] = emberCredits.hide("none");
+set["enter"] = function() { this.emberCredits.show("none") };
+set["leave"] = function() { this.emberCredits.hide("none") };
 set["width"] = 10;
 set["hpattach"] = 100;
 set["wanchor"] = this.Ember.id;
 this.loginEntry = new Box(set);
+console.log("DOOM!")
+console.debug(set);
+console.debug(this.loginEntry);
 set = null;
 
 this.loginEntry.show("none");
