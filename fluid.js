@@ -985,7 +985,7 @@ function Panel(container,style,backdrop) {
 	}
 	else if(style == "solidwhitevert") {
 		set["background"] = "rgba(255,255,255,1)";
-		set["border"] = "none 1px solid rgba(0,179,255,1) none 1px solid rgba(0,179,255,1)";
+		set["border"] = "none 1px none 1px rgba(0,179,255,1) rgba(0,179,255,1) rgba(0,179,255,1) rgba(0,179,255,1)";
 	}
 	else if(style == "modalbg") {
 		set["background"] = "rgba(0,0,0,0.8)";
