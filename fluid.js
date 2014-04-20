@@ -107,6 +107,12 @@ function ComputedValue(rule) {
 //TODO: Check for constrain attachment: seems to be going to container by default instead of page contents
 function Box(set) {
 	AllBoxes[AllBoxes.length+1] = this;
+	console.debug("MOOOOOOD");
+	this.cfg = set;
+	console.debug(this.cfg);
+	this.cfgc = clone(set);
+	console.debug(this.cfgc);
+	console.debug("DOOOOOOM");
 	/* HOW TO CREATE A BOX (options can be omitted if desired; default values shown):
 	var set = new Object();
 	set["property"] = "value";
@@ -370,7 +376,6 @@ function Box(set) {
 	if(typeof set["enter"] !== "undefined") { this.enter = set["enter"];}
 	if(typeof set["leave"] !== "undefined") { this.leave = set["leave"];}
 	if(typeof set["tap"] !== "undefined") { this.tap = set["tap"];}
-	if(typeof set["container"] !== "undefined") { this.container = set["container"];}
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.shown = false;
@@ -769,7 +774,9 @@ function Box(set) {
 		blurId = getId();
 		$('#pageContents').append(compiledBlur);
 		var tcset = new Object();
-		tcset = clone(set);
+		tcset = clone(this.cfgc);
+		console.debug("DOOOOOOOD!");
+		console.debug(tcset);
 		tcset["blur"] = 0;
 		tcset["container"] = this.container;
 		tcset["contents"] = "";
@@ -781,7 +788,7 @@ function Box(set) {
 		this.blurredContainer = new Box(tcset);
 		tcset=null;
 		var tset = new Object();
-		tset = clone(set);
+		tset = clone(this.cfgc);
 		tset["container"] = this.blurredContainer.id;
 		tset["border"] = "";
 		tset["shadow"] = "";
