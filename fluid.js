@@ -349,7 +349,6 @@ function Box(set) {
 		$(this.anchor).css('border',this.border);
 	}
 	$(this.anchor).css('box-shadow',this.shadow);
-			console.log("Setting opacity of "+this.anchor+" to "+this.opacity);
 	$(this.anchor).css('opacity',this.opacity);
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
@@ -578,7 +577,6 @@ function Box(set) {
 		if(this.behaviour == "row") {
 		}
 	};
-			console.log("Setting opacity of "+this.anchor+" to 0");
 
 	$(this.anchor).css('opacity',"0");
 	$(this.anchor).css('display',"block");
@@ -596,36 +594,30 @@ function Box(set) {
 		console.log("Showing "+this.anchor+" to opacity "+this.opacity+" with animation "+animation+"...");
 		this.compute();
 		if(typeof this.blurryBox !== "undefined") {
-			console.log("Setting opacity of "+this.anchor+" to "+this.opacity);
 			$(this.anchor).css('opacity',this.opacity);
 			$(this.anchor).css('display','block');
 		}
 		targetElement = this.hsanchor;
 		$(targetElement).css('z-index',this.zindex);
 		if(animation == "zoomhalffade") {
-		console.log("Setting opacity of "+this.anchor+" to 0");
 			$(targetElement).css('opacity','0');
 			$(targetElement).css('display','block');
 			$(targetElement).animate({ scale: 0.5 }, 0);
 			//$(targetElement).show();
-		console.log("Setting opacity of "+this.anchor+" to "+this.opacity);
 			$(targetElement).animate({
 				opacity: this.opacity,
 				scale: 1
 			}, 500, "linear");
 		}
 		else if(animation == "fade") {
-		console.log("Setting opacity of "+this.anchor+" to 0");
 			$(targetElement).css('opacity','0');
 			$(targetElement).css('display','block');
-		console.log("Setting opacity of "+this.anchor+" to "+this.opacity);
 			$(targetElement).animate({
 				opacity: this.opacity,
 			}, 250, "linear");
 		}
 		$(targetElement).css('display','block');
 		this.shown = true;
-		console.log("NOW Setting opacity of "+this.anchor+" to "+this.opacity);
 		$(targetElement).css('opacity',this.opacity);
 	};
 	this.hide = function(animation){
@@ -634,7 +626,6 @@ function Box(set) {
 		//if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
 		targetElement = this.anchor;
 		if(animation == "zoomhalffade") {
-		console.log("Setting opacity of "+this.anchor+" to 0");
 			$(targetElement).animate({
 				opacity: 0,
 				scale: 0.5
@@ -642,14 +633,12 @@ function Box(set) {
 			$(targetElement).css('display','none');
 		}
 		else if(animation == "fade") {
-		console.log("Setting opacity of "+this.anchor+" to 0");
 			$(targetElement).animate({
 				opacity: 0,
 			}, 250, "linear");
 			$(targetElement).css('display','none');
 		}
 		else {
-		console.log("Setting opacity of "+this.anchor+" to 0");
 			$(targetElement).css('opacity',0);
 			$(targetElement).css('display','none');
 		}
