@@ -122,8 +122,9 @@ $(window).load(function() {
 this.emberCredits = new Panel(this.loginContainer.id, "white", true);
 
 var set = new Object();
-set["container"] = this.Ember.id;
+set["container"] = this.emberCredits.id;
 set["contents"] = "Credits!";
+set["autoconstrain"] = this.loginContainer.id;
 this.emberCreditsText = new Box(set);
 set = null;
 this.emberCreditsText.show("none");
@@ -132,7 +133,6 @@ var set = new Object();
 set["container"] = this.Ember.id;
 set["contents"] = "Credits";
 set["group"] = "credits";
-set["autoconstrain"] = this.loginContainer.id;
 set["hpanchor"] = this.Ember.id;
 set["input"] = true;
 set["hconstrain"] = false;

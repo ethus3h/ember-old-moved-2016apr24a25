@@ -370,6 +370,7 @@ function Box(set) {
 	if(typeof set["enter"] !== "undefined") { this.enter = set["enter"];}
 	if(typeof set["leave"] !== "undefined") { this.leave = set["leave"];}
 	if(typeof set["tap"] !== "undefined") { this.tap = set["tap"];}
+	if(typeof set["container"] !== "undefined") { this.container = set["container"];}
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.shown = false;
@@ -646,7 +647,7 @@ function Box(set) {
 		}
 	}
 	this.show = function(animation){
-		if(typeof(this.hsanchor) !== "undefined") {
+		//if(typeof(this.hsanchor) !== "undefined") {
 			console.log("Showing "+this.hsanchor+" id " + this.id + " to opacity "+this.opacity+" with animation "+animation+"...");
 			this.compute();
 			if(typeof(this.blurredContainer) !== "undefined") {
@@ -686,10 +687,10 @@ function Box(set) {
 				$(targetElement).css('opacity',this.opacity);
 			}
 			this.shown = true;
-		}
+		//}
 	};
 	this.hide = function(animation){
-		//console.log("Hiding "+this.hsanchor+" id " + this.id + " with animation "+animation+"...");
+		console.log("Hiding "+this.hsanchor+" id " + this.id + " with animation "+animation+"...");
 		if(typeof(this.blurredContainer) !== "undefined") {
 			this.blurredContainer.hide(animation);
 		}
@@ -734,6 +735,9 @@ function Box(set) {
 		set=null;
 		this.backdrop = new Panel(this.backdropContainer.id,"modalbg");
 		console.log("Backdrop: "+this.backdrop.anchor);
+		console.log("Backdrop container: "+this.backdropContainer.anchor);
+		console.log("This: "+this.anchor);
+		
 		$(this.anchor).appendTo(this.backdrop.anchor);		
 	}
 	if(this.blur != 0) {
@@ -767,7 +771,7 @@ function Box(set) {
 		var tcset = new Object();
 		tcset = clone(set);
 		tcset["blur"] = 0;
-		tcset["container"] = this.container.id;
+		tcset["container"] = this.container;
 		tcset["contents"] = "";
 		tcset["background"] = "rgba(0,0,0,0)";
 		tcset["border"] = "";
@@ -961,8 +965,18 @@ function Panel(container,style,backdrop) {
 	}
 	if(style == "white") {
 		set["background"] = "rgba(255,255,255,0.7)";
-		set["border"] = "1px solid rgba(130,130,255,1)";
-		//set["blur"] = 2;
+		//set["border"] = "1px solid rgba(130,130,255,1)";
+		set["border"] = "1px solid rgba(0,179,255,1)";
+		set["blur"] = 2;
+	}
+	if(style == "solidwhite") {
+		set["background"] = "rgba(255,255,255,1)";
+		//set["border"] = "1px solid rgba(130,130,255,1)";
+		set["border"] = "1px solid rgba(0,179,255,1)";
+	}
+	if(style == "solidwhitevert") {
+		set["background"] = "rgba(255,255,255,1)";
+		set["border"] = "none 1px solid rgba(0,179,255,1) none 1px solid rgba(0,179,255,1)";
 	}
 	else if(style == "modalbg") {
 		set["background"] = "rgba(0,0,0,0.8)";
@@ -979,7 +993,7 @@ function Panel(container,style,backdrop) {
 		set["background"] = "rgba(206,190,232,0.4)";
 		set["border"] = "1px solid rgba(255,255,255,0.75)";
 		set["shadow"] = "0px 0px 2px #FFFFFF";
-		//set["blur"] = 2;
+		set["blur"] = 2;
 	}
 	set["vconattach"] = container;
 	set["hconattach"] = container;
