@@ -1,5 +1,6 @@
 /* Ember 8.0 alpha. Begun 27 March 2014. */
 
+EmberVersion = '8.0 alpha';
 MainLoadingScreen = new LoadingScreen(0);
 MainLoadingScreen.show();
 
@@ -89,7 +90,7 @@ set["container"] = this.loginContainer.id;
 set["vconattach"] = this.loginContainer.id;
 set["hconattach"] = this.loginContainer.id;
 set["wanchor"] = this.loginContainer.id;
-set["width"] = 33.3333;
+set["width"] = (100 / 3);
 set["wunit"] = "%";
 this.loginLabels = new Box(set);
 set = null;
@@ -97,9 +98,9 @@ set = null;
 var set = new Object();
 set["container"] = this.loginContainer.id;
 set["hpanchor"] = this.loginContainer.id;
-set["hpos"] = 33.3333;
+set["hpos"] = (100 / 3);
 set["wanchor"] = this.loginContainer.id;
-set["width"] = 66.6666;
+set["width"] = (100 / 3) * 2;
 this.loginEntry = new Box(set);
 set = null;
 
@@ -143,3 +144,22 @@ $(window).load(function() {
 /* Load user data */
 //$.getScript("/d/r/active.phpanother_script.js");
 
+var set = new Object();
+set["container"] = this.loginContainer.id;
+set["contents"] = "Credits";
+set["group"] = "credits";
+set["hpanchor"] = this.Ember.id;
+set["hconstrain"] = false;
+set["vconstrain"] = false;
+set["hpos"] = 100;
+set["vpos"] = 0;
+set["vpattach"] = 0;
+set["hover"] = emberCredits.show("none");
+set["leave"] = emberCredits.hide("none");
+set["width"] = 10;
+set["hpattach"] = 100;
+set["wanchor"] = this.Ember.id;
+this.loginEntry = new Box(set);
+set = null;
+
+this.loginEntry.show("none");
