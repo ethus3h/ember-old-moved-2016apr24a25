@@ -119,12 +119,22 @@ $(window).load(function() {
 /* Load user data */
 //$.getScript("/d/r/active.phpanother_script.js");
 
-this.emberCredits = new Panel(this.loginContainer.id, "white", true);
+var set = new Object();
+set["container"] = this.Ember.id;
+set["hpos"] = 25;
+set["group"] = "CreditsPanelContainer";
+set["width"] = 50;
+this.creditsPanelContainer = new Box(set);
+set = null;
+this.creditsPanelContainer.show("none");
+
+this.emberCredits = new Panel(this.creditsPanelContainer.id, "solidwhitevert", true);
 
 var set = new Object();
 set["container"] = this.emberCredits.id;
 set["contents"] = "Credits!";
-set["autoconstrain"] = this.loginContainer.id;
+set["group"] = "CreditsText";
+set["autoconstrain"] = this.creditsPanelContainer.id;
 this.emberCreditsText = new Box(set);
 set = null;
 this.emberCreditsText.show("none");
