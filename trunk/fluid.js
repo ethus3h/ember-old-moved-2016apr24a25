@@ -191,6 +191,9 @@ function Box(set) {
 	UNTESTED      hanchor: ID of the box to which this box's heighth should be relative. ID 0 is the browser window.
 	AVAILABLE     heighth: Width of this box relative to the hanchor box.
 	AVAILABLE     hunit: Units (%, relative, or possibly rem?) of heighth. The value "relative" will set the heighth equal to the specified percentage of the computed width.
+	UNTESTED      heighthpad: Additional padding to add to the heighth
+	UNTESTED      heighthpadunits: Units (%, px, or rem) of heighthpad
+	UNTESTED      heighthpadattach: ID of the box to which this box's heighthpad should be relative. ID 0 is the browser window.
 	
 	
 	~~HORIZONTAL POSITIONING~~
@@ -206,6 +209,9 @@ function Box(set) {
 	UNTESTED      wanchor: ID of the box to which this box's horizontal postion should be relative. ID 0 is the browser window.
 	AVAILABLE     width: Width of this box relative to the wanchor box.
 	AVAILABLE     wunit: Units (%, or possibly rem?) of width
+	UNTESTED      widthpad: Additional padding to add to the width
+	UNTESTED      widthpadunits: Units (%, px, or rem) of widthpad
+	UNTESTED      widthpadattach: ID of the box to which this box's widthpad should be relative. ID 0 is the browser window.
 	
 	
 	~~MARGINS~~
@@ -255,9 +261,15 @@ function Box(set) {
 	this.wanchor = 0;
 	this.width = 100;
 	this.wunit = "%";
+	this.widthpad = 0;
+	this.widthpadunit = "%";
+	this.widthpadattach = 0;
 	this.hanchor = 0;
 	this.heighth = 100;
 	this.hunit = "%";
+	this.heighthpad = 0;
+	this.heighthpadunit = "%";
+	this.heighthpadattach = 0;
 	this.crop = 0;
 	this.lmar = 0;
 	this.rmar = 0;
@@ -312,9 +324,13 @@ function Box(set) {
 	if(typeof set["wanchor"] !== "undefined") { this.wanchor = set["wanchor"];}
 	if(typeof set["width"] !== "undefined") { this.width = set["width"];}
 	if(typeof set["wunit"] !== "undefined") { this.wunit = set["wunit"];}
+	if(typeof set["widthpad"] !== "undefined") { this.widthpad = set["widthpad"];}
+	if(typeof set["widthpadunit"] !== "undefined") { this.widthpadunit = set["widthpadunit"];}
 	if(typeof set["hanchor"] !== "undefined") { this.hanchor = set["hanchor"];}
 	if(typeof set["heighth"] !== "undefined") { this.heighth = set["heighth"];}
 	if(typeof set["hunit"] !== "undefined") { this.hunit = set["hunit"];}
+	if(typeof set["heighthpad"] !== "undefined") { this.heighthpad = set["heighthpad"];}
+	if(typeof set["heighthpadunit"] !== "undefined") { this.heighthpadunit = set["heighthpadunit"];}
 	if(typeof set["crop"] !== "undefined") { this.crop = set["crop"];}
 	if(typeof set["lmar"] !== "undefined") { this.lmar = set["lmar"];}
 	if(typeof set["rmar"] !== "undefined") { this.rmar = set["rmar"];}
@@ -328,10 +344,14 @@ function Box(set) {
 	this.rmarl = this.container;
 	this.tmarl = this.container;
 	this.bmarl = this.container;
+	this.widthpadattach = this.container;
+	this.heighthpadattach = this.container;
 	if(typeof set["lmarl"] !== "undefined") { this.lmarl = set["lmarl"];}
 	if(typeof set["rmarl"] !== "undefined") { this.rmarl = set["rmarl"];}
 	if(typeof set["tmarl"] !== "undefined") { this.tmarl = set["tmarl"];}
 	if(typeof set["bmarl"] !== "undefined") { this.bmarl = set["bmarl"];}
+	if(typeof set["widthpadattach"] !== "undefined") { this.widthpadattach = set["widthpadattach"];}
+	if(typeof set["heighthpadattach"] !== "undefined") { this.heighthpadattach = set["heighthpadattach"];}
 	if(typeof set["group"] !== "undefined") { this.group = set["group"];}
 	if(typeof set["zindex"] !== "undefined") { this.zindex = set["zindex"];}
 	if(typeof set["css"] !== "undefined") { this.css = set["css"];}
@@ -360,6 +380,14 @@ function Box(set) {
 		if(this.hunit == "rem") {
 			this.heighth = this.heighth * getRootElementEmSize();
 			this.hunit = "px";
+		}
+		if(this.widthpadunit == "rem") {
+			this.widthpad = this.widthpad * getRootElementEmSize();
+			this.widthpadunit = "px";
+		}
+		if(this.heighthpadunit == "rem") {
+			this.heighthpad = this.heighthpad * getRootElementEmSize();
+			this.heighthpadunit = "px";
 		}
 		if(this.hposunit == "rem") {
 			this.hpos = this.hpos * getRootElementEmSize();
@@ -408,6 +436,14 @@ function Box(set) {
 		hunitA = this.hunit;
 		if(this.hunit == "%") {
 			hunitA = "px";
+		}
+		heighthpadunitA = this.heighthpadunit;
+		if(this.heighthpadunit == "%") {
+			heighthpadunitA = "px";
+		}
+		widthpadunitA = this.widthpadunit;
+		if(this.widthpadunit == "%") {
+			widthpadunitA = "px";
 		}
 		hposunitA = this.hposunit;
 		if(this.hposunit == "%") {
@@ -471,11 +507,17 @@ function Box(set) {
 			tComputedWidth = $(getAnchor(this.wanchor)).width() * (this.width / 100);
 			computedWidth = tComputedWidth+wunitA;
 		}
+		if(this.widthpadunit == '%') {
+			this.widthpad = $(getAnchor(this.widthpadanchor)).width() * (this.widthpad / 100);
+		}
 		//Calculate the heighth
 		computedHeighth = this.heighth+hunitA;
 		if(this.hunit == '%') {
 			tComputedHeighth = $(getAnchor(this.hanchor)).height() * (this.heighth / 100);
 			computedHeighth = tComputedHeighth+hunitA;
+		}
+		if(this.heighthpadunit == '%') {
+			this.heighthpad = $(getAnchor(this.heighthpadanchor)).height() * (this.heighthpad / 100);
 		}
 		if(this.hunit == 'relative') {
 			tComputedHeighth = tComputedWidth * (this.heighth / 100);
@@ -567,9 +609,9 @@ function Box(set) {
 			$(this.anchor).css("font-size",tComputedHeighth);
 		}
 		computedVpa = ((tComputedVpa + parseInt(this.tmar,10))+vposunitA);
-		computedHeighth = ((tComputedHeighth - parseInt(this.bmar,10))+hunitA);
+		computedHeighth = ((tComputedHeighth - parseInt(this.bmar,10))+hunitA) + this.heighthpad;
 		computedHpa = ((tComputedHpa + parseInt(this.lmar,10))+hposunitA);
-		computedWidth = ((tComputedWidth - parseInt(this.rmar,10))+wunitA);
+		computedWidth = ((tComputedWidth - parseInt(this.rmar,10))+wunitA) + this.widthpad;
 		$(this.anchor).css('top',computedVpa);
 		$(this.anchor).css('left',computedHpa);
 		$(this.anchor).css('height',computedHeighth);
@@ -591,7 +633,7 @@ function Box(set) {
 		}
 	}
 	this.show = function(animation){
-		console.log("Showing "+this.anchor+" to opacity "+this.opacity+" with animation "+animation+"...");
+		console.log("Showing "+this.hsanchor+" id " + this.id + " to opacity "+this.opacity+" with animation "+animation+"...");
 		this.compute();
 		if(typeof this.blurryBox !== "undefined") {
 			$(this.anchor).css('opacity',this.opacity);
@@ -621,10 +663,10 @@ function Box(set) {
 		$(targetElement).css('opacity',this.opacity);
 	};
 	this.hide = function(animation){
-		console.log("Hiding "+this.hsanchor+" with animation "+animation+"...");
-		this.compute();
+		console.log("Hiding "+this.hsanchor+" id " + this.id + " with animation "+animation+"...");
+		//this.compute();
 		//if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
-		targetElement = this.anchor;
+		targetElement = this.hsanchor;
 		if(animation == "zoomhalffade") {
 			$(targetElement).animate({
 				opacity: 0,
@@ -647,9 +689,16 @@ function Box(set) {
 	if(this.blur != 0) {
 		blurPtA='<svg id="';
 		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="';
-		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
-		blurPtD='" /></filter></defs></svg>';
-		compiledBlur = blurPtA+newId()+blurPtB+newId()+blurPtC+this.blur+blurPtD;
+		blurPtCa='" x="0" y="0">';
+		blurPtCb='<feGaussianBlur in="SourceGraphic" stdDeviation="';
+		blurPtCc=this.blur+'" />';
+		if(this.blur == -1) {
+			blurPtCb='<feGaussianBlur in="SourceGraphic" stdDeviation="20" />';
+			blurPtCc='<feColorMatrix in="SourceGraphic" type="saturate" values="1" />';
+		}
+		blurPtC=blurPtCa+blurPtCb+blurPtCc;
+		blurPtD='</filter></defs></svg>';
+		compiledBlur = blurPtA+newId()+blurPtB+newId()+blurPtC+blurPtD;
 		blurId = getId();
 		$('#pageContents').append(compiledBlur);
 		var tcset = new Object();
@@ -672,6 +721,12 @@ function Box(set) {
 		tset["blur"] = 0;
 		tset["wanchor"] = this.blurredContainer.id;
 		tset["width"] = 100;
+		tset["widthpad"] = this.blur;		
+		tset["heighthpad"] = this.blur;		
+		if(this.blur == -1) {
+			tset["widthpad"] = 20;
+			tset["heighthpad"] = 20;
+		}
 		tset["hpanchor"] = this.blurredContainer.id;
 		//tset["hpos"] = 100;
 		tset["contents"] = "";
@@ -803,7 +858,7 @@ function Panel(container,style) {
 	if(style == "white") {
 		set["background"] = "rgba(255,255,255,0.7)";
 		set["border"] = "1px solid rgba(130,130,255,1)";
-		set["blur"] = 2;
+		//set["blur"] = 2;
 	}
 	else if(style == "ios") {
 		set["background"] = "rgba(255,255,255,0.6)";
@@ -813,7 +868,7 @@ function Panel(container,style) {
 		set["background"] = "rgba(206,190,232,0.4)";
 		set["border"] = "1px solid rgba(255,255,255,0.75)";
 		set["shadow"] = "0px 0px 2px #FFFFFF";
-		set["blur"] = 2;
+		//set["blur"] = 2;
 	}
 	set["vconattach"] = container;
 	set["hconattach"] = container;
