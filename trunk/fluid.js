@@ -612,10 +612,6 @@ function Box(set) {
 		if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
 		targetElement = this.anchor;
 		$(this.anchor).css('z-index',this.zindex);
-		if(animation == "none") {
-			$(targetElement).css('display','block');
-			$(targetElement).css('opacity',this.opacity);
-		}
 		if(animation == "zoomhalffade") {
 			$(targetElement).animate({ scale: 0.5 }, 0);
 			this.show("none");
@@ -627,14 +623,19 @@ function Box(set) {
 				scale: 1
 			}, 500, "linear");
 		}
-		if(animation == "fade") {
+		else if(animation == "fade") {
 			$(targetElement).css('opacity','0');
-			this.show("none");
+			//this.show("none");
 			this.shown = false;
 			$(targetElement).show();
 			$(targetElement).animate({
 				opacity: this.opacity,
 			}, 250, "linear");
+			this.show("none");
+		}
+		else {
+			$(targetElement).css('display','block');
+			$(targetElement).css('opacity',this.opacity);
 		}
 		this.shown = true;
 	};
@@ -644,10 +645,6 @@ function Box(set) {
 		if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
 		targetElement = this.anchor;
 		$(this.anchor).css('z-index',this.zindex);
-		if(animation == "none") {
-			$(targetElement).css('opacity',0);
-			$(targetElement).css('display','none');
-		}
 		if(animation == "zoomhalffade") {
 			$(targetElement).animate({
 				opacity: 0,
@@ -655,11 +652,15 @@ function Box(set) {
 			}, 500, "linear");
 			this.hide("none");
 		}
-		if(animation == "fade") {
+		else if(animation == "fade") {
 			$(targetElement).animate({
 				opacity: 0,
 			}, 250, "linear");
 			this.hide("none");
+		}
+		else {
+			$(targetElement).css('opacity',0);
+			$(targetElement).css('display','none');
 		}
 		this.shown = false;
 	};
@@ -818,14 +819,16 @@ function LoadingScreen(container) {
 function Panel(container,style) {
 	var set = new Object();
 	set["container"] = container;
+	console.log( 'style = ');
+	console.debug(style);
 	if(style == "white") {
-		echo 'doom';
-		set["background"] = "rgba(255,255,255,0.6)";
-		set["border"] = "1px solid rgba(200,200,255,0.75)";
-		set["shadow"] = "0px 0px 2px #FFFFFF";
+		console.log( 'doom');
+		set["background"] = "rgba(255,255,255,0.7)";
+		set["border"] = "1px solid rgba(130,130,255,1)";
+		//set["shadow"] = "0px 0px 2px #FFFFFF";
 		set["blur"] = 2;
 	}
-	if(style == "ios") {
+	else if(style == "ios") {
 		set["background"] = "rgba(255,255,255,0.6)";
 		//set["border"] = "1px solid rgba(255,255,255,0.75)";
 		//set["shadow"] = "0px 0px 2px #FFFFFF";
@@ -844,6 +847,7 @@ function Panel(container,style) {
 	this.anchor = this.panelBox.anchor;
 	set=null;
 	this.show = function(animation) {
+		console.log("Showing panel with animation "+animation);
 		this.panelBox.show(animation);
 	} 
 	this.hide = function(animation) {
