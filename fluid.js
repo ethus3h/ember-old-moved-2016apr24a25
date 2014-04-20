@@ -592,9 +592,9 @@ function Box(set) {
 	this.show = function(animation){
 		console.log("Showing "+this.anchor+" to opacity "+this.opacity+" with animation "+animation+"...");
 		this.compute();
-		if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
-		targetElement = this.anchor;
-		$(this.anchor).css('z-index',this.zindex);
+		//if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
+		targetElement = this.hsanchor;
+		$(targetElement).css('z-index',this.zindex);
 		if(animation == "zoomhalffade") {
 			$(targetElement).css('opacity','0');
 			$(targetElement).css('display','block');
@@ -608,13 +608,9 @@ function Box(set) {
 		else if(animation == "fade") {
 			$(targetElement).css('opacity','0');
 			$(targetElement).css('display','block');
-			//this.show("none");
-			//this.shown = false;
-			//$(targetElement).show();
 			$(targetElement).animate({
 				opacity: this.opacity,
 			}, 250, "linear");
-			//this.show("none");
 		}
 		else {
 			$(targetElement).css('opacity',this.opacity);
@@ -623,23 +619,22 @@ function Box(set) {
 		this.shown = true;
 	};
 	this.hide = function(animation){
-		console.log("Hiding "+this.anchor+" with animation "+animation+"...");
+		console.log("Hiding "+this.hsanchor+" with animation "+animation+"...");
 		this.compute();
-		if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
+		//if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
 		targetElement = this.anchor;
-		$(this.anchor).css('z-index',this.zindex);
 		if(animation == "zoomhalffade") {
 			$(targetElement).animate({
 				opacity: 0,
 				scale: 0.5
 			}, 500, "linear");
-			this.hide("none");
+			$(targetElement).css('display','none');
 		}
 		else if(animation == "fade") {
 			$(targetElement).animate({
 				opacity: 0,
 			}, 250, "linear");
-			this.hide("none");
+			$(targetElement).css('display','none');
 		}
 		else {
 			$(targetElement).css('opacity',0);
@@ -697,6 +692,11 @@ function Box(set) {
 	$(this.anchor).mouseover(this.enter);
 	$(this.anchor).mouseout(this.leave);
 	$(this.anchor).click(this.tap);
+	this.hsanchor = this.anchor;
+	if(typeof(this.blurredContainer) !== "undefined") {
+		this.hsanchor = this.blurredContainer.anchor;
+	}
+
 }
 function LoadingScreen(container) {
 	var set = new Object();
