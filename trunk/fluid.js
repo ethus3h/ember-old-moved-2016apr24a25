@@ -135,9 +135,9 @@ function Box(set) {
 	
 	~~SCRIPTING~~
 	AVAILABLE     group: a class for the div to later be used for grouping divs
-	UNIMPLEMENTED enter: A function to run when a pointer enters this box, or when a pointer is moved upon this box if it was already there when the box was show()n
-	UNIMPLEMENTED leave: A function to run when a pointer exits this box
-	UNIMPLEMENTED tap: A function to run when a pointer or touch input taps (clicks) this box
+	UNTESTED      enter: A function to run when a pointer enters this box, or when a pointer is moved upon this box if it was already there when the box was show()n
+	UNTESTED      leave: A function to run when a pointer exits this box
+	UNTESTED      tap: A function to run when a pointer or touch input taps (clicks) this box
 	
 	
 	~~INTERACTION~~
@@ -273,6 +273,9 @@ function Box(set) {
 	this.bmarl = 0;
 	this.group = "";
 	this.zindex = undefined;
+	this.enter = undefined;
+	this.leave = undefined;
+	this.tap = undefined;
 	this.css = "";
 	this.bordercolor = undefined;
 	//Override values if provided
@@ -333,6 +336,9 @@ function Box(set) {
 	if(typeof set["zindex"] !== "undefined") { this.zindex = set["zindex"];}
 	if(typeof set["css"] !== "undefined") { this.css = set["css"];}
 	if(typeof set["bordercolor"] !== "undefined") { this.bordercolor = set["bordercolor"];}
+	if(typeof set["enter"] !== "undefined") { this.enter = set["enter"];}
+	if(typeof set["leave"] !== "undefined") { this.leave = set["leave"];}
+	if(typeof set["tap"] !== "undefined") { this.tap = set["tap"];}
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.shown = false;
@@ -706,6 +712,9 @@ function Box(set) {
 	if(typeof this.bordercolor !== "undefined") {
 		$(this.anchor).css('border-color',this.bordercolor);		
 	}
+	$(this.anchor).mouseover(this.enter);
+	$(this.anchor).mouseout(this.leave);
+	$(this.anchor).click(this.tap);
 }
 function LoadingScreen(container) {
 	var set = new Object();
