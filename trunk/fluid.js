@@ -730,7 +730,7 @@ function Box(set) {
 		var set = new Object();
 		set["container"] = this.container;
 		set["wanchor"] = 0;
-		set["group"] = 'backdroupppp';
+		//set["group"] = 'backdroupppp';
 		set["hpanchor"] = 0;
 		set["vpanchor"] = 0;
 		set["hanchor"] = 0;
@@ -779,18 +779,20 @@ function Box(set) {
 		console.debug(tcset);
 		tcset["blur"] = 0;
 		tcset["container"] = this.container;
+		tcset["backdrop"] = undefined;
 		tcset["contents"] = "";
 		tcset["background"] = "rgba(0,0,0,0)";
 		tcset["border"] = "";
 		tcset["shadow"] = "";
 		tcset["css"] = "";
-		tcset["group"] = "blurcontainer";
+		//tcset["group"] = "blurcontainer";
 		this.blurredContainer = new Box(tcset);
 		tcset=null;
 		var tset = new Object();
 		tset = clone(this.cfgc);
 		tset["container"] = this.blurredContainer.id;
 		tset["border"] = "";
+		tset["backdrop"] = undefined;
 		tset["shadow"] = "";
 		tset["blur"] = 0;
 		if(this.blur == -1) {
@@ -976,12 +978,12 @@ function Panel(container,style,backdrop) {
 		set["border"] = "1px solid rgba(0,179,255,1)";
 		set["blur"] = 2;
 	}
-	if(style == "solidwhite") {
+	else if(style == "solidwhite") {
 		set["background"] = "rgba(255,255,255,1)";
 		//set["border"] = "1px solid rgba(130,130,255,1)";
 		set["border"] = "1px solid rgba(0,179,255,1)";
 	}
-	if(style == "solidwhitevert") {
+	else if(style == "solidwhitevert") {
 		set["background"] = "rgba(255,255,255,1)";
 		set["border"] = "none 1px solid rgba(0,179,255,1) none 1px solid rgba(0,179,255,1)";
 	}
