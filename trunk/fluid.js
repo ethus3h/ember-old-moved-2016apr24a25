@@ -104,6 +104,7 @@ function ComputedValue(rule) {
 	this.compute();
 }
 //TODO: Constrained boxes currently don't work.
+//TODO: Check for constrain attachment: seems to be going to container by default instead of page contents
 function Box(set) {
 	AllBoxes[AllBoxes.length+1] = this;
 	/* HOW TO CREATE A BOX (options can be omitted if desired; default values shown):
@@ -123,8 +124,10 @@ function Box(set) {
 	
 	~~GENERAL LAYOUT AND GROUPING~~
 	AVAILABLE     container: ID of the container box into which this box should be inserted. ID 0 is the browser window.
+	AVAILABLE     autoconstrain: ID of the box that should be used for default parameters where container usually would be. ID 0 is the browser window.
 	UNTESTED      zindex: stacking order of this box. Should this parameter be used? It seems it would probably be better to just have whatever box comes later in the DOM go on top (by getting a dynamically specified z-index)
 	UNIMPLEMENTED crop: ID of the box to which this box should be cropped, if any. Default to 0 (the browser window) (basically that means no cropping).
+	UNTESTED      input: user should be able to interact with the box (Boolean). Overrides zindex setting.
 
 	
 	~~LAYOUT~~
@@ -241,6 +244,7 @@ function Box(set) {
 	this.blur = 0;
 	this.bluratt = 10;
 	this.container = 0;
+	this.autoconstrain = this.container;
 	this.vpanchor = 0;
 	this.vpattach = 0;
 	this.vpattunit = "%";
@@ -286,6 +290,7 @@ function Box(set) {
 	this.bmarl = 0;
 	this.group = "";
 	this.zindex = undefined;
+	this.input = false;
 	this.enter = undefined;
 	this.leave = undefined;
 	this.tap = undefined;
@@ -297,14 +302,15 @@ function Box(set) {
 	if(typeof set["boxes"] !== "undefined") { this.boxes = set["boxes"];}
 	if(typeof set["behaviour"] !== "undefined") { this.behaviour = set["behaviour"];}
 	if(typeof set["background"] !== "undefined") { this.background = set["background"];}
-	if(typeof set["backdrop"] !== "undefined") { console.debug('doom');
-	this.backdrop = set["backdrop"];}
+	if(typeof set["backdrop"] !== "undefined") { this.backdrop = set["backdrop"];}
 	if(typeof set["border"] !== "undefined") { this.border = set["border"];}
 	if(typeof set["shadow"] !== "undefined") { this.shadow = set["shadow"];}
 	if(typeof set["opacity"] !== "undefined") { this.opacity = set["opacity"];}
 	if(typeof set["blur"] !== "undefined") { this.blur = set["blur"];}
 	if(typeof set["bluratt"] !== "undefined") { this.bluratt = set["bluratt"];}
 	if(typeof set["container"] !== "undefined") { this.container = set["container"];}
+	this.autoconstrain = this.container;
+	if(typeof set["autoconstrain"] !== "undefined") { this.autoconstrain = set["autoconstrain"];}
 	if(typeof set["vpanchor"] !== "undefined") { this.vpanchor = set["vpanchor"];}
 	if(typeof set["vpattach"] !== "undefined") { this.vpattach = set["vpattach"];}
 	if(typeof set["vpattunit"] !== "undefined") { this.vpattunit = set["vpattunit"];}
@@ -312,7 +318,7 @@ function Box(set) {
 	if(typeof set["vptattunit"] !== "undefined") { this.vptattunit = set["vptattunit"];}
 	if(typeof set["vpos"] !== "undefined") { this.vpos = set["vpos"];}
 	if(typeof set["vposunit"] !== "undefined") { this.vposunit = set["vposunit"];}
-	this.vconattach = this.container;
+	this.vconattach = this.autoconstrain;
 	if(typeof set["vconattach"] !== "undefined") { this.vconattach = set["vconattach"];}
 	if(typeof set["vconstrain"] !== "undefined") { this.vconstrain = set["vconstrain"];}
 	if(typeof set["hpanchor"] !== "undefined") { this.hpanchor = set["hpanchor"];}
@@ -322,7 +328,7 @@ function Box(set) {
 	if(typeof set["hptattunit"] !== "undefined") { this.hpattunit = set["hptattunit"];}
 	if(typeof set["hpos"] !== "undefined") { this.hpos = set["hpos"];}
 	if(typeof set["hposunit"] !== "undefined") { this.hposunit = set["hposunit"];}
-	this.hconattach = this.container;
+	this.hconattach = this.autoconstrain;
 	if(typeof set["hconattach"] !== "undefined") { this.hconattach = set["hconattach"];}
 	if(typeof set["hconstrain"] !== "undefined") { this.hconstrain = set["hconstrain"];}
 	if(typeof set["wanchor"] !== "undefined") { this.wanchor = set["wanchor"];}
@@ -344,12 +350,12 @@ function Box(set) {
 	if(typeof set["rmarunit"] !== "undefined") { this.rmarunit = set["rmarunit"];}
 	if(typeof set["tmarunit"] !== "undefined") { this.tmarunit = set["tmarunit"];}
 	if(typeof set["bmarunit"] !== "undefined") { this.bmarunit = set["bmarunit"];}
-	this.lmarl = this.container;
-	this.rmarl = this.container;
-	this.tmarl = this.container;
-	this.bmarl = this.container;
-	this.widthpadattach = this.container;
-	this.heighthpadattach = this.container;
+	this.lmarl = this.autoconstrain;
+	this.rmarl = this.autoconstrain;
+	this.tmarl = this.autoconstrain;
+	this.bmarl = this.autoconstrain;
+	this.widthpadattach = this.autoconstrain;
+	this.heighthpadattach = this.autoconstrain;
 	if(typeof set["lmarl"] !== "undefined") { this.lmarl = set["lmarl"];}
 	if(typeof set["rmarl"] !== "undefined") { this.rmarl = set["rmarl"];}
 	if(typeof set["tmarl"] !== "undefined") { this.tmarl = set["tmarl"];}
@@ -358,6 +364,7 @@ function Box(set) {
 	if(typeof set["heighthpadattach"] !== "undefined") { this.heighthpadattach = set["heighthpadattach"];}
 	if(typeof set["group"] !== "undefined") { this.group = set["group"];}
 	if(typeof set["zindex"] !== "undefined") { this.zindex = set["zindex"];}
+	if(typeof set["input"] !== "undefined") { this.input = set["input"];}
 	if(typeof set["css"] !== "undefined") { this.css = set["css"];}
 	if(typeof set["bordercolor"] !== "undefined") { this.bordercolor = set["bordercolor"];}
 	if(typeof set["enter"] !== "undefined") { this.enter = set["enter"];}
@@ -639,49 +646,52 @@ function Box(set) {
 		}
 	}
 	this.show = function(animation){
-		console.log("Showing "+this.hsanchor+" id " + this.id + " to opacity "+this.opacity+" with animation "+animation+"...");
-		this.compute();
-		if(typeof(this.blurredContainer) !== "undefined") {
-			$(this.anchor).css('opacity',this.opacity);
-			$(this.anchor).css('display','block');
-			this.blurredContainer.show(animation);
+		if(typeof(this.hsanchor) !== "undefined") {
+			console.log("Showing "+this.hsanchor+" id " + this.id + " to opacity "+this.opacity+" with animation "+animation+"...");
+			this.compute();
+			if(typeof(this.blurredContainer) !== "undefined") {
+				$(this.anchor).css('opacity',this.opacity);
+				$(this.anchor).css('display','block');
+				this.blurredContainer.show(animation);
+				console.log("Showing blurredContainer "+this.blurredContainer.anchor);
+			}
+			if(typeof(this.backdropContainer) !== "undefined") {
+				$(this.anchor).css('opacity',this.opacity);
+				$(this.anchor).css('display','block');
+				this.backdropContainer.show(animation);
+				console.log("Showing backdropContainer "+this.backdropContainer.anchor);
+			}
+			targetElement = this.hsanchor;
+			$(targetElement).css('z-index',this.zindex);
+			if(animation == "zoomhalffade") {
+				$(targetElement).css('opacity','0');
+				$(targetElement).css('display','block');
+				$(targetElement).animate({ scale: 0.5 }, 0);
+				//$(targetElement).show();
+				$(targetElement).animate({
+					opacity: this.opacity,
+					scale: 1
+				}, 500, "linear");
+			}
+			else if(animation == "fade") {
+				$(targetElement).css('opacity','0');
+	// 			$(targetElement).css('display','block');
+				//$(targetElement).fadeIn(5000);
+				$(targetElement).animate({
+					opacity: this.opacity,
+				}, 250, "linear");
+			}
+			else {
+				$(targetElement).css('display','block');
+				$(targetElement).css('opacity',this.opacity);
+			}
+			this.shown = true;
 		}
-		if(typeof(this.backdropContainer) !== "undefined") {
-			console.log("Doommm.");
-			$(this.anchor).css('opacity',this.opacity);
-			$(this.anchor).css('display','block');
-			this.backdropContainer.show(animation);
-		}
-		targetElement = this.hsanchor;
-		$(targetElement).css('z-index',this.zindex);
-		if(animation == "zoomhalffade") {
-			$(targetElement).css('opacity','0');
-			$(targetElement).css('display','block');
-			$(targetElement).animate({ scale: 0.5 }, 0);
-			//$(targetElement).show();
-			$(targetElement).animate({
-				opacity: this.opacity,
-				scale: 1
-			}, 500, "linear");
-		}
-		else if(animation == "fade") {
-			$(targetElement).css('opacity','0');
-// 			$(targetElement).css('display','block');
-			//$(targetElement).fadeIn(5000);
-			$(targetElement).animate({
-				opacity: this.opacity,
-			}, 250, "linear");
-		}
-		else {
-			$(targetElement).css('display','block');
-			$(targetElement).css('opacity',this.opacity);
-		}
-		this.shown = true;
 	};
 	this.hide = function(animation){
-		console.log("Hiding "+this.hsanchor+" id " + this.id + " with animation "+animation+"...");
+		//console.log("Hiding "+this.hsanchor+" id " + this.id + " with animation "+animation+"...");
 		if(typeof(this.blurredContainer) !== "undefined") {
-			this.blurredContainer.show(animation);
+			this.blurredContainer.hide(animation);
 		}
 		if(typeof(this.backdropContainer) !== "undefined") {
 			this.backdropContainer.hide(animation);
@@ -713,9 +723,17 @@ function Box(set) {
 		console.log("displaying backdrop");
 		var set = new Object();
 		set["container"] = this.container;
+		set["wanchor"] = 0;
+		set["group"] = 'backdroupppp';
+		set["hpanchor"] = 0;
+		set["vpanchor"] = 0;
+		set["hanchor"] = 0;
+		set["hconstrain"] = false;
+		set["vconstrain"] = false;
 		this.backdropContainer = new Box(set);
 		set=null;
 		this.backdrop = new Panel(this.backdropContainer.id,"modalbg");
+		console.log("Backdrop: "+this.backdrop.anchor);
 		$(this.anchor).appendTo(this.backdrop.anchor);		
 	}
 	if(this.blur != 0) {
@@ -749,7 +767,7 @@ function Box(set) {
 		var tcset = new Object();
 		tcset = clone(set);
 		tcset["blur"] = 0;
-		tcset["container"] = this.container;
+		tcset["container"] = this.container.id;
 		tcset["contents"] = "";
 		tcset["background"] = "rgba(0,0,0,0)";
 		tcset["border"] = "";
@@ -832,6 +850,10 @@ function Box(set) {
 	}
 	if(typeof(this.backdropContainer) !== "undefined") {
 		this.hsanchor = this.backdropContainer.anchor;
+	}
+	if(this.input) {
+		console.log("ZINDEX");
+		$(this.anchor).css('z-index',3);
 	}
 
 }
@@ -935,7 +957,6 @@ function Panel(container,style,backdrop) {
 	var set = new Object();
 	set["container"] = container;
 	if(backdrop) {
-		console.log("dooooom");
 		set["backdrop"] = true;
 	}
 	if(style == "white") {
