@@ -122,17 +122,19 @@ $(window).load(function() {
 this.emberCredits = new Panel(this.loginContainer.id, "white", true);
 
 var set = new Object();
-set["container"] = this.emberCredits.id;
+set["container"] = this.Ember.id;
 set["contents"] = "Credits!";
 this.emberCreditsText = new Box(set);
 set = null;
 this.emberCreditsText.show("none");
 
 var set = new Object();
-set["container"] = this.loginContainer.id;
+set["container"] = this.Ember.id;
 set["contents"] = "Credits";
 set["group"] = "credits";
+set["autoconstrain"] = this.loginContainer.id;
 set["hpanchor"] = this.Ember.id;
+set["input"] = true;
 set["hconstrain"] = false;
 set["vconstrain"] = false;
 set["hpos"] = 100;
