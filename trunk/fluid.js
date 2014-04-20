@@ -135,6 +135,9 @@ function Box(set) {
 	
 	~~SCRIPTING~~
 	AVAILABLE     group: a class for the div to later be used for grouping divs
+	UNIMPLEMENTED enter: A function to run when a pointer enters this box, or when a pointer is moved upon this box if it was already there when the box was show()n
+	UNIMPLEMENTED leave: A function to run when a pointer exits this box
+	UNIMPLEMENTED tap: A function to run when a pointer or touch input taps (clicks) this box
 	
 	
 	~~INTERACTION~~
@@ -332,6 +335,7 @@ function Box(set) {
 	if(typeof set["bordercolor"] !== "undefined") { this.bordercolor = set["bordercolor"];}
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
+	this.shown = false;
 	this.anchor = getAnchor(this.id);
 	console.debug(this);
 	$(this.anchor).css('background',this.background);
@@ -588,6 +592,14 @@ function Box(set) {
 	$(this.anchor).css('display',"block");
 	//$(this.anchor).css('z-index',"-1");
 	this.compute();
+	this.toggle = function(showanimation,hideanimation){
+		if(this.shown) {
+			this.hide(hideanimation);
+		}
+		else {
+			this.show(showanimation);
+		}
+	}
 	this.show = function(animation){
 		console.log("Showing "+this.anchor+" to opacity "+this.opacity+" with animation "+animation+"...");
 		this.compute();
@@ -599,35 +611,54 @@ function Box(set) {
 			$(targetElement).css('opacity',this.opacity);
 		}
 		if(animation == "zoomhalffade") {
-			//$(targetElement).css('top',(tComputedHeighth/4)+'px');
-			//$(targetElement).css('left',(tComputedWidth/4)+'px');
-/*			$(targetElement).css('width',(tComputedWidth/2)+'px');
-			$(targetElement).css('height',(tComputedHeighth/2)+'px'); */
 			$(targetElement).animate({ scale: 0.5 }, 0);
+			this.show("none");
+			this.shown = false;
 			$(targetElement).css('opacity','0');
 			$(targetElement).show();
-			bodyWidth = $('#pageContents').width();
-			bodyHeighth = $('#pageContents').height();
 			$(targetElement).animate({
 				opacity: this.opacity,
-				//left: computedHpa,
-				//top: computedVpa,
 				scale: 1
 			}, 500, "linear");
-/*				width: tComputedWidth+"px",
-				height: tComputedHeighth+"px" */
 		}
 		if(animation == "fade") {
 			$(targetElement).css('opacity','0');
+			this.show("none");
+			this.shown = false;
 			$(targetElement).show();
 			$(targetElement).animate({
 				opacity: this.opacity,
 			}, 250, "linear");
 		}
+		this.shown = true;
+	};
+	this.hide = function(animation){
+		console.log("Hiding "+this.anchor+" with animation "+animation+"...");
+		this.compute();
+		if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
+		targetElement = this.anchor;
+		$(this.anchor).css('z-index',this.zindex);
+		if(animation == "none") {
+			$(targetElement).css('opacity',0);
+			$(targetElement).css('display','none');
+		}
+		if(animation == "zoomhalffade") {
+			$(targetElement).animate({
+				opacity: 0,
+				scale: 0.5
+			}, 500, "linear");
+			this.hide("none");
+		}
+		if(animation == "fade") {
+			$(targetElement).animate({
+				opacity: 0,
+			}, 250, "linear");
+			this.hide("none");
+		}
+		this.shown = false;
 	};
 	if(this.blur != 0) {
-		//Not working. I'm trying to make a div blur using filter: url(#filterID);, like in this demo http://jsfiddle.net/3z6ns/27/ (but that's a very complicated way of doing it, I'm looking for something simple). My test div is #Box15
-		blurPtA='<svg id="blur';
+		blurPtA='<svg id="';
 		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="';
 		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
 		blurPtD='" /></filter></defs></svg>';
