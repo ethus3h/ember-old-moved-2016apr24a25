@@ -144,7 +144,7 @@ $(window).load(function() {
 /* Load user data */
 //$.getScript("/d/r/active.phpanother_script.js");
 
-this.emberCredits = new Panel(this.loginContainer.id);
+this.emberCredits = new Panel(this.loginContainer.id, "white");
 
 var set = new Object();
 set["container"] = this.emberCredits.id;
@@ -169,9 +169,9 @@ set["width"] = 10;
 set["hpattach"] = 100;
 set["wanchor"] = this.Ember.id;
 this.loginEntry = new Box(set);
-console.log("DOOM!")
-console.debug(set);
-console.debug(this.loginEntry);
+// console.log("DOOM!")
+// console.debug(set);
+// console.debug(this.loginEntry);
 set = null;
 
 this.loginEntry.show("none");
