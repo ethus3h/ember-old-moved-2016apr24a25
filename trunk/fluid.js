@@ -596,11 +596,10 @@ function Box(set) {
 		targetElement = this.anchor;
 		$(this.anchor).css('z-index',this.zindex);
 		if(animation == "zoomhalffade") {
-			$(targetElement).animate({ scale: 0.5 }, 0);
-			this.show("none");
-			this.shown = false;
 			$(targetElement).css('opacity','0');
-			$(targetElement).show();
+			$(targetElement).css('display','block');
+			$(targetElement).animate({ scale: 0.5 }, 0);
+			//$(targetElement).show();
 			$(targetElement).animate({
 				opacity: this.opacity,
 				scale: 1
@@ -608,18 +607,19 @@ function Box(set) {
 		}
 		else if(animation == "fade") {
 			$(targetElement).css('opacity','0');
+			$(targetElement).css('display','block');
 			//this.show("none");
-			this.shown = false;
-			$(targetElement).show();
+			//this.shown = false;
+			//$(targetElement).show();
 			$(targetElement).animate({
 				opacity: this.opacity,
 			}, 250, "linear");
-			this.show("none");
+			//this.show("none");
 		}
 		else {
-			$(targetElement).css('display','block');
 			$(targetElement).css('opacity',this.opacity);
 		}
+		$(targetElement).css('display','block');
 		this.shown = true;
 	};
 	this.hide = function(animation){
