@@ -815,13 +815,28 @@ function LoadingScreen(container) {
 		this.LoadingBg.show("fade");
 	}
 }
-function Panel(container) {
+function Panel(container,style) {
 	var set = new Object();
 	set["container"] = container;
-	set["background"] = "rgba(206,190,232,0.4)";
-	set["border"] = "1px solid rgba(255,255,255,0.75)";
-	set["shadow"] = "0px 0px 2px #FFFFFF";
-	set["blur"] = 2;
+	if(style == "white") {
+		echo 'doom';
+		set["background"] = "rgba(255,255,255,0.6)";
+		set["border"] = "1px solid rgba(200,200,255,0.75)";
+		set["shadow"] = "0px 0px 2px #FFFFFF";
+		set["blur"] = 2;
+	}
+	if(style == "ios") {
+		set["background"] = "rgba(255,255,255,0.6)";
+		//set["border"] = "1px solid rgba(255,255,255,0.75)";
+		//set["shadow"] = "0px 0px 2px #FFFFFF";
+		set["blur"] = -1;
+	}
+	else {
+		set["background"] = "rgba(206,190,232,0.4)";
+		set["border"] = "1px solid rgba(255,255,255,0.75)";
+		set["shadow"] = "0px 0px 2px #FFFFFF";
+		set["blur"] = 2;
+	}
 	set["vconattach"] = container;
 	set["hconattach"] = container;
 	this.panelBox = new Box(set);
