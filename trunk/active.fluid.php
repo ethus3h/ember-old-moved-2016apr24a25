@@ -183,7 +183,8 @@ class FluidActive
     function close()
     {
         $this->write('</script><script type="text/javascript">$(window).resize(function(){
-        $("#main-content")
+        //don\'t remember what this next line was supposed to be...
+        //$("#main-content")
         // repaint all Boxes
         RecomputeMetrics();
     });</script></body></html>');
