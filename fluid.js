@@ -453,10 +453,6 @@ function Box(set) {
 			bmarunitA = "px";
 			this.bmar = $(getAnchor(this.bmarl)).height() * (this.bmar / 100);
 		}
-		/* console.log("lmar: "+this.lmar);
-		console.log("rmar: "+this.rmar);
-		console.log("tmar: "+this.tmar);
-		console.log("bmar: "+this.bmar); */
 		if(this.hunit == "relative") {
 			hunitA = wunitA;
 		}
@@ -537,7 +533,6 @@ function Box(set) {
 		*/
 		if(this.vconstrain==true) {
 			if(tComputedVpa < $(getAnchor(this.vconattach)).position().top) {
-				//console.log("top constrained");
 				vDelta = $(getAnchor(this.vconattach)).position().top - tComputedVpa;
 				if((tComputedHeighth - vDelta) > 0) {
 					tComputedHeighth = tComputedHeighth - vDelta;
@@ -545,14 +540,11 @@ function Box(set) {
 				tComputedVpa = $(getAnchor(this.vconattach)).position().top;
 			}
 			if((tComputedVpa + tComputedHeighth) > ($(getAnchor(this.vconattach)).position().top + $(getAnchor(this.vconattach)).height())) {
-				//console.log("bottom constrained");
 				tComputedHeighth = $(getAnchor(this.vconattach)).height() - (tComputedVpa - $(getAnchor(this.vconattach)).position().top);
 			}
 		}
 		if(this.hconstrain==true) {
 			if(tComputedHpa < $(getAnchor(this.hconattach)).position().left) {
-				console.log("left constrained");
-				console.log(tComputedHpa + "<" + $(getAnchor(this.hconattach)).position().left);
 				hDelta = $(getAnchor(this.hconattach)).position().left - tComputedHpa;
 				if((tComputedWidth - hDelta) > 0) {
 					tComputedWidth = tComputedWidth - hDelta;
@@ -560,7 +552,6 @@ function Box(set) {
 				tComputedHpa = $(getAnchor(this.hconattach)).position().left;
 			}
 			if((tComputedHpa + tComputedWidth) > ($(getAnchor(this.hconattach)).position().left + $(getAnchor(this.hconattach)).width())) {
-				console.log("right constrained");
 				tComputedWidth = $(getAnchor(this.hconattach)).width() - (tComputedHpa - $(getAnchor(this.hconattach)).position().left);
 			}
 		}
@@ -575,18 +566,10 @@ function Box(set) {
 		if(tComputedHeighth < 3 * getRootElementEmSize()) {
 			$(this.anchor).css("font-size",tComputedHeighth);
 		}
-		/* console.log("lmar: "+this.lmar);
-		console.log("rmar: "+this.rmar);
-		console.log("tmar: "+this.tmar);
-		console.log("bmar: "+this.bmar); */
 		computedVpa = ((tComputedVpa + parseInt(this.tmar,10))+vposunitA);
 		computedHeighth = ((tComputedHeighth - parseInt(this.bmar,10))+hunitA);
 		computedHpa = ((tComputedHpa + parseInt(this.lmar,10))+hposunitA);
 		computedWidth = ((tComputedWidth - parseInt(this.rmar,10))+wunitA);
-		//console.log((tComputedVpa+vposunitA) - computedVpa);
-		//console.log((tComputedHeighth+hunitA) - computedHeighth);
-		/* console.log(computedVpa);
-		console.log(computedHeighth); */
 		$(this.anchor).css('top',computedVpa);
 		$(this.anchor).css('left',computedHpa);
 		$(this.anchor).css('height',computedHeighth);
@@ -670,7 +653,6 @@ function Box(set) {
 		blurPtC='" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="';
 		blurPtD='" /></filter></defs></svg>';
 		compiledBlur = blurPtA+newId()+blurPtB+newId()+blurPtC+this.blur+blurPtD;
-		console.log(compiledBlur);
 		blurId = getId();
 		$('#pageContents').append(compiledBlur);
 		var tcset = new Object();
@@ -701,7 +683,6 @@ function Box(set) {
 		tDataA="filter:url(#";
 		tDataB=blurId+");";
 		tDataC=tDataA+tDataB;
-		console.log(tDataC);
 		tset["css"] = tDataC;
 		tset["group"] = "blurrybox";
 		this.blurryBox = new Box(tset);
@@ -713,11 +694,8 @@ function Box(set) {
 	if(typeof this.bordercolor !== "undefined") {
 		$(this.anchor).css('border-color',this.bordercolor);		
 	}
-	console.log("setting mouseover to "+this.enter);
 	$(this.anchor).mouseover(this.enter);
-	console.log("setting mouseout to "+this.leave);
 	$(this.anchor).mouseout(this.leave);
-	console.log("setting click to "+this.tap);
 	$(this.anchor).click(this.tap);
 }
 function LoadingScreen(container) {
@@ -819,19 +797,13 @@ function LoadingScreen(container) {
 function Panel(container,style) {
 	var set = new Object();
 	set["container"] = container;
-	console.log( 'style = ');
-	console.debug(style);
 	if(style == "white") {
-		console.log( 'doom');
 		set["background"] = "rgba(255,255,255,0.7)";
 		set["border"] = "1px solid rgba(130,130,255,1)";
-		//set["shadow"] = "0px 0px 2px #FFFFFF";
 		set["blur"] = 2;
 	}
 	else if(style == "ios") {
 		set["background"] = "rgba(255,255,255,0.6)";
-		//set["border"] = "1px solid rgba(255,255,255,0.75)";
-		//set["shadow"] = "0px 0px 2px #FFFFFF";
 		set["blur"] = -1;
 	}
 	else {
@@ -847,7 +819,6 @@ function Panel(container,style) {
 	this.anchor = this.panelBox.anchor;
 	set=null;
 	this.show = function(animation) {
-		console.log("Showing panel with animation "+animation);
 		this.panelBox.show(animation);
 	} 
 	this.hide = function(animation) {
