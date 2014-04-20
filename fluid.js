@@ -712,8 +712,11 @@ function Box(set) {
 	if(typeof this.bordercolor !== "undefined") {
 		$(this.anchor).css('border-color',this.bordercolor);		
 	}
+	console.log("setting mouseover to "+this.enter);
 	$(this.anchor).mouseover(this.enter);
+	console.log("setting mouseout to "+this.leave);
 	$(this.anchor).mouseout(this.leave);
+	console.log("setting click to "+this.tap);
 	$(this.anchor).click(this.tap);
 }
 function LoadingScreen(container) {
@@ -822,8 +825,19 @@ function Panel(container) {
 	set["vconattach"] = container;
 	set["hconattach"] = container;
 	this.panelBox = new Box(set);
+	this.id = this.panelBox.id;
+	this.anchor = this.panelBox.anchor;
 	set=null;
 	this.show = function(animation) {
 		this.panelBox.show(animation);
-	}
+	} 
+	this.hide = function(animation) {
+		this.panelBox.hide(animation);
+	} 
+	this.toggle = function(animation) {
+		this.panelBox.toggle(animation);
+	} 
+	this.compute = function() {
+		this.panelBox.compute();
+	} 
 }
