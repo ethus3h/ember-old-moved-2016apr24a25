@@ -83,7 +83,7 @@ set["hpattach"] = 50;
 this.loginContainer = new Box(set);
 set=null;
 
-this.loginPanel = new Panel(this.loginContainer.id);
+this.loginPanel = new Panel(this.loginContainer.id, "");
 
 var set = new Object();
 set["container"] = this.loginContainer.id;
@@ -119,7 +119,7 @@ $(window).load(function() {
 /* Load user data */
 //$.getScript("/d/r/active.phpanother_script.js");
 
-this.emberCredits = new Panel(this.loginContainer.id, "white");
+this.emberCredits = new Panel(this.loginContainer.id, "white", true);
 
 var set = new Object();
 set["container"] = this.emberCredits.id;
@@ -138,8 +138,8 @@ set["vconstrain"] = false;
 set["hpos"] = 100;
 set["vpos"] = 0;
 set["vpattach"] = 0;
-set["enter"] = function () { self.emberCredits.show("none") };
-set["leave"] = function () { self.emberCredits.hide("none") };
+set["enter"] = function () { self.emberCredits.show("fade") };
+set["leave"] = function () { self.emberCredits.hide("fade") };
 set["width"] = 10;
 set["hpattach"] = 100;
 set["wanchor"] = this.Ember.id;

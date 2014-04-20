@@ -175,7 +175,7 @@ function Box(set) {
 	
 	~~BACKDROPS (e. g., for modals)~~
 	UNIMPLEMENTED backdrop: Backdrop to draw behind this box, filling the backdropatt box. This can be a boolean, a string (css background property), or a box config array.
-	UNIMPLEMENTED backdropatt: ID of the container box to clip the backdrop to. ID 0 is the browser window.
+????UNIMPLEMENTED backdropatt: ID of the container box to clip the backdrop to. ID 0 is the browser window. [On further reflection, I think this is unnecessary since this can be specified by providing backdrop as a box config array.
 	
 	
 	~~VERTICAL POSITIONING~~
@@ -234,6 +234,7 @@ function Box(set) {
 	this.boxes = undefined;
 	this.behaviour = "box";
 	this.background = "rgba(0,0,0,0)";
+	this.backdrop = false;
 	this.border = undefined;
 	this.shadow = "";
 	this.opacity = 1;
@@ -291,10 +292,13 @@ function Box(set) {
 	this.css = "";
 	this.bordercolor = undefined;
 	//Override values if provided
+	console.debug(set);
 	if(typeof set["contents"] !== "undefined") { this.contents = set["contents"];}
 	if(typeof set["boxes"] !== "undefined") { this.boxes = set["boxes"];}
 	if(typeof set["behaviour"] !== "undefined") { this.behaviour = set["behaviour"];}
 	if(typeof set["background"] !== "undefined") { this.background = set["background"];}
+	if(typeof set["backdrop"] !== "undefined") { console.debug('doom');
+	this.backdrop = set["backdrop"];}
 	if(typeof set["border"] !== "undefined") { this.border = set["border"];}
 	if(typeof set["shadow"] !== "undefined") { this.shadow = set["shadow"];}
 	if(typeof set["opacity"] !== "undefined") { this.opacity = set["opacity"];}
@@ -609,11 +613,13 @@ function Box(set) {
 			$(this.anchor).css("font-size",tComputedHeighth);
 		}
 		computedVpa = ((tComputedVpa + parseInt(this.tmar,10))+vposunitA);
-		computedHeighth = ((tComputedHeighth - parseInt(this.bmar,10))+hunitA) + this.heighthpad;
+		computedHeighth = (((tComputedHeighth - parseInt(this.bmar,10)) + this.heighthpad)+hunitA);
 		computedHpa = ((tComputedHpa + parseInt(this.lmar,10))+hposunitA);
-		computedWidth = ((tComputedWidth - parseInt(this.rmar,10))+wunitA) + this.widthpad;
+		computedWidth = (((tComputedWidth - parseInt(this.rmar,10)) + this.widthpad)+wunitA);
 		$(this.anchor).css('top',computedVpa);
 		$(this.anchor).css('left',computedHpa);
+		//console.log('Width: '+computedWidth);
+		//console.log('Heighth: '+computedHeighth);
 		$(this.anchor).css('height',computedHeighth);
 		$(this.anchor).css('width',computedWidth);
 		if(this.behaviour == "row") {
@@ -635,9 +641,16 @@ function Box(set) {
 	this.show = function(animation){
 		console.log("Showing "+this.hsanchor+" id " + this.id + " to opacity "+this.opacity+" with animation "+animation+"...");
 		this.compute();
-		if(typeof this.blurryBox !== "undefined") {
+		if(typeof(this.blurredContainer) !== "undefined") {
 			$(this.anchor).css('opacity',this.opacity);
 			$(this.anchor).css('display','block');
+			this.blurredContainer.show(animation);
+		}
+		if(typeof(this.backdropContainer) !== "undefined") {
+			console.log("Doommm.");
+			$(this.anchor).css('opacity',this.opacity);
+			$(this.anchor).css('display','block');
+			this.backdropContainer.show(animation);
 		}
 		targetElement = this.hsanchor;
 		$(targetElement).css('z-index',this.zindex);
@@ -653,17 +666,26 @@ function Box(set) {
 		}
 		else if(animation == "fade") {
 			$(targetElement).css('opacity','0');
-			$(targetElement).css('display','block');
+// 			$(targetElement).css('display','block');
+			//$(targetElement).fadeIn(5000);
 			$(targetElement).animate({
 				opacity: this.opacity,
 			}, 250, "linear");
 		}
-		$(targetElement).css('display','block');
+		else {
+			$(targetElement).css('display','block');
+			$(targetElement).css('opacity',this.opacity);
+		}
 		this.shown = true;
-		$(targetElement).css('opacity',this.opacity);
 	};
 	this.hide = function(animation){
 		console.log("Hiding "+this.hsanchor+" id " + this.id + " with animation "+animation+"...");
+		if(typeof(this.blurredContainer) !== "undefined") {
+			this.blurredContainer.show(animation);
+		}
+		if(typeof(this.backdropContainer) !== "undefined") {
+			this.backdropContainer.hide(animation);
+		}
 		//this.compute();
 		//if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
 		targetElement = this.hsanchor;
@@ -672,20 +694,30 @@ function Box(set) {
 				opacity: 0,
 				scale: 0.5
 			}, 500, "linear");
-			$(targetElement).css('display','none');
+			//$(targetElement).css('display','none');
 		}
 		else if(animation == "fade") {
 			$(targetElement).animate({
-				opacity: 0,
-			}, 250, "linear");
-			$(targetElement).css('display','none');
+ 				opacity: 0,
+ 			}, 250, "linear");
+			//$(targetElement).fadeOut(5000);
+			//$(targetElement).css('display','none');
 		}
 		else {
 			$(targetElement).css('opacity',0);
-			$(targetElement).css('display','none');
+			//$(targetElement).css('display','none');
 		}
 		this.shown = false;
 	};
+	if(this.backdrop) {
+		console.log("displaying backdrop");
+		var set = new Object();
+		set["container"] = this.container;
+		this.backdropContainer = new Box(set);
+		set=null;
+		this.backdrop = new Panel(this.backdropContainer.id,"modalbg");
+		$(this.anchor).appendTo(this.backdrop.anchor);		
+	}
 	if(this.blur != 0) {
 		blurPtA='<svg id="';
 		blurPtB='" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs><filter id="';
@@ -694,8 +726,21 @@ function Box(set) {
 		blurPtCc=this.blur+'" />';
 		if(this.blur == -1) {
 			blurPtCb='<feGaussianBlur in="SourceGraphic" stdDeviation="20" />';
+			blurPtCc='';
+		}
+		if(this.blur == -2) {
+			blurPtCb='';
 			blurPtCc='<feColorMatrix in="SourceGraphic" type="saturate" values="1" />';
 		}
+		if(this.blur == -3) {
+			blurPtCb='<feComponentTransfer>\
+						<feFuncR type="linear" slope="200"/>';
+			blurPtCcA='<feFuncG type="linear" slope="200"/>';
+			blurPtCcB='<feFuncB type="linear" slope="200"/>\
+						</feComponentTransfer>';
+			blurPtCc=blurPtCcA+blurPtCcB;
+		}
+
 		blurPtC=blurPtCa+blurPtCb+blurPtCc;
 		blurPtD='</filter></defs></svg>';
 		compiledBlur = blurPtA+newId()+blurPtB+newId()+blurPtC+blurPtD;
@@ -719,14 +764,42 @@ function Box(set) {
 		tset["border"] = "";
 		tset["shadow"] = "";
 		tset["blur"] = 0;
+		if(this.blur == -1) {
+			tset["blur"] = -2;
+		}
+		if(this.blur == -2) {
+			tset["blur"] = -3;
+		}
 		tset["wanchor"] = this.blurredContainer.id;
 		tset["width"] = 100;
-		tset["widthpad"] = this.blur;		
-		tset["heighthpad"] = this.blur;		
-		if(this.blur == -1) {
-			tset["widthpad"] = 20;
-			tset["heighthpad"] = 20;
-		}
+// 		tset["widthpad"] = this.blur;		
+// 		tset["widthpadunit"] = "px";		
+// 		tset["heighthpad"] = this.blur;		
+// 		tset["heighthpadunit"] = "px";		
+// 		if(this.blur == -1) {
+// 			tset["widthpad"] = 20;
+// 			tset["heighthpad"] = 20;
+// 		}
+// 		if(this.blur == -2) {
+// 			tset["widthpad"] = 0;
+// 			tset["heighthpad"] = 0;
+// 		}
+// 		if(this.blur == -3) {
+// 			tset["widthpad"] = 0;
+// 			tset["heighthpad"] = 0;
+// 		}
+		// tset["tmar"] = -(tset["heighthpad"] / 2);		
+// 		tset["lmar"] = -(tset["widthpad"] / 2);	
+// 		if(this.blur == -2) {
+// 			tset["tmar"] = 0;
+// 			tset["lmar"] = 0;
+// 		}
+// 		if(this.blur == -3) {
+// 			tset["tmar"] = 0;
+// 			tset["lmar"] = 0;
+// 		}
+// 		tset["tmarunit"] = "px";	
+// 		tset["lmarunit"] = "px";	
 		tset["hpanchor"] = this.blurredContainer.id;
 		//tset["hpos"] = 100;
 		tset["contents"] = "";
@@ -740,6 +813,9 @@ function Box(set) {
 		this.blurryBox = new Box(tset);
 		tset=null;
 		$(this.anchor).appendTo(this.blurredContainer.anchor);
+		if(typeof(this.backdropContainer) !== "undefined") {
+			$(this.blurredContainer.anchor).appendTo(this.backdropContainer.anchor);			
+		}
  		this.blurryBox.show("none");
  		//this.blurredContainer.show("none");
  		this.show("none");
@@ -753,6 +829,9 @@ function Box(set) {
 	this.hsanchor = this.anchor;
 	if(typeof(this.blurredContainer) !== "undefined") {
 		this.hsanchor = this.blurredContainer.anchor;
+	}
+	if(typeof(this.backdropContainer) !== "undefined") {
+		this.hsanchor = this.backdropContainer.anchor;
 	}
 
 }
@@ -852,16 +931,27 @@ function LoadingScreen(container) {
 		this.LoadingBg.show("fade");
 	}
 }
-function Panel(container,style) {
+function Panel(container,style,backdrop) {
 	var set = new Object();
 	set["container"] = container;
+	if(backdrop) {
+		console.log("dooooom");
+		set["backdrop"] = true;
+	}
 	if(style == "white") {
 		set["background"] = "rgba(255,255,255,0.7)";
 		set["border"] = "1px solid rgba(130,130,255,1)";
 		//set["blur"] = 2;
 	}
+	else if(style == "modalbg") {
+		set["background"] = "rgba(0,0,0,0.8)";
+		set["hpattach"] = 0;
+		set["vpattach"] = 0;
+		set["blur"] = 1.5;
+	}
 	else if(style == "ios") {
-		set["background"] = "rgba(255,255,255,0.6)";
+	    //This still doesn't work right. :(
+		set["background"] = "rgba(255,255,255,0.1)";
 		set["blur"] = -1;
 	}
 	else {
@@ -873,6 +963,7 @@ function Panel(container,style) {
 	set["vconattach"] = container;
 	set["hconattach"] = container;
 	this.panelBox = new Box(set);
+	console.debug(set);
 	this.id = this.panelBox.id;
 	this.anchor = this.panelBox.anchor;
 	set=null;
