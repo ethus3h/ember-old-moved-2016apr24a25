@@ -660,6 +660,9 @@ function Box(set) {
 		$(this.anchor).css('width',computedWidth);
 		if(this.behaviour == "row") {
 		}
+		$(this.anchor).mouseover(this.enter);
+		$(this.anchor).mouseout(this.leave);
+		$(this.anchor).click(this.tap);
 	};
 
 	$(this.anchor).css('opacity',"0");
@@ -675,6 +678,7 @@ function Box(set) {
 		}
 	}
 	this.show = function(animation){
+		this.shown = true;
 		//if(typeof(this.hsanchor) !== "undefined") {
 			console.log("Showing "+this.hsanchor+" id " + this.id + " to opacity "+this.opacity+" with animation "+animation+"...");
 			this.compute();
@@ -710,14 +714,24 @@ function Box(set) {
 					opacity: this.opacity,
 				}, 250, "linear");
 			}
+			else if(animation == "drop") {
+				$(targetElement).css('opacity','0');
+				$(targetElement).css('scale', 2);
+	// 			$(targetElement).css('display','block');
+				//$(targetElement).fadeIn(5000);
+				$(targetElement).animate({
+					opacity: this.opacity,
+					scale: 1
+				}, 400, "linear");
+			}
 			else {
 				$(targetElement).css('display','block');
 				$(targetElement).css('opacity',this.opacity);
 			}
-			this.shown = true;
 		//}
 	};
 	this.hide = function(animation){
+		this.shown = false;
 		console.log("Hiding "+this.hsanchor+" id " + this.id + " with animation "+animation+"...");
 		if(typeof(this.blurredContainer) !== "undefined") {
 			this.blurredContainer.hide(animation);
@@ -742,11 +756,18 @@ function Box(set) {
 			//$(targetElement).fadeOut(5000);
 			//$(targetElement).css('display','none');
 		}
+		else if(animation == "drop") {
+			$(targetElement).animate({
+ 				opacity: 0,
+				scale: 2
+ 			}, 400, "linear");
+			//$(targetElement).fadeOut(5000);
+			//$(targetElement).css('display','none');
+		}
 		else {
 			$(targetElement).css('opacity',0);
 			//$(targetElement).css('display','none');
 		}
-		this.shown = false;
 	};
 	if(this.backdrop) {
 		console.log("displaying backdrop");
@@ -877,9 +898,6 @@ function Box(set) {
 	if(typeof this.bordercolor !== "undefined") {
 		$(this.anchor).css('border-color',this.bordercolor);		
 	}
-	$(this.anchor).mouseover(this.enter);
-	$(this.anchor).mouseout(this.leave);
-	$(this.anchor).click(this.tap);
 	this.hsanchor = this.anchor;
 	if(typeof(this.blurredContainer) !== "undefined") {
 		this.hsanchor = this.blurredContainer.anchor;
@@ -998,19 +1016,20 @@ function Panel(container,style,backdrop) {
 	if(style == "white") {
 		set["background"] = "rgba(255,255,255,0.7)";
 		//set["border"] = "1px solid rgba(130,130,255,1)";
-		set["border"] = "0.1rem solid rgba(0,179,255,1)";
+		set["border"] = "0.15rem solid rgba(0,179,255,1)";
 		set["blur"] = 2;
 	}
 	else if(style == "solidwhite") {
 		set["background"] = "rgba(255,255,255,1)";
 		//set["border"] = "1px solid rgba(130,130,255,1)";
-		set["border"] = "0.1rem solid rgba(0,179,255,1)";
+		set["border"] = "0.15rem solid rgba(0,179,255,1)";
 	}
 	else if(style == "solidwhitevert") {
 		set["background"] = "rgba(255,255,255,1)";
 		set["borderstyle"] = "solid";
-		set["borderwidth"] = "0rem 0.1rem 0rem 0.1rem";
+		set["borderwidth"] = "0rem 0.15rem 0rem 0.15rem";
 		set["bordercolor"] =  "rgba(0,179,255,1)";
+		set["shadow"] = "0rem 0rem 3rem #FFFFFF";
 	}
 	else if(style == "modalbg") {
 		set["background"] = "rgba(0,0,0,0.8)";

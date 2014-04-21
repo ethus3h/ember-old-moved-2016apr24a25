@@ -132,30 +132,40 @@ this.emberCredits = new Panel(this.creditsPanelContainer.id, "solidwhitevert", t
 
 var set = new Object();
 set["container"] = this.emberCredits.id;
-set["contents"] = "Credits!";
+set["contents"] = "Credits!<br><p>Ember version "+EmberVersion+" using Fracture//Active version "+activeVersion+". Thanks to Jquery, transit, and other for being awesome.</p>";
 set["group"] = "CreditsText";
+set["tap"] = function () { if($(self.emberCredits.id).is(':animated') == false) {self.emberCredits.hide("drop")} };
 set["autoconstrain"] = this.creditsPanelContainer.id;
 this.emberCreditsText = new Box(set);
 set = null;
 this.emberCreditsText.show("none");
+this.emberCredits.panelBox.tap = function () { if($(self.emberCredits.id).is(':animated') == false) {self.emberCredits.hide("drop")} };
 
 var set = new Object();
 set["container"] = this.Ember.id;
-set["contents"] = "Credits";
+set["contents"] = "<span style=\"color:white\">Credits</span>";
 set["group"] = "credits";
 set["hpanchor"] = this.Ember.id;
 set["input"] = true;
 set["hconstrain"] = false;
 set["vconstrain"] = false;
-set["hpos"] = 100;
+set["hpos"] = 0;
 set["vpos"] = 0;
 set["vpattach"] = 0;
-set["enter"] = function () { self.emberCredits.show("fade") };
-set["leave"] = function () { self.emberCredits.hide("fade") };
+//set["enter"] = function () { if($(self.emberCredits.id).is(':animated') == false) {self.emberCredits.show("drop")} };
+//set["leave"] = function () { if($(self.emberCredits.id).is(':animated') == false) {self.emberCredits.hide("drop")} };
+set["tap"] = function () { if($(self.emberCredits.id).is(':animated') == false) {
+	self.emberCredits.toggle("drop","drop");
+	} };
 set["width"] = 10;
-set["hpattach"] = 100;
+set["hpattach"] = 0;
 set["wanchor"] = this.Ember.id;
+set["heighth"] = 1;
+set["hunit"] = "rem";
 this.loginEntry = new Box(set);
 set = null;
-
+this.loginEntry.tap = function () { if($(self.emberCredits.id).is(':animated') == false) {
+	self.emberCredits.toggle("drop","drop");
+	self.loginEntry.toggle("fade","fade");
+	} };
 this.loginEntry.show("none");
