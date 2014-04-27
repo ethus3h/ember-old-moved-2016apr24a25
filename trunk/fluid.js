@@ -107,12 +107,11 @@ function ComputedValue(rule) {
 //TODO: Check for constrain attachment: seems to be going to container by default instead of page contents
 function Box(set) {
 	AllBoxes[AllBoxes.length+1] = this;
-	console.debug("MOOOOOOD");
 	this.cfg = set;
 	console.debug(this.cfg);
 	this.cfgc = clone(set);
 	console.debug(this.cfgc);
-	console.debug("DOOOOOOM");
+	this.locked = false;
 	/* HOW TO CREATE A BOX (options can be omitted if desired; default values shown):
 	var set = new Object();
 	set["property"] = "value";
@@ -669,6 +668,12 @@ function Box(set) {
 	$(this.anchor).css('display',"block");
 	//$(this.anchor).css('z-index',"-1");
 	this.compute();
+	this.lock = function() {
+		this.locked = true;
+	}
+	this.unlock = function() {
+		this.locked = false;
+	}
 	this.toggle = function(showanimation,hideanimation){
 		if(this.shown) {
 			this.hide(hideanimation);
@@ -677,62 +682,113 @@ function Box(set) {
 			this.show(showanimation);
 		}
 	}
-	this.show = function(animation){
-		this.shown = true;
-		//if(typeof(this.hsanchor) !== "undefined") {
-			console.log("Showing "+this.hsanchor+" id " + this.id + " to opacity "+this.opacity+" with animation "+animation+"...");
-			this.compute();
-			if(typeof(this.blurredContainer) !== "undefined") {
-				$(this.anchor).css('opacity',this.opacity);
-				$(this.anchor).css('display','block');
-				this.blurredContainer.show(animation);
-				console.log("Showing blurredContainer "+this.blurredContainer.anchor);
-			}
-			if(typeof(this.backdropContainer) !== "undefined") {
-				$(this.anchor).css('opacity',this.opacity);
-				$(this.anchor).css('display','block');
-				this.backdropContainer.show(animation);
-				console.log("Showing backdropContainer "+this.backdropContainer.anchor);
-			}
-			targetElement = this.hsanchor;
-			$(targetElement).css('z-index',this.zindex);
-			if(animation == "zoomhalffade") {
-				$(targetElement).css('opacity','0');
-				$(targetElement).css('display','block');
-				$(targetElement).animate({ scale: 0.5 }, 0);
-				//$(targetElement).show();
-				$(targetElement).animate({
-					opacity: this.opacity,
-					scale: 1
-				}, 500, "linear");
-			}
-			else if(animation == "fade") {
-				$(targetElement).css('opacity','0');
-	// 			$(targetElement).css('display','block');
-				//$(targetElement).fadeIn(5000);
-				$(targetElement).animate({
-					opacity: this.opacity,
-				}, 250, "linear");
-			}
-			else if(animation == "drop") {
-				$(targetElement).css('opacity','0');
-				$(targetElement).css('scale', 2);
-	// 			$(targetElement).css('display','block');
-				//$(targetElement).fadeIn(5000);
-				$(targetElement).animate({
-					opacity: this.opacity,
-					scale: 1
-				}, 400, "linear");
+	this.stop = function() {
+		if(this.hsbox !== this) {
+			this.hsbox.stop();
+		}
+		else {
+			$(this.anchor).stop(true);
+		}
+	}
+	this.animate = function(animation,complete) {
+		if(this.hsbox !== this) {
+			this.hsbox.animate(animation);
+		}
+		else {
+			if(this.locked) {
+				console.log("WARNING: Not triggering animation; element locked");
 			}
 			else {
-				$(targetElement).css('display','block');
-				$(targetElement).css('opacity',this.opacity);
+				this.lock();
+				if(animation == "fadein") {
+					$(this.anchor).css('opacity','0');
+					$(this.anchor).animate({
+						opacity: this.opacity,
+					}, {
+						duration: 250, 
+						easing: "linear",
+						complete: complete,
+					});
+				}
+				if(animation == "fadeout") {
+					$(this.anchor).animate({
+						opacity: 0,
+					}, {
+						duration: 250, 
+						easing: "linear",
+						complete: complete,
+					});
+				}
+				if(animation == "dropin") {
+					$(targetElement).css('opacity','0');
+					$(targetElement).css('scale', 2);
+					$(targetElement).animate({
+						opacity: this.opacity,
+						scale: 1
+					}, {
+						duration: 400, 
+						easing: "linear",
+						complete: complete,
+					});
+				}
+				if(animation == "dropout") {
+					$(this.anchor).animate({
+						opacity: 0,
+						scale: 2
+					}, {
+						duration: 400, 
+						easing: "linear",
+						complete: complete,
+					});
+				}
+				if(animation == "zoomhalffadein") {
+					$(this.anchor).css('opacity','0');
+					$(this.anchor).css('display','block');
+					$(this.anchor).animate({ scale: 0.5 }, 0);
+					$(this.anchor).animate({
+						opacity: this.opacity,
+						scale: 1
+					}, {
+						duration: 500, 
+						easing: "linear",
+						complete: complete,
+					});
+				}
+				if(animation == "zoomhalffadeout") {
+					$(this.anchor).animate({
+						opacity: 0,
+						scale: 0.5
+					}, {
+						duration: 500, 
+						easing: "linear",
+						complete: complete,
+					});
+				}
+				this.unlock();
 			}
-		//}
+		}
+	}
+	this.show = function(animation){
+		this.stop();
+		console.log("Showing "+this.hsanchor+" id " + this.hsbox.id + " to opacity "+this.hsbox.opacity+" with animation "+animation+"...");
+		if(animation == "zoomhalffade") {
+			this.hsbox.animate('zoomhalffadein');
+		}
+		else if(animation == "fade") {
+			this.hsbox.animate('fadein');
+		}
+		else if(animation == "drop") {
+			this.hsbox.animate('dropin');
+		}
+		else {
+			$(targetElement).css('display','block');
+			$(targetElement).css('opacity',this.opacity);
+		}
+		this.shown = true;
 	};
 	this.hide = function(animation){
-		this.shown = false;
-		console.log("Hiding "+this.hsanchor+" id " + this.id + " with animation "+animation+"...");
+		this.stop();
+		console.log("Hiding "+this.hsanchor+" id " + this.hsbox.id + " with animation "+animation+"...");
 		if(typeof(this.blurredContainer) !== "undefined") {
 			this.blurredContainer.hide(animation);
 		}
@@ -768,6 +824,7 @@ function Box(set) {
 			$(targetElement).css('opacity',0);
 			//$(targetElement).css('display','none');
 		}
+	this.shown = false;
 	};
 	if(this.backdrop) {
 		console.log("displaying backdrop");
@@ -899,11 +956,14 @@ function Box(set) {
 		$(this.anchor).css('border-color',this.bordercolor);		
 	}
 	this.hsanchor = this.anchor;
+	this.hsbox = this;
 	if(typeof(this.blurredContainer) !== "undefined") {
 		this.hsanchor = this.blurredContainer.anchor;
+		this.hsbox = this.blurredContainer;
 	}
 	if(typeof(this.backdropContainer) !== "undefined") {
 		this.hsanchor = this.backdropContainer.anchor;
+		this.hsbox = this.backdropContainer;
 	}
 	if(this.input) {
 		console.log("ZINDEX");
