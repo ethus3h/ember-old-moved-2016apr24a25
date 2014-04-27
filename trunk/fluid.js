@@ -107,6 +107,7 @@ function ComputedValue(rule) {
 //TODO: Check for constrain attachment: seems to be going to container by default instead of page contents
 function Box(set) {
 	AllBoxes[AllBoxes.length+1] = this;
+	this.hsbox = this;
 	this.cfg = set;
 	console.debug(this.cfg);
 	this.cfgc = clone(set);
@@ -720,9 +721,9 @@ function Box(set) {
 					});
 				}
 				if(animation == "dropin") {
-					$(targetElement).css('opacity','0');
-					$(targetElement).css('scale', 2);
-					$(targetElement).animate({
+					$(this.anchor).css('opacity','0');
+					$(this.anchor).css('scale', 2);
+					$(this.anchor).animate({
 						opacity: this.opacity,
 						scale: 1
 					}, {
@@ -781,9 +782,9 @@ function Box(set) {
 			this.hsbox.animate('dropin');
 		}
 		else {
-			$(this.hsbox.anchor).css('display','block');
 			$(this.hsbox.anchor).css('opacity',this.opacity);
 		}
+		$(this.hsbox.anchor).css('display','block');
 		this.shown = true;
 	};
 	this.hide = function(animation){
@@ -933,7 +934,6 @@ function Box(set) {
 		$(this.anchor).css('border-color',this.bordercolor);		
 	}
 	this.hsanchor = this.anchor;
-	this.hsbox = this;
 	if(typeof(this.blurredContainer) !== "undefined") {
 		this.hsanchor = this.blurredContainer.anchor;
 		this.hsbox = this.blurredContainer;
