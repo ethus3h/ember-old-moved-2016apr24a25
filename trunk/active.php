@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", true);
 $displayDebugMessages = True;
 #Futuramerlin Active Scripting Library.
-$activeVersion = 'Version 0.91.11, 26 April 2014.';
+$activeVersion = 'Version 0.91.12, 27 April 2014.';
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #

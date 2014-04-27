@@ -781,50 +781,27 @@ function Box(set) {
 			this.hsbox.animate('dropin');
 		}
 		else {
-			$(targetElement).css('display','block');
-			$(targetElement).css('opacity',this.opacity);
+			$(this.hsbox.anchor).css('display','block');
+			$(this.hsbox.anchor).css('opacity',this.opacity);
 		}
 		this.shown = true;
 	};
 	this.hide = function(animation){
 		this.stop();
 		console.log("Hiding "+this.hsanchor+" id " + this.hsbox.id + " with animation "+animation+"...");
-		if(typeof(this.blurredContainer) !== "undefined") {
-			this.blurredContainer.hide(animation);
-		}
-		if(typeof(this.backdropContainer) !== "undefined") {
-			this.backdropContainer.hide(animation);
-		}
-		//this.compute();
-		//if(typeof this.blurryBox !== "undefined") { this.blurryBox.show();}
-		targetElement = this.hsanchor;
 		if(animation == "zoomhalffade") {
-			$(targetElement).animate({
-				opacity: 0,
-				scale: 0.5
-			}, 500, "linear");
-			//$(targetElement).css('display','none');
+			this.hsbox.animate('zoomhalffadeout');
 		}
 		else if(animation == "fade") {
-			$(targetElement).animate({
- 				opacity: 0,
- 			}, 250, "linear");
-			//$(targetElement).fadeOut(5000);
-			//$(targetElement).css('display','none');
+			this.hsbox.animate('fadeout');
 		}
 		else if(animation == "drop") {
-			$(targetElement).animate({
- 				opacity: 0,
-				scale: 2
- 			}, 400, "linear");
-			//$(targetElement).fadeOut(5000);
-			//$(targetElement).css('display','none');
+			this.hsbox.animate('dropout');
 		}
 		else {
-			$(targetElement).css('opacity',0);
-			//$(targetElement).css('display','none');
+			$(this.hsbox.anchor).css('opacity',0);
 		}
-	this.shown = false;
+		this.shown = false;
 	};
 	if(this.backdrop) {
 		console.log("displaying backdrop");
