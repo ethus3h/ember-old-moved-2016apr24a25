@@ -47,6 +47,9 @@ function runWints($wintNeeded)
 
         calendarsync();
     }
+    if ($wintNeeded == 'discosync') {
+        discosync();
+    }
 }
 
 // function logAdd($text){
