@@ -24,7 +24,13 @@ class FluidActive
     }
     function DBTableEntry($db, $table)
     {
-        $this->append('<div style="background-color:#A8FFEC;left:50px;top:50px;bottom:50px;right:50px;position:fixed;overflow-x:scroll;overflow-y:scroll;z-index:2000;text-align:center;"><table><thead><tr>');
+  	//$main->append('<div style="z-index:2001;left:10px;position:fixed;top:10px;background:#F954A2;"><b>what</b>: What the event/project is. <b>begin</b>: When it begins. <b>end</b>: When it ends or is due. <b>location</b>: Where it happens. <b>notes</b>: e.g. assignment details.</div> -->');
+      $this->append('<div style="background-color:#A8FFEC;left:50px;top:50px;bottom:50px;right:50px;position:fixed;overflow-x:scroll;overflow-y:scroll;z-index:2000;text-align:center;"><table><thead><tr>');
+        $this->append('<table><thead><tr></tr></thead><tbody><tr style="z-index:2001;left:10px;position:fixed;top:10px;background:#F954A2;" id="' . $this->newId() . '"><td id="' . $this->newId() . '"><b>Fields:</b>');
+        $result = $db->getRow($table, 'id', $id);
+        $this->append($result[0]['COLUMN_NAME']);
+				$this->append("\n" . '<td id="' . $this->newId() . '">');
+				$this->append("</td></tr></tbody></table>");
     	$this->state = 0;
         $idList = $db->listIds($table);
         if(strlen($idList) < 1) {

@@ -112,4 +112,30 @@ function calendarsync()
 		$main->close();
 	}
 }
+function discosync()
+{
+	global $classesAuthKey;
+	if ((!isset($_SERVER['PHP_AUTH_USER'])) || ($_SERVER['PHP_AUTH_PW'] != $classesAuthKey)) {
+		header('WWW-Authenticate: Basic realm="Schedule"');
+		header('HTTP/1.0 401 Unauthorized');
+		echo 'DOOM';
+		exit;
+    }
+    else {
+		$main = new FluidActive('discosync','Discography');
+		$main->append('<!-- <div style="z-index:2001;left:10px;position:fixed;top:10px;background:#F954A2;"><b>what</b>: What the event/project is. <b>begin</b>: When it begins. <b>end</b>: When it ends or is due. <b>location</b>: Where it happens. <b>notes</b>: e.g. assignment details.</div> -->');
+		//print('what: What the event/project is. begin: When it begins. end: When it ends or is due. location: Where it happens. notes: e.g. assignment details.');
+		$db = new FractureDB('futuqiur_calendarsync');
+		$music  = $db->getTable('music');
+
+		//$main->append('</script>');
+		$main->DBTableEntry($db, 'music');
+		$main->DBTableEntry($db, 'tracks');
+		$main->DBTableEntry($db, 'versions');
+		$main->DBTableEntry($db, 'artist');
+		$main->DBTableEntry($db, 'label');
+		//$main->append('<script type="text/javascript">');
+		$main->close();
+	}
+}
 ?>
