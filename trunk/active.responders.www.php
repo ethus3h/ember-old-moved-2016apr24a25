@@ -131,7 +131,7 @@ function discosync()
 
 		//$main->append('</script>');
 		$main->DBTableEntry($db, 'music');
-		$main->DBTableEntry($db, 'tracks');
+		$main->DBTableEntry($db, 'works');
 		$main->DBTableEntry($db, 'versions');
 		$main->DBTableEntry($db, 'artist');
 		$main->DBTableEntry($db, 'label');
