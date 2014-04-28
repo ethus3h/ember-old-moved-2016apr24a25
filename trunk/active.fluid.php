@@ -5,6 +5,7 @@ class FluidActive
     function __construct($script,$title = "")
     {
         $this->globalIdsCounter = 1;
+        $this->tabled = false;
         $this->targetLocation   = '/d/r/active.php';
         $this->FluidJS = file_get_contents("fluid.js");
         global $activeVersion;
@@ -24,10 +25,15 @@ class FluidActive
     }
     function DBTableEntry($db, $table)
     {
-  	//$main->append('<div style="z-index:2001;left:10px;position:fixed;top:10px;background:#F954A2;"><b>what</b>: What the event/project is. <b>begin</b>: When it begins. <b>end</b>: When it ends or is due. <b>location</b>: Where it happens. <b>notes</b>: e.g. assignment details.</div> -->');
-      $this->append('<div style="background-color:#A8FFEC;left:50px;top:50px;bottom:50px;right:50px;position:fixed;overflow-x:scroll;overflow-y:scroll;z-index:2000;text-align:center;"><table><thead><tr>');
+    	if($this->tabled == false) {
+       $this->append('<div style="background-color:#A8FFEC;left:50px;top:50px;bottom:50px;right:50px;position:fixed;overflow-x:scroll;overflow-y:scroll;z-index:1998;text-align:center;"> ');
+       }
+    	$this->tabled = true;
+ 	//$main->append('<div style="z-index:2001;left:10px;position:fixed;top:10px;background:#F954A2;"><b>what</b>: What the event/project is. <b>begin</b>: When it begins. <b>end</b>: When it ends or is due. <b>location</b>: Where it happens. <b>notes</b>: e.g. assignment details.</div> -->');
+      $this->append('<!-- <div style="background-color:#A8FFEC;left:50px;top:50px;bottom:50px;right:50px;position:fixed;overflow-x:scroll;overflow-y:scroll;z-index:2000;text-align:center;"> --><div style="background-color:#A8FFEC;left:50px;top:50px;bottom:50px;right:50px;position:relative;overflow-x:scroll;overflow-y:scroll;z-index:2000;text-align:center;"><table><thead><tr>');
+        $this->append('<h3>'.$table."</h3>");
         $this->append('<table><thead><tr></tr></thead><tbody><tr style="z-index:2001;left:10px;position:fixed;top:10px;background:#F954A2;" id="' . $this->newId() . '"><td id="' . $this->newId() . '"><b>Fields:</b>');
-        $result = $db->getRow($table, 'id', $id);
+        $result = $db->getRow($table, 'id', '0');
         $this->append($result[0]['COLUMN_NAME']);
 				$this->append("\n" . '<td id="' . $this->newId() . '">');
 				$this->append("</td></tr></tbody></table>");
@@ -116,14 +122,19 @@ class FluidActive
 // 				echo ". \n\n";
 				$this->append("\n" . '<td id="' . $this->newId() . '">');
 				#$this->DBTextEntry($db,$table,$key,$id));
-				if ($rowType == 'bool') {
-					$this->append('bool not supported');
+				if ($rowType == 'tinyint') {
+					$this->append('<small><small>bool not really supported yet, 0 = false 1 = true, also this might not be a bool and just be a normal tinyint field too...</small></small> ');
+						$this->DBIntegerEntry($db, $table, $thiskey, $id);
 				} else {
-					if ($rowType == 'text') {
+					if (($rowType == 'text') || ($rowType == 'longtext') || ($rowType == 'varchar')) {
 						$this->DBTextEntry($db, $table, $thiskey, $id);
 					} else {
 						if ($rowType == 'int') {
 							$this->DBIntegerEntry($db, $table, $thiskey, $id);
+						}
+						else {
+											$this->append("\n\n".'unknown row type '.$rowType."\n\n");
+
 						}
 					}
 				}
@@ -147,18 +158,20 @@ class FluidActive
         //   // *     example 2: bin2hex(String.fromCharCode(0x00));
         //   // *     returns 2: \'00\'
         $fieldVal = hex2bin($db->getField($table, $field, $id));
-        $this->append($field.': (type: Text). <form method="post"><input type="text" value="' . $fieldVal . '" id="' . $this->getId() . '" onKeyPress="sync_' . $this->getId() . '();"></form>
+        global $generalAuthKey;
+        $this->append("<b>".$field."</b>".': (type: Text). <form method="post"><input type="text" value="' . $fieldVal . '" id="' . $this->getId() . '" onKeyPress="sync_' . $this->getId() . '();"></form>
 			<script type="text/javascript">function bin2hex(s){var i,l,o="",n;s+="";for(i=0,l=s.length;i<l;i++){n=s.charCodeAt(i).toString(16);o+=n.length<2?"0"+n:n}return o} function sync_' . $this->getId() . '() { setTimeout(function () {   var ' . $this->getId() . ' = document.getElementById(\'' . $this->getId() . '\').innerHTML; var ' . $this->getId() . ' = bin2hex(document.getElementById(\'' . $this->getId() . '\').value); console.log(' . $this->getId() . '); var xmlhttp;
-      	  	if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } var send="handler=1&handlerNeeded=DBSimpleSubmissionHandler&authorizationKey=blablabla&db=' . $db->name . '&dataTargetTable=' . $table . '&dataTargetRowId=' . $id . '&dataTargetField=' . $field . '&dataValue="+' . $this->getId() . ';
+      	  	if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } var send="handler=1&handlerNeeded=DBSimpleSubmissionHandler&authorizationKey='.$generalAuthKey.'&db=' . $db->name . '&dataTargetTable=' . $table . '&dataTargetRowId=' . $id . '&dataTargetField=' . $field . '&dataValue="+' . $this->getId() . ';
         	xmlhttp.open("POST","' . $this->targetLocation . '",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); } </script>');
     }
     function DBIntegerEntry($db, $table, $field, $id)
     #$db is a FractureDB instance
     {
         $this->newId();
-        $this->append($field.': (type: Integer). It only likes numbers. <form method="post"><input type="text" value="' . $db->getField($table, $field, $id) . '" id="' . $this->getId() . '" onKeyPress="sync_' . $this->getId() . '();"></form> <script type="text/javascript"> function sync_' . $this->getId() . '() { setTimeout(function () {   var ' . $this->getId() . ' = document.getElementById(\'' . $this->getId() . '\').innerHTML;
+        global $generalAuthKey;
+        $this->append("<b>".$field."</b>".': (type: Integer). It only likes numbers. <form method="post"><input type="text" value="' . $db->getField($table, $field, $id) . '" id="' . $this->getId() . '" onKeyPress="sync_' . $this->getId() . '();"></form> <script type="text/javascript"> function sync_' . $this->getId() . '() { setTimeout(function () {   var ' . $this->getId() . ' = document.getElementById(\'' . $this->getId() . '\').innerHTML;
 			var ' . $this->getId() . ' = document.getElementById(\'' . $this->getId() . '\').value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
-			var send="handler=1&handlerNeeded=DBSimpleSubmissionHandler&authorizationKey=blablabla&db=' . $db->name . '&dataTargetTable=' . $table . '&dataTargetRowId=' . $id . '&dataTargetField=' . $field . '&dataValue="+' . $this->getId() . ';
+			var send="handler=1&handlerNeeded=DBSimpleSubmissionHandler&authorizationKey='.$generalAuthKey.'&db=' . $db->name . '&dataTargetTable=' . $table . '&dataTargetRowId=' . $id . '&dataTargetField=' . $field . '&dataValue="+' . $this->getId() . ';
 			xmlhttp.open("POST","' . $this->targetLocation . '",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); } </script>');
     }
     function filter_out($data)
