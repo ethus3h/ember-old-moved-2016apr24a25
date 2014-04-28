@@ -353,7 +353,9 @@ function DBSimpleSubmissionHandler()
     $dataTargetRowId  = $_REQUEST['dataTargetRowId'];
     $dataValue        = $_REQUEST['dataValue'];
     global $generalAuthKey;
+    //echo $authorizationKey;
     if($authorizationKey == $generalAuthKey) {
+    	//echo 'true';
 		$db               = new FractureDB($dbName);
 		$db->setField($dataTargetTable, $dataTargetField, $dataValue, $dataTargetRowId);
 		$db->close(); 
