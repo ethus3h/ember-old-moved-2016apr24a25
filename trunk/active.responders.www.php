@@ -142,12 +142,13 @@ function discosync()
 function discography()
 {
 	$main = new FluidActive('discography','Releases');
-  $main->append('<div style="background-color:#A8FFEC;left:0px;top:0px;bottom:0px;right:0px;position:fixed;overflow-x:scroll;overflow-y:scroll;z-index:1998;text-align:center;"> ');
+  $main->append('<div style="background-color:#FFFFFF;text-align:left;left:0px;top:0px;bottom:0px;right:0px;padding-left:8px;padding-right:8px;padding-top:8px;padding-bottom:8px;position:fixed;overflow-x:scroll;overflow-y:scroll;z-index:1998;"> ');
 	//$main->append('<!-- <div style="z-index:2001;left:10px;position:fixed;top:10px;background:#F954A2;"><b>what</b>: What the event/project is. <b>begin</b>: When it begins. <b>end</b>: When it ends or is due. <b>location</b>: Where it happens. <b>notes</b>: e.g. assignment details.</div> -->');
 	//print('what: What the event/project is. begin: When it begins. end: When it ends or is due. location: Where it happens. notes: e.g. assignment details.');
 	$db = new FractureDB('futuqiur_calendarsync');
 	if($_REQUEST["action"] == "releases") {
-		$main->append('<h1>Releases</h1>
+		$intro = <<<'EOD'
+<h1>Releases</h1>
 
 Notes:<br>
 
@@ -304,9 +305,58 @@ originally released as ZIP files)</li>
 
 ͠
 <br>
-';
+EOD;
+		$main->append($intro);
+
 	$releases = $db->getOrderedRows('releases', 'indexdate ASC, fineindex ASC');
 	print_r($releases);
+	$main->append('<ul>');
+	
+	        foreach ($releases as $key => $value) {
+	        	if(strlen($value['title'])>0){
+	        		$title=hex2bin($value['title']);
+	        	}
+	        	else {
+	        		$title="(link)";
+	        	}
+	        	if(strlen($value['annotation'])>0){
+	        		$annotation=' ('.hex2bin($value['annotation']).') ';
+	        	}
+	        	else {
+	        		$annotation="";
+	        	}
+	        	if(strlen($value['date'])>0){
+	        		$date=' ('.hex2bin($value['date']).') ';
+	        	}
+	        	else {
+	        		$date="";
+	        	}
+	        	if($value['medium']>0){
+	        		$medium=' ('.$value['medium'].') ';
+	        	}
+	        	else {
+	        		$medium="";
+	        	}
+	        	if($value['va'] == 1) {
+	        		$artist = 'multiple primary artists credited';
+	        	}
+	        	else {
+	        		if(strlen($value['artist']>0)){
+	        			$artist = '<i>as </i>'.$value['artist'];
+					}
+					else {
+						if($value['uncredited'] == 1) {
+							$artist = '<i>no primary artist credited</i>';
+						}
+						else {
+							$artist="<i>artist credit unknown</i>";
+						}
+					}
+	        	}
+	        	$main->append('<li><a href="/r/active.php?wint=1&wintNeeded=discography&action=release&relid='.$value['id'].'">'.$title.'</a>'.$annotation.$date.$medium.'<i>(</i>'.$artist.'<i>)</i></li>');
+	        }
+	$main->append('</ul>');
+
 	}
 	//$music  = $db->getTable('music');
 	//$main->append('<!-- <div style="z-index:2001;left:10px;position:fixed;top:10px;background:#F954A2;"><b>what</b>: What the event/project is. <b>begin</b>: When it begins. <b>end</b>: When it ends or is due. <b>location</b>: Where it happens. <b>notes</b>: e.g. assignment details.</div> -->');
