@@ -50,6 +50,9 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'discosync') {
         discosync();
     }
+    if ($wintNeeded == 'discography') {
+        discography();
+    }
 }
 
 // function logAdd($text){

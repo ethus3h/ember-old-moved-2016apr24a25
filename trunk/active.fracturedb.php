@@ -204,13 +204,30 @@ class FractureDB
 //         echo "\n\n~~~~\n\n";
         return $rowDataP;
     }
-    function getRows($table, $field, $value)
+    function getRows($table, $field, $value, $order = '')
     {
-        $query   = 'SELECT * FROM ' . $table . ' WHERE `' . $field . '` = \'' . $value . '\';';
+    	if ($order !== '') {
+            $queryInsert = ' ORDER BY `'.$order.'`';
+        } else {
+            $queryInsert = '';
+        }
+        $query   = 'SELECT * FROM ' . $table . ' WHERE `' . $field . '` = \'' . $value . '\'' . $queryInsert . ';';
         $rowData = $this->query($query);
         return $rowData;
     }
-    function LoadFromFile($filename, $table, $columnList)
+    function getOrderedRows($table, $order)
+    {
+    	if ($order !== '') {
+            $queryInsert = ' ORDER BY '.$order;
+        } else {
+            $queryInsert = '';
+        }
+        $query   = 'SELECT * FROM ' . $table . $queryInsert . ';';
+        $rowData = $this->query($query);
+        return $rowData;
+    }
+ 
+     function LoadFromFile($filename, $table, $columnList)
     {
 
         if ($columnList !== '') {
