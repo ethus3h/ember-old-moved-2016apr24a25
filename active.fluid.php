@@ -63,6 +63,7 @@ class FluidActive
         // $this->append('Id: '.$id.'<br>');
         // $this->DBRowEntry($db,$table,$id);
         $this->append('</div>');
+        $this->getQueryCount($db);
         
     }
     function DBRowEntry($db, $table, $id)

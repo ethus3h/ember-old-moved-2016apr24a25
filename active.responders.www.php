@@ -135,6 +135,7 @@ function discosync()
 		$main->DBTableEntry($db, 'versions');
 		$main->DBTableEntry($db, 'artist');
 		$main->DBTableEntry($db, 'label');
+		$main->DBTableEntry($db, 'medium');
 		//$main->append('<script type="text/javascript">');
 		$main->close();
 	}
@@ -308,7 +309,7 @@ originally released as ZIP files)</li>
 EOD;
 		$main->append($intro);
 
-	$releases = $db->getOrderedRows('releases', 'indexdate ASC, fineindex ASC');
+	$releases = $db->getOrderedRows('releases', 'indexdate DESC, fineindex DESC');
 	print_r($releases);
 	$main->append('<ul>');
 	
@@ -332,7 +333,13 @@ EOD;
 	        		$date="";
 	        	}
 	        	if($value['medium']>0){
-	        		$medium=' ('.$value['medium'].') ';
+	        		$medium=' ('.hex2bin($db->getField('medium', 'name', $value['medium']));
+	        		if($value['mediumquestioned'] == 1) {
+	        			$medium = $medium.'?) ';
+	        		}
+	        		else {
+	        			$medium = $medium.') ';
+	        		}
 	        	}
 	        	else {
 	        		$medium="";
@@ -342,7 +349,7 @@ EOD;
 	        	}
 	        	else {
 	        		if(strlen($value['artist']>0)){
-	        			$artist = '<i>as </i>'.$value['artist'];
+	        			$artist = '<i>as </i><a href="/d/r/active.php?wint=1&wintNeeded=discography&action=artist&artistid='.$value['artist'].'">'.hex2bin($db->getField('artist', 'name', $value['artist'])).'</a>';
 					}
 					else {
 						if($value['uncredited'] == 1) {
@@ -353,7 +360,10 @@ EOD;
 						}
 					}
 	        	}
-	        	$main->append('<li><a href="/r/active.php?wint=1&wintNeeded=discography&action=release&relid='.$value['id'].'">'.$title.'</a>'.$annotation.$date.$medium.'<i>(</i>'.$artist.'<i>)</i></li>');
+	        	$main->append('<li><a href="/d/r/active.php?wint=1&wintNeeded=discography&action=release&relid='.$value['id'].'">'.$title.'</a>'.$annotation.$date.$medium.'<i>(</i>'.$artist.'<i>)</i></li>');
+	        	if($value['innovation'] == 1) {
+	        		$main->append('<hr>');
+	        	}
 	        }
 	$main->append('</ul>');
 
