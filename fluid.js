@@ -809,7 +809,7 @@ function Box(set) {
 		var set = new Object();
 		set["container"] = this.container;
 		set["wanchor"] = 0;
-		//set["group"] = 'backdroupppp';
+		set["group"] = 'backdroupppp';
 		set["hpanchor"] = 0;
 		set["vpanchor"] = 0;
 		set["hanchor"] = 0;
@@ -864,7 +864,7 @@ function Box(set) {
 		tcset["border"] = "";
 		tcset["shadow"] = "";
 		tcset["css"] = "";
-		//tcset["group"] = "blurcontainer";
+		tcset["group"] = "blurcontainer";
 		this.blurredContainer = new Box(tcset);
 		tcset=null;
 		var tset = new Object();
