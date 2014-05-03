@@ -107,6 +107,7 @@ function ComputedValue(rule) {
 //TODO: Check for constrain attachment: seems to be going to container by default instead of page contents
 function Box(set) {
 	AllBoxes[AllBoxes.length+1] = this;
+	this.linkedBoxes = new Array();
 	this.hsbox = this;
 	this.cfg = set;
 	console.debug(this.cfg);
@@ -692,10 +693,19 @@ function Box(set) {
 		}
 	}
 	this.animate = function(animation,complete) {
-		if(this.hsbox !== this) {
-			this.hsbox.animate(animation);
+		console.log("Animating "+this.anchor+" with animation "+animation);
+		lbArrayLength = this.linkedBoxes.length;
+		console.debug(this.linkedBoxes);
+		for (var i = 0; i <= lbArrayLength; i++) {
+			console.debug(this.linkedBoxes[i]);
+			if(this.linkedBoxes[i]!=undefined) {
+				this.linkedBoxes[i].animate(animation);
+			}
 		}
-		else {
+		// if(this.bg !== this) {
+// 			this.hsbox.animate(animation);
+// 		}
+	//	else {
 			if(this.locked) {
 				console.log("WARNING: Not triggering animation; element locked");
 			}
@@ -766,41 +776,44 @@ function Box(set) {
 					});
 				}
 				this.unlock();
-			}
+		//	}
 		}
 	}
 	this.show = function(animation){
 		this.stop();
-		console.log("Showing "+this.hsanchor+" id " + this.hsbox.id + " to opacity "+this.hsbox.opacity+" with animation "+animation+"...");
+		//console.log("Showing "+this.hsanchor+" id " + this.hsbox.id + " to opacity "+this.hsbox.opacity+" with animation "+animation+"...");
 		if(animation == "zoomhalffade") {
-			this.hsbox.animate('zoomhalffadein');
+			this.animate('zoomhalffadein');
 		}
 		else if(animation == "fade") {
-			this.hsbox.animate('fadein');
+			this.animate('fadein');
 		}
 		else if(animation == "drop") {
-			this.hsbox.animate('dropin');
+			this.animate('dropin');
 		}
 		else {
 			$(this.hsbox.anchor).css('opacity',this.opacity);
+			$(this.anchor).css('opacity',this.opacity);
 		}
 		$(this.hsbox.anchor).css('display','block');
+		$(this.anchor).css('display','block');
 		this.shown = true;
 	};
 	this.hide = function(animation){
 		this.stop();
-		console.log("Hiding "+this.hsanchor+" id " + this.hsbox.id + " with animation "+animation+"...");
+		//console.log("Hiding "+this.hsanchor+" id " + this.hsbox.id + " with animation "+animation+"...");
 		if(animation == "zoomhalffade") {
-			this.hsbox.animate('zoomhalffadeout');
+			this.animate('zoomhalffadeout');
 		}
 		else if(animation == "fade") {
-			this.hsbox.animate('fadeout');
+			this.animate('fadeout');
 		}
 		else if(animation == "drop") {
-			this.hsbox.animate('dropout');
+			this.animate('dropout');
 		}
 		else {
 			$(this.hsbox.anchor).css('opacity',0);
+			$(this.anchor).css('opacity',0);
 		}
 		this.shown = false;
 	};
@@ -817,7 +830,9 @@ function Box(set) {
 		set["vconstrain"] = false;
 		this.backdropContainer = new Box(set);
 		set=null;
+		this.linkedBoxes[this.linkedBoxes.length+1] = this.backdropContainer;
 		this.backdrop = new Panel(this.backdropContainer.id,"modalbg");
+		this.linkedBoxes[this.linkedBoxes.length+1] = this.backdrop;
 		console.log("Backdrop: "+this.backdrop.anchor);
 		console.log("Backdrop container: "+this.backdropContainer.anchor);
 		console.log("This: "+this.anchor);
@@ -867,6 +882,7 @@ function Box(set) {
 		tcset["group"] = "blurcontainer";
 		this.blurredContainer = new Box(tcset);
 		tcset=null;
+		this.linkedBoxes[this.linkedBoxes.length+1] = this.blurredContainer;
 		var tset = new Object();
 		tset = clone(this.cfgc);
 		tset["container"] = this.blurredContainer.id;
@@ -922,6 +938,7 @@ function Box(set) {
 		tset["group"] = "blurrybox";
 		this.blurryBox = new Box(tset);
 		tset=null;
+		this.linkedBoxes[this.linkedBoxes.length+1] = this.blurryBox;
 		$(this.anchor).appendTo(this.blurredContainer.anchor);
 		if(typeof(this.backdropContainer) !== "undefined") {
 			$(this.blurredContainer.anchor).appendTo(this.backdropContainer.anchor);			
@@ -1098,6 +1115,9 @@ function Panel(container,style,backdrop) {
 	} 
 	this.hide = function(animation) {
 		this.panelBox.hide(animation);
+	} 
+	this.animate = function(animation) {
+		this.panelBox.animate(animation);
 	} 
 	this.toggle = function(animation) {
 		this.panelBox.toggle(animation);
