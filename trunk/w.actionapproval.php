@@ -19,7 +19,7 @@ if ($userAuth >= $axnAuthPriv) {
         }
     } else {
         //This is not a node action
-        $nodepermerr == 0;
+        $nodepermerr = 0;
     }
 } else {
     $userpermissionverified = 0;
