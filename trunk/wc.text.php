@@ -19,7 +19,7 @@ class text
     {
         return $this->content;
     }
-    function request_content($request)
+    function request_content($request = "")
     {
         return $this->caption . ': <input type="text" name="' . $this->reference . '"><br>';
     }
