@@ -3,6 +3,11 @@
 function res($name)
 {
     global $dataDirectory;
-    return file_get_contents($dataDirectory . $name);
+    if(file_exists($dataDirectory . $name)) {
+    	return file_get_contents($dataDirectory . $name);
+    }
+    else {
+    	return null;
+    }
 }
 ?>

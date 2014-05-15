@@ -28,13 +28,20 @@ if ($userpermissionverified == 0) {
     if ($wvActionId == 'logInExecute') {
         $_SESSION['wvUserName'] = fv('wvUserName');
         $_SESSION['wvUserPassword'] = fv('wvUserPassword');
-        if ($_POST['returnAction'] == '6') {
-            $pageBody = itr(284) . buildLink('6', '&wvSession=' . session_id() . '&nodeId=' . fv('nodeId') . '&', itr(776) . fv('nodeId') . itr(777));
-        } else {
-            $pageBody = itr(284) . buildLink(1, '&wvSession=' . session_id() . '&', itr(285));
-            $pageTitle = itr(17);
-        }
-    }
+        if(isset($_POST['returnAction'])) {
+       		if ($_POST['returnAction'] == '6') {
+            	$pageBody = itr(284) . buildLink('6', '&wvSession=' . session_id() . '&nodeId=' . fv('nodeId') . '&', itr(776) . fv('nodeId') . itr(777));
+       		}
+       		else {
+            	$pageBody = itr(284) . buildLink(1, '&wvSession=' . session_id() . '&', itr(285));
+        	    $pageTitle = itr(17);
+     	  	}
+     	}
+     	else {
+			$pageBody = itr(284) . buildLink(1, '&wvSession=' . session_id() . '&', itr(285));
+			$pageTitle = itr(17);
+     	}
+   	 }
     //ACTION logOut
     if ($wvActionId == 'logOut') {
         session_destroy();
@@ -74,6 +81,24 @@ if ($userpermissionverified == 0) {
         } else {
             $disambigStr = itr(769) . itr(qry('node_revision', 'node_revision_disambiguation_description', 'node_revision_id', $nodeRevId)) . itr(770);
         }
+        if(!isset($universestatusstring)) {
+        		$universestatusstring = null;
+       	}
+       	if(!isset($copyrightflagstring)) {
+        		$copyrightflagstring = null;
+       	}
+       	if(!isset($moralityflagstring)) {
+        		$moralityflagstring = null;
+       	}
+       	if(!isset($minorflagstring)) {
+        		$minorflagstring = null;
+       	}
+       	if(!isset($personalflagstring)) {
+        		$personalflagstring = null;
+       	}
+       	if(!isset($datastring)) {
+        		$datastring = null;
+       	}
         $replaces = array(itr(933), 'name="nodeTitle" value="' . itr(qry('node_revision', 'node_revision_title', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeSortTitle" value="' . itr(qry('node_revision', 'node_revision_sort_title', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeDisplayTitle" value="' . itr(qry('node_revision', 'node_revision_display_title', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeShortTitle" value="' . itr(qry('node_revision', 'node_revision_short_title', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeType" value="' . itr(qry('node_revision', 'node_revision_type', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeDescription">' . htmlentities(itr(qry('node_revision', 'node_revision_description', 'node_revision_id', $nodeRevId))) . '</textarea><input type="hidden" name="nodeId" value="' . $nodeId . '">', 'name="nodeDisambiguationDescription" value="' . itr(qry('node_revision', 'node_revision_disambiguation_description', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeMetadata" value="' . itr(qry('node_revision', 'node_revision_metadata', 'node_revision_id', $nodeRevId)) . '"', 'name="nodePermissions" value="' . itr(qry('node_revision', 'node_revision_permissions', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeRelationships" value="' . itr(qry('node_revision', 'node_revision_relationships', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeSource" value="' . itr(qry('node_revision', 'node_revision_source', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeComment" value="' . itr(qry('node_revision', 'node_revision_comment', 'node_revision_id', $nodeRevId)) . '"', 'name="nodeShortDescription" value="' . itr(qry('node_revision', 'node_revision_short_description', 'node_revision_id', $nodeRevId)) . '"', $universestatusstring, $copyrightflagstring, $moralityflagstring, $minorflagstring, $personalflagstring, $datastring, '<input type="hidden" name="a" value="26"> Edit note: <textarea rows="10" cols="80" name="editNote"></textarea><br>');
         $pageBody = str_replace($keys, $replaces, itr(65)) . finishForm(itr(67));
         $pageTitle = itr(935) . fv('nodeId') . itr(936);
@@ -126,6 +151,9 @@ if ($userpermissionverified == 0) {
         }
         //print_r($relationship_string);
         $pageMenu = itr(778) . itr(785) . itr(75) . fv('nodeId') . itr(76) . fv('locale') . itr(77) . itr(784) . buildLink('17', '&nodeId=' . fv('nodeId') . '&', itr(1132)) . itr(1134) . buildLink('16', '&nodeId=' . fv('nodeId') . '&', itr(1133)) . itr(778);
+        if(!isset($relationship_string)) {
+        		$relationship_string = null;
+       	}
         if (strlen($relationship_string) == 0) {
             $relsep = '';
         } else {
@@ -286,6 +314,9 @@ if ($userpermissionverified == 0) {
             } else {
                 $separator = itr(859);
             }
+            if(!isset($thisNodeEntry)) {
+        		$thisNodeEntry = null;
+       		}
             $thisNodeEntry = $thisNodeEntry . buildLink('6', '&nodeId=' . $this_node_id . '&', $this_node_id . itr(856) . itr(857) . $title . $separator . $shortdesc) . itr(74);
             $this_node_id = $this_node_id + 1;
         }
