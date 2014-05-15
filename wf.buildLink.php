@@ -2,7 +2,13 @@
 //Make a hyperlink or formlink
 function buildLink($wvActionId, $options, $caption)
 {
-    if ($_POST["login"] == "1") {
+	$lttemp = false;
+	if(isset($_POST["login"])) {
+		if($_POST["login"] == "1") {
+			$lttemp = true;
+		}
+	}
+    if ($lttemp == true) {
         //Check that the user is properly logged in
         $wvuserpasswdmd5ln = qry('user', 'user_password_md5', 'user_name', fv('wvUserName'));
         if (md5($_SESSION['wvUserPassword']) == $wvuserpasswdmd5ln) {

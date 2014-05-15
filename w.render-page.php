@@ -93,6 +93,12 @@ if ($login == 1) {
 //Breadcrumb navigation
 $wvActionDispName = itr(qry('operation', 'operation_disp_name', 'operation_id', fv('a')));
 $breadSeparator = itr(1135);
+if(!isset($nodeRevId)) {
+	$nodeRevId = null;
+}
+if(!isset($disambigStr)) {
+	$disambigStr = null;
+}
 $nodeBCTitle = $nodeId . itr(1150) . c(shorten(itr(qry('node_revision', 'node_revision_title', 'node_revision_id', $nodeRevId))) . $disambigStr);
 if (!strlen(fv('nodeId')) > 0) {
     $nodeNameTag = "";
@@ -105,6 +111,9 @@ if ($wvActionId == 'nodeView') {
     $actionlinkid = fv('a');
 }
 e(str_replace('&a=6&locale', '&a=19&locale', itr(1139) . buildLink(1, '', itr(1137)) . itr(1158) . $breadSeparator . itr(1158) . buildLink($actionlinkid, '', $wvActionDispName) . $nodeNameTag));
+if(!isset($pageMenu)) {
+	$pageMenu = null;
+}
 echo $pageMenu;
 itf(33);
 echo $pageTitle;

@@ -31,7 +31,7 @@ $musicdata=str_replace('cellpadding="2" cellspacing="2"','',$musicdata);
 $musicdata= str_replace('AnoeyFuturamerlincom','anoeyfuturamerlincommedium,AnoeyFuturamerlincom',str_replace('<img',' <img',str_replace('src="a/','class="mlefti" src="d/s/music/r/a/',str_replace('href="a/','class="mlefti" href="d/s/music/r/a/',str_replace('href="../','href="d/s/music/',str_replace('href=','target="_blank" href=',str_replace('</h1>','</h2>',str_replace('<h1>','<h2>',$musicdata))))))));
 return $musicdata;
 }
-function e($content,$pageVersionDirect)
+function e($content,$pageVersionDirect = "")
 {
     global $websiteName;
     global $cssFile;
