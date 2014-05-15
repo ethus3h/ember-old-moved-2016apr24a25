@@ -1,5 +1,5 @@
 <?php
-class baggage_claim
+/* class baggage_claim
 {
 
 # REGISTERED LUGGAGE:
@@ -16,7 +16,7 @@ class baggage_claim
     {
         return $this->$variable;
     }
-}
+} */
 global $baggage_claim;
 $baggage_claim=new baggage_claim;
 ?>
