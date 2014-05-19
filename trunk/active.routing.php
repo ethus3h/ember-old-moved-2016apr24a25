@@ -18,6 +18,18 @@ function runHandlers($handlerNeeded)
     if ($handlerNeeded == 'DBSimpleSubmissionHandler') {
         DBSimpleSubmissionHandler();
     }
+    if ($handlerNeeded == 'CoalIntake') {
+        CoalIntakeHandler();
+    }
+    if ($handlerNeeded == 'CoalRetrieve') {
+        CoalRetrieveHandler();
+    }
+    if ($handlerNeeded == 'CoalChunkIntake') {
+        CoalChunkIntakeHandler();
+    }
+    if ($handlerNeeded == 'CoalChunkRetrieve') {
+        CoalChunkRetrieveHandler();
+    }
 }
 
 function runWints($wintNeeded)

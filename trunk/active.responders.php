@@ -362,6 +362,69 @@ function DBSimpleSubmissionHandler()
     }
 }
 
+function CoalIntake()
+{
+    $authorizationKey = $_REQUEST['authorizationKey'];
+    $dbName           = $_REQUEST['db'];
+    global $generalAuthKey;
+    global $error;
+    if($authorizationKey == $generalAuthKey) {
+    	//Request accepted
+    	//help on times from http://stackoverflow.com/questions/5849702/php-file-upload-time-created
+    	$metadata = bin2hex(var_export($_FILES,true));
+    	$filename = $_FILES['uploadedfile']['name'];
+    	$type = $_FILES['uploadedfile']['type'];
+    	$size = $_FILES['uploadedfile']['size'];
+    	$tmp_name = $_FILES['uploadedfile']['tmp_name'];
+    	$error = $_FILES['uploadedfile']['error'];
+    	//based on http://www.tizag.com/phpT/fileupload.php?MAX_FILE_SIZE=100000&uploadedfile=
+    	$target_path = "coal_temp/";
+    	//cot file extension — Coal temporary data file; can be any binary data
+		$target_path = $target_path . "data.cot"; 
+		if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
+			echo "The file ".basename( $_FILES['uploadedfile']['name'])." has been uploaded";
+		} else {
+  			echo "There was an error uploading the file, please try again!";
+  			$error = 2;
+		}
+		if(file_exists($target_path)) {
+    		$data = file_get_contents($target_path);
+    		$stat = stat( $target_path );
+    		$smtime = $stat['mtime'];
+    		$stats = bin2hex(var_export($stat,true));
+    		$ctime = filectime($target_path);
+    		$mtime = filemtime($target_path);
+    		$atime = fileatime($target_path);
+    	}
+  		else {
+    		//Failed
+    		$error = 3;
+  		}
+		$md5 = md5($data);
+		$crc = bin2hex(get_signed_int(crc32($data)));
+		$sha = sha1($data);
+		
+		$db               = new FractureDB($dbName);
+		$db->setField($dataTargetTable, $dataTargetField, $dataValue, $dataTargetRowId);
+		$db->close(); 
+    }
+    else {
+    	$error = 1;
+    }
+}
+function CoalRetrieve()
+{
+   
+}
+function CoalChunkIntake()
+{
+   
+}
+function CoalChunkRetrieve()
+{
+   
+}
+
 function emberBackend() {
 	session_start();
 	if (isset($_REQUEST['emSession'])) {

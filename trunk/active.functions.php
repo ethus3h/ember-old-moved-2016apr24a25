@@ -169,5 +169,15 @@ function get_domain_simple($url)
     return $hostr;
 }
 
-
+//from http://us1.php.net/manual/en/function.crc32.php#96262
+function get_signed_int($in) {
+    $int_max = pow(2, 31)-1;
+    if ($in > $int_max){
+        $out = $in - $int_max * 2 - 2;
+    }
+    else {
+        $out = $in;
+    }
+    return $out;
+} 
 ?>
