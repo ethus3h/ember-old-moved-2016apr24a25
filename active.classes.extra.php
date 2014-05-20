@@ -230,4 +230,19 @@ class baggage_claim
 global $baggage_claim;
 $baggage_claim = new baggage_claim;
 
+
+class cCoal
+{
+    function __construct($data,$len,$par,$md5,$crc,$sha,$s512)
+    {
+        $this->data=$data;
+        $this->len=$len;
+        $this->par=$par;
+        $this->md5=$md5;
+        $this->crc=$crc;
+        $this->sha=$sha;
+        $this->s512=$s512;
+    }
+}
+
 ?>
