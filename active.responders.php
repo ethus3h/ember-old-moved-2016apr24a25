@@ -365,13 +365,12 @@ function DBSimpleSubmissionHandler()
 function CoalIntakeHandler()
 {
     $authorizationKey = $_REQUEST['authorizationKey'];
-    $dbName           = $_REQUEST['db'];
     global $generalAuthKey;
     global $error;
     if($authorizationKey == $generalAuthKey) {
     	//Request accepted
     	//help on times from http://stackoverflow.com/questions/5849702/php-file-upload-time-created
-		$db               = new FractureDB('coal');
+		$db               = new FractureDB('futuqiur_coal');
     	$metadata = base64_encode(var_export($_FILES,true));
     	$filename = base64_encode($_FILES['uploadedfile']['name']);
     	$type = base64_encode($_FILES['uploadedfile']['type']);
@@ -414,12 +413,12 @@ function CoalIntakeHandler()
 		$crc = strtolower(dechex(crc32($data)));
 		$sha = strtolower(sha1($data));
 		$s512 = strtolower(hash("sha512",$data));
-		$db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$par.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\';');
+		$db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$par.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
 		$carray = str_split($data,512000);
 		foreach($carray as $chunk) {
 			$compression = "bzip2";
 			$compressed = bzcompress($chunk);
-			include('phpseclib0.3.6/Crypt/RSA.php');
+			include('Crypt/RSA.php');
 			$rsa = new Crypt_RSA();
 			extract($rsa->createKey());
 			echo $privatekey;
