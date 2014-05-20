@@ -191,21 +191,49 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	else {
 		$db               = new FractureDB('futuqiur_coalchunks');
 		//Retrieve potential duplicates
-		$potentialDuplicates = $db->getColumn('coalchunks', 'id', 's512', $s512);
+		$potentialDuplicates = $db->getColumns('coalchunks', 'id', 's512', $s512);
 		//Check potentials for duplicate
 		$duplicateFound = false;
 		foreach ($potentialDuplicates as $potential) {
-			//$potential['id']
 			//Request potential from storage
-			
+			$potentialRecord = retrieveChunk($potential['id']);
+			$potentialData = $potentialRecord->data;
+			if($potentialData == $data) {
+				$duplicateFound = true;
+				$duplicateId = $potential['id'];
+				goto duplicatefound;
+			}
 		}
+		duplicatefound:
 		if($duplicateFound) {
 			$newChunkId = $duplicateId;
 			goto finished;
 		}
 		else {
+			chunk:
 			//Add record w/ ID, parity checksum
+			$newChunkId = $db->addRow('coalchunks', 'lengthpre, paritypre', '\''.strlen($data).'\', \''.$par.'\'');
 			//encrypt record
+			global $chunkPrivateKey;
+			global $chunkPublicKey;
+			$rsa = new Crypt_RSA();
+			$rsa->loadKey($chunkPublicKey); // public key
+			$plaintext = $data;
+			$ciphertext = $rsa->encrypt($plaintext);
+			$rsa->loadKey($chunkPrivateKey); // private key
+			if($rsa->decrypt($ciphertext) != $plaintext) {
+				if($chcount < 10) {
+					goto chunk;
+				}
+				else {
+					$icerror = 4;
+				}
+			}
+			$encpar = strtolower(bin2hex(get_signed_int(crc32($ciphertext+md5($ciphertext)))));
+			$encmd5 = strtolower(md5($ciphertext));
+			$enccrc = strtolower(dechex(crc32($ciphertext)));
+			$encsha = strtolower(sha1($ciphertext));
+			$encs512 = strtolower(hash("sha512",$ciphertext));
 			//store chunk
 			//add new (post-encryption) checksums to record
 			goto finished;
@@ -214,7 +242,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	}
 	finished:
 	if($icerror != 0) {
-		header("HTTP/1.0 525 Request failed");
+		//header("HTTP/1.0 525 Request failed");
 	}
 	return array($newChunkId, $icerror);
 }
