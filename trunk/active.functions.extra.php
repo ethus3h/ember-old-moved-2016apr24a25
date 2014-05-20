@@ -269,6 +269,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 function retrieveChunk($id)
 {
 	$db               = new FractureDB('futuqiur_coalchunks');
+	$rcerror = 0;
 	$rccount = 0;
 	$rcpcount = 0;
 	retrievechunk:
@@ -285,24 +286,52 @@ function retrieveChunk($id)
 	//download chunk
 	$chunkData = get_url($chunkLocation);
 	//check retrieved chunk checksums
+	$cklen = strlen($chunkData);
+	$ckpar = par($chunkData);
+	$ckmd5 = amd5($chunkData);
+	$ckcrc = crc($chunkData);
+	$cksha = sha($chunkData);
+	$cks512 = s512($chunkData);
 	$chlen = $chunkMeta['length'];
 	$chpar = $chunkMeta['parity'];
 	$chmd5 = $chunkMeta['md5'];
 	$chsha = $chunkMeta['sha'];
 	$chcrc = $chunkMeta['crc'];
 	$chs512 = $chunkMeta['s512'];
-	if() {
-		$rccount++;
-		goto retrievechunk;
+	if(($cklen != $chlen) || ($ckpar != $chpar) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($ckcrc != $chcrc) || ($cks512 != $chs512)) {
+		if($rccount < 10) {
+			$rccount++;
+			goto retrievechunk;
+		}
+		else {
+			$rcerror = 15;
+		}
 	}
 	//Decrypt chunk using chunk key
+	$rsa = new Crypt_RSA();
+	$rsa->loadKey($chunkPrivateKey); // private key
+	$ciphertext = $chunkData;
+	$plaintext = $rsa->decrypt($ciphertext);
 	//Check decrypted chunk against parity checksum from database
-	if() {
-		$rcpcount++;
-		goto retrievechunk;
+	$ptlen = strlen($plaintext);
+	$ptpar = par($plaintext);
+	$ptmd5 = amd5($plaintext);
+	$ptcrc = crc($plaintext);
+	$ptsha = sha($plaintext);
+	$pts512 = s512($plaintext);
+	$plen = $chunkMeta['length'];
+	$ppar = $chunkMeta['parity'];
+	if(($plen != $ptlen) || ($ppar != $ptpar)) {
+		if($rcpcount < 10) {
+			$rcpcount++;
+			goto retrievechunk;
+		}
+		else {
+			$rcerror = 14;
+		}
 	}
-	//return data and checksums
-	return 
 	$db->close();
+	//return data and checksums
+	return new cChunk ();
 }
 ?>
