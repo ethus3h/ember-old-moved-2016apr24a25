@@ -351,7 +351,7 @@ function retrieveCoal($id)
 	$recordlen = $coalMeta['length'];
 	$coalBlockList = $coalMeta['blocks'];
 	$cblen = $coalMeta['blockslen'];	
-	$cbpar = $coalMeta['blockspar'];
+	$cbpar = trim($coalMeta['blockspar']);
 	$cbmd5 = $coalMeta['blocksmd5'];
 	$cbsha = $coalMeta['blockssha'];
 	$cbcrc = $coalMeta['blockscrc'];
@@ -362,6 +362,30 @@ function retrieveCoal($id)
 	$rbsha = sha($coalBlockList);
 	$rbcrc = crc($coalBlockList);
 	$rbs512 = s512($coalBlockList);
+	echo $cblen;
+	echo '<br>';
+	echo $rblen;
+	echo '<br>';
+	echo $cbpar;
+	echo '<br>';
+	echo $rbpar;
+	echo '<br>';
+	echo $cbmd5;
+	echo '<br>';
+	echo $rbmd5;
+	echo '<br>';
+	echo $cbcrc;
+	echo '<br>';
+	echo $rbcrc;
+	echo '<br>';
+	echo $cbsha;
+	echo '<br>';
+	echo $rbsha;
+	echo '<br>';
+	echo $cbs512;
+	echo '<br>';
+	echo $rbs512;
+	echo '<br>';
 	if(($cblen != $rblen) || ($cbpar != $rbpar) || ($cbmd5 != $rbmd5) || ($cbsha != $rbsha) || ($cbcrc != $rbcrc) || ($cbs512 != $rbs512)) {
 		if($rccount < 10) {
 			$rccount++;
@@ -372,7 +396,7 @@ function retrieveCoal($id)
 			$rcerror = 17;
 		}
 	}
-	$blockListExploded = explode_escaped(',',$coalBlockList);
+	$blockListExploded = explode_esc(',',$coalBlockList);
 	$dataToReturn = '';
 	foreach($blockListExploded as $blockId) {
 		requestblock:

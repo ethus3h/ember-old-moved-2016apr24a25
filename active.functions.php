@@ -305,7 +305,9 @@ function guidv4()
 }
 function par($data)
 {
-	return strtolower(bin2hex(strval(get_signed_int(crc32($data)))));
+	$split = str_split(strtolower(bin2hex(strval(get_signed_int(crc32($data))))),10);
+	$return = $split[0];
+	return $return;
 }
 function crc($data)
 {

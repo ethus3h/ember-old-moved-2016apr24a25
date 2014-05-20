@@ -23,6 +23,12 @@ GENERAL CONFIGURATION
 include('active.config.php');
 
 /*************
+GENERAL-USE FUNCTIONS
+*************/
+
+include('active.functions.php');
+
+/*************
 GENERAL-USE CLASSES
 *************/
 
@@ -32,12 +38,6 @@ include('active.fluid.php');
 
 //FractureDB is the class that implements the FractureDB data management system.
 include('active.fracturedb.php');
-
-/*************
-GENERAL-USE FUNCTIONS
-*************/
-
-include('active.functions.php');
 
 /*************
 ADDITIONAL CLASSES

@@ -482,6 +482,18 @@ function CoalIntakeHandler()
 			$blockList = $blockList . $bins . $newBlockId;
 		}
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
+		$blocklistlen = strlen($blockList);
+		$blocklistpar = par($blockList);
+		$blocklistmd5 = amd5($blockList);
+		$blocklistcrc = crc($blockList);
+		$blocklistsha = sha($blockList);
+		$blocklists512 = s512($blockList);
+		$db->setField('coal', 'blockslen', $blocklistlen, $newCoalId);
+		$db->setField('coal', 'blockspar', $blocklistpar, $newCoalId);
+		$db->setField('coal', 'blocksmd5', $blocklistmd5, $newCoalId);
+		$db->setField('coal', 'blockscrc', $blocklistcrc, $newCoalId);
+		$db->setField('coal', 'blockssha', $blocklistsha, $newCoalId);
+		$db->setField('coal', 'blocks512', $blocklists512, $newCoalId);
 		//$retrievedCoal = null;
 		$retrievedCoal = retrieveCoal($newCoalId);
 		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
