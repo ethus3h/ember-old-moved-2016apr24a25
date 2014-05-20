@@ -1,4 +1,4 @@
- <?php
+<?php
 //FluidActive is the class implementing the Fluid//Active web UI toolkit
 class FluidActive
 {
@@ -248,4 +248,4 @@ class FluidActive
     }
     
 }
-?> 
+?>

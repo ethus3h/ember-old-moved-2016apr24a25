@@ -372,21 +372,36 @@ function CoalIntakeHandler()
     	//help on times from http://stackoverflow.com/questions/5849702/php-file-upload-time-created
 		$db               = new FractureDB('futuqiur_coal');
     	$metadata = base64_encode(var_export($_FILES,true));
-    	$filename = base64_encode($_FILES['uploadedfile']['name']);
-    	$type = base64_encode($_FILES['uploadedfile']['type']);
-    	$size = base64_encode($_FILES['uploadedfile']['size']);
-    	$length = $_FILES['uploadedfile']['size'];
-    	$tmp_name = base64_encode($_FILES['uploadedfile']['tmp_name']);
-    	$error = base64_encode($_FILES['uploadedfile']['error']);
+    	if(isset($_FILES['uploadedfile'])) {
+			$filename = base64_encode($_FILES['uploadedfile']['name']);
+			$type = base64_encode($_FILES['uploadedfile']['type']);
+			$size = base64_encode($_FILES['uploadedfile']['size']);
+			$length = $_FILES['uploadedfile']['size'];
+			$tmp_name = base64_encode($_FILES['uploadedfile']['tmp_name']);
+			$error = base64_encode($_FILES['uploadedfile']['error']);
+		}
+		else {
+			$filename = null;
+			$type = null;
+			$size = null;
+			$length = null;
+			$tmp_name = null;
+			$error = null;
+		}
     	//based on http://www.tizag.com/phpT/fileupload.php?MAX_FILE_SIZE=100000&uploadedfile=
     	$target_path = "coal_temp/";
     	//cot file extension — Coal temporary data file; can be any binary data
 		$target_path = $target_path . "data.cot"; 
-		if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
-			//echo "The file ".basename( $_FILES['uploadedfile']['name'])." has been uploaded";
-		} else {
-  			//echo "There was an error uploading the file, please try again!";
-  			$error = 2;
+    	if(isset($_FILES['uploadedfile'])) {		
+			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
+				//echo "The file ".basename( $_FILES['uploadedfile']['name'])." has been uploaded";
+			} else {
+				//echo "There was an error uploading the file, please try again!";
+				$error = 2;
+			}
+		}
+		else {
+			$error = 6;
 		}
 		$data = null;
 		$stat = null;
@@ -413,24 +428,32 @@ function CoalIntakeHandler()
 		$crc = strtolower(dechex(crc32($data)));
 		$sha = strtolower(sha1($data));
 		$s512 = strtolower(hash("sha512",$data));
+		$coalcount = 0;
 		coal:
+		$coalcount++;
 		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$par.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
 		$carray = str_split($data,512000);
 		$blockList = '';
 		foreach($carray as $chunk) {
+			$chcount = 0;
 			chunk:
+			$chcount++;
 			$compression = "bzip2";
 			$compressed = bzcompress($chunk);
 			global $coalPrivateKey;
 			global $coalPublicKey;
-			include('Crypt/RSA.php');
 			$rsa = new Crypt_RSA();
 			$rsa->loadKey($coalPublicKey); // public key
 			$plaintext = $chunk;
 			$ciphertext = $rsa->encrypt($plaintext);
 			$rsa->loadKey($coalPrivateKey); // private key
 			if($rsa->decrypt($ciphertext) != $plaintext) {
-				goto chunk;
+				if($chcount < 10) {
+					goto chunk;
+				}
+				else {
+					$error = 4;
+				}
 			}
 			$encpar = strtolower(bin2hex(get_signed_int(crc32($ciphertext))));
 			$encmd5 = strtolower(md5($ciphertext));
@@ -438,13 +461,24 @@ function CoalIntakeHandler()
 			$encsha = strtolower(sha1($ciphertext));
 			$encs512 = strtolower(hash("sha512",$ciphertext));
 			//TODO: CoalChunkIntakeHandler
+			$newBlockId = null;
 			$blockList = $blockList + $newBlockId;
 		}
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
-		$retrievedCoal = retrieveCoal($newCoalId);
-		if(($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
-			$blockList = '';
-			goto coal;
+		$retrievedCoal = null;
+		//$retrievedCoal = retrieveCoal($newCoalId);
+		if(!is_null($retrievedCoal)) {
+			if(($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+				$blockList = '';
+				if($coalcount < 10) {
+					goto coal;
+				}
+				else {
+					$error = 5;
+				}
+			}
+		else {
+			$error = 7;
 		}
 		$db->close();
 		if($error != 0) {
