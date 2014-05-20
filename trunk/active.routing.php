@@ -65,6 +65,9 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'discography') {
         discography();
     }
+    if ($wintNeeded == 'coaltestupload') {
+        coaltestupload();
+    }
 }
 
 // function logAdd($text){
