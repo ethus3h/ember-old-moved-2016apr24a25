@@ -419,7 +419,11 @@ function CoalIntake()
 		foreach($carray as $chunk) {
 			$compression = "bzip2";
 			$compressed = bzcompress($chunk);
-			
+			include('phpseclib0.3.6/Crypt/RSA.php');
+			$rsa = new Crypt_RSA();
+			extract($rsa->createKey());
+			echo $privatekey;
+			echo $publickey;
 		}
 		$db->close(); 
     }
