@@ -194,6 +194,11 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$potentialDuplicates = $db->getColumn('coalchunks', 'id', 's512', $s512);
 		//Check potentials for duplicate
 		$duplicateFound = false;
+		foreach ($potentialDuplicates as $potential) {
+			//$potential['id']
+			//Request potential from storage
+			
+		}
 		if($duplicateFound) {
 			$newChunkId = $duplicateId;
 			goto finished;
