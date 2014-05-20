@@ -519,7 +519,7 @@ function CoalIntakeHandler()
     			echo '<br>retrieveCoal returned error code '.$retrievedCoal;
     		}
     		else {
-    			echo '<br>retrieveCoal returned error codes '.$retrievedCoal[0].' and '.$retrievedCoal[1].'.';
+    			echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$retrievedCoal[0].', '.$retrievedCoal[1].', and '.$retrievedCoal[2].'.';
     		}
     	}
     }
