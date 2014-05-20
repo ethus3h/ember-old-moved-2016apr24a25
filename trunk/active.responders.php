@@ -484,7 +484,7 @@ function CoalIntakeHandler()
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
 		//$retrievedCoal = null;
 		$retrievedCoal = retrieveCoal($newCoalId);
-		if(is_int($retrievedCoal)) {
+		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
 			$error = 20;
 		}
 		else {
@@ -514,8 +514,13 @@ function CoalIntakeHandler()
     }
     if($error !== 0) {
     	echo '<br>An error code was returned: '.$error;
-    	if(($error == 20) && (isset($retrievedCoal))) {
-    		echo '<br>retrieveCoal returned error code '.$retrievedCoal;
+    	if(($error == 20) && (is_int($retrievedCoal) || is_array($retrievedCoal))) {
+    		if(is_int($retrievedCoal)) {
+    			echo '<br>retrieveCoal returned error code '.$retrievedCoal;
+    		}
+    		else {
+    			echo '<br>retrieveCoal returned error codes '.$retrievedCoal[0].' and '.$retrievedCoal[1].'.';
+    		}
     	}
     }
 }
