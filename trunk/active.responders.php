@@ -512,7 +512,12 @@ function CoalIntakeHandler()
     else {
     	$error = 1;
     }
-    echo '<br>'.$error;
+    if($error !== 0) {
+    	echo '<br>An error code was returned: '.$error;
+    	if(($error == 20) && (isset($retrievedCoal))) {
+    		echo '<br>retrieveCoal returned error code '.$retrievedCoal;
+    	}
+    }
 }
 function CoalRetrieveHandler()
 {
