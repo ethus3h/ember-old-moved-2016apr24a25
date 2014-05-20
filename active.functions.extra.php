@@ -347,6 +347,8 @@ function retrieveCoal($id)
 	retrievecoal:
 	//Get chunk address from database by ID
 	$coalMeta = $db->getRow('coal', 'id', $id);
+	$recordpar = $coalMeta['parity'];
+	$recordlen = $coalMeta['length'];
 	$coalBlockList = $coalMeta['blocks'];
 	$cblen = $coalMeta['blockslen'];	
 	$cbpar = $coalMeta['blockspar'];
@@ -371,20 +373,56 @@ function retrieveCoal($id)
 	$blockListExploded = explode_escaped(',',$coalBlockList);
 	$dataToReturn = '';
 	foreach($blockListExploded as $blockId) {
+		requestblock:
 		//Request block
+		$blockData = retrieveChunk($blockId);
 		//Check returned block data against returned block checksums
+		$rbdata = $blockData->data;
+		$rblen = $blockData->len;
+		$rbpar = $blockData->par;
+		$rbmd5 = $blockData->md5;
+		$rbsha = $blockData->sha;
+		$rbcrc = $blockData->crc;
+		$rbs512 = $blockData->s512;
+		$lblen = strlen($rbdata);
+		$lbpar = par($rbdata);
+		$lbmd5 = amd5($rbdata);
+		$lbsha = sha($rbdata);
+		$lbcrc = crc($rbdata);
+		$lbs512 = s512($rbdata);
+		if(($rblen != $lblen) || ($rbpar != $lbpar) || ($rbmd5 != $lbmd5) || ($rbsha != $lbsha) || ($rbcrc != $lbcrc) || ($rbs512 != $lbs512)) {
+			if($rccount < 10) {
+				$rccount++;
+				goto requestblock;
+			}
+			else {
+				$rcerror = 18;
+			}
+		}
 		//Decrypt block data using record key
+		$rsa = new Crypt_RSA();
+		$rsa->loadKey($coalPrivateKey); // private key
+		$ciphertext = $rbdata;
+		$plaintext = $rsa->decrypt($ciphertext);
 		//Decompress block data
+		$dcblockdata = bzdecompress($plaintext);
 		//Append block data to record data to return
+		$dataToReturn = $dataToReturn.$dcblockdata;
 	}
 	//Check compiled record data against parity checksum
-	if() {
+	$clen = strlen($dataToReturn);
+	$cpar = par($dataToReturn);
+	$cmd5 = amd5($dataToReturn);
+	$csha = sha($dataToReturn);
+	$ccrc = crc($dataToReturn);
+	$cs512 = s512($dataToReturn);
+	if(($cpar != $recordpar) || ($clen != $recordlen)) {
 		if($rcpcount < 10) {
 			$rcpcount++;
 			goto resetstatus;
 		}
 		else {
-			$rcerror = 18;
+			$rcerror = 19;
 		}
 	}
 	$db->close();
