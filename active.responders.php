@@ -461,6 +461,7 @@ function CoalIntakeHandler()
 			$ichunkcount = 0;
 			ichunk:
 			$ichunkcount++;
+			//When chunks are handled by a separate system, replace this with a cURL request to the CoalChunkIntakeHandler.
 			$icRes = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512,$compression);
 			$newBlockId = $icRes[0];
 			if($icRes[1] != 0) {

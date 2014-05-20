@@ -184,12 +184,30 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	$crc = strtolower(dechex(crc32($data+md5($data))));
 	$sha = strtolower(sha1($data));
 	$s512 = strtolower(hash("sha512",$data));
+	$newChunkId = 0;
 	if(($spar != $par) || ($smd5 != $md5) || ($scrc != $crc) || ($ssha != $sha) || ($ss512 != $s512)) {
 		$icerror = 8;
 	}
 	else {
-		
+		$db               = new FractureDB('futuqiur_coalchunks');
+		//Retrieve potential duplicates
+		$potentialDuplicates = $db->getColumn('coalchunks', 'id', 's512', $s512);
+		//Check potentials for duplicate
+		$duplicateFound = false;
+		if($duplicateFound) {
+			$newChunkId = $duplicateId;
+			goto finished;
+		}
+		else {
+			//Add record w/ ID, parity checksum
+			//encrypt record
+			//store chunk
+			//add new (post-encryption) checksums to record
+			goto finished;
+		}
+		$db->close();
 	}
+	finished:
 	if($icerror != 0) {
 		header("HTTP/1.0 525 Request failed");
 	}
