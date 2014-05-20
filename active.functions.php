@@ -145,7 +145,7 @@ function get_url($url)
     }
     return $ret;
 }
-function ia_upload($data,$item,$authkey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false)
+function ia_upload($data,$identifier,$filename,$authkey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false)
 {
 	$iaerror = 0;
 	//$bucketExists = false; //really, = irrelevant :P
@@ -157,6 +157,25 @@ function ia_upload($data,$item,$authkey,$secretkey,$title,$description,$mediatyp
 		}
 	}
 	try {
+	    $ch = curl_init(); 
+	    $upload_url = 'http://s3.us.archive.org/' + $identifier + '/' + $filename;
+	    //based on http://stackoverflow.com/questions/1915653/uploading-to-s3-using-curl, the ARCMAJ3 client script, and http://stackoverflow.com/questions/8115683/php-curl-custom-headers
+	    curl_setopt($ch, CURLOPT_VERBOSE, 1);
+		curl_setopt($ch, CURLOPT_URL, $upload_url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'x-amz-auto-make-bucket:1',
+			'x-archive-queue-derive:0',
+			'x-archive-size-hint:%d',
+			'authorization: LOW %s:%s',
+			'x-archive-meta-mediatype:web',
+			'x-archive-meta-collection:%s',
+			'x-archive-meta-title:%s',
+			'x-archive-meta-description:%s',
+			'x-archive-meta-subject:%s',
+			'x-archive-meta-mediatype:web'
+		));
 		curl = ['curl', '--location', 
 			'--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
 			'--header', "'x-archive-queue-derive:0'",
