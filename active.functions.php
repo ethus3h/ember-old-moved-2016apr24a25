@@ -145,8 +145,9 @@ function get_url($url)
     }
     return $ret;
 }
-function ia_upload($data,$identifier,$filename,$authkey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false)
+function ia_upload($data,$identifier,$filename,$accesskey,$secretkey,$title,$description,$mediatype,$keywords,$collection = 'opensource', $addToBucket = false)
 {
+	//Keywords in $keywords should be separated by ;
 	$iaerror = 0;
 	//$bucketExists = false; //really, = irrelevant :P
 	if(!$addToBucket) {
@@ -157,44 +158,70 @@ function ia_upload($data,$identifier,$filename,$authkey,$secretkey,$title,$descr
 		}
 	}
 	try {
+	    //based on http://stackoverflow.com/questions/1915653/uploading-to-s3-using-curl, http://frankkoehl.com/2009/09/http-status-code-curl-php/, the ARCMAJ3 client script, http://stackoverflow.com/questions/3085990/post-a-file-string-using-curl-in-php, and http://stackoverflow.com/questions/8115683/php-curl-custom-headers
 	    $ch = curl_init(); 
-	    $upload_url = 'http://s3.us.archive.org/' + $identifier + '/' + $filename;
-	    //based on http://stackoverflow.com/questions/1915653/uploading-to-s3-using-curl, the ARCMAJ3 client script, and http://stackoverflow.com/questions/8115683/php-curl-custom-headers
+	    $upload_url = 'http://s3.us.archive.org/' . $identifier . '/' . $filename;
+	    // form field separator
+		$delimiter = '-------------' . uniqid();
+		// file upload fields: name => array(type=>'mime/type',content=>'raw data')
+		$fileFields = array(
+			'file1' => array(
+				'type' => 'application/octet-stream',
+				'content' => $data
+			), /* ... */
+		);
+		// all other fields (not file upload): name => value
+		$postFields = array(
+			/* ... */
+		);
+
+		$data = '';
+
+		// populate normal fields first (simpler)
+		foreach ($postFields as $name => $content) {
+		   $data .= "--" . $delimiter . "\r\n";
+			$data .= 'Content-Disposition: form-data; name="' . $name . '"';
+			// note: double endline
+			$data .= "\r\n\r\n";
+		}
+		// populate file fields
+		foreach ($fileFields as $name => $file) {
+			$data .= "--" . $delimiter . "\r\n";
+			// "filename" attribute is not essential; server-side scripts may use it
+			$data .= 'Content-Disposition: form-data; name="' . $name . '";' .
+					 ' filename="' . $name . '"' . "\r\n";
+			// this is, again, informative only; good practice to include though
+			$data .= 'Content-Type: ' . $file['type'] . "\r\n";
+			// this endline must be here to indicate end of headers
+			$data .= "\r\n";
+			// the file itself (note: there's no encoding of any kind)
+			$data .= $file['content'] . "\r\n";
+		}
+		// last delimiter
+		$data .= "--" . $delimiter . "--\r\n";
 	    curl_setopt($ch, CURLOPT_VERBOSE, 1);
 		curl_setopt($ch, CURLOPT_URL, $upload_url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'x-amz-auto-make-bucket:1',
 			'x-archive-queue-derive:0',
-			'x-archive-size-hint:%d',
-			'authorization: LOW %s:%s',
-			'x-archive-meta-mediatype:web',
-			'x-archive-meta-collection:%s',
-			'x-archive-meta-title:%s',
-			'x-archive-meta-description:%s',
-			'x-archive-meta-subject:%s',
-			'x-archive-meta-mediatype:web'
+			'x-archive-size-hint:'.strlen($data),
+			'authorization: LOW '.$accesskey.':'.$secretkey,
+			'x-archive-meta-mediatype:'.$mediatype,
+			'x-archive-meta-collection:'.$collection,
+			'x-archive-meta-title:'.$title,
+			'x-archive-meta-description:'.$description,
+			'x-archive-meta-subject:'.$keywords,
+			'x-archive-meta-mediatype:'.$mediatype
 		));
-		curl = ['curl', '--location', 
-			'--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
-			'--header', "'x-archive-queue-derive:0'",
-			'--header', "'x-archive-size-hint:%d'" % (os.path.getsize(dump)), 
-			'--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
-		]
-		if c == 0:
-			curl += ['--header', "'x-archive-meta-mediatype:web'",
-				'--header', "'x-archive-meta-collection:%s'" % (collection),
-				'--header', "'x-archive-meta-title:%s'" % (wikititle),
-				'--header', "'x-archive-meta-description:%s'" % (wikidesc),
-				'--header', "'x-archive-meta-subject:%s'" % ('; '.join(wikikeys)), # Keywords should be separated by ; but it doesn't matter much; the alternative is to set one per field with subject[0], subject[1], ...
-				'--header', "'x-archive-meta-mediatype:web'",
-
-			]
-	
-		curl += ['--upload-file', "%s" % (dump),
-				"http://s3.us.archive.org/" + dumpid + '/' + dump # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
-		]
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		$response = curl_exec($ch);
+		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if(strlen($response) > 0 || $http_status != 200) {
+			throw new Exception('cURL request failed');
+			$iaerror = 12;
+		}
+		curl_close($ch); 
 	}
 	catch (Exception $e) {
 		$iaerror = 11;
