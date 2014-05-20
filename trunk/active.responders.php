@@ -390,13 +390,12 @@ function CoalIntakeHandler()
 		}
     	//based on http://www.tizag.com/phpT/fileupload.php?MAX_FILE_SIZE=100000&uploadedfile=
     	$target_path = "coal_temp/";
+    	$nextId = $db->getNextId('coal').'-'.guidv4();
     	//cot file extension — Coal temporary data file; can be any binary data
-		$target_path = $target_path . "data.cot"; 
+		$target_path = $target_path . "data.".$nextId.".cot"; 
     	if(isset($_FILES['uploadedfile'])) {		
 			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
-				//echo "The file ".basename( $_FILES['uploadedfile']['name'])." has been uploaded";
 			} else {
-				//echo "There was an error uploading the file, please try again!";
 				$error = 2;
 			}
 		}
@@ -420,7 +419,6 @@ function CoalIntakeHandler()
     		$atime = base64_encode(fileatime($target_path));
     	}
   		else {
-    		//Failed
     		$error = 3;
   		}
 		$par = strtolower(bin2hex(get_signed_int(crc32($data))));
@@ -460,8 +458,7 @@ function CoalIntakeHandler()
 			$enccrc = strtolower(dechex(crc32($ciphertext)));
 			$encsha = strtolower(sha1($ciphertext));
 			$encs512 = strtolower(hash("sha512",$ciphertext));
-			//TODO: CoalChunkIntakeHandler
-			$newBlockId = null;
+			$newBlockId = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512);
 			$blockList = $blockList + $newBlockId;
 		}
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
@@ -497,7 +494,40 @@ function CoalRetrieveHandler()
 }
 function CoalChunkIntakeHandler()
 {
-   
+    $authorizationKey = $_REQUEST['authorizationKey'];
+    global $generalAuthKey;
+    global $error;
+    if($authorizationKey == $generalAuthKey) {
+    	$spar = $_REQUEST['spar'];
+    	$smd5 = $_REQUEST['smd5'];
+    	$scrc = $_REQUEST['scrc'];
+    	$ssha = $_REQUEST['ssha'];
+    	$s512 = $_REQUEST['s512'];
+		$db               = new FractureDB('futuqiur_coalchunks');
+    	$nextId = $db->getNextId('coalchunks').'-'.guidv4();
+		$db->close();
+		$target_path = $target_path . "data.".$nextId.".cct"; 
+		if(isset($_FILES['uploadedfile'])) {		
+			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
+			} else {
+				$error = 2;
+			}
+		}
+		$data = null;
+		if(file_exists($target_path)) {
+    		$data = file_get_contents($target_path);
+    	}
+		$par = strtolower(bin2hex(get_signed_int(crc32($data))));
+		$md5 = strtolower(md5($data));
+		$crc = strtolower(dechex(crc32($data)));
+		$sha = strtolower(sha1($data));
+		$s512 = strtolower(hash("sha512",$data));
+		$newChunkId = insertChunk($data,$par,$md5,$crc,$sha,$s512);
+		echo $newChunkId;
+    }
+    else {
+    	$error = 1;
+    }
 }
 function CoalChunkRetrieveHandler()
 {
