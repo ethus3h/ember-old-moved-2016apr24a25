@@ -414,8 +414,12 @@ function CoalIntakeHandler()
 		$sha = strtolower(sha1($data));
 		$s512 = strtolower(hash("sha512",$data));
 		$db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$par.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
+		//TODO: get last ID
+		$newCoalId=0;
 		$carray = str_split($data,512000);
+		$blockList = '';
 		foreach($carray as $chunk) {
+			chunk:
 			$compression = "bzip2";
 			$compressed = bzcompress($chunk);
 			global $coalPrivateKey;
@@ -423,11 +427,21 @@ function CoalIntakeHandler()
 			include('Crypt/RSA.php');
 			$rsa = new Crypt_RSA();
 			$rsa->loadKey($coalPublicKey); // public key
-			$plaintext = '...';
+			$plaintext = $chunk;
 			$ciphertext = $rsa->encrypt($plaintext);
 			$rsa->loadKey($coalPrivateKey); // private key
-			echo $rsa->decrypt($ciphertext);
+			if($rsa->decrypt($ciphertext) != $plaintext) {
+				goto chunk;
+			}
+			$encpar = strtolower(bin2hex(get_signed_int(crc32($ciphertext))));
+			$encmd5 = strtolower(md5($ciphertext));
+			$enccrc = strtolower(dechex(crc32($ciphertext)));
+			$encsha = strtolower(sha1($ciphertext));
+			$encs512 = strtolower(hash("sha512",$ciphertext));
+			//TODO: CoalChunkIntakeHandler
+			$blockList = $blockList + $newBlockId;
 		}
+		$db->setField('coal', 'blocks', $blockList, $newCoalId);
 		$db->close(); 
     }
     else {
