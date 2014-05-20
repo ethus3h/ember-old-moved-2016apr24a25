@@ -475,7 +475,11 @@ function CoalIntakeHandler()
 			else {
 				$error = 10;
 			}
-			$blockList = $blockList + $newBlockId;
+			$bins = ',';
+			if(strlen($blockList) == 0) {
+				$bins = '';
+			}
+			$blockList = $blockList . $bins . $newBlockId;
 		}
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
 		$retrievedCoal = null;
