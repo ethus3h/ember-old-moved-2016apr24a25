@@ -338,7 +338,7 @@ function retrieveChunk($id)
 }
 function retrieveCoal($id)
 {
-	$db               = new FractureDB('futuqiur_coalchunks');
+	$db               = new FractureDB('futuqiur_coal');
 	$rctries = 0;
 	retrievec:
 	$rcerror = 0;
@@ -356,6 +356,7 @@ function retrieveCoal($id)
 	$cbsha = $coalMeta['blockssha'];
 	$cbcrc = $coalMeta['blockscrc'];
 	$cbs512 = $coalMeta['blocks512'];
+	$rblen = strlen($coalBlockList);
 	$rbpar = par($coalBlockList);
 	$rbmd5 = amd5($coalBlockList);
 	$rbsha = sha($coalBlockList);
