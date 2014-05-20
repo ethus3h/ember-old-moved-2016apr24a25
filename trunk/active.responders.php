@@ -418,11 +418,15 @@ function CoalIntakeHandler()
 		foreach($carray as $chunk) {
 			$compression = "bzip2";
 			$compressed = bzcompress($chunk);
+			global $coalPrivateKey;
+			global $coalPublicKey;
 			include('Crypt/RSA.php');
 			$rsa = new Crypt_RSA();
-			extract($rsa->createKey());
-			echo $privatekey;
-			echo $publickey;
+			$rsa->loadKey($coalPublicKey); // public key
+			$plaintext = '...';
+			$ciphertext = $rsa->encrypt($plaintext);
+			$rsa->loadKey($coalPrivateKey); // private key
+			echo $rsa->decrypt($ciphertext);
 		}
 		$db->close(); 
     }
