@@ -434,6 +434,7 @@ function retrieveCoal($id)
 	$dataToReturn = '';
 	$rctries++;
 	if($rctries < 10) {
+		$rcerror = 21;
 		goto retrievec;
 	}
 	else {
