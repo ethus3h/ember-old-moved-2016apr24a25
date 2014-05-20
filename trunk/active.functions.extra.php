@@ -210,7 +210,9 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			goto finished;
 		}
 		else {
+			$chcount = 0;
 			chunk:
+			$chcount++;
 			//Add record w/ ID, parity checksum
 			$newChunkId = $db->addRow('coalchunks', 'lengthpre, paritypre', '\''.strlen($data).'\', \''.$par.'\'');
 			//encrypt record
@@ -234,8 +236,19 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$enccrc = strtolower(dechex(crc32($ciphertext)));
 			$encsha = strtolower(sha1($ciphertext));
 			$encs512 = strtolower(hash("sha512",$ciphertext));
-			//store chunk
 			//add new (post-encryption) checksums to record
+			
+			//store chunk
+			$sccount = 0;
+			storechunk:
+			$sccount++;
+			$ulresult = ia_upload($ciphertext,$identifier,$filename,$accesskey,$secretkey,$title,$description,'texts',$keywords,true,'opensource');
+			if($ulresult = 10) {
+				goto storechunk;
+			}
+			if(($ulresult != 0) && ($ulresult != 10) && ($sccount < 10)) {
+				goto storechunk;
+			}
 			goto finished;
 		}
 		$db->close();
