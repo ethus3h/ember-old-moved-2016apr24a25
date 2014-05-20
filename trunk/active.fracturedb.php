@@ -309,6 +309,10 @@ class FractureDB
         $query = 'SELECT ' . $field . ' FROM ' . $table . ' ' . $queryInsert . ';';
         return $this->query($query);
     }
+    function getColumns($table, $fields, $filterField = '', $filterValue = '')
+    {
+        return getColumn($table, $fields, $filterField = '', $filterValue = '');
+    }
     function getColumn_num($table, $field, $filterField = '', $filterValue = '')
     {
         if (strlen($filterValue) !== 0) {

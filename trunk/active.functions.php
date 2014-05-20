@@ -145,6 +145,44 @@ function get_url($url)
     }
     return $ret;
 }
+function ia_upload($data,$item,$authkey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false)
+{
+	$iaerror = 0;
+	//$bucketExists = false; //really, = irrelevant :P
+	if(!$addToBucket) {
+		//Check for existing bucket
+		if(bucket exists) {
+			$iaerror = 10;
+			goto finished;
+		}
+	}
+	try {
+		curl = ['curl', '--location', 
+			'--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
+			'--header', "'x-archive-queue-derive:0'",
+			'--header', "'x-archive-size-hint:%d'" % (os.path.getsize(dump)), 
+			'--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
+		]
+		if c == 0:
+			curl += ['--header', "'x-archive-meta-mediatype:web'",
+				'--header', "'x-archive-meta-collection:%s'" % (collection),
+				'--header', "'x-archive-meta-title:%s'" % (wikititle),
+				'--header', "'x-archive-meta-description:%s'" % (wikidesc),
+				'--header', "'x-archive-meta-subject:%s'" % ('; '.join(wikikeys)), # Keywords should be separated by ; but it doesn't matter much; the alternative is to set one per field with subject[0], subject[1], ...
+				'--header', "'x-archive-meta-mediatype:web'",
+
+			]
+	
+		curl += ['--upload-file', "%s" % (dump),
+				"http://s3.us.archive.org/" + dumpid + '/' + dump # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
+		]
+	}
+	catch (Exception $e) {
+		$iaerror = 11;
+	}
+	finished:
+	return $iaerror;
+}
 function get_domain($url)
 #from http://stackoverflow.com/questions/16027102/get-domain-name-from-full-url
 {
