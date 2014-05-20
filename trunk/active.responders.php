@@ -371,12 +371,14 @@ function CoalIntake()
     if($authorizationKey == $generalAuthKey) {
     	//Request accepted
     	//help on times from http://stackoverflow.com/questions/5849702/php-file-upload-time-created
-    	$metadata = bin2hex(var_export($_FILES,true));
-    	$filename = $_FILES['uploadedfile']['name'];
-    	$type = $_FILES['uploadedfile']['type'];
-    	$size = $_FILES['uploadedfile']['size'];
-    	$tmp_name = $_FILES['uploadedfile']['tmp_name'];
-    	$error = $_FILES['uploadedfile']['error'];
+		$db               = new FractureDB('coal');
+    	$metadata = base64_encode(var_export($_FILES,true));
+    	$filename = base64_encode($_FILES['uploadedfile']['name']);
+    	$type = base64_encode($_FILES['uploadedfile']['type']);
+    	$size = base64_encode($_FILES['uploadedfile']['size']);
+    	$length = $_FILES['uploadedfile']['size'];
+    	$tmp_name = base64_encode($_FILES['uploadedfile']['tmp_name']);
+    	$error = base64_encode($_FILES['uploadedfile']['error']);
     	//based on http://www.tizag.com/phpT/fileupload.php?MAX_FILE_SIZE=100000&uploadedfile=
     	$target_path = "coal_temp/";
     	//cot file extension — Coal temporary data file; can be any binary data
@@ -397,11 +399,11 @@ function CoalIntake()
 		if(file_exists($target_path)) {
     		$data = file_get_contents($target_path);
     		$stat = stat( $target_path );
-    		$smtime = $stat['mtime'];
+    		$smtime = base64_encode($stat['mtime']);
     		$stats = bin2hex(var_export($stat,true));
-    		$ctime = filectime($target_path);
-    		$mtime = filemtime($target_path);
-    		$atime = fileatime($target_path);
+    		$ctime = base64_encode(filectime($target_path));
+    		$mtime = base64_encode(filemtime($target_path));
+    		$atime = base64_encode(fileatime($target_path));
     	}
   		else {
     		//Failed
@@ -412,13 +414,13 @@ function CoalIntake()
 		$crc = strtolower(dechex(crc32($data)));
 		$sha = strtolower(sha1($data));
 		$s512 = strtolower(hash("sha512",$data));
-		
+		$db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$par.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\';');
 		$carray = str_split($data,512000);
 		foreach($carray as $chunk) {
+			$compression = "bzip2";
+			$compressed = bzcompress($chunk);
 			
 		}
-		$db               = new FractureDB($dbName);
-		$db->setField($dataTargetTable, $dataTargetField, $dataValue, $dataTargetRowId);
 		$db->close(); 
     }
     else {
