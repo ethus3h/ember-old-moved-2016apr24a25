@@ -438,8 +438,9 @@ function retrieveCoal($id)
 	}
 	else {
 		//Chunk retrieval failed too many times
-		$rcerror = 16;
-		return 16;
+		//$rcerror = 16;
+		//echo 'Chunk retrieval failed: 
+		return array(16, $rcerror);
 	}
 }
 ?>
