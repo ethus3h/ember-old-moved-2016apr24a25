@@ -387,6 +387,13 @@ function CoalIntake()
   			echo "There was an error uploading the file, please try again!";
   			$error = 2;
 		}
+		$data = null;
+		$stat = null;
+		$smtime = null;
+		$stats = null;
+		$ctime = null;
+		$mtime = null;
+		$atime = null;
 		if(file_exists($target_path)) {
     		$data = file_get_contents($target_path);
     		$stat = stat( $target_path );
@@ -400,10 +407,16 @@ function CoalIntake()
     		//Failed
     		$error = 3;
   		}
-		$md5 = md5($data);
-		$crc = bin2hex(get_signed_int(crc32($data)));
-		$sha = sha1($data);
+		$par = strtolower(bin2hex(get_signed_int(crc32($data))));
+		$md5 = strtolower(md5($data));
+		$crc = strtolower(dechex(crc32($data)));
+		$sha = strtolower(sha1($data));
+		$s512 = strtolower(hash("sha512",$data));
 		
+		$carray = str_split($data,512000);
+		foreach($carray as $chunk) {
+			
+		}
 		$db               = new FractureDB($dbName);
 		$db->setField($dataTargetTable, $dataTargetField, $dataValue, $dataTargetRowId);
 		$db->close(); 
