@@ -145,22 +145,51 @@ function get_url($url)
     }
     return $ret;
 }
-function ia_upload($data,$identifier,$filename,$accesskey,$secretkey,$title,$description,$mediatype,$keywords,$collection = 'opensource', $addToBucket = false)
+function ia_upload($data,$identifier,$filename,$accesskey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false,$collection = 'opensource')
 {
 	//Keywords in $keywords should be separated by ;
 	$iaerror = 0;
 	//$bucketExists = false; //really, = irrelevant :P
 	if(!$addToBucket) {
 		//Check for existing bucket
-		if(bucket exists) {
-			$iaerror = 10;
-			goto finished;
+		//based on the code in the try block below and on http://stackoverflow.com/questions/5043525/php-curl-http-put; help also from http://sriram-iyengar.blogspot.com/2011/07/aws-create-s3-bucket-using-curl.html
+		$ch = curl_init(); 
+		$bucket_url = 'http://s3.us.archive.org/' . $identifier . '/';
+		curl_setopt($ch, CURLOPT_VERBOSE, 1);
+		curl_setopt($ch, CURLOPT_URL, $bucket_url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'x-amz-auto-make-bucket:1',
+			'x-archive-queue-derive:0',
+			'x-archive-size-hint:'.strlen($data),
+			'authorization: LOW '.$accesskey.':'.$secretkey,
+			'x-archive-meta-mediatype:'.$mediatype,
+			'x-archive-meta-collection:'.$collection,
+			'x-archive-meta-title:'.$title,
+			'x-archive-meta-description:'.$description,
+			'x-archive-meta-subject:'.$keywords,
+			'x-archive-meta-mediatype:'.$mediatype
+		));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		$response = curl_exec($ch);
+		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch); 
+		//help from http://stackoverflow.com/questions/4366730/how-to-check-if-a-string-contains-specific-words
+		if(($http_status == 409) && (strpos($response,'BucketAlreadyOwnedByYou') !== false)) {
+			$myBucket = true;
+		}
+		else {
+			if($http_status != 200) {
+				//Not my bucket.
+				$iaerror = 10;
+				goto finished;
+			}
 		}
 	}
+	
 	try {
 	    //based on http://stackoverflow.com/questions/1915653/uploading-to-s3-using-curl, http://frankkoehl.com/2009/09/http-status-code-curl-php/, the ARCMAJ3 client script, http://stackoverflow.com/questions/3085990/post-a-file-string-using-curl-in-php, and http://stackoverflow.com/questions/8115683/php-curl-custom-headers
 	    $ch = curl_init(); 
-	    $upload_url = 'http://s3.us.archive.org/' . $identifier . '/' . $filename;
 	    // form field separator
 		$delimiter = '-------------' . uniqid();
 		// file upload fields: name => array(type=>'mime/type',content=>'raw data')
@@ -217,11 +246,11 @@ function ia_upload($data,$identifier,$filename,$accesskey,$secretkey,$title,$des
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 		$response = curl_exec($ch);
 		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch); 
 		if(strlen($response) > 0 || $http_status != 200) {
 			throw new Exception('cURL request failed');
 			$iaerror = 12;
 		}
-		curl_close($ch); 
 	}
 	catch (Exception $e) {
 		$iaerror = 11;
