@@ -484,19 +484,24 @@ function CoalIntakeHandler()
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
 		//$retrievedCoal = null;
 		$retrievedCoal = retrieveCoal($newCoalId);
-		if(!is_null($retrievedCoal)) {
-			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
-				$blockList = '';
-				if($coalcount < 10) {
-					goto coal;
-				}
-				else {
-					$error = 5;
-				}
-			}
+		if(is_int($retrievedCoal)) {
+			$error = 20;
 		}
 		else {
-			$error = 7;
+			if(!is_null($retrievedCoal)) {
+				if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+					$blockList = '';
+					if($coalcount < 10) {
+						goto coal;
+					}
+					else {
+						$error = 5;
+					}
+				}
+			}
+			else {
+				$error = 7;
+			}
 		}
 		$db->close();
 		if($error != 0) {
