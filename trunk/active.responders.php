@@ -477,6 +477,7 @@ function CoalIntakeHandler()
 					$error = 5;
 				}
 			}
+		}
 		else {
 			$error = 7;
 		}
