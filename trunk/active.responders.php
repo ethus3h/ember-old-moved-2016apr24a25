@@ -362,7 +362,7 @@ function DBSimpleSubmissionHandler()
     }
 }
 
-function CoalIntake()
+function CoalIntakeHandler()
 {
     $authorizationKey = $_REQUEST['authorizationKey'];
     $dbName           = $_REQUEST['db'];
@@ -431,15 +431,15 @@ function CoalIntake()
     	$error = 1;
     }
 }
-function CoalRetrieve()
+function CoalRetrieveHandler()
 {
    
 }
-function CoalChunkIntake()
+function CoalChunkIntakeHandler()
 {
    
 }
-function CoalChunkRetrieve()
+function CoalChunkRetrieveHandler()
 {
    
 }
