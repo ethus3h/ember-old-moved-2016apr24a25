@@ -421,16 +421,16 @@ function CoalIntakeHandler()
   		else {
     		$error = 3;
   		}
-		$par = strtolower(bin2hex(get_signed_int(crc32($data))));
-		$md5 = strtolower(md5($data));
-		$crc = strtolower(dechex(crc32($data+md5($data))));
-		$sha = strtolower(sha1($data));
-		$s512 = strtolower(hash("sha512",$data));
+		$par = par($data);
+		$md5 = amd5($data);
+		$crc = crc($data);
+		$sha = sha($data);
+		$s512 = s512($data);
 		$coalcount = 0;
 		coal:
 		$coalcount++;
 		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$par.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
-		$carray = str_split($data,512000);
+		$carray = str_split($data,524288);
 		$blockList = '';
 		foreach($carray as $chunk) {
 			$chcount = 0;
@@ -453,11 +453,11 @@ function CoalIntakeHandler()
 					$error = 4;
 				}
 			}
-			$encpar = strtolower(bin2hex(get_signed_int(crc32($ciphertext+md5($ciphertext)))));
-			$encmd5 = strtolower(md5($ciphertext));
-			$enccrc = strtolower(dechex(crc32($ciphertext)));
-			$encsha = strtolower(sha1($ciphertext));
-			$encs512 = strtolower(hash("sha512",$ciphertext));
+			$encpar = par($ciphertext);
+			$encmd5 = amd5($ciphertext);
+			$enccrc = crc($ciphertext);
+			$encsha = sha($ciphertext);
+			$encs512 = s512($ciphertext);
 			$ichunkcount = 0;
 			ichunk:
 			$ichunkcount++;
@@ -533,11 +533,11 @@ function CoalChunkIntakeHandler()
 		if(file_exists($target_path)) {
     		$data = file_get_contents($target_path);
     	}
-		$par = strtolower(bin2hex(get_signed_int(crc32($data+md5($data)))));
-		$md5 = strtolower(md5($data));
-		$crc = strtolower(dechex(crc32($data)));
-		$sha = strtolower(sha1($data));
-		$s512 = strtolower(hash("sha512",$data));
+		$par = par($data);
+		$md5 = amd5($data);
+		$crc = crc($data);
+		$sha = sha($data);
+		$s512 = s512($data);
 		$ichunkcount = 0;
 		ichunk:
 		$ichunkcount++;

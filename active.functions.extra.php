@@ -180,10 +180,10 @@ function arcmaj3_barrel_expire($barrelId)
 function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	$icerror = 0;
 	$par = par($data);
-	$md5 = strtolower(md5($data));
-	$crc = strtolower(dechex(crc32($data+md5($data))));
-	$sha = strtolower(sha1($data));
-	$s512 = strtolower(hash("sha512",$data));
+	$md5 = amd5($data);
+	$crc = crc($data);
+	$sha = sha($data);
+	$s512 = s512($data);
 	$newChunkId = 0;
 	if(($spar != $par) || ($smd5 != $md5) || ($scrc != $crc) || ($ssha != $sha) || ($ss512 != $s512)) {
 		$icerror = 8;
@@ -194,11 +194,37 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$potentialDuplicates = $db->getColumns('coalchunks', 'id', 's512', $s512);
 		//Check potentials for duplicate
 		$duplicateFound = false;
+		//encrypt record
+		global $chunkPrivateKey;
+		global $chunkPublicKey;
+		$rsa = new Crypt_RSA();
+		$rsa->loadKey($chunkPublicKey); // public key
+		$plaintext = $data;
+		$ciphertext = $rsa->encrypt($plaintext);
+		$rsa->loadKey($chunkPrivateKey); // private key
+		if($rsa->decrypt($ciphertext) != $plaintext) {
+			if($chcount < 10) {
+				goto chunk;
+			}
+			else {
+				$icerror = 4;
+			}
+		}
+		$encpar = par($ciphertext);
+		$encmd5 = amd5($ciphertext);
+		$enccrc = crc($ciphertext);
+		$encsha = sha($ciphertext);
+		$encs512 = s512($ciphertext);
 		foreach ($potentialDuplicates as $potential) {
 			//Request potential from storage
 			$potentialRecord = retrieveChunk($potential['id']);
 			$potentialData = $potentialRecord->data;
-			if($potentialData == $data) {
+			$potentialpar = $potentialRecord->par;
+			$potentialmd5 = $potentialRecord->md5;
+			$potentialcrc = $potentialRecord->crc;
+			$potentialsha = $potentialRecord->sha;
+			$potentials512 = $potentialRecord->s512;
+			if(($potentialData == $data) && ($potentialpar == $encpar) && ($potentialmd5 == $encmd5) && ($potentialcrc == $enccrc) && ($potentialsha == $encsha) && ($potentials512 == $encs512)) {
 				$duplicateFound = true;
 				$duplicateId = $potential['id'];
 				goto duplicatefound;
@@ -214,35 +240,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			chunk:
 			$chcount++;
 			//Add record w/ ID, parity checksum
-			$newChunkId = $db->addRow('coalchunks', 'lengthpre, paritypre, compression', '\''.strlen($data).'\', \''.$par.'\', \''.$compression.'\'');
-			//encrypt record
-			global $chunkPrivateKey;
-			global $chunkPublicKey;
-			$rsa = new Crypt_RSA();
-			$rsa->loadKey($chunkPublicKey); // public key
-			$plaintext = $data;
-			$ciphertext = $rsa->encrypt($plaintext);
-			$rsa->loadKey($chunkPrivateKey); // private key
-			if($rsa->decrypt($ciphertext) != $plaintext) {
-				if($chcount < 10) {
-					goto chunk;
-				}
-				else {
-					$icerror = 4;
-				}
-			}
-			$encpar = strtolower(bin2hex(get_signed_int(crc32($ciphertext+md5($ciphertext)))));
-			$encmd5 = strtolower(md5($ciphertext));
-			$enccrc = strtolower(dechex(crc32($ciphertext)));
-			$encsha = strtolower(sha1($ciphertext));
-			$encs512 = strtolower(hash("sha512",$ciphertext));
-			//add new (post-encryption) checksums to record
-			$db->setField('coalchunks', 'length', strlen($ciphertext), $newChunkId);
-			$db->setField('coalchunks', 'parity', $encpar, $newChunkId);
-			$db->setField('coalchunks', 'md5', $encmd5, $newChunkId);
-			$db->setField('coalchunks', 'sha', $encsha, $newChunkId);
-			$db->setField('coalchunks', 'crc', $enccrc, $newChunkId);
-			$db->setField('coalchunks', 's512', $encs512, $newChunkId);
+			$newChunkId = $db->addRow('coalchunks', 'length, lengthpre, parity, paritypre, md5, sha, crc, s512, compression', '\''.strlen($ciphertext).'\', \''.strlen($data).'\', \''.$encpar.'\', \''.$par.'\', \''.$encmd5.'\', \''.$encsha.'\', \''.$enccrc.'\', \''.$encs512.'\', \''.$compression.'\'');
 			//store chunk
 			$sccount = 0;
 			storechunk:
@@ -270,6 +268,41 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 }
 function retrieveChunk($id)
 {
-
+	$db               = new FractureDB('futuqiur_coalchunks');
+	$rccount = 0;
+	$rcpcount = 0;
+	retrievechunk:
+	//Get chunk address from database by ID
+	$chunkMeta = $db->getRow('coalchunks', 'id', $id);
+	$chunkStorage = $chunkMeta['storage'];
+	$chunkAddress = $chunkMeta['address'];
+	switch(trim($chunkStorage)) {
+		case "ia":
+			$chunkStoragePrefix = "http://archive.org/download/";
+			break;
+	}
+	$chunkLocation = $chunkStoragePrefix+$chunkAddress;
+	//download chunk
+	$chunkData = get_url($chunkLocation);
+	//check retrieved chunk checksums
+	$chlen = $chunkMeta['length'];
+	$chpar = $chunkMeta['parity'];
+	$chmd5 = $chunkMeta['md5'];
+	$chsha = $chunkMeta['sha'];
+	$chcrc = $chunkMeta['crc'];
+	$chs512 = $chunkMeta['s512'];
+	if() {
+		$rccount++;
+		goto retrievechunk;
+	}
+	//Decrypt chunk using chunk key
+	//Check decrypted chunk against parity checksum from database
+	if() {
+		$rcpcount++;
+		goto retrievechunk;
+	}
+	//return data and checksums
+	return 
+	$db->close();
 }
 ?>

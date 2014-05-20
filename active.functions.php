@@ -150,7 +150,7 @@ function ia_upload($data,$identifier,$filename,$accesskey,$secretkey,$title,$des
 	//Keywords in $keywords should be separated by ;
 	$iaerror = 0;
 	//$bucketExists = false; //really, = irrelevant :P
-	if(!$addToBucket) {
+	//if(!$addToBucket) {
 		//Check for existing bucket
 		//based on the code in the try block below and on http://stackoverflow.com/questions/5043525/php-curl-http-put; help also from http://sriram-iyengar.blogspot.com/2011/07/aws-create-s3-bucket-using-curl.html
 		$ch = curl_init(); 
@@ -185,7 +185,7 @@ function ia_upload($data,$identifier,$filename,$accesskey,$secretkey,$title,$des
 				goto finished;
 			}
 		}
-	}
+	//}
 	
 	try {
 	    //based on http://stackoverflow.com/questions/1915653/uploading-to-s3-using-curl, http://frankkoehl.com/2009/09/http-status-code-curl-php/, the ARCMAJ3 client script, http://stackoverflow.com/questions/3085990/post-a-file-string-using-curl-in-php, and http://stackoverflow.com/questions/8115683/php-curl-custom-headers
@@ -305,6 +305,22 @@ function guidv4()
 }
 function par($data)
 {
-return strtolower(bin2hex(get_signed_int(crc32($data))));
+	return strtolower(bin2hex(strval(get_signed_int(crc32($data)))));
+}
+function crc($data)
+{
+	return strtolower(dechex(crc32($data)));
+}
+function amd5($data)
+{
+	return strtolower(md5($data));
+}
+function sha($data)
+{
+	return strtolower(sha1($data));
+}
+function s512($data)
+{
+	return strtolower(hash("sha512",$data));
 }
 ?>
