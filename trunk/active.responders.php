@@ -429,7 +429,7 @@ function CoalIntakeHandler()
 		$coalcount = 0;
 		coal:
 		$coalcount++;
-		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$par.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
+		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
 		$carray = str_split($data,524288);
 		$blockList = '';
 		foreach($carray as $chunk) {
@@ -442,7 +442,7 @@ function CoalIntakeHandler()
 			global $coalPublicKey;
 			$rsa = new Crypt_RSA();
 			$rsa->loadKey($coalPublicKey); // public key
-			$plaintext = $chunk;
+			$plaintext = $compressed;
 			$ciphertext = $rsa->encrypt($plaintext);
 			$rsa->loadKey($coalPrivateKey); // private key
 			if($rsa->decrypt($ciphertext) != $plaintext) {
@@ -481,7 +481,7 @@ function CoalIntakeHandler()
 		$retrievedCoal = null;
 		//$retrievedCoal = retrieveCoal($newCoalId);
 		if(!is_null($retrievedCoal)) {
-			if(($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
 				$blockList = '';
 				if($coalcount < 10) {
 					goto coal;

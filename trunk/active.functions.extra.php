@@ -179,7 +179,7 @@ function arcmaj3_barrel_expire($barrelId)
 }
 function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	$icerror = 0;
-	$par = par($data);
+	$par = crc($data);
 	$md5 = amd5($data);
 	$crc = crc($data);
 	$sha = sha($data);
@@ -210,6 +210,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 				$icerror = 4;
 			}
 		}
+		$enclen = strlen($ciphertext);
 		$encpar = par($ciphertext);
 		$encmd5 = amd5($ciphertext);
 		$enccrc = crc($ciphertext);
@@ -219,12 +220,13 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			//Request potential from storage
 			$potentialRecord = retrieveChunk($potential['id']);
 			$potentialData = $potentialRecord->data;
+			$potentiallen = $potentialRecord->len;
 			$potentialpar = $potentialRecord->par;
 			$potentialmd5 = $potentialRecord->md5;
 			$potentialcrc = $potentialRecord->crc;
 			$potentialsha = $potentialRecord->sha;
 			$potentials512 = $potentialRecord->s512;
-			if(($potentialData == $data) && ($potentialpar == $encpar) && ($potentialmd5 == $encmd5) && ($potentialcrc == $enccrc) && ($potentialsha == $encsha) && ($potentials512 == $encs512)) {
+			if(($potentialData === $data) && ($potentiallen == $enclen) && ($potentialpar == $encpar) && ($potentialmd5 == $encmd5) && ($potentialcrc == $enccrc) && ($potentialsha == $encsha) && ($potentials512 == $encs512)) {
 				$duplicateFound = true;
 				$duplicateId = $potential['id'];
 				goto duplicatefound;
@@ -321,7 +323,7 @@ function retrieveChunk($id)
 	$pts512 = s512($plaintext);
 	$plen = $chunkMeta['length'];
 	$ppar = $chunkMeta['parity'];
-	if(($plen != $ptlen) || ($ppar != $ptpar)) {
+	if(($plen != $ptlen) || ($ppar != $ptcrc)) {
 		if($rcpcount < 10) {
 			$rcpcount++;
 			goto retrievechunk;
@@ -332,6 +334,73 @@ function retrieveChunk($id)
 	}
 	$db->close();
 	//return data and checksums
-	return new cChunk ();
+	return new cChunk ($plaintext,$ptlen,$ptpar,$ptmd5,$ptcrc,$ptsha,$pts512);
+}
+function retrieveCoal($id)
+{
+	$db               = new FractureDB('futuqiur_coalchunks');
+	$rctries = 0;
+	retrievec:
+	$rcerror = 0;
+	$rccount = 0;
+	$rcpcount = 0;
+	retrievecoal:
+	//Get chunk address from database by ID
+	$coalMeta = $db->getRow('coal', 'id', $id);
+	$coalBlockList = $coalMeta['blocks'];
+	$cblen = $coalMeta['blockslen'];	
+	$cbpar = $coalMeta['blockspar'];
+	$cbmd5 = $coalMeta['blocksmd5'];
+	$cbsha = $coalMeta['blockssha'];
+	$cbcrc = $coalMeta['blockscrc'];
+	$cbs512 = $coalMeta['blocks512'];
+	$rbpar = par($coalBlockList);
+	$rbmd5 = amd5($coalBlockList);
+	$rbsha = sha($coalBlockList);
+	$rbcrc = crc($coalBlockList);
+	$rbs512 = s512($coalBlockList);
+	if(($cblen != $rblen) || ($cbpar != $rbpar) || ($cbmd5 != $rbmd5) || ($cbsha != $rbsha) || ($cbcrc != $rbcrc) || ($cbs512 != $rbs512)) {
+		if($rccount < 10) {
+			$rccount++;
+			goto resetstatus;
+		}
+		else {
+			$rcerror = 17;
+		}
+	}
+	$blockListExploded = explode_escaped(',',$coalBlockList);
+	$dataToReturn = '';
+	foreach($blockListExploded as $blockId) {
+		//Request block
+		//Check returned block data against returned block checksums
+		//Decrypt block data using record key
+		//Decompress block data
+		//Append block data to record data to return
+	}
+	//Check compiled record data against parity checksum
+	if() {
+		if($rcpcount < 10) {
+			$rcpcount++;
+			goto resetstatus;
+		}
+		else {
+			$rcerror = 18;
+		}
+	}
+	$db->close();
+	//return data and checksums
+	return new cCoal ($dataToReturn,$clen,$cpar,$cmd5,$ccrc,$csha,$cs512);
+	resetstatus:
+	$blocklist = '';
+	$dataToReturn = '';
+	$rctries++;
+	if($rctries < 10) {
+		goto retrievec;
+	}
+	else {
+		//Chunk retrieval failed too many times
+		$rcerror = 16;
+		return 16;
+	}
 }
 ?>
