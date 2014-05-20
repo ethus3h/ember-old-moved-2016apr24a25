@@ -482,8 +482,8 @@ function CoalIntakeHandler()
 			$blockList = $blockList . $bins . $newBlockId;
 		}
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
-		$retrievedCoal = null;
-		//$retrievedCoal = retrieveCoal($newCoalId);
+		//$retrievedCoal = null;
+		$retrievedCoal = retrieveCoal($newCoalId);
 		if(!is_null($retrievedCoal)) {
 			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
 				$blockList = '';
@@ -502,11 +502,12 @@ function CoalIntakeHandler()
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
-		echo '<br><br>Added coal '+$newCoalId+'.';
+		echo '<br><br>Added coal '.$newCoalId.'.';
     }
     else {
     	$error = 1;
     }
+    echo '<br>'.$error;
 }
 function CoalRetrieveHandler()
 {
