@@ -383,9 +383,9 @@ function CoalIntakeHandler()
     	//cot file extension — Coal temporary data file; can be any binary data
 		$target_path = $target_path . "data.cot"; 
 		if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
-			echo "The file ".basename( $_FILES['uploadedfile']['name'])." has been uploaded";
+			//echo "The file ".basename( $_FILES['uploadedfile']['name'])." has been uploaded";
 		} else {
-  			echo "There was an error uploading the file, please try again!";
+  			//echo "There was an error uploading the file, please try again!";
   			$error = 2;
 		}
 		$data = null;
@@ -413,9 +413,8 @@ function CoalIntakeHandler()
 		$crc = strtolower(dechex(crc32($data)));
 		$sha = strtolower(sha1($data));
 		$s512 = strtolower(hash("sha512",$data));
-		$db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$par.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
-		//TODO: get last ID
-		$newCoalId=0;
+		coal:
+		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$par.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
 		$carray = str_split($data,512000);
 		$blockList = '';
 		foreach($carray as $chunk) {
@@ -442,7 +441,16 @@ function CoalIntakeHandler()
 			$blockList = $blockList + $newBlockId;
 		}
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
-		$db->close(); 
+		$retrievedCoal = retrieveCoal($newCoalId);
+		if(($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+			$blockList = '';
+			goto coal;
+		}
+		$db->close();
+		if($error != 0) {
+			header("HTTP/1.0 525 Request failed");
+		}
+		echo '<br><br>Added coal '+$newCoalId+'.';
     }
     else {
     	$error = 1;
