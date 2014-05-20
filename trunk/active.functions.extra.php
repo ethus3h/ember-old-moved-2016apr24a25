@@ -214,7 +214,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			chunk:
 			$chcount++;
 			//Add record w/ ID, parity checksum
-			$newChunkId = $db->addRow('coalchunks', 'lengthpre, paritypre', '\''.strlen($data).'\', \''.$par.'\'');
+			$newChunkId = $db->addRow('coalchunks', 'lengthpre, paritypre, compression', '\''.strlen($data).'\', \''.$par.'\', \''.$compression.'\'');
 			//encrypt record
 			global $chunkPrivateKey;
 			global $chunkPublicKey;
@@ -237,7 +237,12 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$encsha = strtolower(sha1($ciphertext));
 			$encs512 = strtolower(hash("sha512",$ciphertext));
 			//add new (post-encryption) checksums to record
-			
+			$db->setField('coalchunks', 'length', strlen($ciphertext), $newChunkId);
+			$db->setField('coalchunks', 'parity', $encpar, $newChunkId);
+			$db->setField('coalchunks', 'md5', $encmd5, $newChunkId);
+			$db->setField('coalchunks', 'sha', $encsha, $newChunkId);
+			$db->setField('coalchunks', 'crc', $enccrc, $newChunkId);
+			$db->setField('coalchunks', 's512', $encs512, $newChunkId);
 			//store chunk
 			$sccount = 0;
 			storechunk:
@@ -249,6 +254,10 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			if(($ulresult != 0) && ($ulresult != 10) && ($sccount < 10)) {
 				goto storechunk;
 			}
+			$db->setField('coalchunks', 'storage', 'ia', $newChunkId);
+			$db->setField('coalchunks', 'address', $identifier.'/'.$filename, $newChunkId);
+			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
+			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
 			goto finished;
 		}
 		$db->close();
@@ -259,5 +268,8 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	}
 	return array($newChunkId, $icerror);
 }
+function retrieveChunk($id)
+{
 
+}
 ?>
