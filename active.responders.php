@@ -423,7 +423,7 @@ function CoalIntakeHandler()
   		}
 		$par = strtolower(bin2hex(get_signed_int(crc32($data))));
 		$md5 = strtolower(md5($data));
-		$crc = strtolower(dechex(crc32($data)));
+		$crc = strtolower(dechex(crc32($data+md5($data))));
 		$sha = strtolower(sha1($data));
 		$s512 = strtolower(hash("sha512",$data));
 		$coalcount = 0;
@@ -453,12 +453,27 @@ function CoalIntakeHandler()
 					$error = 4;
 				}
 			}
-			$encpar = strtolower(bin2hex(get_signed_int(crc32($ciphertext))));
+			$encpar = strtolower(bin2hex(get_signed_int(crc32($ciphertext+md5($ciphertext)))));
 			$encmd5 = strtolower(md5($ciphertext));
 			$enccrc = strtolower(dechex(crc32($ciphertext)));
 			$encsha = strtolower(sha1($ciphertext));
 			$encs512 = strtolower(hash("sha512",$ciphertext));
-			$newBlockId = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512);
+			$ichunkcount = 0;
+			ichunk:
+			$ichunkcount++;
+			$icRes = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512,$compression);
+			$newBlockId = $icRes[0];
+			if($icRes[1] != 0) {
+				if($ichunkcount < 10) {
+					goto ichunk;
+				}
+				else {
+					$error = 9;
+				}
+			}
+			else {
+				$error = 10;
+			}
 			$blockList = $blockList + $newBlockId;
 		}
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
@@ -517,12 +532,27 @@ function CoalChunkIntakeHandler()
 		if(file_exists($target_path)) {
     		$data = file_get_contents($target_path);
     	}
-		$par = strtolower(bin2hex(get_signed_int(crc32($data))));
+		$par = strtolower(bin2hex(get_signed_int(crc32($data+md5($data)))));
 		$md5 = strtolower(md5($data));
 		$crc = strtolower(dechex(crc32($data)));
 		$sha = strtolower(sha1($data));
 		$s512 = strtolower(hash("sha512",$data));
-		$newChunkId = insertChunk($data,$par,$md5,$crc,$sha,$s512);
+		$ichunkcount = 0;
+		ichunk:
+		$ichunkcount++;
+		$icRes = insertChunk($data,$par,$md5,$crc,$sha,$s512);
+		$newChunkId = $icRes[0];
+		if($icRes[1] != 0) {
+			if($ichunkcount < 10) {
+				goto ichunk;
+			}
+			else {
+				$error = 9;
+			}
+		}
+		else {
+			$error = 10;
+		}
 		echo $newChunkId;
     }
     else {

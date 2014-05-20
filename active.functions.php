@@ -189,4 +189,8 @@ function guidv4()
 
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }
+function par($data)
+{
+return strtolower(bin2hex(get_signed_int(crc32($data))));
+}
 ?>

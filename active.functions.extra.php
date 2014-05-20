@@ -177,6 +177,23 @@ function arcmaj3_barrel_expire($barrelId)
     echo 'Expired barrel ' . $barrelId . '.<br>' . "\n";
     $db->close();
 }
-
+function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
+	$icerror = 0;
+	$par = par($data);
+	$md5 = strtolower(md5($data));
+	$crc = strtolower(dechex(crc32($data+md5($data))));
+	$sha = strtolower(sha1($data));
+	$s512 = strtolower(hash("sha512",$data));
+	if(($spar != $par) || ($smd5 != $md5) || ($scrc != $crc) || ($ssha != $sha) || ($ss512 != $s512)) {
+		$icerror = 8;
+	}
+	else {
+		
+	}
+	if($icerror != 0) {
+		header("HTTP/1.0 525 Request failed");
+	}
+	return array($newChunkId, $icerror);
+}
 
 ?>
