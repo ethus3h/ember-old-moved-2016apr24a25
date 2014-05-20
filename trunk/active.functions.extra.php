@@ -365,6 +365,7 @@ function retrieveCoal($id)
 	if(($cblen != $rblen) || ($cbpar != $rbpar) || ($cbmd5 != $rbmd5) || ($cbsha != $rbsha) || ($cbcrc != $rbcrc) || ($cbs512 != $rbs512)) {
 		if($rccount < 10) {
 			$rccount++;
+			$rcperror = 24;
 			goto resetstatus;
 		}
 		else {
@@ -394,6 +395,8 @@ function retrieveCoal($id)
 		if(($rblen != $lblen) || ($rbpar != $lbpar) || ($rbmd5 != $lbmd5) || ($rbsha != $lbsha) || ($rbcrc != $lbcrc) || ($rbs512 != $lbs512)) {
 			if($rccount < 10) {
 				$rccount++;
+				//potential error
+				$rcperror = 22;
 				goto requestblock;
 			}
 			else {
@@ -420,6 +423,7 @@ function retrieveCoal($id)
 	if(($cpar != $recordpar) || ($clen != $recordlen)) {
 		if($rcpcount < 10) {
 			$rcpcount++;
+			$rcperror = 23;
 			goto resetstatus;
 		}
 		else {
@@ -434,14 +438,13 @@ function retrieveCoal($id)
 	$dataToReturn = '';
 	$rctries++;
 	if($rctries < 10) {
-		$rcerror = 21;
 		goto retrievec;
 	}
 	else {
 		//Chunk retrieval failed too many times
 		//$rcerror = 16;
 		//echo 'Chunk retrieval failed: 
-		return array(16, $rcerror);
+		return array(16, $rcerror, $rcperror);
 	}
 }
 ?>
