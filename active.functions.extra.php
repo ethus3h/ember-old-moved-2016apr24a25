@@ -276,9 +276,12 @@ function retrieveChunk($id)
 	$rcpcount = 0;
 	retrievechunk:
 	//Get chunk address from database by ID
+	echo 'Getting metadata for chunk '.$id;
 	$chunkMeta = $db->getRow('coalchunks', 'id', $id);
+	//print_r($chunkMeta);
 	$chunkStorage = $chunkMeta['storage'];
 	$chunkAddress = $chunkMeta['address'];
+	$chunkStoragePrefix = '';
 	switch(trim($chunkStorage)) {
 		case "ia":
 			$chunkStoragePrefix = "http://archive.org/download/";
@@ -310,6 +313,7 @@ function retrieveChunk($id)
 		}
 	}
 	//Decrypt chunk using chunk key
+	global $chunkPrivateKey;
 	$rsa = new Crypt_RSA();
 	$rsa->loadKey($chunkPrivateKey); // private key
 	$ciphertext = $chunkData;
@@ -362,30 +366,30 @@ function retrieveCoal($id)
 	$rbsha = sha($coalBlockList);
 	$rbcrc = crc($coalBlockList);
 	$rbs512 = s512($coalBlockList);
-	echo $cblen;
-	echo '<br>';
-	echo $rblen;
-	echo '<br>';
-	echo $cbpar;
-	echo '<br>';
-	echo $rbpar;
-	echo '<br>';
-	echo $cbmd5;
-	echo '<br>';
-	echo $rbmd5;
-	echo '<br>';
-	echo $cbcrc;
-	echo '<br>';
-	echo $rbcrc;
-	echo '<br>';
-	echo $cbsha;
-	echo '<br>';
-	echo $rbsha;
-	echo '<br>';
-	echo $cbs512;
-	echo '<br>';
-	echo $rbs512;
-	echo '<br>';
+//  echo $cblen;
+// 	echo '<br>';
+// 	echo $rblen;
+// 	echo '<br>';
+// 	echo $cbpar;
+// 	echo '<br>';
+// 	echo $rbpar;
+// 	echo '<br>';
+// 	echo $cbmd5;
+// 	echo '<br>';
+// 	echo $rbmd5;
+// 	echo '<br>';
+// 	echo $cbcrc;
+// 	echo '<br>';
+// 	echo $rbcrc;
+// 	echo '<br>';
+// 	echo $cbsha;
+// 	echo '<br>';
+// 	echo $rbsha;
+// 	echo '<br>';
+// 	echo $cbs512;
+// 	echo '<br>';
+// 	echo $rbs512;
+// 	echo '<br>';
 	if(($cblen != $rblen) || ($cbpar != $rbpar) || ($cbmd5 != $rbmd5) || ($cbsha != $rbsha) || ($cbcrc != $rbcrc) || ($cbs512 != $rbs512)) {
 		if($rccount < 10) {
 			$rccount++;
@@ -428,6 +432,7 @@ function retrieveCoal($id)
 			}
 		}
 		//Decrypt block data using record key
+		global $coalPrivateKey;
 		$rsa = new Crypt_RSA();
 		$rsa->loadKey($coalPrivateKey); // private key
 		$ciphertext = $rbdata;
