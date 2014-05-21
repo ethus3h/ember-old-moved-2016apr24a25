@@ -378,7 +378,7 @@ function CoalIntakeHandler()
 			$size = base64_encode($_FILES['uploadedfile']['size']);
 			$length = $_FILES['uploadedfile']['size'];
 			$tmp_name = base64_encode($_FILES['uploadedfile']['tmp_name']);
-			$error = base64_encode($_FILES['uploadedfile']['error']);
+			$ferror = base64_encode($_FILES['uploadedfile']['error']);
 		}
 		else {
 			$filename = null;
@@ -386,21 +386,24 @@ function CoalIntakeHandler()
 			$size = null;
 			$length = null;
 			$tmp_name = null;
-			$error = null;
+			$ferror = null;
 		}
     	//based on http://www.tizag.com/phpT/fileupload.php?MAX_FILE_SIZE=100000&uploadedfile=
     	$target_path = "coal_temp/";
     	$nextId = $db->getNextId('coal').'-'.guidv4();
     	//cot file extension — Coal temporary data file; can be any binary data
 		$target_path = $target_path . "data.".$nextId.".cot"; 
+		print_r($_FILES);
     	if(isset($_FILES['uploadedfile'])) {		
 			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
 			} else {
 				$error = 2;
+				echo "error 2";
 			}
 		}
 		else {
 			$error = 6;
+			echo "error 6";
 		}
 		$data = null;
 		$stat = null;
@@ -429,10 +432,12 @@ function CoalIntakeHandler()
 		$coalcount = 0;
 		coal:
 		$coalcount++;
-		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$error.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
+		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$ferror.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
 		$carray = str_split($data,524288);
 		$blockList = '';
+		include('Crypt/RSA.php');
 		foreach($carray as $chunk) {
+			//echo $chunk;
 			$chcount = 0;
 			chunk:
 			$chcount++;
@@ -480,6 +485,10 @@ function CoalIntakeHandler()
 				$bins = '';
 			}
 			$blockList = $blockList . $bins . $newBlockId;
+		}
+		echo 'Length: '.$length;
+		if($length == 0) {
+			$blockList = '';
 		}
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
 		$blocklistlen = strlen($blockList);
