@@ -393,7 +393,7 @@ function CoalIntakeHandler()
     	$nextId = $db->getNextId('coal').'-'.guidv4();
     	//cot file extension — Coal temporary data file; can be any binary data
 		$target_path = $target_path . "data.".$nextId.".cot"; 
-		print_r($_FILES);
+		//print_r($_FILES);
     	if(isset($_FILES['uploadedfile'])) {		
 			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
 			} else {
