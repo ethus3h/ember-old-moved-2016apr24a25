@@ -178,6 +178,7 @@ function arcmaj3_barrel_expire($barrelId)
     $db->close();
 }
 function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
+	echo 'NEW CHUNK DATA: '.$data;
 	$icerror = 0;
 	$par = crc($data);
 	$md5 = amd5($data);
@@ -207,6 +208,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 				goto chunk;
 			}
 			else {
+				echo 'error 4';
 				$icerror = 4;
 			}
 		}
@@ -235,6 +237,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		duplicatefound:
 		if($duplicateFound) {
 			$newChunkId = $duplicateId;
+			echo 'duplicate found';
 			goto finished;
 		}
 		else {
@@ -247,7 +250,18 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$sccount = 0;
 			storechunk:
 			$sccount++;
-			$ulresult = ia_upload($ciphertext,$identifier,$filename,$accesskey,$secretkey,$title,$description,'texts',$keywords,true,'opensource');
+			$identifierId = $newChunkId / 1000;
+			$identifier = $identifierId.guidv4();
+			$fallbackid = $identifierId.guidv4();
+			$filename = $newChunkId.'.coal';
+			global $iaAuthKey;
+			global $iaPrivateKey;
+			$accesskey = $iaAuthKey;
+			$secretkey = $iaPrivateKey;
+			$title = 'Coal chunks for '.$identifierId;
+			$description = $title;
+			$keywords = 'coal; data; coal chunks; ';
+			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,'texts',$keywords,true,'opensource');
 			if($ulresult = 10) {
 				goto storechunk;
 			}

@@ -145,7 +145,7 @@ function get_url($url)
     }
     return $ret;
 }
-function ia_upload($data,$identifier,$filename,$accesskey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false,$collection = 'opensource')
+function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false,$collection = 'opensource')
 {
 	//Keywords in $keywords should be separated by ;
 	$iaerror = 0;
