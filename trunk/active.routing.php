@@ -68,6 +68,9 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'coaltestupload') {
         coaltestupload();
     }
+    if ($wintNeeded == 'inforesource') {
+        inforesource();
+    }
 }
 
 // function logAdd($text){

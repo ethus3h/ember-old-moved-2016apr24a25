@@ -391,4 +391,12 @@ function coaltestupload()
 enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="handlerNeeded" value="CoalIntake" /><br /><input type="submit" value="Upload File" /></form></body></html>';
 	}
 }
+function inforesource()
+{
+	echo 'doom';
+	$topic = $_REQUEST['topic'];
+	$title = titleCase($topic);
+    echo '<html><head><title>' . $title . ' | Information Resource</title><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/></head><body><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=5"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><form action="active.php" method="post"
+enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="handlerNeeded" value="CoalIntake" /><br /><input type="submit" value="Upload File" /></form></body></html>';
+}
 ?>
