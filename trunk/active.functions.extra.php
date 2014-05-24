@@ -180,13 +180,15 @@ function arcmaj3_barrel_expire($barrelId)
 function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	echo 'NEW CHUNK DATA: '.$data;
 	$icerror = 0;
+	$rpar = par($data);
 	$par = crc($data);
 	$md5 = amd5($data);
 	$crc = crc($data);
 	$sha = sha($data);
 	$s512 = s512($data);
 	$newChunkId = 0;
-	if(($spar != $par) || ($smd5 != $md5) || ($scrc != $crc) || ($ssha != $sha) || ($ss512 != $s512)) {
+	if(($spar != $rpar) || ($smd5 != $md5) || ($scrc != $crc) || ($ssha != $sha) || ($ss512 != $s512)) {
+		echo 'error 8';
 		$icerror = 8;
 	}
 	else {
@@ -231,13 +233,14 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			if(($potentialData === $data) && ($potentiallen == $enclen) && ($potentialpar == $encpar) && ($potentialmd5 == $encmd5) && ($potentialcrc == $enccrc) && ($potentialsha == $encsha) && ($potentials512 == $encs512)) {
 				$duplicateFound = true;
 				$duplicateId = $potential['id'];
+				echo 'information code 25';
 				goto duplicatefound;
 			}
 		}
 		duplicatefound:
 		if($duplicateFound) {
+			echo 'information code 26: duplicate found';
 			$newChunkId = $duplicateId;
-			echo 'duplicate found';
 			goto finished;
 		}
 		else {
@@ -263,9 +266,11 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$keywords = 'coal; data; coal chunks; ';
 			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,'texts',$keywords,true,'opensource');
 			if($ulresult = 10) {
+				echo 'information code 27';
 				goto storechunk;
 			}
 			if(($ulresult != 0) && ($ulresult != 10) && ($sccount < 10)) {
+				echo 'information code 28';
 				goto storechunk;
 			}
 			$db->setField('coalchunks', 'storage', 'ia', $newChunkId);
@@ -319,10 +324,12 @@ function retrieveChunk($id)
 	$chs512 = $chunkMeta['s512'];
 	if(($cklen != $chlen) || ($ckpar != $chpar) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($ckcrc != $chcrc) || ($cks512 != $chs512)) {
 		if($rccount < 10) {
+			echo 'information code 29';
 			$rccount++;
 			goto retrievechunk;
 		}
 		else {
+			echo 'error 15';
 			$rcerror = 15;
 		}
 	}
@@ -343,6 +350,7 @@ function retrieveChunk($id)
 	$ppar = $chunkMeta['parity'];
 	if(($plen != $ptlen) || ($ppar != $ptcrc)) {
 		if($rcpcount < 10) {
+			echo 'information code 30';
 			$rcpcount++;
 			goto retrievechunk;
 		}

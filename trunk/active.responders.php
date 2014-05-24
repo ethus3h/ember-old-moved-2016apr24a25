@@ -436,56 +436,56 @@ function CoalIntakeHandler()
 		$carray = str_split($data,524288);
 		$blockList = '';
 		include('Crypt/RSA.php');
-		foreach($carray as $chunk) {
-			//echo $chunk;
-			$chcount = 0;
-			chunk:
-			$chcount++;
-			$compression = "bzip2";
-			$compressed = bzcompress($chunk);
-			global $coalPrivateKey;
-			global $coalPublicKey;
-			$rsa = new Crypt_RSA();
-			$rsa->loadKey($coalPublicKey); // public key
-			$plaintext = $compressed;
-			$ciphertext = $rsa->encrypt($plaintext);
-			$rsa->loadKey($coalPrivateKey); // private key
-			if($rsa->decrypt($ciphertext) != $plaintext) {
-				if($chcount < 10) {
-					goto chunk;
-				}
-				else {
-					$error = 4;
-				}
-			}
-			$encpar = par($ciphertext);
-			$encmd5 = amd5($ciphertext);
-			$enccrc = crc($ciphertext);
-			$encsha = sha($ciphertext);
-			$encs512 = s512($ciphertext);
-			$ichunkcount = 0;
-			ichunk:
-			$ichunkcount++;
-			//When chunks are handled by a separate system, replace this with a cURL request to the CoalChunkIntakeHandler.
-			$icRes = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512,$compression);
-			$newBlockId = $icRes[0];
-			if($icRes[1] != 0) {
-				if($ichunkcount < 10) {
-					goto ichunk;
-				}
-				else {
-					$error = 9;
-				}
-			}
-			else {
-				$error = 10;
-			}
-			$bins = ',';
-			if(strlen($blockList) == 0) {
-				$bins = '';
-			}
-			$blockList = $blockList . $bins . $newBlockId;
-		}
+// 		foreach($carray as $chunk) {
+// 			//echo $chunk;
+// 			$chcount = 0;
+// 			chunk:
+// 			$chcount++;
+// 			$compression = "bzip2";
+// 			$compressed = bzcompress($chunk);
+// 			global $coalPrivateKey;
+// 			global $coalPublicKey;
+// 			$rsa = new Crypt_RSA();
+// 			$rsa->loadKey($coalPublicKey); // public key
+// 			$plaintext = $compressed;
+// 			$ciphertext = $rsa->encrypt($plaintext);
+// 			$rsa->loadKey($coalPrivateKey); // private key
+// 			if($rsa->decrypt($ciphertext) != $plaintext) {
+// 				if($chcount < 10) {
+// 					goto chunk;
+// 				}
+// 				else {
+// 					$error = 4;
+// 				}
+// 			}
+// 			$encpar = par($ciphertext);
+// 			$encmd5 = amd5($ciphertext);
+// 			$enccrc = crc($ciphertext);
+// 			$encsha = sha($ciphertext);
+// 			$encs512 = s512($ciphertext);
+// 			$ichunkcount = 0;
+// 			ichunk:
+// 			$ichunkcount++;
+// 			//When chunks are handled by a separate system, replace this with a cURL request to the CoalChunkIntakeHandler.
+// 			$icRes = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512,$compression);
+// 			$newBlockId = $icRes[0];
+// 			if($icRes[1] != 0) {
+// 				if($ichunkcount < 10) {
+// 					goto ichunk;
+// 				}
+// 				else {
+// 					$error = 9;
+// 				}
+// 			}
+// 			else {
+// 				$error = 10;
+// 			}
+// 			$bins = ',';
+// 			if(strlen($blockList) == 0) {
+// 				$bins = '';
+// 			}
+// 			$blockList = $blockList . $bins . $newBlockId;
+// 		}
 		echo 'Length: '.$length;
 		if($length == 0) {
 			$blockList = '';
@@ -513,6 +513,7 @@ function CoalIntakeHandler()
 				if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
 					$blockList = '';
 					if($coalcount < 10) {
+						echo 'information code 31';
 						goto coal;
 					}
 					else {
