@@ -394,10 +394,11 @@ function get_processed_url($url) {
 // 	if (!$caller->ok()) {
 // 	  var_dump($caller->errors());
 // 	}
-	$d->loadHTML($data);
-	$body = $d->getElementsByTagName('body')->item(0);
+	//help from http://stackoverflow.com/questions/14783760/remove-dom-warning-php
+	@$d->loadHTML($data);
+	@$body = $d->getElementsByTagName('body')->item(0);
 	foreach ($body->childNodes as $child){
-		$mock->appendChild($mock->importNode($child, true));
+		@$mock->appendChild($mock->importNode($child, true));
 	}
 	$data = $mock->saveHTML();
 	//based on http://stackoverflow.com/questions/19190180/preg-replace-change-link-from-href; help from http://us2.php.net/manual/en/function.preg-replace-callback.php
