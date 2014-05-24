@@ -393,25 +393,31 @@ enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input ty
 }
 function inforesource()
 {
+	$type='unknown';
+	if(isset($_REQUEST['type'])) {
+		$type = $_REQUEST['type'];
+	}
 	if(isset($_REQUEST['topic'])) {
 		$topic = $_REQUEST['topic'];
-		$results = get_info($topic);
 	}
 	else {
 		if(isset($_REQUEST['r'])) {
-			$url = str_rot13(base64_decode($_REQUEST['r']));
-			$topic = $url;
-			$results = get_readied_url($url);
-			$results = $results . get_info($topic);
+			$topic = str_rot13(base64_decode($_REQUEST['r']));
 		}
 		else {
 			$topic = '';
-			$results = '';
 		}
 	}
 	$title = titleCase($topic);
+	$displayType=titleCase($type) . ' at ';
+	if($type == 'unknown') {
+		$displayType = '';
+	}
+	$results = get_info($topic, $type);
 	//some js from http://stackoverflow.com/questions/4742746/jquery-open-new-window-on-page-load
-    echo '<html><head><title>' . $title . ' | Information Resource</title><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/></head><body><script>console.debug("doom");$(function(){  window.open(\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\'); });</script><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=5"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><h1>Information on '.$topic.'</h1>'.$results.'<h1>Website attribution</h1><ul><li>Theme: <a href="http://designmodo.com">Designmodo</a></li><li><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></li></ul></body></html>';
+	//some css from http://stackoverflow.com/questions/1150163/stretch-and-scale-a-css-image-in-the-background-with-css-only
+	//some code from from active.fluid.php
+    echo '<html><head><title>' . $title . ' | ' . $displayType . 'Information Resource</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/><style type="text/css"> #background {width: 100%; height: 100%; position: fixed; left: 0px;  top: 0px; z-index: -1; /* Ensure div tag stays behind content; -999 might work, too. */} .stretch { width:100%;  height:100%;}</style></head><body><script>console.debug("doom");$(function(){  window.open(\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\'); });</script><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=5"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><div id="background"><img src="4278136735_20329c6cb7_o.jpg" class="stretch" alt="" /></div><h1>Information on '.$topic.'</h1>'.$results.'<h1>Website attribution</h1><ul><li>Theme: <a href="http://designmodo.com">Designmodo</a></li><li>Background image: <a href="http://www.flickr.com/photos/caseyyee/4278136735/">"4278136735_20329c6cb7_o.jpg": by Casey Yee</a>. CC Attribution Share-Alike 2.0.</li><li><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></li></ul></body></html>';
 } 
 function bnner()
 {
