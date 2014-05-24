@@ -417,7 +417,7 @@ function get_readied_url($url) {
 	$data = str_replace('>>@NEVER__BE__MATCHED2@<<','',$data);
 	return $data;
 }
-function get_info($topic) {
+function get_info($topic, $type = 'unknown') {
 	$data = get_readied_url("http://futuramerlin.com/pageview.php?page=render-page.php?search=".$topic);
 	$data = $data . get_readied_url("http://m.bing.com/search/search.aspx?A=webresults&Q=".$topic);
 	return $data;
