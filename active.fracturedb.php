@@ -311,7 +311,7 @@ class FractureDB
     }
     function getColumns($table, $fields, $filterField = '', $filterValue = '')
     {
-        return getColumn($table, $fields, $filterField = '', $filterValue = '');
+        return $this->getColumn($table, $fields, $filterField = '', $filterValue = '');
     }
     function getColumn_num($table, $field, $filterField = '', $filterValue = '')
     {
