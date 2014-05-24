@@ -2,7 +2,6 @@
 
 //This script handles requests in the correct manner.
 
-
 function runHandlers($handlerNeeded)
 {
     //     echo 'Executing handler: ';
@@ -70,6 +69,9 @@ function runWints($wintNeeded)
     }
     if ($wintNeeded == 'inforesource') {
         inforesource();
+    }
+    if ($wintNeeded == 'bnner') {
+        bnner();
     }
 }
 

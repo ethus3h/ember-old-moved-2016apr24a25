@@ -380,4 +380,23 @@ function titleCase ($title) {
     foreach ($html[0] as &$tag) $title = substr_replace ($title, $tag[0], $tag[1], 0);
     return $title;
 }
+function url_processor_callback($data) {
+	return ">>@NEVER__BE__MATCHED@<<".base64_encode(str_rot13($data[1]));
+}
+function get_processed_url($url) {
+	$data = get_url($url);
+	//based on http://stackoverflow.com/questions/11254619/get-contents-of-body-without-doctype-html-head-and-body-tags
+	$d = new DOMDocument;
+	$mock = new DOMDocument;
+	$d->loadHTML($data);
+	$body = $d->getElementsByTagName('body')->item(0);
+	foreach ($body->childNodes as $child){
+		$mock->appendChild($mock->importNode($child, true));
+	}
+	$data = $mock->saveHTML();
+	//based on http://stackoverflow.com/questions/19190180/preg-replace-change-link-from-href; help from http://us2.php.net/manual/en/function.preg-replace-callback.php
+	$result = preg_replace_callback('/src="([^"]+)"/', "url_processor_callback", $data);
+	$result = preg_replace_callback('/href="([^"]+)"/', "url_processor_callback", $result);
+	return $pageData;
+}
 ?>

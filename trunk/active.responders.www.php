@@ -393,10 +393,22 @@ enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input ty
 }
 function inforesource()
 {
-	echo 'doom';
-	$topic = $_REQUEST['topic'];
-	$title = titleCase($topic);
-    echo '<html><head><title>' . $title . ' | Information Resource</title><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/></head><body><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=5"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><form action="active.php" method="post"
-enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="handlerNeeded" value="CoalIntake" /><br /><input type="submit" value="Upload File" /></form></body></html>';
-}
+	if(isset($_REQUEST['topic'])) {
+		$topic = $_REQUEST['topic'];
+		$title = titleCase($topic);
+		$results = get_info($topic);
+	}
+	if(isset($_REQUEST['r'])) {
+		$url = str_rot13(base64_decode($_REQUEST['r']));
+		$topic = $url;
+		$results = get_processed_url($url);
+		$results = $results . get_info($topic);
+	}
+	//some js from http://stackoverflow.com/questions/4742746/jquery-open-new-window-on-page-load
+    echo '<html><head><title>' . $title . ' | Information Resource</title><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/></head><body><script>$(function(){  window.open(\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\'); });</script><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=5"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><h1>Information on '.$topic.'</h1>'.$request.'<h1>Website attribution</h1><ul><li>Theme: <a href="http://designmodo.com">Designmodo</a></li><li><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></li></ul></body></html>';
+} 
+function bnner()
+{
+    echo '<html><head><title></title><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/></head><body><iframe width=\'728\' height=\'90\' frameborder=\'0\' src=\'http://chelhi.ptp33.com/seo.php?username=chelhi&format=728x90\' marginwidth=\'0\' marginheight=\'0\' vspace=\'0\' hspace=\'0\' allowtransparency=\'true\' scrolling=\'no\'></iframe><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></body></html>';
+} 
 ?>
