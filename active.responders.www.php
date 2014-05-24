@@ -395,17 +395,23 @@ function inforesource()
 {
 	if(isset($_REQUEST['topic'])) {
 		$topic = $_REQUEST['topic'];
-		$title = titleCase($topic);
 		$results = get_info($topic);
 	}
-	if(isset($_REQUEST['r'])) {
-		$url = str_rot13(base64_decode($_REQUEST['r']));
-		$topic = $url;
-		$results = get_processed_url($url);
-		$results = $results . get_info($topic);
+	else {
+		if(isset($_REQUEST['r'])) {
+			$url = str_rot13(base64_decode($_REQUEST['r']));
+			$topic = $url;
+			$results = get_readied_url($url);
+			$results = $results . get_info($topic);
+		}
+		else {
+			$topic = '';
+			$results = '';
+		}
 	}
+	$title = titleCase($topic);
 	//some js from http://stackoverflow.com/questions/4742746/jquery-open-new-window-on-page-load
-    echo '<html><head><title>' . $title . ' | Information Resource</title><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/></head><body><script>$(function(){  window.open(\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\'); });</script><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=5"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><h1>Information on '.$topic.'</h1>'.$request.'<h1>Website attribution</h1><ul><li>Theme: <a href="http://designmodo.com">Designmodo</a></li><li><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></li></ul></body></html>';
+    echo '<html><head><title>' . $title . ' | Information Resource</title><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/></head><body><script>console.debug("doom");$(function(){  window.open(\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\'); });</script><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=5"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><h1>Information on '.$topic.'</h1>'.$results.'<h1>Website attribution</h1><ul><li>Theme: <a href="http://designmodo.com">Designmodo</a></li><li><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></li></ul></body></html>';
 } 
 function bnner()
 {

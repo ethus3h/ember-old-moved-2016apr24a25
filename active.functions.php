@@ -381,13 +381,19 @@ function titleCase ($title) {
     return $title;
 }
 function url_processor_callback($data) {
-	return ">>@NEVER__BE__MATCHED@<<".base64_encode(str_rot13($data[1]));
+	return $data[1]."=\">>@NEVER__BE__MATCHED1@<<".base64_encode(str_rot13($data[2])).">>@NEVER__BE__MATCHED2@<<\"";
 }
 function get_processed_url($url) {
 	$data = get_url($url);
 	//based on http://stackoverflow.com/questions/11254619/get-contents-of-body-without-doctype-html-head-and-body-tags
 	$d = new DOMDocument;
 	$mock = new DOMDocument;
+// 	$caller = new ErrorTrap(array($xmlDoc, 'loadHTML'));
+// 	// this doesn't dump out any warnings
+// 	$caller->call($fetchResult);
+// 	if (!$caller->ok()) {
+// 	  var_dump($caller->errors());
+// 	}
 	$d->loadHTML($data);
 	$body = $d->getElementsByTagName('body')->item(0);
 	foreach ($body->childNodes as $child){
@@ -395,8 +401,26 @@ function get_processed_url($url) {
 	}
 	$data = $mock->saveHTML();
 	//based on http://stackoverflow.com/questions/19190180/preg-replace-change-link-from-href; help from http://us2.php.net/manual/en/function.preg-replace-callback.php
-	$result = preg_replace_callback('/src="([^"]+)"/', "url_processor_callback", $data);
-	$result = preg_replace_callback('/href="([^"]+)"/', "url_processor_callback", $result);
+	//$result = preg_replace_callback('/(src)="([^"]+)"/', "url_processor_callback", $data);
+	$result = preg_replace_callback('/(href)="([^"]+)"/', "url_processor_callback", $data);
+	$result = preg_replace('/<script(\w+)script>/', "", $data);
+	$result = preg_replace('/<style(\w+)style>/', "", $data);
+	$result = preg_replace('/<link(\w+)link>/', "", $data);
+	$pageData = preg_replace('/<link(\w+)\/>/', "", $data);
+	// $pageData = str_replace('<style','<!--',$result);
+// 	$pageData = str_replace('<script','<!-- ',$result);
+// 	$pageData = str_replace('</style>','-->',$result);
+// 	$pageData = str_replace('</script>','--> ',$result);
 	return $pageData;
+}
+function get_readied_url($url) {
+	$data = get_processed_url($url);
+	$data = str_replace('>>@NEVER__BE__MATCHED1@<<','http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=inforesource&r=',$data);
+	$data = str_replace('>>@NEVER__BE__MATCHED2@<<','',$data);
+	return $data;
+}
+function get_info($topic) {
+	$data = get_readied_url("http://www.yandex.com/yandsearch?text=".$topic);
+	return $data;
 }
 ?>
