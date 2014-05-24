@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", true);
-$displayDebugMessages = True;
 #Futuramerlin Active Scripting Library.
 global $emberVersion;
 $activeVersion = $emberVersion;
