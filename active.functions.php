@@ -419,6 +419,7 @@ function get_readied_url($url) {
 }
 function get_info($topic) {
 	$data = get_readied_url("http://futuramerlin.com/pageview.php?page=render-page.php?search=".$topic);
+	$data = $data . get_readied_url("http://m.bing.com/search/search.aspx?A=webresults&Q=".$topic);
 	return $data;
 }
 //based on http://www.php.net/manual/en/function.strip-tags.php#68757
