@@ -403,10 +403,7 @@ function get_processed_url($url) {
 	//based on http://stackoverflow.com/questions/19190180/preg-replace-change-link-from-href; help from http://us2.php.net/manual/en/function.preg-replace-callback.php
 	//$result = preg_replace_callback('/(src)="([^"]+)"/', "url_processor_callback", $data);
 	$result = preg_replace_callback('/(href)="([^"]+)"/', "url_processor_callback", $data);
-	$result = preg_replace('/<script(\w+)script>/', "", $data);
-	$result = preg_replace('/<style(\w+)style>/', "", $data);
-	$result = preg_replace('/<link(\w+)link>/', "", $data);
-	$pageData = preg_replace('/<link(\w+)\/>/', "", $data);
+	$pageData = remove_script_style($result);
 	// $pageData = str_replace('<style','<!--',$result);
 // 	$pageData = str_replace('<script','<!-- ',$result);
 // 	$pageData = str_replace('</style>','-->',$result);
@@ -420,7 +417,20 @@ function get_readied_url($url) {
 	return $data;
 }
 function get_info($topic) {
-	$data = get_readied_url("http://www.yandex.com/yandsearch?text=".$topic);
+	$data = get_readied_url("http://futuramerlin.com/pageview.php?page=render-page.php?search=".$topic);
 	return $data;
+}
+//based on http://www.php.net/manual/en/function.strip-tags.php#68757
+function remove_script_style($data) {
+	$search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
+					'@<link[^>]*?>.*?</link>@si',  // Strip out link tags
+					'@<form[^>]*?>.*?</form>@si',  // Strip out form tags
+				   '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+				   '@<![\s\S]*?--[ \t\n\r]*>@'         // Strip multi-line comments including CDATA
+	);
+	$text = preg_replace($search, '', $data);
+	//based on http://stackoverflow.com/questions/5517255/remove-style-attribute-from-html-tags
+	$output = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $text);
+	return $output;
 }
 ?>
