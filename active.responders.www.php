@@ -414,11 +414,15 @@ function inforesource()
 		$displayType = '';
 	}
 	$results = get_info($topic, $type);
+	$title = $title . ' | ' . $displayType . 'Information Resource';
+	$main = new FluidActive('Information Resource');
+	$main->write(file_get_contents("inforesource.fluidScriptedUI"));
+    $main->close();
 	//some js from http://stackoverflow.com/questions/4742746/jquery-open-new-window-on-page-load, http://www.4guysfromrolla.com/demos/OnBeforeUnloadDemo1.htm, http://kbeezie.com/cross-browser-exit-pop/, and http://forums.devarticles.com/javascript-development-22/how-to-stop-browser-from-closing-using-javascript-8458.html
 	//some css from http://stackoverflow.com/questions/1150163/stretch-and-scale-a-css-image-in-the-background-with-css-only and http://stackoverflow.com/questions/13367403/background-image-doesnt-cover-entire-screen
 	//some code from from active.fluid.php
 	//help from http://www.w3schools.com/cssref/css3_pr_background-size.asp
-    echo '<html><head><title>' . $title . ' | ' . $displayType . 'Information Resource</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><script language="JavaScript">
+    //echo '<html><head><title>' . $ptitle . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><script language="JavaScript">
   //window.onbeforeunload = confirmExit;
   function confirmExit()
   {
@@ -426,20 +430,15 @@ function inforesource()
     return "Are you sure you want to exit this page?";
     
   }
-  //from http://stackoverflow.com/questions/12445886/is-it-possible-to-load-existing-href-links-with-jquery-into-a-div-tag-without-re
-  var arun = true;
-  // Catch the click on your a tag
-//$("a").click(function(){
-    // Load the content of the page referenced in the a-tags href
-    // $("body").load($(this).attr("href"));
-//     if(arun) {
-//     	window.open(\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\');
-//     	arun = false;
-//     }
-    // Prevent browsers default behavior to follow the link when clicked
-    //return false;
-//});
-</script><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/><style type="text/css"> body {background: url(\'4278136735_20329c6cb7_o.jpg\')  no-repeat center center fixed; background-size:cover;} #content { position: fixed; left: 1em; top:1em; right: 1em; bottom: 1em; background-color: rgba(255,255,255,0); } </style></head><body><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=1"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><div id="content"><h1>Information on '.$topic.'</h1>'.$results.'<h1>Website attribution</h1><ul><li>Theme: <a href="http://designmodo.com">Designmodo</a></li><li>Background image: <a href="http://www.flickr.com/photos/caseyyee/4278136735/">"4278136735_20329c6cb7_o.jpg": by Casey Yee</a>. CC Attribution Share-Alike 2.0.</li><li><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></li></ul></div></body></html>';
+//from http://stackoverflow.com/questions/7064998/how-to-make-a-link-open-multiple-pages-when-clicked
+$(\'a\').click(function(e) {
+	//e.preventDefault();
+    window.open(\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\');
+    
+});
+</script><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/><style type="text/css"> body {background: url(\'4278136735_20329c6cb7_o.jpg\')  no-repeat center center fixed; background-size:cover;} #content { position: fixed; left: 1em; top:1em; right: 1em; bottom: 1em; background-color: rgba(255,255,255,0); overflow-x: scroll; overflow-y:scroll; } </style></head><body><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=1"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><div id="content">
+<div id="header" style=" position: fixed; left: 1em; top:1em; right: 1em; bottom: 1em; background-color: rgba(255,255,255,0.6); "></div>
+<h1>Information on '.$topic.'</h1>'.$results.'<h1>Website attribution</h1><ul><li>Theme: <a href="http://designmodo.com">Designmodo</a></li><li>Background image: <a href="http://www.flickr.com/photos/caseyyee/4278136735/">"4278136735_20329c6cb7_o.jpg": by Casey Yee</a>. CC Attribution Share-Alike 2.0.</li><li><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></li></ul></div></body></html>';
 } 
 function bnner()
 {

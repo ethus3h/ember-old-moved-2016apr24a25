@@ -380,11 +380,36 @@ function titleCase ($title) {
     foreach ($html[0] as &$tag) $title = substr_replace ($title, $tag[0], $tag[1], 0);
     return $title;
 }
+global $urlroot;
+global $domain;
 function url_processor_callback($data) {
+	global $urlroot;
+	//echo $urlroot;
+	if(substr($data[2],0,4) != 'http') {
+		if(substr($data[2],0,1) != '/') {
+			$data[2] = $urlroot .'/'. $data[2];
+		}
+		else {
+			
+		}
+	}
+
 	return $data[1]."=\">>@NEVER__BE__MATCHED1@<<".base64_encode(str_rot13($data[2])).">>@NEVER__BE__MATCHED2@<<\"";
 }
 function get_processed_url($url) {
+	//echo $url;
+	global $urlroot;
 	$data = get_url($url);
+	// //based on http://www.sitepoint.com/forums/showthread.php?192267-How-to-get-folder-name-out-of-a-URL
+// 	$parsedUrl = parse_url($url);
+// 	$root = $parsedUrl['path'];  
+// 	echo $root;
+// 	$urlroot = $root;
+// based on http://stackoverflow.com/questions/5939412/php-string-function-to-get-substring-before-the-last-occurrence-of-a-character
+$string = explode('/', $url);
+array_pop($string);
+$res = implode('/', $string);
+	$urlroot = $res;
 	//based on http://stackoverflow.com/questions/11254619/get-contents-of-body-without-doctype-html-head-and-body-tags
 	$d = new DOMDocument;
 	$mock = new DOMDocument;
