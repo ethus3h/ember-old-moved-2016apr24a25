@@ -459,7 +459,19 @@ function get_readied_url($url) {
 function get_info($topic, $type = 'unknown') {
 	$data = get_readied_url("http://futuramerlin.com/pageview.php?page=render-page.php?search=".$topic);
 	$data = $data . get_readied_url("http://m.bing.com/search/search.aspx?A=webresults&amp;Q=".$topic);
-	return $data;
+	//help from http://www.developphp.com/view_lesson.php?v=229
+	$info = array(
+				'unknown' => array (
+									'overview' => "doom",
+									'bing' => $data
+									),
+				'url' => array     (
+									'overview' => "doom",
+									'bing' => $data
+									)
+	);
+	//help from http://stackoverflow.com/questions/2058635/cannot-use-string-offset-as-an-array-error (I was returning $data :P )
+	return $info;
 }
 //based on http://www.php.net/manual/en/function.strip-tags.php#68757
 function remove_script_style($data) {
