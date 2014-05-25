@@ -436,12 +436,49 @@ function inforesource()
 var initialType = \''.titleCase($type).'\';
 var initialTab = \''.titleCase($tab).'\';
 
+//based on http://stackoverflow.com/questions/921789/how-to-loop-through-javascript-object-literal-with-objects-as-members
+firsttabcreated = false;
+prevkey = '';
+for (var key in results) {
+	var obj = results[key];
+	//alert(key);
+	var set = new Object();
+	if(firsttabcreated = false) {
+		set["container"] = this.fub.id;
+	}
+	else {
+		eval("set[\"container\"] = this.tab"+prevkey+"Box.id;");
+	}
+	set["vpos"] = 3;
+	set["vposunit"] = "rem";
+	eval("var tab"+key+"Box = new Box(set);");
+	set=null;
+	this.box.show("none");
+	for (var prop in obj) {
+		// important check that this is objects own property 
+		// not from prototype prop inherited
+		if(obj.hasOwnProperty(prop)){
+			//alert(prop + " = " + obj[prop]);
+		}
+	}
+	firsttabcreated = true;
+	prevkey = key;
+}
+
+
+
 var set = new Object();
 set["container"] = this.contentPanel.id;
-set["contents"] = "'.$results['unknown']['overview'].'";
-this.defaultcontent = new Box(set);
+set["css"] = "overflow-x: scroll; overflow-y: scroll;";
+this.pagecontents = new Box(set);
 set=null;
-this.defaultcontent.show("fade");
+this.pagecontents.show("none");
+
+//help from http://stackoverflow.com/questions/2820249/base64-encoding-and-decoding-in-client-side-javascript / https://developer.mozilla.org/en-US/docs/Web/JavaScript/Base64_encoding_and_decoding
+this.pagecontents.contents = atob(results[initialType][initialTab]);
+console.debug(results[initialType][initialTab]);
+this.pagecontents.compute();
+console.debug(this.pagecontents);
 
 var set = new Object();
 set["container"] = this.Ember.id;
