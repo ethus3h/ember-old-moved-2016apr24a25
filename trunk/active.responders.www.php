@@ -520,8 +520,8 @@ this.logo.show("none"); */
 
 var set = new Object();
 set["container"] = this.Ember.id;
-//based on http://stackoverflow.com/questions/3151974/highlight-entire-text-inside-text-field-with-single-click
-set["contents"] = "<span style=\"font-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\"><form><input type=\"hidden\" name=\"wint\" value=\"1\" /><input type=\"hidden\" name=\"wintNeeded\" value=\"inforesource\" /><input type=\"text\" onclick=\"this.select()\" style=\"background-color: rgba(0,0,0,0); border-style: none; text-align:center;font-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\" name=\"topic\" value=\"'.$topic.'\"></form></span>";
+//based on http://stackoverflow.com/questions/3151974/highlight-entire-text-inside-text-field-with-single-click and http://stackoverflow.com/questions/2984311/delete-default-value-of-an-input-text-on-click
+set["contents"] = "<span style=\"font-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\"><form><input type=\"hidden\" name=\"wint\" value=\"1\" /><input type=\"hidden\" name=\"wintNeeded\" value=\"inforesource\" /><input type=\"text\" list=\"prefilled\" onblur=\"if (this.value == \'\') {this.value = \''.str_replace('\'','\\\'',$topic).'\';}\" onfocus=\"if (this.value == \''.str_replace('\'','\\\'',$topic).'\') {this.value = \'\';}\" style=\"background-color: rgba(0,0,0,0); border-style: none; text-align:center;font-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\" name=\"topic\" value=\"'.$topic.'\"><datalist id=\"prefilled\"><option value=\"'.$topic.'\"></datalist></form></span>";
 set["heighth"] = 3;
 set["hunit"] = "rem";
 set["vpos"] = 0.75;
