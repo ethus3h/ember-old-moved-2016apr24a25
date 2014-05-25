@@ -432,13 +432,19 @@ function inforesource()
 	$title = $title . ' | ' . $displayType . 'Information Resource';
 	$main = new FluidActive('inforesource',$title);
 	$main->write(file_get_contents("inforesource.fluidScriptedUI"));
-	$main->write("\n\n" . $resultsjs . ' 
-var initialType = \''.titleCase($type).'\';
-var initialTab = \''.titleCase($tab).'\';
+	$main->write("\n\n" . $resultsjs);
+	$main->write(' var initialType = \''.titleCase($type));
+	$main->write('\';
+var initialTab = \''.titleCase($tab));
+$main->write('\';
 
-//based on http://stackoverflow.com/questions/921789/how-to-loop-through-javascript-object-literal-with-objects-as-members
-firsttabcreated = false;
-prevkey = '';
+//based on http://stackoverflow.com/questions/9');
+$main->write('21789/how-to-loop-through-javascript-object-literal-with-objects-as-members');
+$main->write('
+firsttabcreated = false;');
+$main->write('
+prevkey = \'\';');
+$main->write('
 for (var key in results) {
 	var obj = results[key];
 	//alert(key);
@@ -448,7 +454,8 @@ for (var key in results) {
 	}
 	else {
 		eval("set[\"container\"] = this.tab"+prevkey+"Box.id;");
-	}
+	}');
+$main->write('
 	set["vpos"] = 3;
 	set["vposunit"] = "rem";
 	eval("var tab"+key+"Box = new Box(set);");
@@ -465,16 +472,20 @@ for (var key in results) {
 	prevkey = key;
 }
 
-
+');
+$main->write('
 
 var set = new Object();
-set["container"] = this.contentPanel.id;
+set["container"] = this.contentPanel.id;');
+$main->write('
 set["css"] = "overflow-x: scroll; overflow-y: scroll;";
 this.pagecontents = new Box(set);
 set=null;
 this.pagecontents.show("none");
 
-//help from http://stackoverflow.com/questions/2820249/base64-encoding-and-decoding-in-client-side-javascript / https://developer.mozilla.org/en-US/docs/Web/JavaScript/Base64_encoding_and_decoding
+');
+$main->write('//help from http://stackoverflow.com/questions/2820249/base64-encoding-and-decoding-in-client-side-jav');
+$main->write('ascript / https://developer.mozilla.org/en-US/docs/Web/JavaScript/Base64_encoding_and_decoding
 this.pagecontents.contents = atob(results[initialType][initialTab]);
 console.debug(results[initialType][initialTab]);
 this.pagecontents.compute();
@@ -482,8 +493,19 @@ console.debug(this.pagecontents);
 
 var set = new Object();
 set["container"] = this.Ember.id;
-//based on http://stackoverflow.com/questions/3151974/highlight-entire-text-inside-text-field-with-single-click and http://stackoverflow.com/questions/2984311/delete-default-value-of-an-input-text-on-click
-set["contents"] = "<span style=\"font-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\"><form><input type=\"hidden\" name=\"wint\" value=\"1\" /><input type=\"hidden\" name=\"wintNeeded\" value=\"inforesource\" /><input type=\"text\" list=\"prefilled\" onblur=\"if (this.value == \'\') {this.value = \''.str_replace('\'','\\\'',$topic).'\';}\" onfocus=\"if (this.value == \''.str_replace('\'','\\\'',$topic).'\') {this.value = \'\';}\" style=\"background-color: rgba(0,0,0,0); border-style: none; text-align:center;font-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\" name=\"topic\" value=\"'.$topic.'\"><datalist id=\"prefilled\"><option value=\"'.$topic.'\"></datalist></form></span>";
+//based on http://stackoverflow.com/questions/3151974/highlight-entire-text-inside-text-field-with-single-click an');
+$main->write('d http://stackoverflow.com/questions/2984311/delete-default-value-of-an-input-text-on-click');
+$main->write('set["contents"] = "<span style=\"font-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\"><form><input ty');
+$main->write('pe=\"hidden\" name=\"wint\" value=\"1\" /><input type=\"hidden\" name=\"wintNeeded\"');
+$main->write(' value=\"inforesource\" /><input type=\"text\" list=\"prefilled\" onblur=\"if (thi');
+$main->write('s.value == \'\') {this.value = \'');
+$main->write(str_replace('\'','\\\'',$topic));
+$main->write('\';}\" onfocus=\"if (this.value == \'');
+$main->write(str_replace('\'','\\\'',$topic));
+$main->write('\') {this.value = \'\';}\" style=\"background-color: rgba(0,0,0,0); border-style: none; text-align:center;font');
+$main->write('-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\" name=\"topic\" value=\"');
+$main->write($topic.'\"><datalist id=\"prefilled\"><option value=\"');
+$main->write($topic.'\"></datalist></form></span>";
 set["heighth"] = 3;
 set["hunit"] = "rem";
 set["vpos"] = 0.75;
