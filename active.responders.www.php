@@ -417,28 +417,126 @@ function inforesource()
 	$title = $title . ' | ' . $displayType . 'Information Resource';
 	$main = new FluidActive('Information Resource');
 	$main->write(file_get_contents("inforesource.fluidScriptedUI"));
+	$main->write('
+
+/* Information on ...→ from */
+
+var set = new Object();
+set["container"] = this.logoPanel.id;
+set["heighth"] = 1.7;
+set["hunit"] = "rem";
+this.l1h = new Box(set);
+set=null;
+this.l1h.show("none");
+
+var set = new Object();
+set["container"] = this.logoPanel.id;
+set["heighth"] = 3;
+set["hunit"] = "rem";
+set["width"] = 15;
+set["wunit"] = "rem";
+set["hpattach"] = 50;
+set["hpos"] = 50;
+set["vpos"] = -0.5;
+set["vposunit"] = "rem";
+//set["hposunit"] = "rem";
+this.searchp = new Box(set);
+set=null;
+this.searchp.show("none");
+
+var set = new Object();
+set["container"] = this.searchp.id;
+set["contents"] = "<span style=\"font-size:1rem;line-height:1rem;font-weight:bold;\">'.$topic.'</span>";
+set["heighth"] = 1.5;
+set["hunit"] = "rem";
+set["vpos"] = 1;
+set["vposunit"] = "rem";
+set["css"] = "overflow-x: hidden; overflow-y: hidden;"
+this.spl = new Box(set);
+set=null;
+this.spl.show("none");
+
+var set = new Object();
+set["container"] = this.logoPanel.id;
+set["contents"] = "<br><span style=\"font-size:1.7rem;font-weight:bold;\">Information Resource</span>";
+this.logo = new Box(set);
+set=null;
+this.logo.show("none");
+
+var set = new Object();
+set["hpanchor"] = this.logoPanel.id;
+set["hpos"] = 1;
+set["hposunit"] = "rem";
+
+set["contents"] = "<br><span style=\"font-size:1.7rem;font-weight:bold;\">Information Resource</span>";
+this.logo = new Box(set);
+set=null;
+this.logo.show("none");
+
+$(window).load(function() {
+	Ember.show("zoomhalffade");
+});');
+
     $main->close();
+    //Pasting this next block here for archival purposes, lol, nothing to do with this project but I don't really have anywhere better to put it. This was a conversation via join.me (https://join.me/762-915-672 ) hosted by SupaYoshi who asked a question in Freenode's #css. I'm kyan / You@All :)
+    /*
+    Host@All: So it has a little distance
+Host@All: :D
+Viewer 1@All: looks better without
+Host@All: yes
+Host@All: So how do I make it without :)
+Host@All: Cus it is width now	
+Viewer 1@All: negative margin
+Host@All: O.o how to do tha
+Viewer 1@All: 1 sec let me load the page
+Host@All: sure tyt :O
+You@All: Kyan here watching the project :)
+Host@All: Awesomeeee :o
+Viewer 1@All: Im Blaster btw the guy who's skills pale in comparison to kyan
+You@All: I'm not really sure what to do now though, I'm pretty much at the limits of my abilites
+You@All: ummm no I'm not that good
+You@All: :P thanks though
+Host@All: lmao
+Viewer 1@All: .input-prepend.input-append .add-on:first-child, .input-prepend.input-append .btn:first-child { margin-right:-4px!important }
+Host@All: eh nuh?
+Viewer 1@All: is that what you wanted?
+Host@All: idk what changed?
+Viewer 1@All: little space between input addon
+Host@All: eh no that was fine already :D
+Host@All: heheh
+Host@All: XD
+Host@All: i mean this
+Viewer 1@All: oh sorry
+You@All: Ohhhh!
+You@All: I was confused too
+Host@All: hehe np :P
+Host@All: sorry!
+You@All: trying to figure what was going on, LOL
+You@All: it's ok :D
+Viewer 1@All: #form-login-remember label { margin-left:8px!important; }
+
+    */
 	//some js from http://stackoverflow.com/questions/4742746/jquery-open-new-window-on-page-load, http://www.4guysfromrolla.com/demos/OnBeforeUnloadDemo1.htm, http://kbeezie.com/cross-browser-exit-pop/, and http://forums.devarticles.com/javascript-development-22/how-to-stop-browser-from-closing-using-javascript-8458.html
 	//some css from http://stackoverflow.com/questions/1150163/stretch-and-scale-a-css-image-in-the-background-with-css-only and http://stackoverflow.com/questions/13367403/background-image-doesnt-cover-entire-screen
 	//some code from from active.fluid.php
 	//help from http://www.w3schools.com/cssref/css3_pr_background-size.asp
-    //echo '<html><head><title>' . $ptitle . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><script language="JavaScript">
-  //window.onbeforeunload = confirmExit;
-  function confirmExit()
-  {
-  	//document.write("<iframe width=\'100%\' height=\'100%\' frameborder=\'0\' src=\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\' marginwidth=\'0\' marginheight=\'0\' vspace=\'0\' hspace=\'0\' allowtransparency=\'true\' scrolling=\'no\'></iframe>"); 
-    return "Are you sure you want to exit this page?";
-    
-  }
-//from http://stackoverflow.com/questions/7064998/how-to-make-a-link-open-multiple-pages-when-clicked
-$(\'a\').click(function(e) {
-	//e.preventDefault();
-    window.open(\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\');
-    
-});
-</script><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/><style type="text/css"> body {background: url(\'4278136735_20329c6cb7_o.jpg\')  no-repeat center center fixed; background-size:cover;} #content { position: fixed; left: 1em; top:1em; right: 1em; bottom: 1em; background-color: rgba(255,255,255,0); overflow-x: scroll; overflow-y:scroll; } </style></head><body><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=1"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><div id="content">
-<div id="header" style=" position: fixed; left: 1em; top:1em; right: 1em; bottom: 1em; background-color: rgba(255,255,255,0.6); "></div>
-<h1>Information on '.$topic.'</h1>'.$results.'<h1>Website attribution</h1><ul><li>Theme: <a href="http://designmodo.com">Designmodo</a></li><li>Background image: <a href="http://www.flickr.com/photos/caseyyee/4278136735/">"4278136735_20329c6cb7_o.jpg": by Casey Yee</a>. CC Attribution Share-Alike 2.0.</li><li><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></li></ul></div></body></html>';
+//     echo '<html><head><title>' . $ptitle . '</title><script src="/d/jquery-2.1.0.min.js" type="text/javascript"></script><script language="JavaScript">
+//   //window.onbeforeunload = confirmExit;
+//   function confirmExit()
+//   {
+//   	//document.write("<iframe width=\'100%\' height=\'100%\' frameborder=\'0\' src=\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\' marginwidth=\'0\' marginheight=\'0\' vspace=\'0\' hspace=\'0\' allowtransparency=\'true\' scrolling=\'no\'></iframe>"); 
+//     return "Are you sure you want to exit this page?";
+//     
+//   }
+// //from http://stackoverflow.com/questions/7064998/how-to-make-a-link-open-multiple-pages-when-clicked
+// $(\'a\').click(function(e) {
+// 	//e.preventDefault();
+//     window.open(\'http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=bnner\');
+//     
+// });
+// </script><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/><style type="text/css"> body {background: url(\'4278136735_20329c6cb7_o.jpg\')  no-repeat center center fixed; background-size:cover;} #content { position: fixed; left: 1em; top:1em; right: 1em; bottom: 1em; background-color: rgba(255,255,255,0); overflow-x: scroll; overflow-y:scroll; } </style></head><body><script language="javascript" src="http://chelhi.ptp33.com/pop.php?username=chelhi&max=1"></script><noscript><a href="http://www.paid-to-promote.net/" target="_blank">Paid To Popup</a></noscript><div id="content">
+// <div id="header" style=" position: fixed; left: 1em; top:1em; right: 1em; bottom: 1em; background-color: rgba(255,255,255,0.6); "></div>
+// <h1>Information on '.$topic.'</h1>'.$results.'<h1>Website attribution</h1><ul><li>Theme: <a href="http://designmodo.github.io/Flat-UI/">Flat UI</a> from <a href="http://designmodo.com">Designmodo</a></li><li>Background image: <a href="http://www.flickr.com/photos/caseyyee/4278136735/">"4278136735_20329c6cb7_o.jpg": by Casey Yee</a>. CC Attribution Share-Alike 2.0.</li><li><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></li></ul></div></body></html>';
 } 
 function bnner()
 {
