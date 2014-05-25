@@ -206,7 +206,7 @@ function Box(set) {
 	AVAILABLE     heighth: Width of this box relative to the hanchor box.
 	AVAILABLE     hunit: Units (%, relative, or possibly rem?) of heighth. The value "relative" will set the heighth equal to the specified percentage of the computed width.
 	UNTESTED      heighthpad: Additional padding to add to the heighth
-	UNTESTED      heighthpadunits: Units (%, px, or rem) of heighthpad
+	UNTESTED      heighthpadunit: Units (%, px, or rem) of heighthpad
 	UNTESTED      heighthpadattach: ID of the box to which this box's heighthpad should be relative. ID 0 is the browser window.
 	
 	
@@ -224,7 +224,7 @@ function Box(set) {
 	AVAILABLE     width: Width of this box relative to the wanchor box.
 	AVAILABLE     wunit: Units (%, or possibly rem?) of width
 	UNTESTED      widthpad: Additional padding to add to the width
-	UNTESTED      widthpadunits: Units (%, px, or rem) of widthpad
+	UNTESTED      widthpadunit: Units (%, px, or rem) of widthpad
 	UNTESTED      widthpadattach: ID of the box to which this box's widthpad should be relative. ID 0 is the browser window.
 	
 	
@@ -1077,6 +1077,9 @@ function Panel(container,style,backdrop) {
 		set["background"] = "rgba(255,255,255,1)";
 		//set["border"] = "1px solid rgba(130,130,255,1)";
 		set["border"] = "0.15rem solid rgba(0,179,255,1)";
+	}
+	else if(style == "whiteplain") {
+		set["background"] = "rgba(255,255,255,0.7)";
 	}
 	else if(style == "solidwhitevert") {
 		set["background"] = "rgba(255,255,255,1)";

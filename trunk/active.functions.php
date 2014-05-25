@@ -384,13 +384,14 @@ global $urlroot;
 global $domain;
 function url_processor_callback($data) {
 	global $urlroot;
+	global $domain;
 	//echo $urlroot;
 	if(substr($data[2],0,4) != 'http') {
 		if(substr($data[2],0,1) != '/') {
 			$data[2] = $urlroot .'/'. $data[2];
 		}
 		else {
-			
+			$data[2] = $domain . $data[2];
 		}
 	}
 
@@ -399,12 +400,25 @@ function url_processor_callback($data) {
 function get_processed_url($url) {
 	//echo $url;
 	global $urlroot;
+	global $domain;
 	$data = get_url($url);
 	// //based on http://www.sitepoint.com/forums/showthread.php?192267-How-to-get-folder-name-out-of-a-URL
-// 	$parsedUrl = parse_url($url);
-// 	$root = $parsedUrl['path'];  
-// 	echo $root;
-// 	$urlroot = $root;
+	$parsedUrl = parse_url($url);
+	$path = '';
+	if(isset($parsedUrl['path'])) {
+		$path = $parsedUrl['path'];
+	}
+	$query = '';
+	if(isset($parsedUrl['query'])) {
+		$query = $parsedUrl['query'];
+	}
+	$fragment = '';
+	if(isset($parsedUrl['fragment'])) {
+		$fragment = $parsedUrl['fragment'];
+	}
+	$root = str_replace($path.'?'.$query.'#'.$fragment,'',$url);  
+	//echo $root;
+	$domain = $root;
 // based on http://stackoverflow.com/questions/5939412/php-string-function-to-get-substring-before-the-last-occurrence-of-a-character
 $string = explode('/', $url);
 array_pop($string);
@@ -438,13 +452,13 @@ $res = implode('/', $string);
 }
 function get_readied_url($url) {
 	$data = get_processed_url($url);
-	$data = str_replace('>>@NEVER__BE__MATCHED1@<<','http://futuramerlin.com/d/r/active.php?wint=1&wintNeeded=inforesource&r=',$data);
+	$data = str_replace('>>@NEVER__BE__MATCHED1@<<','http://futuramerlin.com/d/r/active.php?wint=1&amp;wintNeeded=inforesource&amp;r=',$data);
 	$data = str_replace('>>@NEVER__BE__MATCHED2@<<','',$data);
 	return $data;
 }
 function get_info($topic, $type = 'unknown') {
 	$data = get_readied_url("http://futuramerlin.com/pageview.php?page=render-page.php?search=".$topic);
-	$data = $data . get_readied_url("http://m.bing.com/search/search.aspx?A=webresults&Q=".$topic);
+	$data = $data . get_readied_url("http://m.bing.com/search/search.aspx?A=webresults&amp;Q=".$topic);
 	return $data;
 }
 //based on http://www.php.net/manual/en/function.strip-tags.php#68757
