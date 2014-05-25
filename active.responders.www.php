@@ -397,6 +397,10 @@ function inforesource()
 	if(isset($_REQUEST['type'])) {
 		$type = $_REQUEST['type'];
 	}
+	$tab='overview';
+	if(isset($_REQUEST['tab'])) {
+		$tab = $_REQUEST['tab'];
+	}
 	if(isset($_REQUEST['topic'])) {
 		$topic = $_REQUEST['topic'];
 	}
@@ -414,117 +418,30 @@ function inforesource()
 		$displayType = '';
 	}
 	$results = get_info($topic, $type);
+	$resultsjs = 'var results = { ';
+	//help from http://stackoverflow.com/questions/4329092/multi-dimensional-associative-arrays-in-javascript, http://stackoverflow.com/questions/22815511/foreach-loop-over-multidimensional-associative-array, and http://stackoverflow.com/questions/9833481/key-names-of-associative-arrays
+	foreach($results as $key => $value) {
+		$resultsjs = $resultsjs . titleCase($key) . ': { ';
+		foreach($value as $vkey => $vvalue) {
+			$resultsjs = $resultsjs . titleCase($vkey) . ': \'' . base64_encode($vvalue) . '\', ';
+		}
+		$resultsjs = $resultsjs . '}, ';
+	}
+	$resultsjs = $resultsjs . '};';
 	//print_r($results);
 	$title = $title . ' | ' . $displayType . 'Information Resource';
 	$main = new FluidActive('inforesource',$title);
 	$main->write(file_get_contents("inforesource.fluidScriptedUI"));
-	$main->write('
-
-/* Information on ...→ from */
-
-var set = new Object();
-set["container"] = this.logoPanel.id;
-set["heighth"] = 1.7;
-set["hunit"] = "rem";
-this.l1h = new Box(set);
-set=null;
-this.l1h.show("none");
-
-var set = new Object();
-set["container"] = this.logoPanel.id;
-set["heighth"] = 3;
-set["hunit"] = "rem";
-set["width"] = 15;
-set["wunit"] = "rem";
-set["hpattach"] = 50;
-set["hpos"] = 50;
-set["vpos"] = -0.5;
-set["vposunit"] = "rem";
-//set["hposunit"] = "rem";
-this.searchp = new Box(set);
-set=null;
-this.searchp.show("none");
-
-var set = new Object();
-set["container"] = this.searchp.id;
-set["background"] = "rgba(0,0,0,0.4)";
-set["css"] = "overflow-x: hidden; overflow-y: hidden;"
-set["heighth"] = 2.5;
-set["hunit"] = "rem";
-set["vpos"] = 0.5;
-set["vposunit"] = "rem";
-set["textsize"] = "1.5rem";
-set["css"] = "border-radius:1rem;";
-this.spl = new Box(set);
-set=null;
-this.spl.show("none");
-
-var set = new Object();
-set["container"] = this.searchp.id;
-set["hconstrain"] = false;
-set["contents"] = "<span style=\"font-size:1rem;line-height:1rem;font-weight:bold;\">Information on: </span>";
-set["heighth"] = 3;
-set["hunit"] = "rem";
-set["hpos"] = 0;
-set["width"] = 15;
-set["wunit"] = "rem";
-set["hpattach"] = 100;
-set["hpanchor"] = this.spl.id;
-set["vpos"] = 0;
-set["vposunit"] = "rem";
-set["textsize"] = "1.5rem";
-set["widthpad"] = -1;
-set["widthpadunit"] = "rem";
-set["css"] = "text-align: right !important; margin-right: 1rem !important;"
-this.infolabel = new Box(set);
-set=null;
-this.infolabel.show("none");
-
-var set = new Object();
-set["container"] = this.searchp.id;
-set["hconstrain"] = false;
-set["contents"] = "<span style=\"font-size:1rem;line-height:1rem;font-weight:bold;font-style:italic;\"> from</span>";
-set["heighth"] = 3;
-set["hunit"] = "rem";
-set["hpos"] = 100;
-set["width"] = 15;
-set["wunit"] = "rem";
-set["hpattach"] = 0;
-set["hpanchor"] = this.spl.id;
-set["vpos"] = 0;
-set["vposunit"] = "rem";
-set["textsize"] = "1.5rem";
-set["lmar"] = 1;
-set["lmarunit"] = "rem";
-set["css"] = "text-align: left !important; margin-right: 1rem !important;"
-this.fromlabel = new Box(set);
-set=null;
-this.fromlabel.show("none");
-
-var set = new Object();
-set["container"] = this.logoPanel.id;
-set["contents"] = "<br><span style=\"font-size:1.7rem;font-weight:bold;\">Information Resource</span>";
-this.logo = new Box(set);
-set=null;
-this.logo.show("none");
-/*
-var set = new Object();
-set["container"] = this.logoPanel.id;
-set["hpanchor"] = this.logoPanel.id;
-set["hpos"] = 1;
-set["hposunit"] = "rem";
-
-set["contents"] = "<br><span style=\"font-size:1.7rem;font-weight:bold;\">Information Resource</span>";
-this.logo = new Box(set);
-set=null;
-this.logo.show("none"); */
+	$main->write("\n\n" . $resultsjs . ' 
+var initialType = \''.titleCase($type).'\';
+var initialTab = \''.titleCase($tab).'\';
 
 var set = new Object();
 set["container"] = this.contentPanel.id;
 set["contents"] = "'.$results['unknown']['overview'].'";
 this.defaultcontent = new Box(set);
 set=null;
-this.defaultcontent.show("none");
+this.defaultcontent.show("fade");
 
 var set = new Object();
 set["container"] = this.Ember.id;
