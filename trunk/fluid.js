@@ -185,6 +185,7 @@ function Box(set) {
 	UNTESTED      bluratt: element to use as the blur background
 	AVAILABLE     opacity: CSS opacity value
 	AVAILABLE     css: Any other arbitrary CSS to specify for this box
+	AVAILABLE     textsize: Text size (CSS font-size property)
 	
 	
 	~~BACKDROPS (e. g., for modals)~~
@@ -308,6 +309,7 @@ function Box(set) {
 	this.enter = undefined;
 	this.leave = undefined;
 	this.tap = undefined;
+	this.textsize = undefined;
 	this.css = "";
 	this.bordercolor = undefined;
 	//Override values if provided
@@ -389,6 +391,7 @@ function Box(set) {
 	if(typeof set["enter"] !== "undefined") { this.enter = set["enter"];}
 	if(typeof set["leave"] !== "undefined") { this.leave = set["leave"];}
 	if(typeof set["tap"] !== "undefined") { this.tap = set["tap"];}
+	if(typeof set["textsize"] !== "undefined") { this.textsize = set["textsize"];}
 	$(getAnchor(this.container)).append("<div id=\""+newId()+"\" class=\""+this.group+"\" style=\"display:none;"+this.css+"\">"+this.contents+"</div>");
 	this.id=getId();
 	this.shown = false;
@@ -664,6 +667,7 @@ function Box(set) {
 		$(this.anchor).mouseover(this.enter);
 		$(this.anchor).mouseout(this.leave);
 		$(this.anchor).click(this.tap);
+		if(typeof set["textsize"] !== "undefined") { $(this.anchor).css("font-size",this.textsize);}
 	};
 
 	$(this.anchor).css('opacity',"0");
@@ -1080,6 +1084,9 @@ function Panel(container,style,backdrop) {
 	}
 	else if(style == "whiteplain") {
 		set["background"] = "rgba(255,255,255,0.7)";
+	}
+	else if(style == "blackplain") {
+		set["background"] = "rgba(0,0,0,0.7)";
 	}
 	else if(style == "solidwhitevert") {
 		set["background"] = "rgba(255,255,255,1)";

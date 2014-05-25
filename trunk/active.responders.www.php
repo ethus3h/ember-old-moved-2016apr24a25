@@ -446,15 +446,59 @@ this.searchp.show("none");
 
 var set = new Object();
 set["container"] = this.searchp.id;
-set["contents"] = "<span style=\"font-size:1rem;line-height:1rem;font-weight:bold;\">'.$topic.'</span>";
-set["heighth"] = 1.5;
-set["hunit"] = "rem";
-set["vpos"] = 1;
-set["vposunit"] = "rem";
+set["background"] = "rgba(0,0,0,0.4)";
 set["css"] = "overflow-x: hidden; overflow-y: hidden;"
+set["heighth"] = 2.5;
+set["hunit"] = "rem";
+set["vpos"] = 0.5;
+set["vposunit"] = "rem";
+set["textsize"] = "1.5rem";
+set["css"] = "border-radius:1rem;";
 this.spl = new Box(set);
 set=null;
 this.spl.show("none");
+
+var set = new Object();
+set["container"] = this.searchp.id;
+set["hconstrain"] = false;
+set["contents"] = "<span style=\"font-size:1rem;line-height:1rem;font-weight:bold;\">Information on: </span>";
+set["heighth"] = 3;
+set["hunit"] = "rem";
+set["hpos"] = 0;
+set["width"] = 15;
+set["wunit"] = "rem";
+set["hpattach"] = 100;
+set["hpanchor"] = this.spl.id;
+set["vpos"] = 0;
+set["vposunit"] = "rem";
+set["textsize"] = "1.5rem";
+set["widthpad"] = -1;
+set["widthpadunit"] = "rem";
+set["css"] = "text-align: right !important; margin-right: 1rem !important;"
+this.infolabel = new Box(set);
+set=null;
+this.infolabel.show("none");
+
+var set = new Object();
+set["container"] = this.searchp.id;
+set["hconstrain"] = false;
+set["contents"] = "<span style=\"font-size:1rem;line-height:1rem;font-weight:bold;font-style:italic;\"> from</span>";
+set["heighth"] = 3;
+set["hunit"] = "rem";
+set["hpos"] = 100;
+set["width"] = 15;
+set["wunit"] = "rem";
+set["hpattach"] = 0;
+set["hpanchor"] = this.spl.id;
+set["vpos"] = 0;
+set["vposunit"] = "rem";
+set["textsize"] = "1.5rem";
+set["lmar"] = 1;
+set["lmarunit"] = "rem";
+set["css"] = "text-align: left !important; margin-right: 1rem !important;"
+this.fromlabel = new Box(set);
+set=null;
+this.fromlabel.show("none");
 
 var set = new Object();
 set["container"] = this.logoPanel.id;
@@ -462,8 +506,9 @@ set["contents"] = "<br><span style=\"font-size:1.7rem;font-weight:bold;\">Inform
 this.logo = new Box(set);
 set=null;
 this.logo.show("none");
-
+/*
 var set = new Object();
+set["container"] = this.logoPanel.id;
 set["hpanchor"] = this.logoPanel.id;
 set["hpos"] = 1;
 set["hposunit"] = "rem";
@@ -471,7 +516,19 @@ set["hposunit"] = "rem";
 set["contents"] = "<br><span style=\"font-size:1.7rem;font-weight:bold;\">Information Resource</span>";
 this.logo = new Box(set);
 set=null;
-this.logo.show("none");
+this.logo.show("none"); */
+
+var set = new Object();
+set["container"] = this.Ember.id;
+//based on http://stackoverflow.com/questions/3151974/highlight-entire-text-inside-text-field-with-single-click
+set["contents"] = "<span style=\"font-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\"><form><input type=\"hidden\" name=\"wint\" value=\"1\" /><input type=\"hidden\" name=\"wintNeeded\" value=\"inforesource\" /><input type=\"text\" onclick=\"this.select()\" style=\"background-color: rgba(0,0,0,0); border-style: none; text-align:center;font-size:1rem;color:#fff;line-height:1rem;font-weight:bold;\" name=\"topic\" value=\"'.$topic.'\"></form></span>";
+set["heighth"] = 3;
+set["hunit"] = "rem";
+set["vpos"] = 0.75;
+set["vposunit"] = "rem";
+this.sbform = new Box(set);
+set=null;
+this.sbform.show("none");
 
 $(window).load(function() {
 	Ember.show("zoomhalffade");
