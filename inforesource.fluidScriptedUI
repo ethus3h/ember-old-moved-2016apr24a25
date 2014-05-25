@@ -23,3 +23,37 @@ this.lc.show("none");
 
 this.logoPanel = new Panel(this.lc.id, "whiteplain", false);
 this.logoPanel.show("none");
+
+var set = new Object();
+set["container"] = this.Ember.id;
+set["vpos"] = 6;
+set["vposunit"] = "rem";
+set["hpos"] = 16;
+set["hposunit"] = "rem";
+set["widthpad"] = -1;
+set["widthpadunit"] = "rem";
+set["heighthpad"] = -1;
+set["heighthpadunit"] = "rem";
+this.cc = new Box(set);
+set=null;
+this.cc.show("none");
+
+this.contentPanel = new Panel(this.cc.id, "whiteplain", false);
+this.contentPanel.show("none");
+
+var set = new Object();
+set["container"] = this.Ember.id;
+set["vpos"] = 6;
+set["vposunit"] = "rem";
+set["hpos"] = 1;
+set["hposunit"] = "rem";
+set["width"] = 15;
+set["wunit"] = "rem";
+set["heighthpad"] = -1;
+set["heighthpadunit"] = "rem";
+this.fc = new Box(set);
+set=null;
+this.fc.show("none");
+
+this.filterPanel = new Panel(this.fc.id, "blackplain", false);
+this.filterPanel.show("none");
