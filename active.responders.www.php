@@ -439,8 +439,10 @@ var initialTab = \''.titleCase($tab).'\';
 //based on http://stackoverflow.com/questions/921789/how-to-loop-through-javascript-object-literal-with-objects-as-members
 firsttabcreated = false;
 prevkey = \'\';
+//Make tabs work like Futuramerlin.com music page?
 for (var key in results) {
 	if(key.length > 0) {
+		//IIRC (which I\'m pretty darn sure I do), "sttodo" meant "string to do", and "sttodp" was the successor of that alphabetically
 		var obj = results[key];
 		//alert(key);
 		var set = new Object();
