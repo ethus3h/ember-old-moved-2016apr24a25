@@ -26,7 +26,7 @@ this.logoPanel.show("none");
 
 var set = new Object();
 set["container"] = this.Ember.id;
-set["vpos"] = 6;
+set["vpos"] = 9;
 set["vposunit"] = "rem";
 set["hpos"] = 16;
 set["hposunit"] = "rem";
@@ -43,13 +43,13 @@ this.contentPanel.show("none");
 
 var set = new Object();
 set["container"] = this.Ember.id;
-set["vpos"] = 6;
+set["vpos"] = 9;
 set["vposunit"] = "rem";
 set["hpos"] = 1;
 set["hposunit"] = "rem";
 set["width"] = 15;
 set["wunit"] = "rem";
-set["heighthpad"] = -1;
+set["heighthpad"] = -4;
 set["heighthpadunit"] = "rem";
 this.fc = new Box(set);
 set=null;
@@ -57,3 +57,94 @@ this.fc.show("none");
 
 this.filterPanel = new Panel(this.fc.id, "blackplain", false);
 this.filterPanel.show("none");
+
+var set = new Object();
+set["container"] = this.Ember.id;
+set["vpos"] = 6;
+set["vposunit"] = "rem";
+set["hpos"] = 1;
+set["hposunit"] = "rem";
+set["width"] = 15;
+set["wunit"] = "rem";
+set["heighth"] = 3;
+set["hunit"] = "rem";
+this.fub = new Box(set);
+set=null;
+this.fub.show("none");
+
+this.filterupbtnPanel = new Panel(this.fub.id, "blackopplain", false);
+this.filterupbtnPanel.show("none");
+
+var set = new Object();
+set["container"] = this.Ember.id;
+set["hpos"] = 1;
+set["hposunit"] = "rem";
+set["vptattach"] = 100;
+set["vpattach"] = 100;
+set["tmar"] = -1;
+set["tmarunit"] = "rem";
+set["width"] = 15;
+set["wunit"] = "rem";
+set["heighth"] = 3;
+set["hunit"] = "rem";
+this.fud = new Box(set);
+set=null;
+this.fud.show("none");
+
+this.filterupbtnPanel = new Panel(this.fud.id, "blackopplain", false);
+this.filterupbtnPanel.show("none");
+
+var set = new Object();
+set["container"] = this.Ember.id;
+set["vpos"] = 6;
+set["vposunit"] = "rem";
+set["hpos"] = 19;
+set["hposunit"] = "rem";
+set["widthpad"] = -4;
+set["widthpadunit"] = "rem";
+set["heighth"] = 3;
+set["hunit"] = "rem";
+this.tr = new Box(set);
+set=null;
+this.tr.show("none");
+
+this.tabrowPanel = new Panel(this.tr.id, "greyplain", false);
+this.tabrowPanel.show("none");
+
+var set = new Object();
+set["container"] = this.Ember.id;
+set["vpos"] = 6;
+set["vposunit"] = "rem";
+set["hpos"] = 16;
+set["hposunit"] = "rem";
+set["width"] = 3;
+set["wunit"] = "rem";
+set["heighth"] = 3;
+set["hunit"] = "rem";
+this.tlb = new Box(set);
+set=null;
+this.tlb.show("none");
+
+this.tableftbuttonPanel = new Panel(this.tlb.id, "darkgreyplain", false);
+this.tableftbuttonPanel.show("none");
+
+var set = new Object();
+set["container"] = this.Ember.id;
+set["hconstrain"] = false;
+set["vpos"] = 6;
+set["vposunit"] = "rem";
+set["hpos"] = 100;
+set["hposunit"] = "%";
+set["lmar"] = -1;
+set["lmarunit"] = "rem";
+set["hptattach"] = 100;
+set["width"] = 3;
+set["wunit"] = "rem";
+set["heighth"] = 3;
+set["hunit"] = "rem";
+this.trb = new Box(set);
+set=null;
+this.trb.show("none");
+
+this.tabrightbuttonPanel = new Panel(this.trb.id, "darkgreyplain", false);
+this.tabrightbuttonPanel.show("none");

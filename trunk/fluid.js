@@ -417,6 +417,10 @@ function Box(set) {
 	$(this.anchor).css('background-size','cover');
 	$(this.anchor).css('position','fixed');
 	this.compute = function() {
+		$contentsCurrent = $(this.anchor).html();
+		if($contentsCurrent != this.contents) {
+			$contentsCurrent = $(this.anchor).html(this.contents);
+		}
 		if(this.wunit == "rem") {
 			this.width = this.width * getRootElementEmSize();
 			this.wunit = "px";
@@ -1085,8 +1089,17 @@ function Panel(container,style,backdrop) {
 	else if(style == "whiteplain") {
 		set["background"] = "rgba(255,255,255,0.7)";
 	}
+	else if(style == "greyplain") {
+		set["background"] = "rgba(127,127,127,0.7)";
+	}
+	else if(style == "darkgreyplain") {
+		set["background"] = "rgba(63,63,63,0.7)";
+	}
 	else if(style == "blackplain") {
 		set["background"] = "rgba(0,0,0,0.7)";
+	}
+	else if(style == "blackopplain") {
+		set["background"] = "rgba(0,0,0,0.9)";
 	}
 	else if(style == "solidwhitevert") {
 		set["background"] = "rgba(255,255,255,1)";

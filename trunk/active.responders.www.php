@@ -414,8 +414,9 @@ function inforesource()
 		$displayType = '';
 	}
 	$results = get_info($topic, $type);
+	//print_r($results);
 	$title = $title . ' | ' . $displayType . 'Information Resource';
-	$main = new FluidActive('Information Resource');
+	$main = new FluidActive('inforesource',$title);
 	$main->write(file_get_contents("inforesource.fluidScriptedUI"));
 	$main->write('
 
@@ -517,6 +518,13 @@ set["contents"] = "<br><span style=\"font-size:1.7rem;font-weight:bold;\">Inform
 this.logo = new Box(set);
 set=null;
 this.logo.show("none"); */
+
+var set = new Object();
+set["container"] = this.contentPanel.id;
+set["contents"] = "'.$results['unknown']['overview'].'";
+this.defaultcontent = new Box(set);
+set=null;
+this.defaultcontent.show("none");
 
 var set = new Object();
 set["container"] = this.Ember.id;
