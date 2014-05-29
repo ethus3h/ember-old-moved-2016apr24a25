@@ -442,56 +442,66 @@ function CoalIntakeHandler()
 		$carray = str_split($data,524288);
 		$blockList = '';
 		include('Crypt/RSA.php');
-// 		foreach($carray as $chunk) {
-// 			//echo $chunk;
-// 			$chcount = 0;
-// 			chunk:
-// 			$chcount++;
-// 			$compression = "bzip2";
-// 			$compressed = bzcompress($chunk);
-// 			global $coalPrivateKey;
-// 			global $coalPublicKey;
-// 			$rsa = new Crypt_RSA();
-// 			$rsa->loadKey($coalPublicKey); // public key
-// 			$plaintext = $compressed;
-// 			$ciphertext = $rsa->encrypt($plaintext);
-// 			$rsa->loadKey($coalPrivateKey); // private key
-// 			if($rsa->decrypt($ciphertext) != $plaintext) {
-// 				if($chcount < 10) {
-// 					goto chunk;
-// 				}
-// 				else {
-// 					$error = 4;
-// 				}
-// 			}
-// 			$encpar = par($ciphertext);
-// 			$encmd5 = amd5($ciphertext);
-// 			$enccrc = crc($ciphertext);
-// 			$encsha = sha($ciphertext);
-// 			$encs512 = s512($ciphertext);
-// 			$ichunkcount = 0;
-// 			ichunk:
-// 			$ichunkcount++;
-// 			//When chunks are handled by a separate system, replace this with a cURL request to the CoalChunkIntakeHandler.
-// 			$icRes = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512,$compression);
-// 			$newBlockId = $icRes[0];
-// 			if($icRes[1] != 0) {
-// 				if($ichunkcount < 10) {
-// 					goto ichunk;
-// 				}
-// 				else {
-// 					$error = 9;
-// 				}
-// 			}
-// 			else {
-// 				$error = 10;
-// 			}
-// 			$bins = ',';
-// 			if(strlen($blockList) == 0) {
-// 				$bins = '';
-// 			}
-// 			$blockList = $blockList . $bins . $newBlockId;
-// 		}
+		foreach($carray as $chunk) {
+			echo 'Coal intake handler begun step 4.1<br>';
+			//echo $chunk;
+			$chcount = 0;
+			chunk:
+			$chcount++;
+			$compression = "bzip2";
+			$compressed = bzcompress($chunk);
+			echo 'Coal intake handler completed step 4.1<br>';
+			global $coalPrivateKey;
+			global $coalPublicKey;
+			$rsa = new Crypt_RSA();
+			$rsa->loadKey($coalPublicKey); // public key
+			$plaintext = $compressed;
+			$ciphertext = $rsa->encrypt($plaintext);
+			$rsa->loadKey($coalPrivateKey); // private key
+			echo 'Coal intake handler completed step 4.2<br>';
+			if($rsa->decrypt($ciphertext) != $plaintext) {
+				if($chcount < 10) {
+					goto chunk;
+				}
+				else {
+					$error = 4;
+				}
+			}
+			echo 'Coal intake handler completed step 4.3<br>';
+			$encpar = par($ciphertext);
+			$encmd5 = amd5($ciphertext);
+			$enccrc = crc($ciphertext);
+			$encsha = sha($ciphertext);
+			$encs512 = s512($ciphertext);
+			$ichunkcount = 0;
+			ichunk:
+			echo 'Coal intake handler begun step 4.4<br>';
+			$ichunkcount++;
+			//When chunks are handled by a separate system, replace this with a cURL request to the CoalChunkIntakeHandler.
+			echo 'Coal intake handler completed step 4.4<br>';
+			echo 'Coal intake handler begun step 4.5: requesting chunk insertion<br>';
+			$icRes = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512,$compression);
+			echo 'Coal intake handler completed step 4.5<br>';
+			$newBlockId = $icRes[0];
+			if($icRes[1] != 0) {
+				if($ichunkcount < 10) {
+					goto ichunk;
+				}
+				else {
+					$error = 9;
+				}
+			}
+			else {
+				$error = 10;
+			}
+			echo 'Coal intake handler completed step 4.6<br>';
+			$bins = ',';
+			if(strlen($blockList) == 0) {
+				$bins = '';
+			}
+			$blockList = $blockList . $bins . $newBlockId;
+			echo 'Coal intake handler completed step 4.7<br>';
+		}
 		echo 'Length: '.$length.'<br>';
 		if($length == 0) {
 			$blockList = '';
