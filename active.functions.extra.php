@@ -289,87 +289,103 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 }
 function retrieveChunk($id)
 {
-	$db               = new FractureDB('futuqiur_coalchunks');
-	$rcerror = 0;
-	$rccount = 0;
-	$rcpcount = 0;
-	retrievechunk:
-	//Get chunk address from database by ID
-	echo 'Getting metadata for chunk '.$id;
-	$chunkMeta = $db->getRow('coalchunks', 'id', $id);
-	//print_r($chunkMeta);
-	$chunkStorage = $chunkMeta['storage'];
-	$chunkAddress = $chunkMeta['address'];
-	$chunkStoragePrefix = '';
-	switch(trim($chunkStorage)) {
-		case "ia":
-			$chunkStoragePrefix = "http://archive.org/download/";
-			break;
+	if(strlen($id) < 1) {
+		echo 'information code 32<br>';
 	}
-	$chunkLocation = $chunkStoragePrefix+$chunkAddress;
-	//download chunk
-	$chunkData = get_url($chunkLocation);
-	//check retrieved chunk checksums
-	$cklen = strlen($chunkData);
-	$ckpar = par($chunkData);
-	$ckmd5 = amd5($chunkData);
-	$ckcrc = crc($chunkData);
-	$cksha = sha($chunkData);
-	$cks512 = s512($chunkData);
-	$chlen = $chunkMeta['length'];
-	$chpar = $chunkMeta['parity'];
-	$chmd5 = $chunkMeta['md5'];
-	$chsha = $chunkMeta['sha'];
-	$chcrc = $chunkMeta['crc'];
-	$chs512 = $chunkMeta['s512'];
-	if(($cklen != $chlen) || ($ckpar != $chpar) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($ckcrc != $chcrc) || ($cks512 != $chs512)) {
-		if($rccount < 10) {
-			echo 'information code 29';
-			$rccount++;
-			goto retrievechunk;
+	else {
+		'Chunk retrieval function begun<br>';
+		$db               = new FractureDB('futuqiur_coalchunks');
+		$rcerror = 0;
+		$rccount = 0;
+		$rcpcount = 0;
+		'Chunk retrieval function completed step 1<br>';
+		retrievechunk:
+		'<br>Chunk retrieval function begun step 1b<br>';
+		//Get chunk address from database by ID
+		echo '<br>Getting metadata for chunk '.$id;
+		$chunkMeta = $db->getRow('coalchunks', 'id', $id);
+		//print_r($chunkMeta);
+		'Chunk retrieval function completed step 2<br>';
+		$chunkStorage = $chunkMeta['storage'];
+		$chunkAddress = $chunkMeta['address'];
+		$chunkStoragePrefix = '';
+		switch(trim($chunkStorage)) {
+			case "ia":
+				$chunkStoragePrefix = "http://archive.org/download/";
+				break;
 		}
-		else {
-			echo 'error 15';
-			$rcerror = 15;
+		$chunkLocation = $chunkStoragePrefix+$chunkAddress;
+		//download chunk
+		$chunkData = get_url($chunkLocation);
+		'Chunk retrieval function completed step 3<br>';
+		//check retrieved chunk checksums
+		$cklen = strlen($chunkData);
+		$ckpar = par($chunkData);
+		$ckmd5 = amd5($chunkData);
+		$ckcrc = crc($chunkData);
+		$cksha = sha($chunkData);
+		$cks512 = s512($chunkData);
+		$chlen = $chunkMeta['length'];
+		$chpar = $chunkMeta['parity'];
+		$chmd5 = $chunkMeta['md5'];
+		$chsha = $chunkMeta['sha'];
+		$chcrc = $chunkMeta['crc'];
+		$chs512 = $chunkMeta['s512'];
+		if(($cklen != $chlen) || ($ckpar != $chpar) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($ckcrc != $chcrc) || ($cks512 != $chs512)) {
+			if($rccount < 10) {
+				echo '<br>information code 29<br>';
+				$rccount++;
+				goto retrievechunk;
+			}
+			else {
+				echo 'error 15';
+				$rcerror = 15;
+			}
 		}
+		'Chunk retrieval function completed step 4<br>';
+		//Decrypt chunk using chunk key
+		global $chunkPrivateKey;
+		$rsa = new Crypt_RSA();
+		$rsa->loadKey($chunkPrivateKey); // private key
+		$ciphertext = $chunkData;
+		$plaintext = $rsa->decrypt($ciphertext);
+		'Chunk retrieval function completed step 5<br>';
+		//Check decrypted chunk against parity checksum from database
+		$ptlen = strlen($plaintext);
+		$ptpar = par($plaintext);
+		$ptmd5 = amd5($plaintext);
+		$ptcrc = crc($plaintext);
+		$ptsha = sha($plaintext);
+		$pts512 = s512($plaintext);
+		$plen = $chunkMeta['length'];
+		$ppar = $chunkMeta['parity'];
+		if(($plen != $ptlen) || ($ppar != $ptcrc)) {
+			if($rcpcount < 10) {
+				echo 'information code 30<br>';
+				$rcpcount++;
+				goto retrievechunk;
+			}
+			else {
+				$rcerror = 14;
+			}
+		}
+		'Chunk retrieval function completed step 6<br>';
+		$db->close();
+		'Chunk retrieval function completed step 7<br>';
+		//return data and checksums
+		return new cChunk ($plaintext,$ptlen,$ptpar,$ptmd5,$ptcrc,$ptsha,$pts512);
 	}
-	//Decrypt chunk using chunk key
-	global $chunkPrivateKey;
-	$rsa = new Crypt_RSA();
-	$rsa->loadKey($chunkPrivateKey); // private key
-	$ciphertext = $chunkData;
-	$plaintext = $rsa->decrypt($ciphertext);
-	//Check decrypted chunk against parity checksum from database
-	$ptlen = strlen($plaintext);
-	$ptpar = par($plaintext);
-	$ptmd5 = amd5($plaintext);
-	$ptcrc = crc($plaintext);
-	$ptsha = sha($plaintext);
-	$pts512 = s512($plaintext);
-	$plen = $chunkMeta['length'];
-	$ppar = $chunkMeta['parity'];
-	if(($plen != $ptlen) || ($ppar != $ptcrc)) {
-		if($rcpcount < 10) {
-			echo 'information code 30';
-			$rcpcount++;
-			goto retrievechunk;
-		}
-		else {
-			$rcerror = 14;
-		}
-	}
-	$db->close();
-	//return data and checksums
-	return new cChunk ($plaintext,$ptlen,$ptpar,$ptmd5,$ptcrc,$ptsha,$pts512);
 }
 function retrieveCoal($id)
 {
+	'Coal retrieval function begun<br>';
 	$db               = new FractureDB('futuqiur_coal');
 	$rctries = 0;
 	retrievec:
 	$rcerror = 0;
 	$rccount = 0;
 	$rcpcount = 0;
+	'Coal retrieval function completed step 1<br>';
 	retrievecoal:
 	//Get chunk address from database by ID
 	$coalMeta = $db->getRow('coal', 'id', $id);
@@ -388,6 +404,7 @@ function retrieveCoal($id)
 	$rbsha = sha($coalBlockList);
 	$rbcrc = crc($coalBlockList);
 	$rbs512 = s512($coalBlockList);
+	'Coal retrieval function completed step 2<br>';
 //  echo $cblen;
 // 	echo '<br>';
 // 	echo $rblen;
@@ -422,12 +439,17 @@ function retrieveCoal($id)
 			$rcerror = 17;
 		}
 	}
+	'Coal retrieval function completed step 3<br>';
 	$blockListExploded = explode_esc(',',$coalBlockList);
 	$dataToReturn = '';
+	'Coal retrieval function completed step 4<br>';
 	foreach($blockListExploded as $blockId) {
+		'Coal retrieval function running from checkpoint 5a<br>';
 		requestblock:
+		'Coal retrieval function requesting chunk retrieval: begun step 5<br>';
 		//Request block
 		$blockData = retrieveChunk($blockId);
+		'Coal retrieval function completed step 5<br>';
 		//Check returned block data against returned block checksums
 		$rbdata = $blockData->data;
 		$rblen = $blockData->len;
@@ -442,6 +464,7 @@ function retrieveCoal($id)
 		$lbsha = sha($rbdata);
 		$lbcrc = crc($rbdata);
 		$lbs512 = s512($rbdata);
+		'Coal retrieval function completed step 6<br>';
 		if(($rblen != $lblen) || ($rbpar != $lbpar) || ($rbmd5 != $lbmd5) || ($rbsha != $lbsha) || ($rbcrc != $lbcrc) || ($rbs512 != $lbs512)) {
 			if($rccount < 10) {
 				$rccount++;
@@ -453,16 +476,20 @@ function retrieveCoal($id)
 				$rcerror = 18;
 			}
 		}
+		'Coal retrieval function completed step 7<br>';
 		//Decrypt block data using record key
 		global $coalPrivateKey;
 		$rsa = new Crypt_RSA();
 		$rsa->loadKey($coalPrivateKey); // private key
 		$ciphertext = $rbdata;
 		$plaintext = $rsa->decrypt($ciphertext);
+		'Coal retrieval function completed step 8<br>';
 		//Decompress block data
 		$dcblockdata = bzdecompress($plaintext);
+		'Coal retrieval function completed step 9<br>';
 		//Append block data to record data to return
 		$dataToReturn = $dataToReturn.$dcblockdata;
+		'Coal retrieval function completed step 10<br>';
 	}
 	//Check compiled record data against parity checksum
 	$clen = strlen($dataToReturn);
@@ -481,17 +508,21 @@ function retrieveCoal($id)
 			$rcerror = 19;
 		}
 	}
+	'Coal retrieval function completed step 11<br>';
 	$db->close();
 	//return data and checksums
 	return new cCoal ($dataToReturn,$clen,$cpar,$cmd5,$ccrc,$csha,$cs512);
 	resetstatus:
+	'Coal retrieval function reached status checkpoint a<br>';
 	$blocklist = '';
 	$dataToReturn = '';
 	$rctries++;
 	if($rctries < 10) {
+		'Coal retrieval function reached status checkpoint b<br>';
 		goto retrievec;
 	}
 	else {
+		'Coal retrieval function reached status checkpoint c<br>';
 		//Chunk retrieval failed too many times
 		//$rcerror = 16;
 		//echo 'Chunk retrieval failed: 

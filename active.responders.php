@@ -369,6 +369,7 @@ function CoalIntakeHandler()
     global $error;
     if($authorizationKey == $generalAuthKey) {
     	//Request accepted
+    	echo 'Coal intake handler begun<br>';
     	//help on times from http://stackoverflow.com/questions/5849702/php-file-upload-time-created
 		$db               = new FractureDB('futuqiur_coal');
     	$metadata = base64_encode(var_export($_FILES,true));
@@ -394,6 +395,7 @@ function CoalIntakeHandler()
     	//cot file extension — Coal temporary data file; can be any binary data
 		$target_path = $target_path . "data.".$nextId.".cot"; 
 		//print_r($_FILES);
+		echo 'Coal intake handler completed step 1<br>';
     	if(isset($_FILES['uploadedfile'])) {		
 			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
 			} else {
@@ -405,6 +407,7 @@ function CoalIntakeHandler()
 			$error = 6;
 			echo "error 6";
 		}
+		echo 'Coal intake handler completed step 2<br>';
 		$data = null;
 		$stat = null;
 		$smtime = null;
@@ -430,9 +433,12 @@ function CoalIntakeHandler()
 		$sha = sha($data);
 		$s512 = s512($data);
 		$coalcount = 0;
+		echo 'Coal intake handler completed step 3<br>';
 		coal:
-		$coalcount++;
+		echo 'Coal intake handler begun step 4<br>';
+		$coalcount++;		
 		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$ferror.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
+		echo 'Coal intake handler completed step 4<br>';
 		$carray = str_split($data,524288);
 		$blockList = '';
 		include('Crypt/RSA.php');
@@ -486,10 +492,11 @@ function CoalIntakeHandler()
 // 			}
 // 			$blockList = $blockList . $bins . $newBlockId;
 // 		}
-		echo 'Length: '.$length;
+		echo 'Length: '.$length.'<br>';
 		if($length == 0) {
 			$blockList = '';
 		}
+		echo 'Coal intake handler completed step 5<br>';
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
 		$blocklistlen = strlen($blockList);
 		$blocklistpar = par($blockList);
@@ -504,7 +511,10 @@ function CoalIntakeHandler()
 		$db->setField('coal', 'blockssha', $blocklistsha, $newCoalId);
 		$db->setField('coal', 'blocks512', $blocklists512, $newCoalId);
 		//$retrievedCoal = null;
+		echo 'Coal intake handler completed step 5b<br>';
+		echo 'Coal intake requesting coal retrieval: beginning step 6<br>';
 		$retrievedCoal = retrieveCoal($newCoalId);
+		echo 'Coal intake handler completed step 6<br>';
 		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
 			$error = 20;
 		}
@@ -525,11 +535,13 @@ function CoalIntakeHandler()
 				$error = 7;
 			}
 		}
+		echo 'Coal intake handler completed step 7<br>';
 		$db->close();
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
 		echo '<br><br>Added coal '.$newCoalId.'.';
+		echo '<br>Coal intake handler completed step 8<br>';
     }
     else {
     	$error = 1;
