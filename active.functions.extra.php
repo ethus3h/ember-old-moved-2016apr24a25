@@ -282,8 +282,13 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$sc27try++;
 			$sccount++;
 			$identifierId = $newChunkId / 1000;
-			$identifier = $identifierId.guidv4();
-			$fallbackid = $identifierId.guidv4();
+			$randomInt = rand(0,100000);
+			$randomIntAlt = rand(0,100000);
+			//"RECORD33" has no meaning, but it sounds kind of cool and hopefully helps avoid collisions (not that it's needed, really... :P)
+			$identifier = $identifierId.$randomInt.'.COALPROJECT.RECORD33';
+			$fallbackid = $identifierId.$randomIntAlt;
+// 			$identifier = $identifierId.guidv4();
+			//$fallbackid = $identifierId.guidv4();
 			$filename = $newChunkId.'.coal';
 			global $iaAuthKey;
 			global $iaPrivateKey;
@@ -354,7 +359,7 @@ function retrieveChunk($id)
 		$chunkLocation = $chunkStoragePrefix.$chunkAddress;
 		//download chunk
 		if(strlen($chunkLocation) > 0) {
- 			$chunkData = get_url_dummy($chunkLocation);
+ 			$chunkData = get_url($chunkLocation);
 		}
 		else {
 			echo 'status 33<br>';
@@ -375,7 +380,14 @@ function retrieveChunk($id)
 		$chs512 = $chunkMeta['s512'];
 		if(($cklen != $chlen) || ($ckpar != $chpar) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($ckcrc != $chcrc) || ($cks512 != $chs512)) {
 			if($rccount < 10) {
-				echo '<br>information code 29<br>';
+				echo '<br>information code 29.<br>';
+				echo '<br>Retrieved data: '.$chunkData.'<br><br>';				
+				echo 'Retrieved md5 = '.$ckmd5.'; expected '.$chmd5.'.<br>';
+				echo 'Retrieved par = '.$ckpar.'; expected '.$chpar.'.<br>';
+				echo 'Retrieved sha = '.$cksha.'; expected '.$chsha.'.<br>';
+				echo 'Retrieved len = '.$cklen.'; expected '.$chlen.'.<br>';
+				echo 'Retrieved crc = '.$ckcrc.'; expected '.$chcrc.'.<br>';
+				echo 'Retrieved s512 = '.$cks512.'; expected '.$chs512.'.<br>';
 				$rccount++;
 				goto retrievechunk;
 			}
@@ -399,11 +411,14 @@ function retrieveChunk($id)
 		$ptcrc = crc($plaintext);
 		$ptsha = sha($plaintext);
 		$pts512 = s512($plaintext);
-		$plen = $chunkMeta['length'];
-		$ppar = $chunkMeta['parity'];
+		$plen = $chunkMeta['lengthpre'];
+		$ppar = $chunkMeta['paritypre'];
 		if(($plen != $ptlen) || ($ppar != $ptcrc)) {
-			if($rcpcount < 10) {
+			if($rcpcount < 1) {
 				echo 'information code 30<br>';
+				echo '<br>Retrieved data: '.$plaintext.'<br><br>';				
+				echo 'Retrieved len = '.$ptlen.'; expected '.$plen.'.<br>';
+				echo 'Retrieved par = '.$ptpar.'; expected '.$ppar.'.<br>';
 				$rcpcount++;
 				goto retrievechunk;
 			}
@@ -546,13 +561,19 @@ function retrieveCoal($id)
 	$csha = sha($dataToReturn);
 	$ccrc = crc($dataToReturn);
 	$cs512 = s512($dataToReturn);
-	if(($cpar != $recordpar) || ($clen != $recordlen)) {
+	if(($ccrc != $recordpar) || ($clen != $recordlen)) {
+		echo 'Coal retrieval function reached status checkpoint 10a<br>';
+		echo '<br>Retrieved data: '.$dataToReturn.'<br><br>';				
+		echo 'Retrieved len = '.$clen.'; expected '.$recordlen.'.<br>';
+		echo 'Retrieved crc = '.$ccrc.'; expected '.$recordpar.'.<br>';
 		if($rcpcount < 10) {
+			echo 'Coal retrieval function reached status checkpoint 10b<br>';
 			$rcpcount++;
 			$rcperror = 23;
 			goto resetstatus;
 		}
 		else {
+			echo 'Coal retrieval function reached status checkpoint 10c<br>';
 			$rcerror = 19;
 		}
 	}
