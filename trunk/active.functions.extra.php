@@ -254,11 +254,11 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			//$l->a('Provided data = '.$data.'; potential '.$potentialData.'.<br><br>');
 			$l->a('Provided data md5 = '.$md5.'; potential '.$potentialmd5.'.<br>');
 			$l->a('Provided data len = '.$len.'; potential '.$potentiallen.'.<br>');
-			$l->a('Provided data par = '.$par.'; potential '.$potentialpar.'.<br>');
+			$l->a('Provided data par = '.$rpar.'; potential '.$potentialpar.'.<br>');
 			$l->a('Provided data sha = '.$sha.'; potential '.$potentialsha.'.<br>');
 			$l->a('Provided data crc = '.$crc.'; potential '.$potentialcrc.'.<br>');
 			$l->a('Provided data s512 = '.$s512.'; potential '.$potentials512.'.<br>');
-			if(($potentialData === $data) && ($potentiallen == $len) && ($potentialpar == $par) && ($potentialmd5 == $md5) && ($potentialcrc == $crc) && ($potentialsha == $sha) && ($potentials512 == $s512)) {
+			if(($potentialData === $data) && ($potentiallen == $len) && ($potentialpar == $rpar) && ($potentialmd5 == $md5) && ($potentialcrc == $crc) && ($potentialsha == $sha) && ($potentials512 == $s512)) {
 				$duplicateFound = true;
 				$duplicateId = $potential['id'];
 				$l->a('information code 25');
@@ -270,7 +270,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
  		duplicatefound:
  		$l->a('Chunk insertion function begun step 6<br>');
  		if($duplicateFound) {
-			$l->a('information code 26: duplicate found');
+			$l->a('information code 26: duplicate found<br>');
 			$newChunkId = $duplicateId;
 			$l->a('Chunk insertion function reached status checkpoint 6a<br>');
  			goto finished;
@@ -411,6 +411,10 @@ function retrieveChunk($id)
 		$l->a('<br>Chunk retrieval function completed step 4<br>');
 		//Decrypt chunk using chunk key
 		global $chunkPrivateKey;
+		//help from http://www.php.net/manual/en/function.class-exists.php
+		if(!class_exists('Crypt_RSA')) {
+			include('Crypt/RSA.php');
+		}
 		$rsa = new Crypt_RSA();
 		$rsa->loadKey($chunkPrivateKey); // private key
 		$ciphertext = $chunkData;

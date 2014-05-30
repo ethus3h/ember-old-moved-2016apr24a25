@@ -67,6 +67,9 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'coaltestupload') {
         coaltestupload();
     }
+    if ($wintNeeded == 'coaltestdownload') {
+        coaltestdownload();
+    }
     if ($wintNeeded == 'inforesource') {
         inforesource();
     }

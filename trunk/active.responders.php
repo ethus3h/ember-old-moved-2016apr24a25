@@ -402,12 +402,12 @@ function CoalIntakeHandler()
 			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
 			} else {
 				$error = 2;
-				$l->a("error 2");
+				$l->a("error 2<br>");
 			}
 		}
 		else {
 			$error = 6;
-			$l->a("error 6");
+			$l->a("error 6<br>");
 		}
 		$l->a('Coal intake handler completed step 2<br>');
 		$data = null;
@@ -428,6 +428,7 @@ function CoalIntakeHandler()
     	}
   		else {
     		$error = 3;
+    		$data = '';
   		}
 		$par = par($data);
 		$md5 = amd5($data);
@@ -557,29 +558,77 @@ function CoalIntakeHandler()
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
-		echo '<br><br>Added coal '.$newCoalId.'; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
-		echo '<br><h1>Log output:</h1><br><small>';
-		$l->e();
-		echo '</small><br>Coal intake handler completed step 8<br>';
+		if(isset($_REQUEST['coalVerbose'])) {
+			echo '<br><br>Added coal ';
+			
+		}
+		echo $newCoalId;
+if(isset($_REQUEST['coalVerbose'])) {		echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
+			echo '<br><h1>Log output:</h1><br><small>';
+			$l->e();
+			echo '</small><br>Coal intake handler completed step 8<br>';
+		}
     }
     else {
+    	header("HTTP/1.0 403 Forbidden");
     	$error = 1;
     }
-    if(($error !== 0) && (strlen($error) > 0)) {
-    	echo '<br>An error code was returned: '.$error;
-    	if(($error == 20) && (is_int($retrievedCoal) || is_array($retrievedCoal))) {
-    		if(is_int($retrievedCoal)) {
-    			echo '<br>retrieveCoal returned error code '.$retrievedCoal;
-    		}
-    		else {
-    			echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$retrievedCoal[0].', '.$retrievedCoal[1].', and '.$retrievedCoal[2].'.';
-    		}
-    	}
-    }
+    if(isset($_REQUEST['coalVerbose'])) {
+		if(($error !== 0) && (strlen($error) > 0)) {
+			echo '<br>An error code was returned: '.$error;
+			if(($error == 20) && (is_int($retrievedCoal) || is_array($retrievedCoal))) {
+				if(is_int($retrievedCoal)) {
+					echo '<br>retrieveCoal returned error code '.$retrievedCoal;
+				}
+				else {
+					echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$retrievedCoal[0].', '.$retrievedCoal[1].', and '.$retrievedCoal[2].'.';
+				}
+			}
+		}
+	}
 }
 function CoalRetrieveHandler()
 {
-   
+    $authorizationKey = $_REQUEST['authorizationKey'];
+    global $generalAuthKey;
+    global $error;
+    global $l;
+    $l = new llog();
+    if($authorizationKey == $generalAuthKey) {
+		$db               = new FractureDB('futuqiur_coal');
+				$retrievedCoal = retrieveCoal($_REQUEST['coalId']);
+		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
+			$error = 20;
+		}
+		else {
+			if(is_null($retrievedCoal)) {
+					$error = 7;
+
+			}
+		}
+		if($error != 0) {
+			header("HTTP/1.0 525 Request failed");
+		}
+		$filename = base64_decode($db->getField('coal','filename',$_REQUEST['coalId']));
+		//help from http://forums.mozillazine.org/viewtopic.php?f=37&t=27721 and http://www.rebol.net/cookbook/recipes/0059.html and http://stackoverflow.com/questions/1074898/mime-type-of-downloading-file
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=$filename");
+		header("Content-Type: application/octet-stream");
+		header("Content-Transfer-Encoding: binary");
+		header('Content-Length: ' . strlen($retrievedCoal->data));
+		echo $retrievedCoal->data;
+		$db->close();
+
+
+	}
+    else {
+    
+        			header("HTTP/1.0 403 Forbidden");
+
+    	$error = 1;
+    }
+
 }
 function CoalChunkIntakeHandler()
 {
