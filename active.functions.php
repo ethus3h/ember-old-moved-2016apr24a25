@@ -152,6 +152,9 @@ function get_url_dummy($url)
 }
 function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false,$collection = 'opensource')
 {
+	echo '<br>ia_upload function arguments: <br><pre>';
+	print_r(func_get_args());
+	echo '</pre><br>';
 	//Keywords in $keywords should be separated by ;
 	$iaerror = 0;
 	//$bucketExists = false; //really, = irrelevant :P
@@ -163,6 +166,8 @@ function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey
 		curl_setopt($ch, CURLOPT_VERBOSE, 1);
 		curl_setopt($ch, CURLOPT_URL, $bucket_url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		//help from http://stackoverflow.com/questions/3164405/show-curl-post-request-headers-is-there-a-way-to-do-this
+		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'x-amz-auto-make-bucket:1',
 			'x-archive-queue-derive:0',
@@ -175,9 +180,18 @@ function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey
 			'x-archive-meta-subject:'.$keywords,
 			'x-archive-meta-mediatype:'.$mediatype
 		));
+		
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 		$response = curl_exec($ch);
+		//help from http://stackoverflow.com/questions/3164405/show-curl-post-request-headers-is-there-a-way-to-do-this
+		$information = curl_getinfo($ch);
+		echo '<br>CURL RESULT INFORMATION: <br><pre>';
+		print_r($information);
 		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		echo '</pre><br>';
+		echo '<br>CURL RESPONSE: <br><pre>';
+		echo $response;
+		echo '</pre><br>';
 		curl_close($ch); 
 		//help from http://stackoverflow.com/questions/4366730/how-to-check-if-a-string-contains-specific-words
 		if(($http_status == 409) && (strpos($response,'BucketAlreadyOwnedByYou') !== false)) {
@@ -236,6 +250,8 @@ function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey
 	    curl_setopt($ch, CURLOPT_VERBOSE, 1);
 		curl_setopt($ch, CURLOPT_URL, $upload_url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		//help from http://stackoverflow.com/questions/3164405/show-curl-post-request-headers-is-there-a-way-to-do-this
+		curl_setopt($ch, CURLOPT_HEADER, true);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'x-amz-auto-make-bucket:1',
 			'x-archive-queue-derive:0',
@@ -250,7 +266,15 @@ function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey
 		));
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 		$response = curl_exec($ch);
+		//help from http://stackoverflow.com/questions/3164405/show-curl-post-request-headers-is-there-a-way-to-do-this
+		$information = curl_getinfo($ch);
+		echo '<br>CURL RESULT INFORMATION: <br><pre>';
+		print_r($information);
 		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		echo '</pre><br>';
+		echo '<br>CURL RESPONSE: <br><pre>';
+		echo $response;
+		echo '</pre><br>';
 		curl_close($ch); 
 		if(strlen($response) > 0 || $http_status != 200) {
 			throw new Exception('cURL request failed');

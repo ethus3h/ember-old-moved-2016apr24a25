@@ -187,7 +187,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	$crc = crc($data);
 	$sha = sha($data);
 	$s512 = s512($data);
-	echo '<br>Chunk insertion function completed step 1<br>';
+	echo '<br><br>Chunk insertion function completed step 1; calculated SHA512 hash as '.$s512.'.<br>';
 	$newChunkId = 0;
 	if(($spar != $rpar) || ($smd5 != $md5) || ($scrc != $crc) || ($ssha != $sha) || ($ss512 != $s512)) {
 		echo 'Chunk insertion function reached status checkpoint 1a<br>';
@@ -229,7 +229,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$encsha = sha($ciphertext);
 		$encs512 = s512($ciphertext);
 		foreach ($potentialDuplicates as $potential) {
-			echo '<br>Chunk insertion function begun step 5<br>';
+			echo '<br>Chunk insertion function begun step 5; requesting chunk '.$potential['id'].'.<br>';
 			//Request potential from storage
 			//help from http://stackoverflow.com/questions/4207343/how-to-get-time-in-php-with-nanosecond-precision
 // 			$btime = microtime(true);

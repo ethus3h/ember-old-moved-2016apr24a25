@@ -307,11 +307,12 @@ class FractureDB
             $queryInsert = '';
         }
         $query = 'SELECT ' . $field . ' FROM ' . $table . ' ' . $queryInsert . ';';
+        //echo '<br>Requesting column from database with query '.$query.'.<br>';
         return $this->query($query);
     }
     function getColumns($table, $fields, $filterField = '', $filterValue = '')
     {
-        return $this->getColumn($table, $fields, $filterField = '', $filterValue = '');
+        return $this->getColumn($table, $fields, $filterField, $filterValue);
     }
     function getColumn_num($table, $field, $filterField = '', $filterValue = '')
     {
