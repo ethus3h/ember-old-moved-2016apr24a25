@@ -180,7 +180,7 @@ function arcmaj3_barrel_expire($barrelId)
 function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	global $l;
 	$l->a('Chunk insertion function begun step 1<br>');
-	$l->a('NEW CHUNK DATA: '.$data);
+	//$l->a('NEW CHUNK DATA: '.$data);
 	$icerror = 0;
 	$rpar = par($data);
 	$par = crc($data);
@@ -200,6 +200,8 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$db               = new FractureDB('futuqiur_coalchunks');
 		//Retrieve potential duplicates
 		$potentialDuplicates = $db->getColumns('coalchunks', 'id', 's512', $s512);
+		//help from http://stackoverflow.com/questions/9325067/store-print-r-result-into-a-variable-as-a-string-or-text
+		$l->a('<br>Potential duplicates: '.print_r($potentialDuplicates,true).'<br>');		
 		$l->a('Chunk insertion function completed step 2<br>');
 		//Check potentials for duplicate
 		$duplicateFound = false;
@@ -283,8 +285,8 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$sc27try++;
 			$sccount++;
 			$identifierId = $newChunkId / 1000;
-			$randomInt = rand(0,100000);
-			$randomIntAlt = rand(0,100000);
+			$randomInt = rand(0,1000);
+			$randomIntAlt = rand(0,1000);
 			//"RECORD33" has no meaning, but it sounds kind of cool and hopefully helps avoid collisions (not that it's needed, really... :P)
 			$identifier = $identifierId.$randomInt.'.COALPROJECT.RECORD33';
 			$fallbackid = $identifierId.$randomIntAlt;
