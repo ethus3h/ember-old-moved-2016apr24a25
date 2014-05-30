@@ -579,4 +579,16 @@ function bnner()
 {
     echo '<html><head><title></title><link type="text/css" rel="stylesheet" href="css/flat-ui.css"/></head><body><iframe width=\'728\' height=\'90\' frameborder=\'0\' src=\'http://chelhi.ptp33.com/seo.php?username=chelhi&format=728x90\' marginwidth=\'0\' marginheight=\'0\' vspace=\'0\' hspace=\'0\' allowtransparency=\'true\' scrolling=\'no\'></iframe><a href="http://www.paid-to-promote.net/member/signup.php?r=chelhi" target="_blank"><img src="http://www.paid-to-promote.net/images/ptp.gif" alt="Get Paid To Promote, Get Paid To Popup, Get Paid Display Banner" width="468" height="60" border="0" longdesc="http://www.paid-to-promote.net/" /></a></body></html>';
 } 
+function PhpinfoWint()
+{
+    $authorizationKey = $_REQUEST['authorizationKey'];
+    global $generalAuthKey;
+    if($authorizationKey == $generalAuthKey) {
+		phpinfo();
+	}
+    else {
+        header("HTTP/1.0 403 Forbidden");
+    }
+
+}
 ?>

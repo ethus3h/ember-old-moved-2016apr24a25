@@ -418,7 +418,7 @@ function CoalIntakeHandler()
 		$mtime = null;
 		$atime = null;
 		if(file_exists($target_path)) {
-    		$data = file_get_contents($target_path);
+    		//$data = file_get_contents($target_path);
     		$stat = stat( $target_path );
     		$smtime = base64_encode($stat['mtime']);
     		$stats = bin2hex(var_export($stat,true));
@@ -428,13 +428,13 @@ function CoalIntakeHandler()
     	}
   		else {
     		$error = 3;
-    		$data = '';
+    		//$data = '';
   		}
-		$par = par($data);
-		$md5 = amd5($data);
-		$crc = crc($data);
-		$sha = sha($data);
-		$s512 = s512($data);
+		$par = parf($target_path);
+		$md5 = amd5f($target_path);
+		$crc = crcf($target_path);
+		$sha = shaf($target_path);
+		$s512 = s512f($target_path);
 		$coalcount = 0;
 		$l->a('Coal intake handler completed step 3<br>');
 		coal:
@@ -442,10 +442,15 @@ function CoalIntakeHandler()
 		$coalcount++;		
 		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$ferror.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
 		$l->a('Coal intake handler completed step 4<br>');
-		$carray = str_split($data,524288);
+		//$carray = str_split($data,524288);
 		$blockList = '';
 		include('Crypt/RSA.php');
-		foreach($carray as $chunk) {
+		//foreach($carray as $chunk) {
+		//help from (based on) http://www.php.net/manual/en/function.fread.php Example #1
+		$fhandle = fopen($target_path,"r");
+		//help from http://www.php.net/manual/en/function.ftell.php
+		while(ftell($fhandle) < $length) {
+			$chunk = fread($fhandle,262144);
 			$l->a('Coal intake handler begun step 4.1<br>');
 			//echo $chunk;
 			$chcount = 0;
@@ -508,6 +513,7 @@ function CoalIntakeHandler()
 			$blockList = $blockList . $bins . $newBlockId;
 			$l->a('Coal intake handler completed step 4.7<br>');
 		}
+		fclose($fhandle);
 		$l->a('Length: '.$length.'<br>');
 		if($length == 0) {
 			$blockList = '';

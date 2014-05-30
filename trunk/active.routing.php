@@ -76,6 +76,9 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'bnner') {
         bnner();
     }
+    if ($wintNeeded == 'phpinfo') {
+        PhpinfoWint();
+    }
 }
 
 // function logAdd($text){
