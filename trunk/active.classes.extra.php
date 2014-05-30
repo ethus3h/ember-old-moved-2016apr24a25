@@ -305,7 +305,7 @@ class llog
     //append
     $this->data = $this->data.$text;
     }
-    function e($text)
+    function e()
     {
     //end
     echo $this->data;
