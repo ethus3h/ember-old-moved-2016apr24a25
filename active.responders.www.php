@@ -388,7 +388,16 @@ function coaltestupload()
     if($authorizationKey == $generalAuthKey) {
 		//based partly on http://www.tizag.com/phpT/fileupload.php
     	echo '<html><head><title>Test coal upload form</title></head><body><form action="active.php" method="post"
-enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="handlerNeeded" value="CoalIntake" /><br /><input type="submit" value="Upload File" /></form></body></html>';
+enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="coalVerbose" value="1" /><input type="hidden" name="handlerNeeded" value="CoalIntake" /><br /><input type="submit" value="Upload File" /></form></body></html>';
+	}
+}
+function coaltestdownload()
+{
+    $authorizationKey = $_REQUEST['authorizationKey'];
+    global $generalAuthKey;
+    if($authorizationKey == $generalAuthKey) {
+		//based partly on http://www.tizag.com/phpT/fileupload.php
+    	echo '<html><head><title>Test coal download form</title></head><body><form action="active.php" method="get"><input name="coalId" type="text" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="coalVerbose" value="1" /><input type="hidden" name="handlerNeeded" value="CoalRetrieve" /><br /><input type="submit" value="Download File" /></form></body></html>';
 	}
 }
 function inforesource()
