@@ -492,7 +492,8 @@ function CoalIntakeHandler()
 				}
 			}
 			else {
-				$error = 10;
+				echo '<br>insertChunk returned status '.$icRes[1].'.<br>';
+				$error = 36;
 			}
 			echo 'Coal intake handler completed step 4.6<br>';
 			$bins = ',';
@@ -523,6 +524,8 @@ function CoalIntakeHandler()
 		//$retrievedCoal = null;
 		echo 'Coal intake handler completed step 5b<br>';
 		echo 'Coal intake requesting coal retrieval: beginning step 6<br>';
+		//help from http://stackoverflow.com/questions/740954/does-sleep-time-count-for-execution-time-limit
+		sleep(30);
 		$retrievedCoal = retrieveCoal($newCoalId);
 		echo 'Coal intake handler completed step 6<br>';
 		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
@@ -607,6 +610,7 @@ function CoalChunkIntakeHandler()
 		$ichunkcount++;
 		$icRes = insertChunk($data,$par,$md5,$crc,$sha,$s512);
 		$newChunkId = $icRes[0];
+		echo '<br>insertChunk returned status '.$icRes[1].'.<br>';
 		if($icRes[1] != 0) {
 			if($ichunkcount < 10) {
 				goto ichunk;
@@ -616,7 +620,8 @@ function CoalChunkIntakeHandler()
 			}
 		}
 		else {
-			$error = 10;
+			echo '<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>';
+			$error = 36;
 		}
 		echo $newChunkId;
     }

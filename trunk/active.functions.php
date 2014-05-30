@@ -153,9 +153,9 @@ function get_url_dummy($url)
 function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false,$collection = 'opensource')
 {
 //note that the description options etc. aren't implemented
-	echo '<br>ia_upload function arguments: <br><pre>';
-	print_r(func_get_args());
-	echo '</pre><br>';
+// 	echo '<br>ia_upload function arguments: <br><pre>';
+// 	print_r(func_get_args());
+// 	echo '</pre><br>';
 	$iaerror = 0;
 	$bucketName=$identifier;
 	//based on the example.php file from amazon-s3-php-class
@@ -171,17 +171,17 @@ function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey
 
 	// Create a bucket with public read access
 	if ($s3->putBucket($bucketName, S3::ACL_PUBLIC_READ)) {
-		echo "Created bucket {$bucketName}".PHP_EOL;
+		echo "Created bucket {$bucketName}".PHP_EOL.'<br>';
 
 		// Put our file (also with public read access)
 		if ($s3->putObject($data, $bucketName, $filename, S3::ACL_PUBLIC_READ)) {
-			echo "S3::putObjectFile(): File copied to {$bucketName}/".baseName($uploadFile).PHP_EOL;
+			echo "S3::putObjectFile(): File copied to {$bucketName}/".$filename.PHP_EOL.'<br>';
 		} else {
-			echo "error code 34: S3::putObjectFile(): Failed to copy file\n";
+			echo "error code 34: S3::putObjectFile(): Failed to copy file\n<br>";
 			$iaerror = 34;
 		}
 	} else {
-		echo "error code 35: S3::putBucket(): Unable to create bucket (it may already exist and/or be owned by someone else)\n";
+		echo "error code 35: S3::putBucket(): Unable to create bucket (it may already exist and/or be owned by someone else)\n<br>";
 		$iaerror = 35;
 	}
 // 
