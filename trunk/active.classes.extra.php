@@ -294,4 +294,5 @@ class stt
         $this->btime=$btime;
     }
 }
+include('S3.php');
 ?>
