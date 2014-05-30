@@ -295,11 +295,11 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			echo 'Chunk insertion function completed step 8<br>';
 			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,'texts',$keywords,true,'opensource');
 			echo 'Chunk insertion function completed step 9; upload result code '.$ulresult.'<br>';
-			if(($ulresult == 10) && ($sc27try < 10)) {
+			if(($ulresult == 35) && ($sc27try < 10)) {
 				echo 'information code 27';
 				goto storechunk;
 			}
-			if(($ulresult != 0) && ($ulresult != 10) && ($sccount < 10)) {
+			if(($ulresult != 0) && ($ulresult != 35) && ($sccount < 10)) {
 				echo 'information code 28';
 				goto storechunk;
 			}
