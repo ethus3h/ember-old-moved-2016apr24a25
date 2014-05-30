@@ -187,6 +187,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	$md5 = amd5($data);
 	$crc = crc($data);
 	$sha = sha($data);
+	$len = strlen($data);
 	$s512 = s512($data);
 	$l->a('<br><br>Chunk insertion function completed step 1; calculated SHA512 hash as '.$s512.'.<br>');
 	$newChunkId = 0;
@@ -199,7 +200,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$l->a('Chunk insertion function begun step 2<br>');
 		$db               = new FractureDB('futuqiur_coalchunks');
 		//Retrieve potential duplicates
-		$potentialDuplicates = $db->getColumns('coalchunks', 'id', 's512', $s512);
+		$potentialDuplicates = $db->getColumns('coalchunks', 'id', 'paritypre', $crc);
 		//help from http://stackoverflow.com/questions/9325067/store-print-r-result-into-a-variable-as-a-string-or-text
 		$l->a('<br>Potential duplicates: '.print_r($potentialDuplicates,true).'<br>');		
 		$l->a('Chunk insertion function completed step 2<br>');
@@ -250,7 +251,8 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$potentialcrc = $potentialRecord->crc;
 			$potentialsha = $potentialRecord->sha;
 			$potentials512 = $potentialRecord->s512;
-			if(($potentialData === $data) && ($potentiallen == $enclen) && ($potentialpar == $encpar) && ($potentialmd5 == $encmd5) && ($potentialcrc == $enccrc) && ($potentialsha == $encsha) && ($potentials512 == $encs512)) {
+			$l->a('Provided data md5 = '.$md5.'; potential '.$potentialmd5.'.<br>');
+			if(($potentialData === $data) && ($potentiallen == $len) && ($potentialpar == $par) && ($potentialmd5 == $md5) && ($potentialcrc == $crc) && ($potentialsha == $sha) && ($potentials512 == $s512)) {
 				$duplicateFound = true;
 				$duplicateId = $potential['id'];
 				$l->a('information code 25');

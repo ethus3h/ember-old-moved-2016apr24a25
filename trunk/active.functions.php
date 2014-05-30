@@ -550,14 +550,16 @@ function remove_script_style($data) {
 	return $output;
 }
 function st() {
+	global $l;
 	$btime = microtime(true);
-	echo '<br>Timed event begun at '.$btime.'.<br>';
+	$l->a('<br>Timed event begun at '.$btime.'.<br>');
 	return new stt($btime);
 }
 function et($st) {
+	global $l;
 	$btime = $st->btime;
 	$etime = microtime(true);
 	$dtime = $etime-$btime;
-	echo '<br>Timed event finished at '.$etime.'; took '.$dtime.' seconds.<br>';
+	$l->a('<br>Timed event finished at '.$etime.'; took '.$dtime.' seconds.<br>');
 }
 ?>
