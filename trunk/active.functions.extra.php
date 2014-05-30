@@ -332,6 +332,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 }
 function retrieveChunk($id)
 {
+	global $l;
 	if(strlen($id) < 1) {
 		$l->a('information code 32<br>');
 	}
@@ -436,6 +437,7 @@ function retrieveChunk($id)
 }
 function retrieveCoal($id)
 {
+	global $l;
 	$l->a('Coal retrieval function begun<br>');
 	$db               = new FractureDB('futuqiur_coal');
 	$rctries = 0;
@@ -542,11 +544,12 @@ function retrieveCoal($id)
 		}
 		$l->a('Coal retrieval function completed step 7<br>');
 		//Decrypt block data using record key
-		global $coalPrivateKey;
-		$rsa = new Crypt_RSA();
-		$rsa->loadKey($coalPrivateKey); // private key
-		$ciphertext = $rbdata;
-		$plaintext = $rsa->decrypt($ciphertext);
+		// global $coalPrivateKey;
+// 		$rsa = new Crypt_RSA();
+// 		$rsa->loadKey($coalPrivateKey); // private key
+// 		$ciphertext = $rbdata;
+// 		$plaintext = $rsa->decrypt($ciphertext);
+		$plaintext = $rbdata;
 		$l->a('Coal retrieval function completed step 8<br>');
 		//Decompress block data
 		$dcblockdata = bzdecompress($plaintext);

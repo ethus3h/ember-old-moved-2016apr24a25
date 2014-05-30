@@ -455,20 +455,21 @@ function CoalIntakeHandler()
 			$l->a('Coal intake handler completed step 4.1<br>');
 			global $coalPrivateKey;
 			global $coalPublicKey;
-			$rsa = new Crypt_RSA();
-			$rsa->loadKey($coalPublicKey); // public key
-			$plaintext = $compressed;
-			$ciphertext = $rsa->encrypt($plaintext);
-			$rsa->loadKey($coalPrivateKey); // private key
-			$l->a('Coal intake handler completed step 4.2<br>');
-			if($rsa->decrypt($ciphertext) != $plaintext) {
-				if($chcount < 10) {
-					goto chunk;
-				}
-				else {
-					$error = 4;
-				}
-			}
+			// $rsa = new Crypt_RSA();
+// 			$rsa->loadKey($coalPublicKey); // public key
+// 			$plaintext = $compressed;
+// 			$ciphertext = $rsa->encrypt($plaintext);
+// 			$rsa->loadKey($coalPrivateKey); // private key
+// 			$l->a('Coal intake handler completed step 4.2<br>');
+// 			if($rsa->decrypt($ciphertext) != $plaintext) {
+// 				if($chcount < 10) {
+// 					goto chunk;
+// 				}
+// 				else {
+// 					$error = 4;
+// 				}
+// 			}
+			$ciphertext = $compressed;
 			$l->a('Coal intake handler completed step 4.3<br>');
 			$encpar = par($ciphertext);
 			$encmd5 = amd5($ciphertext);
