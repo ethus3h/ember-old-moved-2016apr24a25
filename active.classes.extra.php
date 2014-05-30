@@ -294,5 +294,22 @@ class stt
         $this->btime=$btime;
     }
 }
+class llog
+{
+    function __construct()
+    {
+    $this->data = '';
+    }
+    function a($text)
+    {
+    //append
+    $this->data = $this->data.$text;
+    }
+    function e($text)
+    {
+    //end
+    echo $this->data;
+    }
+}
 include('S3.php');
 ?>

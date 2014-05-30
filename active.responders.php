@@ -367,9 +367,11 @@ function CoalIntakeHandler()
     $authorizationKey = $_REQUEST['authorizationKey'];
     global $generalAuthKey;
     global $error;
+    global $l;
+    $l = new llog;
     if($authorizationKey == $generalAuthKey) {
     	//Request accepted
-    	echo 'Coal intake handler begun<br>';
+    	$l->a('Coal intake handler begun<br>');
     	//help on times from http://stackoverflow.com/questions/5849702/php-file-upload-time-created
 		$db               = new FractureDB('futuqiur_coal');
     	$metadata = base64_encode(var_export($_FILES,true));
@@ -395,19 +397,19 @@ function CoalIntakeHandler()
     	//cot file extension — Coal temporary data file; can be any binary data
 		$target_path = $target_path . "data.".$nextId.".cot"; 
 		//print_r($_FILES);
-		echo 'Coal intake handler completed step 1<br>';
+		$l->a('Coal intake handler completed step 1<br>');
     	if(isset($_FILES['uploadedfile'])) {		
 			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
 			} else {
 				$error = 2;
-				echo "error 2";
+				$l->a("error 2");
 			}
 		}
 		else {
 			$error = 6;
-			echo "error 6";
+			$l->a("error 6");
 		}
-		echo 'Coal intake handler completed step 2<br>';
+		$l->a('Coal intake handler completed step 2<br>');
 		$data = null;
 		$stat = null;
 		$smtime = null;
@@ -433,24 +435,24 @@ function CoalIntakeHandler()
 		$sha = sha($data);
 		$s512 = s512($data);
 		$coalcount = 0;
-		echo 'Coal intake handler completed step 3<br>';
+		$l->a('Coal intake handler completed step 3<br>');
 		coal:
-		echo 'Coal intake handler begun step 4<br>';
+		$l->a('Coal intake handler begun step 4<br>');
 		$coalcount++;		
 		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$ferror.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
-		echo 'Coal intake handler completed step 4<br>';
+		$l->a('Coal intake handler completed step 4<br>');
 		$carray = str_split($data,524288);
 		$blockList = '';
 		include('Crypt/RSA.php');
 		foreach($carray as $chunk) {
-			echo 'Coal intake handler begun step 4.1<br>';
+			$l->a('Coal intake handler begun step 4.1<br>');
 			//echo $chunk;
 			$chcount = 0;
 			chunk:
 			$chcount++;
 			$compression = "bzip2";
 			$compressed = bzcompress($chunk);
-			echo 'Coal intake handler completed step 4.1<br>';
+			$l->a('Coal intake handler completed step 4.1<br>');
 			global $coalPrivateKey;
 			global $coalPublicKey;
 			$rsa = new Crypt_RSA();
@@ -458,7 +460,7 @@ function CoalIntakeHandler()
 			$plaintext = $compressed;
 			$ciphertext = $rsa->encrypt($plaintext);
 			$rsa->loadKey($coalPrivateKey); // private key
-			echo 'Coal intake handler completed step 4.2<br>';
+			$l->a('Coal intake handler completed step 4.2<br>');
 			if($rsa->decrypt($ciphertext) != $plaintext) {
 				if($chcount < 10) {
 					goto chunk;
@@ -467,7 +469,7 @@ function CoalIntakeHandler()
 					$error = 4;
 				}
 			}
-			echo 'Coal intake handler completed step 4.3<br>';
+			$l->a('Coal intake handler completed step 4.3<br>');
 			$encpar = par($ciphertext);
 			$encmd5 = amd5($ciphertext);
 			$enccrc = crc($ciphertext);
@@ -475,15 +477,18 @@ function CoalIntakeHandler()
 			$encs512 = s512($ciphertext);
 			$ichunkcount = 0;
 			ichunk:
-			echo 'Coal intake handler begun step 4.4<br>';
+			$l->a('Coal intake handler begun step 4.4<br>');
 			$ichunkcount++;
 			//When chunks are handled by a separate system, replace this with a cURL request to the CoalChunkIntakeHandler.
-			echo 'Coal intake handler completed step 4.4<br>';
-			echo 'Coal intake handler begun step 4.5: requesting chunk insertion<br>';
+			$l->a('Coal intake handler completed step 4.4<br>');
+			$l->a('Coal intake handler begun step 4.5: requesting chunk insertion<br>');
 			$icRes = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512,$compression);
-			echo 'Coal intake handler completed step 4.5<br>';
+			$l->a('Coal intake handler completed step 4.5<br>');
 			$newBlockId = $icRes[0];
+			$l->a('<br>insertChunk returned status '.$icRes[1].'.<br>');
 			if($icRes[1] != 0) {
+				$l->a('<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>');
+				$error = 36;
 				if($ichunkcount < 10) {
 					goto ichunk;
 				}
@@ -492,22 +497,20 @@ function CoalIntakeHandler()
 				}
 			}
 			else {
-				echo '<br>insertChunk returned status '.$icRes[1].'.<br>';
-				$error = 36;
 			}
-			echo 'Coal intake handler completed step 4.6<br>';
+			$l->a('Coal intake handler completed step 4.6<br>');
 			$bins = ',';
 			if(strlen($blockList) == 0) {
 				$bins = '';
 			}
 			$blockList = $blockList . $bins . $newBlockId;
-			echo 'Coal intake handler completed step 4.7<br>';
+			$l->a('Coal intake handler completed step 4.7<br>');
 		}
-		echo 'Length: '.$length.'<br>';
+		$l->a('Length: '.$length.'<br>');
 		if($length == 0) {
 			$blockList = '';
 		}
-		echo 'Coal intake handler completed step 5<br>';
+		$l->a('Coal intake handler completed step 5<br>');
 		$db->setField('coal', 'blocks', $blockList, $newCoalId);
 		$blocklistlen = strlen($blockList);
 		$blocklistpar = par($blockList);
@@ -522,12 +525,12 @@ function CoalIntakeHandler()
 		$db->setField('coal', 'blockssha', $blocklistsha, $newCoalId);
 		$db->setField('coal', 'blocks512', $blocklists512, $newCoalId);
 		//$retrievedCoal = null;
-		echo 'Coal intake handler completed step 5b<br>';
-		echo 'Coal intake requesting coal retrieval: beginning step 6<br>';
+		$l->a( 'Coal intake handler completed step 5b<br>');
+		$l->a( 'Coal intake requesting coal retrieval: beginning step 6<br>');
 		//help from http://stackoverflow.com/questions/740954/does-sleep-time-count-for-execution-time-limit
 		sleep(30);
 		$retrievedCoal = retrieveCoal($newCoalId);
-		echo 'Coal intake handler completed step 6<br>';
+		$l->a( 'Coal intake handler completed step 6<br>');
 		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
 			$error = 20;
 		}
@@ -536,7 +539,7 @@ function CoalIntakeHandler()
 				if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
 					$blockList = '';
 					if($coalcount < 10) {
-						echo 'information code 31';
+						$l->a( 'information code 31');
 						goto coal;
 					}
 					else {
@@ -548,18 +551,20 @@ function CoalIntakeHandler()
 				$error = 7;
 			}
 		}
-		echo 'Coal intake handler completed step 7<br>';
+		$l->a( 'Coal intake handler completed step 7<br>');
 		$db->close();
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
 		echo '<br><br>Added coal '.$newCoalId.'; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
+		echo '<br>Log output:<br>';
+		$l->e();
 		echo '<br>Coal intake handler completed step 8<br>';
     }
     else {
     	$error = 1;
     }
-    if($error !== 0) {
+    if(($error !== 0) && (strlen($error) > 0)) {
     	echo '<br>An error code was returned: '.$error;
     	if(($error == 20) && (is_int($retrievedCoal) || is_array($retrievedCoal))) {
     		if(is_int($retrievedCoal)) {
@@ -580,6 +585,8 @@ function CoalChunkIntakeHandler()
     $authorizationKey = $_REQUEST['authorizationKey'];
     global $generalAuthKey;
     global $error;
+    global $l;
+    $l = new llog();
     if($authorizationKey == $generalAuthKey) {
     	$spar = $_REQUEST['spar'];
     	$smd5 = $_REQUEST['smd5'];
@@ -610,8 +617,10 @@ function CoalChunkIntakeHandler()
 		$ichunkcount++;
 		$icRes = insertChunk($data,$par,$md5,$crc,$sha,$s512);
 		$newChunkId = $icRes[0];
-		echo '<br>insertChunk returned status '.$icRes[1].'.<br>';
+		$l->a('<br>insertChunk returned status '.$icRes[1].'.<br>');
 		if($icRes[1] != 0) {
+			$l->a('<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>');
+			$error = 36;
 			if($ichunkcount < 10) {
 				goto ichunk;
 			}
@@ -620,8 +629,6 @@ function CoalChunkIntakeHandler()
 			}
 		}
 		else {
-			echo '<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>';
-			$error = 36;
 		}
 		echo $newChunkId;
     }
