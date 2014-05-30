@@ -216,7 +216,7 @@ function arcmaj3_handler()
             $db->setField('am_barrels', 'status', 1, $barrelId);
             $db->close();
             if (count($barrelData) < 2) {
-                echo 'Barrel upload failed. Expiring barrel ' . $barrelId . '…';
+                echo 'Barrel upload failed. Expiring barrel ' . $barrelId . 'â€¦';
                 #The barrel data array should always have at least two things in it, I'm saying. Could be a one-URL barrel I suppose, but even that should get listed twice (once for Wget, once for Heritrix)
                 arcmaj3_barrel_expire($barrelId);
                 echo 'Expired barrel ' . $barrelId . '.';
@@ -394,7 +394,7 @@ function CoalIntakeHandler()
     	//based on http://www.tizag.com/phpT/fileupload.php?MAX_FILE_SIZE=100000&uploadedfile=
     	$target_path = "coal_temp/";
     	$nextId = $db->getNextId('coal').'-'.guidv4();
-    	//cot file extension — Coal temporary data file; can be any binary data
+    	//cot file extension â€” Coal temporary data file; can be any binary data
 		$target_path = $target_path . "data.".$nextId.".cot"; 
 		//print_r($_FILES);
 		$l->a('Coal intake handler completed step 1<br>');
@@ -557,70 +557,29 @@ function CoalIntakeHandler()
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
-		if(isset($_REQUEST['coalVerbose'])) {
-			echo '<br><br>Added coal '.$newCoalId.'; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
-			echo '<br><h1>Log output:</h1><br><small>';
-			$l->e();
-			echo '</small><br>Coal intake handler completed step 8<br>';
-		}
+		echo '<br><br>Added coal '.$newCoalId.'; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
+		echo '<br><h1>Log output:</h1><br><small>';
+		$l->e();
+		echo '</small><br>Coal intake handler completed step 8<br>';
     }
     else {
-    			header("HTTP/1.0 403 Forbidden");
     	$error = 1;
     }
-    if(isset($_REQUEST['coalVerbose'])) {
-		if(($error !== 0) && (strlen($error) > 0)) {
-			echo '<br>An error code was returned: '.$error;
-			if(($error == 20) && (is_int($retrievedCoal) || is_array($retrievedCoal))) {
-				if(is_int($retrievedCoal)) {
-					echo '<br>retrieveCoal returned error code '.$retrievedCoal;
-				}
-				else {
-					echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$retrievedCoal[0].', '.$retrievedCoal[1].', and '.$retrievedCoal[2].'.';
-				}
-			}
-		}
-	}
+    if(($error !== 0) && (strlen($error) > 0)) {
+    	echo '<br>An error code was returned: '.$error;
+    	if(($error == 20) && (is_int($retrievedCoal) || is_array($retrievedCoal))) {
+    		if(is_int($retrievedCoal)) {
+    			echo '<br>retrieveCoal returned error code '.$retrievedCoal;
+    		}
+    		else {
+    			echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$retrievedCoal[0].', '.$retrievedCoal[1].', and '.$retrievedCoal[2].'.';
+    		}
+    	}
+    }
 }
 function CoalRetrieveHandler()
 {
-    $authorizationKey = $_REQUEST['authorizationKey'];
-    global $generalAuthKey;
-    global $error;
-    global $l;
-    $l = new llog();
-    if($authorizationKey == $generalAuthKey) {
-				$retrievedCoal = retrieveCoal($_REQUEST['coalId']);
-		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
-			$error = 20;
-		}
-		else {
-			if(is_null($retrievedCoal)) {
-					$error = 7;
-
-			}
-		}
-		if($error != 0) {
-			header("HTTP/1.0 525 Request failed");
-		}
-		//help from http://forums.mozillazine.org/viewtopic.php?f=37&t=27721 and http://www.rebol.net/cookbook/recipes/0059.html and http://stackoverflow.com/questions/1074898/mime-type-of-downloading-file
-		header("Cache-Control: public");
-		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=$filepath");
-		header("Content-Type: mime/type");
-		header("Content-Transfer-Encoding: binary");
-		header('Content-Length: ' . strlen($retrievedCoal));
-		echo $retrievedCoal;
-		
-
-	}
-    else {
-    
-        			header("HTTP/1.0 403 Forbidden");
-
-    	$error = 1;
-    }
-
+   
 }
 function CoalChunkIntakeHandler()
 {
