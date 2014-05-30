@@ -599,8 +599,13 @@ function CoalRetrieveHandler()
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
-		//help from http://forums.mozillazine.org/viewtopic.php?f=37&t=27721 and http://www.rebol.net/cookbook/recipes/0059.html
-		header('Content-type: application/xhtml+xml');
+		//help from http://forums.mozillazine.org/viewtopic.php?f=37&t=27721 and http://www.rebol.net/cookbook/recipes/0059.html and http://stackoverflow.com/questions/1074898/mime-type-of-downloading-file
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=$filepath");
+		header("Content-Type: mime/type");
+		header("Content-Transfer-Encoding: binary");
+		header('Content-Length: ' . strlen($retrievedCoal));
 		echo $retrievedCoal;
 		
 
