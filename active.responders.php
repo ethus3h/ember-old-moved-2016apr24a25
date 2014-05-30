@@ -557,26 +557,30 @@ function CoalIntakeHandler()
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
-		echo '<br><br>Added coal '.$newCoalId.'; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
-		echo '<br><h1>Log output:</h1><br><small>';
-		$l->e();
-		echo '</small><br>Coal intake handler completed step 8<br>';
+		if(isset($_REQUEST['coalVerbose'])) {
+			echo '<br><br>Added coal '.$newCoalId.'; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
+			echo '<br><h1>Log output:</h1><br><small>';
+			$l->e();
+			echo '</small><br>Coal intake handler completed step 8<br>';
+		}
     }
     else {
     			header("HTTP/1.0 403 Forbidden");
     	$error = 1;
     }
-    if(($error !== 0) && (strlen($error) > 0)) {
-    	echo '<br>An error code was returned: '.$error;
-    	if(($error == 20) && (is_int($retrievedCoal) || is_array($retrievedCoal))) {
-    		if(is_int($retrievedCoal)) {
-    			echo '<br>retrieveCoal returned error code '.$retrievedCoal;
-    		}
-    		else {
-    			echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$retrievedCoal[0].', '.$retrievedCoal[1].', and '.$retrievedCoal[2].'.';
-    		}
-    	}
-    }
+    if(isset($_REQUEST['coalVerbose'])) {
+		if(($error !== 0) && (strlen($error) > 0)) {
+			echo '<br>An error code was returned: '.$error;
+			if(($error == 20) && (is_int($retrievedCoal) || is_array($retrievedCoal))) {
+				if(is_int($retrievedCoal)) {
+					echo '<br>retrieveCoal returned error code '.$retrievedCoal;
+				}
+				else {
+					echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$retrievedCoal[0].', '.$retrievedCoal[1].', and '.$retrievedCoal[2].'.';
+				}
+			}
+		}
+	}
 }
 function CoalRetrieveHandler()
 {
