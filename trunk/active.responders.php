@@ -563,6 +563,7 @@ function CoalIntakeHandler()
 		echo '</small><br>Coal intake handler completed step 8<br>';
     }
     else {
+    			header("HTTP/1.0 403 Forbidden");
     	$error = 1;
     }
     if(($error !== 0) && (strlen($error) > 0)) {
@@ -579,7 +580,38 @@ function CoalIntakeHandler()
 }
 function CoalRetrieveHandler()
 {
-   
+    $authorizationKey = $_REQUEST['authorizationKey'];
+    global $generalAuthKey;
+    global $error;
+    global $l;
+    $l = new llog();
+    if($authorizationKey == $generalAuthKey) {
+				$retrievedCoal = retrieveCoal($_REQUEST['coalId']);
+		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
+			$error = 20;
+		}
+		else {
+			if(is_null($retrievedCoal)) {
+					$error = 7;
+
+			}
+		}
+		if($error != 0) {
+			header("HTTP/1.0 525 Request failed");
+		}
+		//help from http://forums.mozillazine.org/viewtopic.php?f=37&t=27721 and http://www.rebol.net/cookbook/recipes/0059.html
+		header('Content-type: application/xhtml+xml');
+		echo $retrievedCoal;
+		
+
+	}
+    else {
+    
+        			header("HTTP/1.0 403 Forbidden");
+
+    	$error = 1;
+    }
+
 }
 function CoalChunkIntakeHandler()
 {
