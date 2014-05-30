@@ -178,8 +178,9 @@ function arcmaj3_barrel_expire($barrelId)
     $db->close();
 }
 function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
-	echo 'Chunk insertion function begun step 1<br>';
-	echo 'NEW CHUNK DATA: '.$data;
+	global $l;
+	$l->a('Chunk insertion function begun step 1<br>');
+	$l->a('NEW CHUNK DATA: '.$data);
 	$icerror = 0;
 	$rpar = par($data);
 	$par = crc($data);
@@ -187,19 +188,19 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	$crc = crc($data);
 	$sha = sha($data);
 	$s512 = s512($data);
-	echo '<br><br>Chunk insertion function completed step 1; calculated SHA512 hash as '.$s512.'.<br>';
+	$l->a('<br><br>Chunk insertion function completed step 1; calculated SHA512 hash as '.$s512.'.<br>');
 	$newChunkId = 0;
 	if(($spar != $rpar) || ($smd5 != $md5) || ($scrc != $crc) || ($ssha != $sha) || ($ss512 != $s512)) {
-		echo 'Chunk insertion function reached status checkpoint 1a<br>';
-		echo 'error 8';
+		$l->a('Chunk insertion function reached status checkpoint 1a<br>');
+		$l->a('error 8');
 		$icerror = 8;
 	}
 	else {
-		echo 'Chunk insertion function begun step 2<br>';
+		$l->a('Chunk insertion function begun step 2<br>');
 		$db               = new FractureDB('futuqiur_coalchunks');
 		//Retrieve potential duplicates
 		$potentialDuplicates = $db->getColumns('coalchunks', 'id', 's512', $s512);
-		echo 'Chunk insertion function completed step 2<br>';
+		$l->a('Chunk insertion function completed step 2<br>');
 		//Check potentials for duplicate
 		$duplicateFound = false;
 		//encrypt record
@@ -210,18 +211,18 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$plaintext = $data;
 		$ciphertext = $rsa->encrypt($plaintext);
 		$rsa->loadKey($chunkPrivateKey); // private key
-		echo 'Chunk insertion function completed step 3<br>';
+		$l->a('Chunk insertion function completed step 3<br>');
 		if($rsa->decrypt($ciphertext) != $plaintext) {
 			if($chcount < 10) {
-				echo 'Chunk insertion function status checkpoint 3a<br>';
+				$l->a('Chunk insertion function status checkpoint 3a<br>');
 				goto chunk;
 			}
 			else {
-				echo 'error 4';
+				$l->a('error 4');
 				$icerror = 4;
 			}
 		}
-		echo 'Chunk insertion function completed step 4<br>';
+		$l->a('Chunk insertion function completed step 4<br>');
 		$enclen = strlen($ciphertext);
 		$encpar = par($ciphertext);
 		$encmd5 = amd5($ciphertext);
@@ -229,7 +230,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$encsha = sha($ciphertext);
 		$encs512 = s512($ciphertext);
 		foreach ($potentialDuplicates as $potential) {
-			echo '<br>Chunk insertion function begun step 5; requesting chunk '.$potential['id'].'.<br>';
+			$l->a('<br>Chunk insertion function begun step 5; requesting chunk '.$potential['id'].'.<br>');
 			//Request potential from storage
 			//help from http://stackoverflow.com/questions/4207343/how-to-get-time-in-php-with-nanosecond-precision
 // 			$btime = microtime(true);
@@ -250,35 +251,35 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			if(($potentialData === $data) && ($potentiallen == $enclen) && ($potentialpar == $encpar) && ($potentialmd5 == $encmd5) && ($potentialcrc == $enccrc) && ($potentialsha == $encsha) && ($potentials512 == $encs512)) {
 				$duplicateFound = true;
 				$duplicateId = $potential['id'];
-				echo 'information code 25';
-				echo 'Chunk insertion function reached status checkpoint 5a<br>';
+				$l->a('information code 25');
+				$l->a('Chunk insertion function reached status checkpoint 5a<br>');
 				goto duplicatefound;
 			}
-			echo 'Chunk insertion function completed step 5<br>';
+			$l->a('Chunk insertion function completed step 5<br>');
 		}
  		duplicatefound:
- 		echo 'Chunk insertion function begun step 6<br>';
+ 		$l->a('Chunk insertion function begun step 6<br>');
  		if($duplicateFound) {
-			echo 'information code 26: duplicate found';
+			$l->a('information code 26: duplicate found');
 			$newChunkId = $duplicateId;
-			echo 'Chunk insertion function reached status checkpoint 6a<br>';
+			$l->a('Chunk insertion function reached status checkpoint 6a<br>');
  			goto finished;
  		}
  		else {
-			echo 'Chunk insertion function begun step 7<br>';
+			$l->a('Chunk insertion function begun step 7<br>');
 			$chcount = 0;
 			chunk:
-			echo 'Chunk insertion function reached status checkpoint 7a<br>';
+			$l->a('Chunk insertion function reached status checkpoint 7a<br>');
 			// $chcount++;
 			//Add record w/ ID, parity checksum
-			echo 'Chunk insertion function completed step 7<br>';
+			$l->a('Chunk insertion function completed step 7<br>');
 			$newChunkId = $db->addRow('coalchunks', 'length, lengthpre, parity, paritypre, md5, sha, crc, s512, compression', '\''.strlen($ciphertext).'\', \''.strlen($data).'\', \''.$encpar.'\', \''.$par.'\', \''.$encmd5.'\', \''.$encsha.'\', \''.$enccrc.'\', \''.$encs512.'\', \''.$compression.'\'');
-			echo 'Chunk insertion function completed step 8<br>';
+			$l->a('Chunk insertion function completed step 8<br>');
 			//store chunk
 			$sccount = 0;
 			$sc27try = 0;
 			storechunk:
-			echo '<br>Chunk insertion function reached status checkpoint 8a<br>';
+			$l->a('<br>Chunk insertion function reached status checkpoint 8a<br>');
 			$sc27try++;
 			$sccount++;
 			$identifierId = $newChunkId / 1000;
@@ -297,22 +298,22 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$title = 'Coal chunks for '.$identifierId;
 			$description = $title;
 			$keywords = 'coal; data; coal chunks; ';
-			echo 'Chunk insertion function completed step 8<br>';
+			$l->a('Chunk insertion function completed step 8<br>');
 			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,'texts',$keywords,true,'opensource');
-			echo 'Chunk insertion function completed step 9; upload result code '.$ulresult.'<br>';
+			$l->a('Chunk insertion function completed step 9; upload result code '.$ulresult.'<br>');
 			if(($ulresult == 35) && ($sc27try < 10)) {
-				echo 'information code 27';
+				$l->a('information code 27');
 				goto storechunk;
 			}
 			if(($ulresult != 0) && ($ulresult != 35) && ($sccount < 10)) {
-				echo 'information code 28';
+				$l->a('information code 28');
 				goto storechunk;
 			}
-			echo 'Chunk insertion function completed step 10<br>';
+			$l->a('Chunk insertion function completed step 10<br>');
 			$db->setField('coalchunks', 'storage', 'ia', $newChunkId);
 			$db->setField('coalchunks', 'address', $identifier.'/'.$filename, $newChunkId);
-			echo 'Chunk insertion function completed step 11<br>';
-			echo 'Chunk insertion function completed step 6<br>';
+			$l->a('Chunk insertion function completed step 11<br>');
+			$l->a('Chunk insertion function completed step 6<br>');
 // 			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
 // 			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
  			goto finished;
@@ -320,34 +321,34 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$db->close();
  	}
 	finished:
-	echo 'Chunk insertion function reached status checkpoint a<br>';
+	$l->a('Chunk insertion function reached status checkpoint a<br>');
 	if($icerror != 0) {
-		echo 'Chunk insertion function reached status checkpoint b<br>';
+		$l->a('Chunk insertion function reached status checkpoint b<br>');
 		//header("HTTP/1.0 525 Request failed");
 	}
-	echo 'Chunk insertion function returning new chunk ID '.$newChunkId.' and error code '.$icerror.'.<br>';
+	$l->a('Chunk insertion function returning new chunk ID '.$newChunkId.' and error code '.$icerror.'.<br>');
 	return array($newChunkId, $icerror);
-	echo 'Chunk insertion function reached status checkpoint c<br>';
+	$l->a('Chunk insertion function reached status checkpoint c<br>');
 }
 function retrieveChunk($id)
 {
 	if(strlen($id) < 1) {
-		echo 'information code 32<br>';
+		$l->a('information code 32<br>');
 	}
 	else {
-		echo 'Chunk retrieval function begun; retrieving chunk '.$id.'.<br>';
+		$l->a('Chunk retrieval function begun; retrieving chunk '.$id.'.<br>');
 		$db               = new FractureDB('futuqiur_coalchunks');
 		$rcerror = 0;
 		$rccount = 0;
 		$rcpcount = 0;
-		echo 'Chunk retrieval function completed step 1<br>';
+		$l->a('Chunk retrieval function completed step 1<br>');
 		retrievechunk:
-		echo '<br>Chunk retrieval function begun step 1b<br>';
+		$l->a('<br>Chunk retrieval function begun step 1b<br>');
 		//Get chunk address from database by ID
-		echo '<br>Getting metadata for chunk '.$id;
+		$l->a('<br>Getting metadata for chunk '.$id);
 		$chunkMeta = $db->getRow('coalchunks', 'id', $id);
 		//print_r($chunkMeta);
-		echo '<br>Chunk retrieval function completed step 2<br>';
+		$l->a('<br>Chunk retrieval function completed step 2<br>');
 		$chunkStorage = $chunkMeta['storage'];
 		$chunkAddress = $chunkMeta['address'];
 		$chunkStoragePrefix = '';
@@ -362,9 +363,9 @@ function retrieveChunk($id)
  			$chunkData = get_url($chunkLocation);
 		}
 		else {
-			echo 'status 33<br>';
+			$l->a('status 33<br>');
 		}
- 		echo 'Chunk retrieval function completed step 3<br>';
+ 		$l->a('Chunk retrieval function completed step 3<br>');
 		//check retrieved chunk checksums
 		$cklen = strlen($chunkData);
 		$ckpar = par($chunkData);
@@ -396,14 +397,14 @@ function retrieveChunk($id)
 				$rcerror = 15;
 			}
 		}
-		echo '<br>Chunk retrieval function completed step 4<br>';
+		$l->a('<br>Chunk retrieval function completed step 4<br>');
 		//Decrypt chunk using chunk key
 		global $chunkPrivateKey;
 		$rsa = new Crypt_RSA();
 		$rsa->loadKey($chunkPrivateKey); // private key
 		$ciphertext = $chunkData;
 		$plaintext = $rsa->decrypt($ciphertext);
-		echo 'Chunk retrieval function completed step 5<br>';
+		$l->a('Chunk retrieval function completed step 5<br>');
 		//Check decrypted chunk against parity checksum from database
 		$ptlen = strlen($plaintext);
 		$ptpar = par($plaintext);
@@ -415,10 +416,10 @@ function retrieveChunk($id)
 		$ppar = $chunkMeta['paritypre'];
 		if(($plen != $ptlen) || ($ppar != $ptcrc)) {
 			if($rcpcount < 1) {
-				echo 'information code 30<br>';
-				echo '<br>Retrieved data: '.$plaintext.'<br><br>';				
-				echo 'Retrieved len = '.$ptlen.'; expected '.$plen.'.<br>';
-				echo 'Retrieved par = '.$ptpar.'; expected '.$ppar.'.<br>';
+				$l->a('information code 30<br>');
+				$l->a('<br>Retrieved data: '.$plaintext.'<br><br>');				
+				$l->a('Retrieved len = '.$ptlen.'; expected '.$plen.'.<br>');
+				$l->a('Retrieved par = '.$ptpar.'; expected '.$ppar.'.<br>');
 				$rcpcount++;
 				goto retrievechunk;
 			}
@@ -426,23 +427,23 @@ function retrieveChunk($id)
 				$rcerror = 14;
 			}
 		}
-		echo 'Chunk retrieval function completed step 6<br>';
+		$l->a('Chunk retrieval function completed step 6<br>');
 		$db->close();
-		echo 'Chunk retrieval function completed step 7<br>';
+		$l->a('Chunk retrieval function completed step 7<br>');
 		//return data and checksums
 		return new cChunk ($plaintext,$ptlen,$ptpar,$ptmd5,$ptcrc,$ptsha,$pts512);
 	}
 }
 function retrieveCoal($id)
 {
-	echo 'Coal retrieval function begun<br>';
+	$l->a('Coal retrieval function begun<br>');
 	$db               = new FractureDB('futuqiur_coal');
 	$rctries = 0;
 	retrievec:
 	$rcerror = 0;
 	$rccount = 0;
 	$rcpcount = 0;
-	echo 'Coal retrieval function completed step 1<br>';
+	$l->a('Coal retrieval function completed step 1<br>');
 	retrievecoal:
 	//Get chunk address from database by ID
 	$coalMeta = $db->getRow('coal', 'id', $id);
@@ -461,7 +462,7 @@ function retrieveCoal($id)
 	$rbsha = sha($coalBlockList);
 	$rbcrc = crc($coalBlockList);
 	$rbs512 = s512($coalBlockList);
-	echo 'Coal retrieval function completed step 2<br>';
+	$l->a('Coal retrieval function completed step 2<br>');
 //  echo $cblen;
 // 	echo '<br>';
 // 	echo $rblen;
@@ -496,8 +497,8 @@ function retrieveCoal($id)
 			$rcerror = 17;
 		}
 	}
-	echo 'Coal retrieval function completed step 3<br>';
-	echo 'Coal block list: ' . $coalBlockList.'<br>';
+	$l->a('Coal retrieval function completed step 3<br>');
+	$l->a('Coal block list: ' . $coalBlockList.'<br>');
 	if(strlen($coalBlockList)==0) {
 		$blockListExploded = array();
 	}
@@ -505,14 +506,14 @@ function retrieveCoal($id)
 		$blockListExploded = explode_esc(',',$coalBlockList);
 	}
 	$dataToReturn = '';
-	echo 'Coal retrieval function completed step 4<br>';
+	$l->a('Coal retrieval function completed step 4<br>');
 	foreach($blockListExploded as $blockId) {
-		echo 'Coal retrieval function running from checkpoint 5a<br>';
+		$l->a('Coal retrieval function running from checkpoint 5a<br>');
 		requestblock:
-		echo 'Coal retrieval function requesting chunk retrieval: begun step 5<br>';
+		$l->a('Coal retrieval function requesting chunk retrieval: begun step 5<br>');
 		//Request block
 		$blockData = retrieveChunk($blockId);
-		echo 'Coal retrieval function completed step 5<br>';
+		$l->a('Coal retrieval function completed step 5<br>');
 		//Check returned block data against returned block checksums
 		$rbdata = $blockData->data;
 		$rblen = $blockData->len;
@@ -527,7 +528,7 @@ function retrieveCoal($id)
 		$lbsha = sha($rbdata);
 		$lbcrc = crc($rbdata);
 		$lbs512 = s512($rbdata);
-		echo 'Coal retrieval function completed step 6<br>';
+		$l->a('Coal retrieval function completed step 6<br>');
 		if(($rblen != $lblen) || ($rbpar != $lbpar) || ($rbmd5 != $lbmd5) || ($rbsha != $lbsha) || ($rbcrc != $lbcrc) || ($rbs512 != $lbs512)) {
 			if($rccount < 10) {
 				$rccount++;
@@ -539,20 +540,20 @@ function retrieveCoal($id)
 				$rcerror = 18;
 			}
 		}
-		echo 'Coal retrieval function completed step 7<br>';
+		$l->a('Coal retrieval function completed step 7<br>');
 		//Decrypt block data using record key
 		global $coalPrivateKey;
 		$rsa = new Crypt_RSA();
 		$rsa->loadKey($coalPrivateKey); // private key
 		$ciphertext = $rbdata;
 		$plaintext = $rsa->decrypt($ciphertext);
-		echo 'Coal retrieval function completed step 8<br>';
+		$l->a('Coal retrieval function completed step 8<br>');
 		//Decompress block data
 		$dcblockdata = bzdecompress($plaintext);
-		echo 'Coal retrieval function completed step 9<br>';
+		$l->a('Coal retrieval function completed step 9<br>');
 		//Append block data to record data to return
 		$dataToReturn = $dataToReturn.$dcblockdata;
-		echo 'Coal retrieval function completed step 10<br>';
+		$l->a('Coal retrieval function completed step 10<br>');
 	}
 	//Check compiled record data against parity checksum
 	$clen = strlen($dataToReturn);
@@ -562,36 +563,36 @@ function retrieveCoal($id)
 	$ccrc = crc($dataToReturn);
 	$cs512 = s512($dataToReturn);
 	if(($ccrc != $recordpar) || ($clen != $recordlen)) {
-		echo 'Coal retrieval function reached status checkpoint 10a<br>';
-		echo '<br>Retrieved data: '.$dataToReturn.'<br><br>';				
-		echo 'Retrieved len = '.$clen.'; expected '.$recordlen.'.<br>';
-		echo 'Retrieved crc = '.$ccrc.'; expected '.$recordpar.'.<br>';
+		$l->a('Coal retrieval function reached status checkpoint 10a<br>');
+		$l->a('<br>Retrieved data: '.$dataToReturn.'<br><br>');				
+		$l->a('Retrieved len = '.$clen.'; expected '.$recordlen.'.<br>');
+		$l->a('Retrieved crc = '.$ccrc.'; expected '.$recordpar.'.<br>');
 		if($rcpcount < 10) {
-			echo 'Coal retrieval function reached status checkpoint 10b<br>';
+			$l->a('Coal retrieval function reached status checkpoint 10b<br>');
 			$rcpcount++;
 			$rcperror = 23;
 			goto resetstatus;
 		}
 		else {
-			echo 'Coal retrieval function reached status checkpoint 10c<br>';
+			$l->a('Coal retrieval function reached status checkpoint 10c<br>');
 			$rcerror = 19;
 		}
 	}
-	echo 'Coal retrieval function completed step 11<br>';
+	$l->a('Coal retrieval function completed step 11<br>');
 	$db->close();
 	//return data and checksums
 	return new cCoal ($dataToReturn,$clen,$cpar,$cmd5,$ccrc,$csha,$cs512);
 	resetstatus:
-	echo 'Coal retrieval function reached status checkpoint a<br>';
+	$l->a('Coal retrieval function reached status checkpoint a<br>');
 	$blocklist = '';
 	$dataToReturn = '';
 	$rctries++;
 	if($rctries < 10) {
-		echo 'Coal retrieval function reached status checkpoint b<br>';
+		$l->a('Coal retrieval function reached status checkpoint b<br>');
 		goto retrievec;
 	}
 	else {
-		echo 'Coal retrieval function reached status checkpoint c<br>';
+		$l->a('Coal retrieval function reached status checkpoint c<br>');
 		//Chunk retrieval failed too many times
 		//$rcerror = 16;
 		//echo 'Chunk retrieval failed: 
