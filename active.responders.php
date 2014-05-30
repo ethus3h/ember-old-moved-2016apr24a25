@@ -550,7 +550,7 @@ function CoalIntakeHandler()
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
-		echo '<br><br>Added coal '.$newCoalId.'.';
+		echo '<br><br>Added coal '.$newCoalId.'; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
 		echo '<br>Coal intake handler completed step 8<br>';
     }
     else {
