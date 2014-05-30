@@ -211,10 +211,13 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		global $chunkPrivateKey;
 		global $chunkPublicKey;
 		//help from http://www.php.net/manual/en/function.openssl-public-encrypt.php
+		$ciphertext = '';
 		openssl_public_encrypt($data,$ciphertext,$chunkPublicKey);
 		$l->a('Chunk insertion function completed step 3<br>');
 		//help from http://www.php.net/manual/en/function.openssl-private-decrypt.php
+		$cdecrypted = '';
 		openssl_private_decrypt($ciphertext,$cdecrypted,$chunkPrivateKey);
+		$l->a('Length of encrypted data: '.strlen($ciphertext).'; length of decrypted data: '.strlen($cdecrypted).'; length of original data: '.strlen($data).'.');
 		if($cdecrypted != $data) {
 			if($chcount < 10) {
 				$l->a('Chunk insertion function status checkpoint 3a<br>');
@@ -418,6 +421,7 @@ function retrieveChunk($id)
 		// $rsa = new Crypt_RSA();
 // 		$rsa->loadKey($chunkPrivateKey); // private key
 // 		$ciphertext = $chunkData;
+		$plaintext = '';
 		openssl_private_decrypt($chunkData,$plaintext,$chunkPrivateKey);
 		//$plaintext = $rsa->decrypt($ciphertext);
 		$l->a('Chunk retrieval function completed step 5<br>');
