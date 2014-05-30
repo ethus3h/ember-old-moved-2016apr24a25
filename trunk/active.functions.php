@@ -176,50 +176,6 @@ function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey
 		// Put our file (also with public read access)
 		if ($s3->putObject($data, $bucketName, $filename, S3::ACL_PUBLIC_READ)) {
 			echo "S3::putObjectFile(): File copied to {$bucketName}/".baseName($uploadFile).PHP_EOL;
-
-
-			// Get the contents of our bucket
-			$contents = $s3->getBucket($bucketName);
-			echo "S3::getBucket(): Files in bucket {$bucketName}: ".print_r($contents, 1);
-
-
-			// Get object info
-			$info = $s3->getObjectInfo($bucketName, baseName($uploadFile));
-			echo "S3::getObjectInfo(): Info for {$bucketName}/".baseName($uploadFile).': '.print_r($info, 1);
-
-
-			// You can also fetch the object into memory
-			// var_dump("S3::getObject() to memory", $s3->getObject($bucketName, baseName($uploadFile)));
-
-			// Or save it into a file (write stream)
-			// var_dump("S3::getObject() to savefile.txt", $s3->getObject($bucketName, baseName($uploadFile), 'savefile.txt'));
-
-			// Or write it to a resource (write stream)
-			// var_dump("S3::getObject() to resource", $s3->getObject($bucketName, baseName($uploadFile), fopen('savefile.txt', 'wb')));
-
-
-
-			// Get the access control policy for a bucket:
-			// $acp = $s3->getAccessControlPolicy($bucketName);
-			// echo "S3::getAccessControlPolicy(): {$bucketName}: ".print_r($acp, 1);
-
-			// Update an access control policy ($acp should be the same as the data returned by S3::getAccessControlPolicy())
-			// $s3->setAccessControlPolicy($bucketName, '', $acp);
-			// $acp = $s3->getAccessControlPolicy($bucketName);
-			// echo "S3::getAccessControlPolicy(): {$bucketName}: ".print_r($acp, 1);
-
-
-			// Enable logging for a bucket:
-			// $s3->setBucketLogging($bucketName, 'logbucket', 'prefix');
-
-			// if (($logging = $s3->getBucketLogging($bucketName)) !== false) {
-			// 	echo "S3::getBucketLogging(): Logging for {$bucketName}: ".print_r($contents, 1);
-			// } else {
-			// 	echo "S3::getBucketLogging(): Logging for {$bucketName} not enabled\n";
-			// }
-
-			// Disable bucket logging:
-			// var_dump($s3->disableBucketLogging($bucketName));
 		} else {
 			echo "error code 34: S3::putObjectFile(): Failed to copy file\n";
 			$iaerror = 34;
