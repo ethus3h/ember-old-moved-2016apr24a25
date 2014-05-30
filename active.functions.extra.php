@@ -180,6 +180,7 @@ function arcmaj3_barrel_expire($barrelId)
 function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	global $l;
 	$l->a('Chunk insertion function begun step 1<br>');
+	$chcount = 0;
 	//$l->a('NEW CHUNK DATA: '.$data);
 	$icerror = 0;
 	$rpar = par($data);
@@ -209,13 +210,12 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		//encrypt record
 		global $chunkPrivateKey;
 		global $chunkPublicKey;
-		$rsa = new Crypt_RSA();
-		$rsa->loadKey($chunkPublicKey); // public key
-		$plaintext = $data;
-		$ciphertext = $rsa->encrypt($plaintext);
-		$rsa->loadKey($chunkPrivateKey); // private key
+		//help from http://www.php.net/manual/en/function.openssl-public-encrypt.php
+		openssl_public_encrypt($data,$ciphertext,$chunkPublicKey);
 		$l->a('Chunk insertion function completed step 3<br>');
-		if($rsa->decrypt($ciphertext) != $plaintext) {
+		//help from http://www.php.net/manual/en/function.openssl-private-decrypt.php
+		openssl_private_decrypt($ciphertext,$cdecrypted,$chunkPrivateKey);
+		if($cdecrypted != $data) {
 			if($chcount < 10) {
 				$l->a('Chunk insertion function status checkpoint 3a<br>');
 				goto chunk;
@@ -280,7 +280,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$chcount = 0;
 			chunk:
 			$l->a('Chunk insertion function reached status checkpoint 7a<br>');
-			// $chcount++;
+			$chcount++;
 			//Add record w/ ID, parity checksum
 			$l->a('Chunk insertion function completed step 7<br>');
 			$newChunkId = $db->addRow('coalchunks', 'length, lengthpre, parity, paritypre, md5, sha, crc, s512, compression', '\''.strlen($ciphertext).'\', \''.strlen($data).'\', \''.$encpar.'\', \''.$par.'\', \''.$encmd5.'\', \''.$encsha.'\', \''.$enccrc.'\', \''.$encs512.'\', \''.$compression.'\'');
@@ -412,13 +412,14 @@ function retrieveChunk($id)
 		//Decrypt chunk using chunk key
 		global $chunkPrivateKey;
 		//help from http://www.php.net/manual/en/function.class-exists.php
-		if(!class_exists('Crypt_RSA')) {
-			include('Crypt/RSA.php');
-		}
-		$rsa = new Crypt_RSA();
-		$rsa->loadKey($chunkPrivateKey); // private key
-		$ciphertext = $chunkData;
-		$plaintext = $rsa->decrypt($ciphertext);
+// 		if(!class_exists('Crypt_RSA')) {
+// 			include('Crypt/RSA.php');
+// 		}
+		// $rsa = new Crypt_RSA();
+// 		$rsa->loadKey($chunkPrivateKey); // private key
+// 		$ciphertext = $chunkData;
+		openssl_private_decrypt($chunkData,$plaintext,$chunkPrivateKey);
+		//$plaintext = $rsa->decrypt($ciphertext);
 		$l->a('Chunk retrieval function completed step 5<br>');
 		//Check decrypted chunk against parity checksum from database
 		$ptlen = strlen($plaintext);
