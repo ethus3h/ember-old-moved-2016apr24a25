@@ -251,7 +251,13 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$potentialcrc = $potentialRecord->crc;
 			$potentialsha = $potentialRecord->sha;
 			$potentials512 = $potentialRecord->s512;
+			//$l->a('Provided data = '.$data.'; potential '.$potentialData.'.<br><br>');
 			$l->a('Provided data md5 = '.$md5.'; potential '.$potentialmd5.'.<br>');
+			$l->a('Provided data len = '.$len.'; potential '.$potentiallen.'.<br>');
+			$l->a('Provided data par = '.$par.'; potential '.$potentialpar.'.<br>');
+			$l->a('Provided data sha = '.$sha.'; potential '.$potentialsha.'.<br>');
+			$l->a('Provided data crc = '.$crc.'; potential '.$potentialcrc.'.<br>');
+			$l->a('Provided data s512 = '.$s512.'; potential '.$potentials512.'.<br>');
 			if(($potentialData === $data) && ($potentiallen == $len) && ($potentialpar == $par) && ($potentialmd5 == $md5) && ($potentialcrc == $crc) && ($potentialsha == $sha) && ($potentials512 == $s512)) {
 				$duplicateFound = true;
 				$duplicateId = $potential['id'];
