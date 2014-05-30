@@ -287,4 +287,11 @@ class ErrorTrap {
     return $this->errors;
   }
 }
+class stt
+{
+    function __construct($btime)
+    {
+        $this->btime=$btime;
+    }
+}
 ?>

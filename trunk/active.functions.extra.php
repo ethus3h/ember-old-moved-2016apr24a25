@@ -187,7 +187,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 	$crc = crc($data);
 	$sha = sha($data);
 	$s512 = s512($data);
-	echo 'Chunk insertion function completed step 1<br>';
+	echo '<br>Chunk insertion function completed step 1<br>';
 	$newChunkId = 0;
 	if(($spar != $rpar) || ($smd5 != $md5) || ($scrc != $crc) || ($ssha != $sha) || ($ss512 != $s512)) {
 		echo 'Chunk insertion function reached status checkpoint 1a<br>';
@@ -229,9 +229,17 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$encsha = sha($ciphertext);
 		$encs512 = s512($ciphertext);
 		foreach ($potentialDuplicates as $potential) {
-			echo 'Chunk insertion function begun step 5<br>';
+			echo '<br>Chunk insertion function begun step 5<br>';
 			//Request potential from storage
+			//help from http://stackoverflow.com/questions/4207343/how-to-get-time-in-php-with-nanosecond-precision
+// 			$btime = microtime(true);
+// 			echo '<br>Begun chunk retrieval at '.$btime.'.<br>';
+			$s=st();
 			$potentialRecord = retrieveChunk($potential['id']);
+// 			$etime = microtime(true);
+// 			$tduration = $etime - $btime;
+// 			echo '<br>Finished chunk retrieval at '.$etime.'; took '.$tduration.' seconds.<br>';
+			et($s);
 			$potentialData = $potentialRecord->data;
 			$potentiallen = $potentialRecord->len;
 			$potentialpar = $potentialRecord->par;
@@ -248,29 +256,30 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			}
 			echo 'Chunk insertion function completed step 5<br>';
 		}
-		duplicatefound:
-		echo 'Chunk insertion function begun step 6<br>';
-		if($duplicateFound) {
+ 		duplicatefound:
+ 		echo 'Chunk insertion function begun step 6<br>';
+ 		if($duplicateFound) {
 			echo 'information code 26: duplicate found';
 			$newChunkId = $duplicateId;
 			echo 'Chunk insertion function reached status checkpoint 6a<br>';
-			goto finished;
-		}
-		echo 'Chunk insertion function completed step 6<br>';
-		else {
+ 			goto finished;
+ 		}
+ 		else {
 			echo 'Chunk insertion function begun step 7<br>';
 			$chcount = 0;
 			chunk:
 			echo 'Chunk insertion function reached status checkpoint 7a<br>';
-			$chcount++;
+			// $chcount++;
 			//Add record w/ ID, parity checksum
 			echo 'Chunk insertion function completed step 7<br>';
 			$newChunkId = $db->addRow('coalchunks', 'length, lengthpre, parity, paritypre, md5, sha, crc, s512, compression', '\''.strlen($ciphertext).'\', \''.strlen($data).'\', \''.$encpar.'\', \''.$par.'\', \''.$encmd5.'\', \''.$encsha.'\', \''.$enccrc.'\', \''.$encs512.'\', \''.$compression.'\'');
 			echo 'Chunk insertion function completed step 8<br>';
 			//store chunk
 			$sccount = 0;
+			$sc27try = 0;
 			storechunk:
-			echo 'Chunk insertion function reached status checkpoint 8a<br>';
+			echo '<br>Chunk insertion function reached status checkpoint 8a<br>';
+			$sc27try++;
 			$sccount++;
 			$identifierId = $newChunkId / 1000;
 			$identifier = $identifierId.guidv4();
@@ -285,8 +294,8 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$keywords = 'coal; data; coal chunks; ';
 			echo 'Chunk insertion function completed step 8<br>';
 			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,'texts',$keywords,true,'opensource');
-			echo 'Chunk insertion function completed step 9<br>';
-			if($ulresult = 10) {
+			echo 'Chunk insertion function completed step 9; upload result code '.$ulresult.'<br>';
+			if(($ulresult == 10) && ($sc27try < 10)) {
 				echo 'information code 27';
 				goto storechunk;
 			}
@@ -298,18 +307,20 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$db->setField('coalchunks', 'storage', 'ia', $newChunkId);
 			$db->setField('coalchunks', 'address', $identifier.'/'.$filename, $newChunkId);
 			echo 'Chunk insertion function completed step 11<br>';
-			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
-			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
-			goto finished;
+			echo 'Chunk insertion function completed step 6<br>';
+// 			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
+// 			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
+ 			goto finished;
 		}
 		$db->close();
-	}
+ 	}
 	finished:
 	echo 'Chunk insertion function reached status checkpoint a<br>';
 	if($icerror != 0) {
 		echo 'Chunk insertion function reached status checkpoint b<br>';
 		//header("HTTP/1.0 525 Request failed");
 	}
+	echo 'Chunk insertion function returning new chunk ID '.$newChunkId.' and error code '.$icerror.'.<br>';
 	return array($newChunkId, $icerror);
 	echo 'Chunk insertion function reached status checkpoint c<br>';
 }
@@ -319,7 +330,7 @@ function retrieveChunk($id)
 		echo 'information code 32<br>';
 	}
 	else {
-		echo 'Chunk retrieval function begun<br>';
+		echo 'Chunk retrieval function begun; retrieving chunk '.$id.'.<br>';
 		$db               = new FractureDB('futuqiur_coalchunks');
 		$rcerror = 0;
 		$rccount = 0;
@@ -331,7 +342,7 @@ function retrieveChunk($id)
 		echo '<br>Getting metadata for chunk '.$id;
 		$chunkMeta = $db->getRow('coalchunks', 'id', $id);
 		//print_r($chunkMeta);
-		echo 'Chunk retrieval function completed step 2<br>';
+		echo '<br>Chunk retrieval function completed step 2<br>';
 		$chunkStorage = $chunkMeta['storage'];
 		$chunkAddress = $chunkMeta['address'];
 		$chunkStoragePrefix = '';
@@ -340,10 +351,15 @@ function retrieveChunk($id)
 				$chunkStoragePrefix = "http://archive.org/download/";
 				break;
 		}
-		$chunkLocation = $chunkStoragePrefix+$chunkAddress;
+		$chunkLocation = $chunkStoragePrefix.$chunkAddress;
 		//download chunk
-		$chunkData = get_url($chunkLocation);
-		echo 'Chunk retrieval function completed step 3<br>';
+		if(strlen($chunkLocation) > 0) {
+ 			$chunkData = get_url_dummy($chunkLocation);
+		}
+		else {
+			echo 'status 33<br>';
+		}
+ 		echo 'Chunk retrieval function completed step 3<br>';
 		//check retrieved chunk checksums
 		$cklen = strlen($chunkData);
 		$ckpar = par($chunkData);
@@ -368,7 +384,7 @@ function retrieveChunk($id)
 				$rcerror = 15;
 			}
 		}
-		echo 'Chunk retrieval function completed step 4<br>';
+		echo '<br>Chunk retrieval function completed step 4<br>';
 		//Decrypt chunk using chunk key
 		global $chunkPrivateKey;
 		$rsa = new Crypt_RSA();

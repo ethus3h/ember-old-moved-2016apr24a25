@@ -145,6 +145,11 @@ function get_url($url)
     }
     return $ret;
 }
+function get_url_dummy($url)
+{
+	echo '<br>Data requested from URL: '.$url.'<br>';
+	return 'Fake data...';
+}
 function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false,$collection = 'opensource')
 {
 	//Keywords in $keywords should be separated by ;
@@ -485,5 +490,16 @@ function remove_script_style($data) {
 	//based on http://stackoverflow.com/questions/5517255/remove-style-attribute-from-html-tags
 	$output = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $text);
 	return $output;
+}
+function st() {
+	$btime = microtime(true);
+	echo '<br>Timed event begun at '.$btime.'.<br>';
+	return new stt($btime);
+}
+function et($st) {
+	$btime = $st->btime;
+	$etime = microtime(true);
+	$dtime = $etime-$btime;
+	echo '<br>Timed event finished at '.$etime.'; took '.$dtime.' seconds.<br>';
 }
 ?>
