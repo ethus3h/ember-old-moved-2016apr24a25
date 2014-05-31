@@ -214,15 +214,17 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		global $chunkPrivateKey;
 		global $chunkPublicKey;
 		$b = st('Encrypting chunk');
-		$rsa = new Crypt_RSA();
-		$rsa->loadKey($chunkPublicKey); // public key
-		$plaintext = $data;
-		$ciphertext = $rsa->encrypt($plaintext);
-		$rsa->loadKey($chunkPrivateKey); // private key
+// 		$rsa = new Crypt_RSA();
+// 		$rsa->loadKey($chunkPublicKey); // public key
+// 		$plaintext = $data;
+// 		$ciphertext = $rsa->encrypt($plaintext);
+// 		$rsa->loadKey($chunkPrivateKey); // private key
+		global $chunkMasterKey;
+		$ciphertext = mc_encrypt($plaintext,$chunkMasterKey);
 		et($b);
 		$c = st('Decrypting chunk for insertion check');
 		$l->a('Chunk insertion function completed step 3<br>');
-		if($rsa->decrypt($ciphertext) != $plaintext) {
+		if(mc_decrypt($ciphertext,$chunkMasterKey) != $plaintext) {
 			if($chcount < 10) {
 				$l->a('Chunk insertion function status checkpoint 3a<br>');
 				goto chunk;
@@ -425,16 +427,18 @@ function retrieveChunk($id)
 		$l->a('<br>Chunk retrieval function completed step 4<br>');
 		//Decrypt chunk using chunk key
 		$b = st('Decrypting chunk for retrieval');
-		global $chunkPrivateKey;
-		//help from http://www.php.net/manual/en/function.class-exists.php
-		if(!class_exists('Crypt_RSA')) {
-			include('Crypt/RSA.php');
-		}
-		$rsa = new Crypt_RSA();
-		$rsa->loadKey($chunkPrivateKey); // private key
-		$ciphertext = $chunkData;
-		$plaintext = $rsa->decrypt($ciphertext);
-		et($b);
+		// global $chunkPrivateKey;
+// 		//help from http://www.php.net/manual/en/function.class-exists.php
+// 		if(!class_exists('Crypt_RSA')) {
+// 			include('Crypt/RSA.php');
+// 		}
+// 		$rsa = new Crypt_RSA();
+// 		$rsa->loadKey($chunkPrivateKey); // private key
+// 		$ciphertext = $chunkData;
+// 		$plaintext = $rsa->decrypt($ciphertext);
+		global $chunkMasterKey;
+		$plaintext = mc_decrypt($ciphertext,$chunkMasterKey);
+ 		et($b);
 		$l->a('Chunk retrieval function completed step 5<br>');
 		//Check decrypted chunk against parity checksum from database
 		$ptlen = strlen($plaintext);
