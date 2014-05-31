@@ -364,6 +364,8 @@ function DBSimpleSubmissionHandler()
 
 function CoalIntakeHandler()
 {
+	global $coalVersion;
+	$coalVersion = 1;
     $authorizationKey = $_REQUEST['authorizationKey'];
     global $generalAuthKey;
     global $error;
@@ -534,7 +536,7 @@ function CoalIntakeHandler()
 		$blocklistsha = sha($blockList);
 		$blocklists512 = s512($blockList);
 		$dbt = st('Adding coal record to database');
-		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime, blocks, blockslen, blockspar, blocksmd5, blockscrc, blockssha, blocks512', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$ferror.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\', \''.$blockList.'\', \''.$blocklistlen.'\', \''.$blocklistpar.'\', \''.$blocklistmd5.'\', \''.$blocklistcrc.'\', \''.$blocklistsha.'\', \''.$blocklists512.'\'');
+		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime, blocks, blockslen, blockspar, blocksmd5, blockscrc, blockssha, blocks512, coalcreatorversion', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$ferror.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\', \''.$blockList.'\', \''.$blocklistlen.'\', \''.$blocklistpar.'\', \''.$blocklistmd5.'\', \''.$blocklistcrc.'\', \''.$blocklistsha.'\', \''.$blocklists512.'\', \''.$coalVersion.'\'');
 		et($dbt);
 		// $db->setField('coal', 'blockslen', $blocklistlen, $newCoalId);
 // 		$db->setField('coal', 'blockspar', $blocklistpar, $newCoalId);
