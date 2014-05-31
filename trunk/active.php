@@ -1,7 +1,7 @@
 <?php
 #Futuramerlin Active Scripting Library.
 //from http://davidwalsh.name/increase-php-script-execution-time-limit-ini_set
-ini_set('max_execution_time', 300);
+//ini_set('max_execution_time', 300);
 global $emberVersion;
 $activeVersion = $emberVersion;
 #Some code based on StudyMaster; some based on the other d/r scripts.
