@@ -571,18 +571,18 @@ function remove_script_style($data) {
 	$output = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $text);
 	return $output;
 }
-function st() {
+function st($name = '') {
 	global $l;
 	$btime = microtime(true);
 	$l->a('<br>Timed event begun at '.$btime.'.<br>');
-	return new stt($btime);
+	return new stt($btime,$name);
 }
 function et($st) {
 	global $l;
 	$btime = $st->btime;
 	$etime = microtime(true);
 	$dtime = $etime-$btime;
-	$l->a('<br>Timed event finished at '.$etime.'; took '.$dtime.' seconds.<br>');
+	$l->a('<br>Timed event '.$st->name.' finished at '.$etime.'; took '.$dtime.' seconds.<br>');
 }
 //from http://us1.php.net/manual/en/function.crc32.php#31832
     $GLOBALS['__crc32_table']=array();        // Lookup table array

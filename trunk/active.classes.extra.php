@@ -289,9 +289,10 @@ class ErrorTrap {
 }
 class stt
 {
-    function __construct($btime)
+    function __construct($btime,$name)
     {
         $this->btime=$btime;
+        $this->name=$name;
     }
 }
 class llog

@@ -369,6 +369,7 @@ function CoalIntakeHandler()
     global $error;
     global $l;
     $l = new llog;
+    $t = st('CoalIntakeHandler');
     if($authorizationKey == $generalAuthKey) {
     	//Request accepted
     	$l->a('Coal intake handler begun<br>');
@@ -536,9 +537,50 @@ function CoalIntakeHandler()
 		$l->a( 'Coal intake handler completed step 5b<br>');
 		$l->a( 'Coal intake requesting coal retrieval: beginning step 6<br>');
 		//help from http://stackoverflow.com/questions/740954/does-sleep-time-count-for-execution-time-limit
-		sleep(30);
+		global $chunkUploadDirty;
+		if($chunkUploadDirty) {
+			sleep(5);
+		}
+		$ccoalcount = 0;
+		checkcoal:
+		$ccoalcount++;
 		$retrievedCoal = retrieveCoal($newCoalId);
 		$l->a( 'Coal intake handler completed step 6<br>');
+		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
+			if($ccoalcount < 10) {
+				$l->a( 'information code 37');
+				global $chunkUploadDirty;
+				if($chunkUploadDirty) {
+					sleep($ccoalcount*10);
+				}
+				goto checkcoal;
+			}
+		}
+		else {
+			if(!is_null($retrievedCoal)) {
+				if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+					$blockList = '';
+					if($ccoalcount < 10) {
+						$l->a( 'information code 37');
+						global $chunkUploadDirty;
+						if($chunkUploadDirty) {
+							sleep($ccoalcount*10);
+						}
+						goto checkcoal;
+					}
+				}
+			}
+			else {
+				if($ccoalcount < 10) {
+					$l->a( 'information code 37');
+					global $chunkUploadDirty;
+					if($chunkUploadDirty) {
+						sleep($ccoalcount*10);
+					}
+					goto checkcoal;
+				}
+			}
+		}
 		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
 			$error = 20;
 		}
@@ -570,6 +612,7 @@ function CoalIntakeHandler()
 		}
 		echo $newCoalId;
 if(isset($_REQUEST['coalVerbose'])) {		echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
+			et($t);
 			echo '<br><h1>Log output:</h1><br><small>';
 			$l->e();
 			echo '</small><br>Coal intake handler completed step 8<br>';
