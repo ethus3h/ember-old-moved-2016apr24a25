@@ -372,6 +372,7 @@ function CoalIntakeHandler()
     $t = st('CoalIntakeHandler');
     if($authorizationKey == $generalAuthKey) {
     	//Request accepted
+    	$plt = st('CoalIntakeHandler pre-loop');
     	$l->a('Coal intake handler begun<br>');
     	//help on times from http://stackoverflow.com/questions/5849702/php-file-upload-time-created
 		$db               = new FractureDB('futuqiur_coal');
@@ -440,8 +441,7 @@ function CoalIntakeHandler()
 		$l->a('Coal intake handler completed step 3<br>');
 		coal:
 		$l->a('Coal intake handler begun step 4<br>');
-		$coalcount++;		
-		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$ferror.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\'');
+		$coalcount++;
 		$l->a('Coal intake handler completed step 4<br>');
 		//$carray = str_split($data,524288);
 		$blockList = '';
@@ -450,7 +450,9 @@ function CoalIntakeHandler()
 		//help from (based on) http://www.php.net/manual/en/function.fread.php Example #1
 		$fhandle = fopen($target_path,"r");
 		//help from http://www.php.net/manual/en/function.ftell.php
+		et($plt);
 		while(ftell($fhandle) < $length) {
+			$loopt = st('CoalIntakeHandler loop pre-insert');
 			$chunk = fread($fhandle,262144);
 			$l->a('Coal intake handler begun step 4.1<br>');
 			//echo $chunk;
@@ -490,7 +492,9 @@ function CoalIntakeHandler()
 			//When chunks are handled by a separate system, replace this with a cURL request to the CoalChunkIntakeHandler.
 			$l->a('Coal intake handler completed step 4.4<br>');
 			$l->a('Coal intake handler begun step 4.5: requesting chunk insertion<br>');
+			et($loopt);
 			$icRes = insertChunk($ciphertext,$encpar,$encmd5,$enccrc,$encsha,$encs512,$compression);
+			$looptb = st('CoalIntakeHandler loop post-insert');
 			$l->a('Coal intake handler completed step 4.5<br>');
 			$newBlockId = $icRes[0];
 			$l->a('<br>insertChunk returned status '.$icRes[1].'.<br>');
@@ -512,27 +516,30 @@ function CoalIntakeHandler()
 				$bins = '';
 			}
 			$blockList = $blockList . $bins . $newBlockId;
+			et($looptb);
 			$l->a('Coal intake handler completed step 4.7<br>');
 		}
+		$postloop = st('CoalIntakeHandler post-loop, pre-retrieval');
 		fclose($fhandle);
 		$l->a('Length: '.$length.'<br>');
 		if($length == 0) {
 			$blockList = '';
 		}
 		$l->a('Coal intake handler completed step 5<br>');
-		$db->setField('coal', 'blocks', $blockList, $newCoalId);
+		//$db->setField('coal', 'blocks', $blockList, $newCoalId);
 		$blocklistlen = strlen($blockList);
 		$blocklistpar = par($blockList);
 		$blocklistmd5 = amd5($blockList);
 		$blocklistcrc = crc($blockList);
 		$blocklistsha = sha($blockList);
 		$blocklists512 = s512($blockList);
-		$db->setField('coal', 'blockslen', $blocklistlen, $newCoalId);
-		$db->setField('coal', 'blockspar', $blocklistpar, $newCoalId);
-		$db->setField('coal', 'blocksmd5', $blocklistmd5, $newCoalId);
-		$db->setField('coal', 'blockscrc', $blocklistcrc, $newCoalId);
-		$db->setField('coal', 'blockssha', $blocklistsha, $newCoalId);
-		$db->setField('coal', 'blocks512', $blocklists512, $newCoalId);
+		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime, blocks, blockslen, blockspar, blocksmd5, blockscrc, blockssha, blocks512', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$ferror.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\', \''.$blockList.'\', \''.$blocklistlen.'\', \''.$blocklistpar.'\', \''.$blocklistmd5.'\', \''.$blocklistcrc.'\', \''.$blocklistsha.'\', \''.$blocklists512.'\'');
+		// $db->setField('coal', 'blockslen', $blocklistlen, $newCoalId);
+// 		$db->setField('coal', 'blockspar', $blocklistpar, $newCoalId);
+// 		$db->setField('coal', 'blocksmd5', $blocklistmd5, $newCoalId);
+// 		$db->setField('coal', 'blockscrc', $blocklistcrc, $newCoalId);
+// 		$db->setField('coal', 'blockssha', $blocklistsha, $newCoalId);
+// 		$db->setField('coal', 'blocks512', $blocklists512, $newCoalId);
 		//$retrievedCoal = null;
 		$l->a( 'Coal intake handler completed step 5b<br>');
 		$l->a( 'Coal intake requesting coal retrieval: beginning step 6<br>');
@@ -544,8 +551,11 @@ function CoalIntakeHandler()
 		$ccoalcount = 0;
 		checkcoal:
 		$ccoalcount++;
+		et($postloop);
 		$retrievedCoal = retrieveCoal($newCoalId);
+		$postretrieval = st('CoalIntakeHandler post-retrieval');
 		$l->a( 'Coal intake handler completed step 6<br>');
+		$sleeptime = st('Sleeping, etc. for IA retrieval');
 		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
 			if($ccoalcount < 10) {
 				$l->a( 'information code 37');
@@ -601,6 +611,8 @@ function CoalIntakeHandler()
 				$error = 7;
 			}
 		}
+		et($sleeptime);
+		unlink($target_path);
 		$l->a( 'Coal intake handler completed step 7<br>');
 		$db->close();
 		if($error != 0) {
@@ -611,8 +623,9 @@ function CoalIntakeHandler()
 			
 		}
 		echo $newCoalId;
+		et($postretrieval);
+		et($t);
 if(isset($_REQUEST['coalVerbose'])) {		echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
-			et($t);
 			echo '<br><h1>Log output:</h1><br><small>';
 			$l->e();
 			echo '</small><br>Coal intake handler completed step 8<br>';
