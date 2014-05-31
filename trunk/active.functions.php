@@ -574,7 +574,7 @@ function remove_script_style($data) {
 function st($name = '') {
 	global $l;
 	$btime = microtime(true);
-	$l->a('<br>Timed event begun at '.$btime.'.<br>');
+	$l->a('<br>Timed event '.$st->name.' begun at '.$btime.'.<br>');
 	return new stt($btime,$name);
 }
 function et($st) {
