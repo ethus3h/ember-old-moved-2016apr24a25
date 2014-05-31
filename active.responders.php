@@ -533,7 +533,9 @@ function CoalIntakeHandler()
 		$blocklistcrc = crc($blockList);
 		$blocklistsha = sha($blockList);
 		$blocklists512 = s512($blockList);
+		$dbt = st('Adding coal record to database');
 		$newCoalId = $db->addRow('coal', 'length, parity, metadata, filename, type, size, tmp_name, error, smtime, stats, ctime, mtime, atime, blocks, blockslen, blockspar, blocksmd5, blockscrc, blockssha, blocks512', '\''.$length.'\', \''.$crc.'\', \''.$metadata.'\', \''.$filename.'\', \''.$type.'\', \''.$size.'\', \''.$tmp_name.'\', \''.$ferror.'\', \''.$smtime.'\', \''.$stats.'\', \''.$ctime.'\', \''.$mtime.'\', \''.$atime.'\', \''.$blockList.'\', \''.$blocklistlen.'\', \''.$blocklistpar.'\', \''.$blocklistmd5.'\', \''.$blocklistcrc.'\', \''.$blocklistsha.'\', \''.$blocklists512.'\'');
+		et($dbt);
 		// $db->setField('coal', 'blockslen', $blocklistlen, $newCoalId);
 // 		$db->setField('coal', 'blockspar', $blocklistpar, $newCoalId);
 // 		$db->setField('coal', 'blocksmd5', $blocklistmd5, $newCoalId);
@@ -545,8 +547,9 @@ function CoalIntakeHandler()
 		$l->a( 'Coal intake requesting coal retrieval: beginning step 6<br>');
 		//help from http://stackoverflow.com/questions/740954/does-sleep-time-count-for-execution-time-limit
 		global $chunkUploadDirty;
+		$sleeptime = st('Sleeping, etc. for IA retrieval');
 		if($chunkUploadDirty) {
-			sleep(5);
+			sleep(3);
 		}
 		$ccoalcount = 0;
 		checkcoal:
@@ -555,7 +558,6 @@ function CoalIntakeHandler()
 		$retrievedCoal = retrieveCoal($newCoalId);
 		$postretrieval = st('CoalIntakeHandler post-retrieval');
 		$l->a( 'Coal intake handler completed step 6<br>');
-		$sleeptime = st('Sleeping, etc. for IA retrieval');
 		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
 			if($ccoalcount < 10) {
 				$l->a( 'information code 37');
@@ -605,6 +607,9 @@ function CoalIntakeHandler()
 					else {
 						$error = 5;
 					}
+				}
+				else {
+					$l->a('Coal test retrieval was successful');
 				}
 			}
 			else {
@@ -658,7 +663,12 @@ function CoalRetrieveHandler()
     $l = new llog();
     if($authorizationKey == $generalAuthKey) {
 		$db               = new FractureDB('futuqiur_coal');
-				$retrievedCoal = retrieveCoal($_REQUEST['coalId']);
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=$filename");
+		header("Content-Type: application/octet-stream");
+		header("Content-Transfer-Encoding: binary");
+		$retrievedCoal = retrieveCoal($_REQUEST['coalId']);
 		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
 			$error = 20;
 		}
@@ -673,11 +683,6 @@ function CoalRetrieveHandler()
 		}
 		$filename = base64_decode($db->getField('coal','filename',$_REQUEST['coalId']));
 		//help from http://forums.mozillazine.org/viewtopic.php?f=37&t=27721 and http://www.rebol.net/cookbook/recipes/0059.html and http://stackoverflow.com/questions/1074898/mime-type-of-downloading-file
-		header("Cache-Control: public");
-		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=$filename");
-		header("Content-Type: application/octet-stream");
-		header("Content-Transfer-Encoding: binary");
 		header('Content-Length: ' . strlen($retrievedCoal->data));
 		echo $retrievedCoal->data;
 		$db->close();
