@@ -211,20 +211,22 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		//Check potentials for duplicate
 		$duplicateFound = false;
 		//encrypt record
+		//Can this be moved to after duplicate checking, so it's not unnecessarily encrypting $data when a duplicate is found?
 		global $chunkPrivateKey;
 		global $chunkPublicKey;
 		$b = st('Encrypting chunk');
-// 		$rsa = new Crypt_RSA();
-// 		$rsa->loadKey($chunkPublicKey); // public key
-// 		$plaintext = $data;
+		$rsa = new Crypt_RSA();
+		// $rsa->loadKey($chunkPublicKey); // public key
+ 		//$plaintext = $data;
 // 		$ciphertext = $rsa->encrypt($plaintext);
-// 		$rsa->loadKey($chunkPrivateKey); // private key
+		$rsa->loadKey($chunkPrivateKey); // private key
 		global $chunkMasterKey;
-		$ciphertext = mc_encrypt($plaintext,$chunkMasterKey);
+		$ciphertext = mc_encrypt($data,$chunkMasterKey);
 		et($b);
 		$c = st('Decrypting chunk for insertion check');
 		$l->a('Chunk insertion function completed step 3<br>');
-		if(mc_decrypt($ciphertext,$chunkMasterKey) != $plaintext) {
+		//$dcrp = mc_decrypt($ciphertext,$chunkMasterKey);
+		if(mc_decrypt($ciphertext,$chunkMasterKey) != $data) {
 			if($chcount < 10) {
 				$l->a('Chunk insertion function status checkpoint 3a<br>');
 				goto chunk;
@@ -234,6 +236,16 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 				$icerror = 4;
 			}
 		}
+		// if($rsa->decrypt($ciphertext) != $plaintext) {
+// 			if($chcount < 10) {
+// 				$l->a('Chunk insertion function status checkpoint 3a<br>');
+// 				goto chunk;
+// 			}
+// 			else {
+// 				$l->a('error 4');
+// 				$icerror = 4;
+// 			}
+// 		}
 		et($c);
 		$l->a('Chunk insertion function completed step 4<br>');
 		$enclen = strlen($ciphertext);
@@ -427,18 +439,17 @@ function retrieveChunk($id)
 		$l->a('<br>Chunk retrieval function completed step 4<br>');
 		//Decrypt chunk using chunk key
 		$b = st('Decrypting chunk for retrieval');
-		// global $chunkPrivateKey;
-// 		//help from http://www.php.net/manual/en/function.class-exists.php
-// 		if(!class_exists('Crypt_RSA')) {
-// 			include('Crypt/RSA.php');
-// 		}
-// 		$rsa = new Crypt_RSA();
-// 		$rsa->loadKey($chunkPrivateKey); // private key
-// 		$ciphertext = $chunkData;
-// 		$plaintext = $rsa->decrypt($ciphertext);
+		global $chunkPrivateKey;
+		//help from http://www.php.net/manual/en/function.class-exists.php
+		if(!class_exists('Crypt_RSA')) {
+			include('Crypt/RSA.php');
+		}
+		$rsa = new Crypt_RSA();
+		$rsa->loadKey($chunkPrivateKey); // private key
+		$ciphertext = $chunkData;
+		$plaintext = $rsa->decrypt($ciphertext);
 		global $chunkMasterKey;
-		$plaintext = mc_decrypt($ciphertext,$chunkMasterKey);
- 		et($b);
+		et($b);
 		$l->a('Chunk retrieval function completed step 5<br>');
 		//Check decrypted chunk against parity checksum from database
 		$ptlen = strlen($plaintext);
