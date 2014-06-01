@@ -210,50 +210,6 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 		$l->a('Chunk insertion function completed step 2<br>');
 		//Check potentials for duplicate
 		$duplicateFound = false;
-		//encrypt record
-		//Can this be moved to after duplicate checking, so it's not unnecessarily encrypting $data when a duplicate is found?
-		global $chunkPrivateKey;
-		global $chunkPublicKey;
-		$b = st('Encrypting chunk');
-		$rsa = new Crypt_RSA();
-		// $rsa->loadKey($chunkPublicKey); // public key
- 		//$plaintext = $data;
-// 		$ciphertext = $rsa->encrypt($plaintext);
-		$rsa->loadKey($chunkPrivateKey); // private key
-		global $chunkMasterKey;
-		$ciphertext = mc_encrypt($data,$chunkMasterKey);
-		et($b);
-		$c = st('Decrypting chunk for insertion check');
-		$l->a('Chunk insertion function completed step 3<br>');
-		//$dcrp = mc_decrypt($ciphertext,$chunkMasterKey);
-		if(mc_decrypt($ciphertext,$chunkMasterKey) != $data) {
-			if($chcount < 10) {
-				$l->a('Chunk insertion function status checkpoint 3a<br>');
-				goto chunk;
-			}
-			else {
-				$l->a('error 4');
-				$icerror = 4;
-			}
-		}
-		// if($rsa->decrypt($ciphertext) != $plaintext) {
-// 			if($chcount < 10) {
-// 				$l->a('Chunk insertion function status checkpoint 3a<br>');
-// 				goto chunk;
-// 			}
-// 			else {
-// 				$l->a('error 4');
-// 				$icerror = 4;
-// 			}
-// 		}
-		et($c);
-		$l->a('Chunk insertion function completed step 4<br>');
-		$enclen = strlen($ciphertext);
-		$encpar = par($ciphertext);
-		$encmd5 = amd5($ciphertext);
-		$enccrc = crc($ciphertext);
-		$encsha = sha($ciphertext);
-		$encs512 = s512($ciphertext);
 		foreach ($potentialDuplicates as $potential) {
 			$l->a('<br>Chunk insertion function begun step 5; requesting chunk '.$potential['id'].'.<br>');
 			//Request potential from storage
@@ -298,6 +254,51 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
  			goto finished;
  		}
  		else {
+			//encrypt record
+			//Can this be moved to after duplicate checking, so it's not unnecessarily encrypting $data when a duplicate is found?
+				//Hopefully so. :P
+	// 		global $chunkPrivateKey;
+	// 		global $chunkPublicKey;
+			$b = st('Encrypting chunk');
+			//$rsa = new Crypt_RSA();
+			// $rsa->loadKey($chunkPublicKey); // public key
+			//$plaintext = $data;
+	// 		$ciphertext = $rsa->encrypt($plaintext);
+			//$rsa->loadKey($chunkPrivateKey); // private key
+			global $chunkMasterKey;
+			$ciphertext = mc_encrypt($data,$chunkMasterKey);
+			et($b);
+			$c = st('Decrypting chunk for insertion check');
+			$l->a('Chunk insertion function completed step 3<br>');
+			//$dcrp = mc_decrypt($ciphertext,$chunkMasterKey);
+			if(mc_decrypt($ciphertext,$chunkMasterKey) != $data) {
+				if($chcount < 10) {
+					$l->a('Chunk insertion function status checkpoint 3a<br>');
+					goto chunk;
+				}
+				else {
+					$l->a('error 4');
+					$icerror = 4;
+				}
+			}
+			// if($rsa->decrypt($ciphertext) != $plaintext) {
+	// 			if($chcount < 10) {
+	// 				$l->a('Chunk insertion function status checkpoint 3a<br>');
+	// 				goto chunk;
+	// 			}
+	// 			else {
+	// 				$l->a('error 4');
+	// 				$icerror = 4;
+	// 			}
+	// 		}
+			et($c);
+			$l->a('Chunk insertion function completed step 4<br>');
+			$enclen = strlen($ciphertext);
+			$encpar = par($ciphertext);
+			$encmd5 = amd5($ciphertext);
+			$enccrc = crc($ciphertext);
+			$encsha = sha($ciphertext);
+			$encs512 = s512($ciphertext);
 			$l->a('Chunk insertion function begun step 7<br>');
 			$chcount = 0;
 			chunk:
