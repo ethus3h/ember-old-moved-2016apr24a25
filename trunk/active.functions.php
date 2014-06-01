@@ -682,6 +682,7 @@ return $encoded;
  
 // Decrypt Function
 function mc_decrypt($decrypt, $key){
+//print_r(func_get_args());
 $decrypt = explode('|', $decrypt);
 $decoded = base64_decode($decrypt[0]);
 $iv = base64_decode($decrypt[1]);

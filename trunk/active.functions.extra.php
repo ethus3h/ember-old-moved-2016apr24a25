@@ -440,16 +440,17 @@ function retrieveChunk($id)
 		$l->a('<br>Chunk retrieval function completed step 4<br>');
 		//Decrypt chunk using chunk key
 		$b = st('Decrypting chunk for retrieval');
-		global $chunkPrivateKey;
+		//global $chunkPrivateKey;
 		//help from http://www.php.net/manual/en/function.class-exists.php
-		if(!class_exists('Crypt_RSA')) {
-			include('Crypt/RSA.php');
-		}
-		$rsa = new Crypt_RSA();
-		$rsa->loadKey($chunkPrivateKey); // private key
-		$ciphertext = $chunkData;
-		$plaintext = $rsa->decrypt($ciphertext);
+		// if(!class_exists('Crypt_RSA')) {
+// 			include('Crypt/RSA.php');
+// 		}
+		// $rsa = new Crypt_RSA();
+// 		$rsa->loadKey($chunkPrivateKey); // private key
+// 		$ciphertext = $chunkData;
+// 		$plaintext = $rsa->decrypt($ciphertext);
 		global $chunkMasterKey;
+		$plaintext = mc_decrypt($chunkData,$chunkMasterKey);
 		et($b);
 		$l->a('Chunk retrieval function completed step 5<br>');
 		//Check decrypted chunk against parity checksum from database
