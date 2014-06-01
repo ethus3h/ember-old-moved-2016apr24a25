@@ -396,7 +396,7 @@ function parf($file)
 }
 function crcf($file)
 {
-	return __crc32_file($file);
+	return substr(md5_file($file),0,5);
 }
 function amd5f($file)
 {

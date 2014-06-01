@@ -375,6 +375,7 @@ function CoalIntakeHandler()
     if($authorizationKey == $generalAuthKey) {
     	//Request accepted
     	$plt = st('CoalIntakeHandler pre-loop');
+    	$pla = st('CoalIntakeHandler pre-loop part A');
     	$l->a('Coal intake handler begun<br>');
     	//help on times from http://stackoverflow.com/questions/5849702/php-file-upload-time-created
 		$db               = new FractureDB('futuqiur_coal');
@@ -395,6 +396,8 @@ function CoalIntakeHandler()
 			$tmp_name = null;
 			$ferror = null;
 		}
+		et($pla);
+		$plb = st('CoalIntakeHandler pre-loop part B');
     	//based on http://www.tizag.com/phpT/fileupload.php?MAX_FILE_SIZE=100000&uploadedfile=
     	$target_path = "coal_temp/";
     	$nextId = $db->getNextId('coal').'-'.guidv4();
@@ -402,6 +405,8 @@ function CoalIntakeHandler()
 		$target_path = $target_path . "data.".$nextId.".cot"; 
 		//print_r($_FILES);
 		$l->a('Coal intake handler completed step 1<br>');
+		et($plb);
+		$plc = st('CoalIntakeHandler pre-loop part C');
     	if(isset($_FILES['uploadedfile'])) {		
 			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
 			} else {
@@ -413,6 +418,8 @@ function CoalIntakeHandler()
 			$error = 6;
 			$l->a("error 6<br>");
 		}
+		et($plc);
+		$pld = st('CoalIntakeHandler pre-loop part D');
 		$l->a('Coal intake handler completed step 2<br>');
 		$data = null;
 		$stat = null;
@@ -434,24 +441,41 @@ function CoalIntakeHandler()
     		$error = 3;
     		//$data = '';
   		}
+  		et($pld);
+  		$ple = st('CoalIntakeHandler pre-loop part E');
+  		$plea = st('CoalIntakeHandler pre-loop part E, subpart A: parity');
 		$par = parf($target_path);
+		et($plea);
+		$pleb = st('CoalIntakeHandler pre-loop part E, subpart B: md5');
 		$md5 = amd5f($target_path);
+		et($pleb);
+		$plec = st('CoalIntakeHandler pre-loop part E, subpart C: crc');
 		$crc = crcf($target_path);
+		et($plec);
+		$pled = st('CoalIntakeHandler pre-loop part E, subpart D: sha');
 		$sha = shaf($target_path);
+		et($pled);
+		$plee = st('CoalIntakeHandler pre-loop part E, subpart E: s512');
 		$s512 = s512f($target_path);
+		et($plee);
+		$plef = st('CoalIntakeHandler pre-loop part E, subpart F');
 		$coalcount = 0;
 		$l->a('Coal intake handler completed step 3<br>');
 		coal:
 		$l->a('Coal intake handler begun step 4<br>');
 		$coalcount++;
 		$l->a('Coal intake handler completed step 4<br>');
+		et($plef);
+		et($ple);
+		$plf = st('CoalIntakeHandler pre-loop part F');
 		//$carray = str_split($data,524288);
 		$blockList = '';
-		include('Crypt/RSA.php');
+		//include('Crypt/RSA.php');
 		//foreach($carray as $chunk) {
 		//help from (based on) http://www.php.net/manual/en/function.fread.php Example #1
 		$fhandle = fopen($target_path,"r");
 		//help from http://www.php.net/manual/en/function.ftell.php
+		et($plf);
 		et($plt);
 		while(ftell($fhandle) < $length) {
 			$loopt = st('CoalIntakeHandler loop pre-insert');
