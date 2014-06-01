@@ -365,7 +365,7 @@ function DBSimpleSubmissionHandler()
 function CoalIntakeHandler()
 {
 	global $coalVersion;
-	$coalVersion = 2;
+	$coalVersion = 3;
     $authorizationKey = $_REQUEST['authorizationKey'];
     global $generalAuthKey;
     global $error;
