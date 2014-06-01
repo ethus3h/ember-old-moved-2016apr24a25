@@ -247,7 +247,7 @@ class cCoal
 
 class cChunk
 {
-    function __construct($data,$len,$par,$md5,$crc,$sha,$s512)
+    function __construct($data,$len,$par,$md5,$crc,$sha,$s512,$disabled)
     {
         $this->data=$data;
         $this->len=$len;
@@ -256,6 +256,7 @@ class cChunk
         $this->crc=$crc;
         $this->sha=$sha;
         $this->s512=$s512;
+        $this->disabled=$disabled;
     }
 }
 //from http://stackoverflow.com/questions/1148928/disable-warnings-when-loading-non-well-formed-html-by-domdocument-php

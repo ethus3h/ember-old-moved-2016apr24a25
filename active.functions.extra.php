@@ -229,6 +229,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$potentialcrc = $potentialRecord->crc;
 			$potentialsha = $potentialRecord->sha;
 			$potentials512 = $potentialRecord->s512;
+			$pdisabled = $potentialRecord->disabled;
 			//$l->a('Provided data = '.$data.'; potential '.$potentialData.'.<br><br>');
 			$l->a('Provided data md5 = '.$md5.'; potential '.$potentialmd5.'.<br>');
 			$l->a('Provided data len = '.$len.'; potential '.$potentiallen.'.<br>');
@@ -236,7 +237,7 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 			$l->a('Provided data sha = '.$sha.'; potential '.$potentialsha.'.<br>');
 			$l->a('Provided data crc = '.$crc.'; potential '.$potentialcrc.'.<br>');
 			$l->a('Provided data s512 = '.$s512.'; potential '.$potentials512.'.<br>');
-			if(($potentialData === $data) && ($potentiallen == $len) && ($potentialpar == $rpar) && ($potentialmd5 == $md5) && ($potentialcrc == $crc) && ($potentialsha == $sha) && ($potentials512 == $s512)) {
+			if(($potentialData === $data) && ($potentiallen == $len) && ($potentialpar == $rpar) && ($potentialmd5 == $md5) && ($potentialcrc == $crc) && ($potentialsha == $sha) && ($potentials512 == $s512) && ($pdisabled != 1)) {
 				$duplicateFound = true;
 				$duplicateId = $potential['id'];
 				$l->a('information code 25<br>');
@@ -419,6 +420,7 @@ function retrieveChunk($id)
 		$chsha = $chunkMeta['sha'];
 		$chcrc = $chunkMeta['crc'];
 		$chs512 = $chunkMeta['s512'];
+		$cdisabled = $chunkMeta['disabled'];
 		if(($cklen != $chlen) || ($ckpar != $chpar) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($ckcrc != $chcrc) || ($cks512 != $chs512)) {
 			if($rccount < 10) {
 				$l->a('<br>information code 29.<br>');
@@ -480,7 +482,7 @@ function retrieveChunk($id)
 		$l->a('Chunk retrieval function completed step 7<br>');
 		//return data and checksums
 		et($t);
-		return new cChunk ($plaintext,$ptlen,$ptpar,$ptmd5,$ptcrc,$ptsha,$pts512);
+		return new cChunk ($plaintext,$ptlen,$ptpar,$ptmd5,$ptcrc,$ptsha,$pts512,$cdisabled);
 	}
 }
 function retrieveCoal($id)
@@ -498,6 +500,10 @@ function retrieveCoal($id)
 	retrievecoal:
 	//Get chunk address from database by ID
 	$coalMeta = $db->getRow('coal', 'id', $id);
+	$disabled = $coalMeta['disabled'];
+	if($disabled == '1') {
+		return null;
+	}
 	$recordpar = $coalMeta['parity'];
 	$recordlen = $coalMeta['length'];
 	$coalBlockList = $coalMeta['blocks'];
