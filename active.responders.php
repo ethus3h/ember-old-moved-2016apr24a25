@@ -665,6 +665,7 @@ function CoalRetrieveHandler()
     $l = new llog();
     if($authorizationKey == $generalAuthKey) {
 		$db               = new FractureDB('futuqiur_coal');
+		$filename = base64_decode($db->getField('coal','filename',$_REQUEST['coalId']));
 		header("Cache-Control: public");
 		header("Content-Description: File Transfer");
 		header("Content-Disposition: attachment; filename=$filename");
@@ -683,7 +684,6 @@ function CoalRetrieveHandler()
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
-		$filename = base64_decode($db->getField('coal','filename',$_REQUEST['coalId']));
 		//help from http://forums.mozillazine.org/viewtopic.php?f=37&t=27721 and http://www.rebol.net/cookbook/recipes/0059.html and http://stackoverflow.com/questions/1074898/mime-type-of-downloading-file
 		header('Content-Length: ' . strlen($retrievedCoal->data));
 		echo $retrievedCoal->data;
