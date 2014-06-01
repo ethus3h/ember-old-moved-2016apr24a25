@@ -218,33 +218,35 @@ function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
 // 			echo '<br>Begun chunk retrieval at '.$btime.'.<br>';
 			$s=st('Chunk retrieval requested at insertChunk step 5');
 			$potentialRecord = retrieveChunk($potential['id']);
-// 			$etime = microtime(true);
-// 			$tduration = $etime - $btime;
-// 			echo '<br>Finished chunk retrieval at '.$etime.'; took '.$tduration.' seconds.<br>';
 			et($s);
-			$potentialData = $potentialRecord->data;
-			$potentiallen = $potentialRecord->len;
-			$potentialpar = $potentialRecord->par;
-			$potentialmd5 = $potentialRecord->md5;
-			$potentialcrc = $potentialRecord->crc;
-			$potentialsha = $potentialRecord->sha;
-			$potentials512 = $potentialRecord->s512;
-			$pdisabled = $potentialRecord->disabled;
-			//$l->a('Provided data = '.$data.'; potential '.$potentialData.'.<br><br>');
-			$l->a('Provided data md5 = '.$md5.'; potential '.$potentialmd5.'.<br>');
-			$l->a('Provided data len = '.$len.'; potential '.$potentiallen.'.<br>');
-			$l->a('Provided data par = '.$rpar.'; potential '.$potentialpar.'.<br>');
-			$l->a('Provided data sha = '.$sha.'; potential '.$potentialsha.'.<br>');
-			$l->a('Provided data crc = '.$crc.'; potential '.$potentialcrc.'.<br>');
-			$l->a('Provided data s512 = '.$s512.'; potential '.$potentials512.'.<br>');
-			if(($potentialData === $data) && ($potentiallen == $len) && ($potentialpar == $rpar) && ($potentialmd5 == $md5) && ($potentialcrc == $crc) && ($potentialsha == $sha) && ($potentials512 == $s512) && ($pdisabled != 1)) {
-				$duplicateFound = true;
-				$duplicateId = $potential['id'];
-				$l->a('information code 25<br>');
-				$l->a('Chunk insertion function reached status checkpoint 5a<br>');
-				goto duplicatefound;
+			if(!is_null($potentialRecord)) {
+	// 			$etime = microtime(true);
+	// 			$tduration = $etime - $btime;
+	// 			echo '<br>Finished chunk retrieval at '.$etime.'; took '.$tduration.' seconds.<br>';
+				$potentialData = $potentialRecord->data;
+				$potentiallen = $potentialRecord->len;
+				$potentialpar = $potentialRecord->par;
+				$potentialmd5 = $potentialRecord->md5;
+				$potentialcrc = $potentialRecord->crc;
+				$potentialsha = $potentialRecord->sha;
+				$potentials512 = $potentialRecord->s512;
+				$pdisabled = $potentialRecord->disabled;
+				//$l->a('Provided data = '.$data.'; potential '.$potentialData.'.<br><br>');
+				$l->a('Provided data md5 = '.$md5.'; potential '.$potentialmd5.'.<br>');
+				$l->a('Provided data len = '.$len.'; potential '.$potentiallen.'.<br>');
+				$l->a('Provided data par = '.$rpar.'; potential '.$potentialpar.'.<br>');
+				$l->a('Provided data sha = '.$sha.'; potential '.$potentialsha.'.<br>');
+				$l->a('Provided data crc = '.$crc.'; potential '.$potentialcrc.'.<br>');
+				$l->a('Provided data s512 = '.$s512.'; potential '.$potentials512.'.<br>');
+				if(($potentialData === $data) && ($potentiallen == $len) && ($potentialpar == $rpar) && ($potentialmd5 == $md5) && ($potentialcrc == $crc) && ($potentialsha == $sha) && ($potentials512 == $s512)) {
+					$duplicateFound = true;
+					$duplicateId = $potential['id'];
+					$l->a('information code 25<br>');
+					$l->a('Chunk insertion function reached status checkpoint 5a<br>');
+					goto duplicatefound;
+				}
+				$l->a('Chunk insertion function completed step 5<br>');
 			}
-			$l->a('Chunk insertion function completed step 5<br>');
 		}
  		duplicatefound:
  		$l->a('Chunk insertion function begun step 6<br>');
@@ -388,6 +390,9 @@ function retrieveChunk($id)
 		//Get chunk address from database by ID
 		$l->a('<br>Getting metadata for chunk '.$id);
 		$chunkMeta = $db->getRow('coalchunks', 'id', $id);
+		if($chunkMeta['disabled'] == 1) {
+			return null;
+		}
 		//print_r($chunkMeta);
 		$l->a('<br>Chunk retrieval function completed step 2<br>');
 		$chunkStorage = $chunkMeta['storage'];

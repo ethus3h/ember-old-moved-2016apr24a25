@@ -455,7 +455,7 @@ function CoalIntakeHandler()
 		et($plt);
 		while(ftell($fhandle) < $length) {
 			$loopt = st('CoalIntakeHandler loop pre-insert');
-			$chunk = fread($fhandle,262144);
+			$chunk = fread($fhandle,4194304);
 			$l->a('Coal intake handler begun step 4.1<br>');
 			//echo $chunk;
 			$chcount = 0;
