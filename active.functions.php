@@ -677,6 +677,7 @@ $key = pack('H*', $key);
 $mac = hash_hmac('sha256', $encrypt, substr(bin2hex($key), -32));
 $passcrypt = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $encrypt.$mac, MCRYPT_MODE_CBC, $iv);
 $encoded = base64_encode($passcrypt).'|'.base64_encode($iv);
+//echo 'IV first : ' . base64_encode($iv).'<br>';
 return $encoded;
 }
  
@@ -686,6 +687,7 @@ function mc_decrypt($decrypt, $key){
 $decrypt = explode('|', $decrypt);
 $decoded = base64_decode($decrypt[0]);
 $iv = base64_decode($decrypt[1]);
+//echo 'IV now : ' . base64_encode($iv).'<br>';
 $key = pack('H*', $key);
 $decrypted = trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $decoded, MCRYPT_MODE_CBC, $iv));
 $mac = substr($decrypted, -64);
