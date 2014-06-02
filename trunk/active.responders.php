@@ -657,17 +657,13 @@ function CoalIntakeHandler()
 			$filenamedec=base64_decode($filename);
 			header("Cache-Control: public");
 			header("Content-Description: File Transfer");
-			header("Content-Disposition: attachment; filename=$filenamedec".'.webloc');
+			header("Content-Disposition: attachment; filename=$filenamedec".'.url');
 			header("Content-Type: application/octet-stream");
 			header("Content-Transfer-Encoding: binary");
-			$smallified='<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>URL</key>
-	<string>http://futuramerlin.com/d/r/active.php?coalId='.$newCoalId.'&authorizationKey='.urlencode($generalAuthKey).'&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve</string>
-</dict>
-</plist>';
+			//help from http://forums.macrumors.com/showthread.php?t=853291
+			$smallified='[InternetShortcut]
+URL=http://futuramerlin.com/d/r/active.php?coalId='.$newCoalId.'&authorizationKey='.urlencode($generalAuthKey).'&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve
+IconIndex=0';
 			header('Content-Length: ' . strlen($smallified));
 			echo $smallified;
 		}
