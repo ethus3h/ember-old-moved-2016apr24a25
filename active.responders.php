@@ -653,17 +653,37 @@ function CoalIntakeHandler()
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
-		if(isset($_REQUEST['coalVerbose'])) {
-			echo '<br><br>Added coal ';
-			
+		if(isset($_REQUEST['outputwebloc'])) {
+			$filenamedec=base64_decode($filename);
+			header("Cache-Control: public");
+			header("Content-Description: File Transfer");
+			header("Content-Disposition: attachment; filename=$filenamedec".'.webloc');
+			header("Content-Type: application/octet-stream");
+			header("Content-Transfer-Encoding: binary");
+			$smallified='<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>URL</key>
+	<string>http://futuramerlin.com/d/r/active.php?coalId='.$newCoalId.'&authorizationKey='.urlencode($generalAuthKey).'&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve</string>
+</dict>
+</plist>';
+			header('Content-Length: ' . strlen($smallified));
+			echo $smallified;
 		}
-		echo $newCoalId;
-		et($postretrieval);
-		et($t);
-if(isset($_REQUEST['coalVerbose'])) {		echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
-			echo '<br><h1>Log output:</h1><br><small>';
-			$l->e();
-			echo '</small><br>Coal intake handler completed step 8<br>';
+		else {
+			if(isset($_REQUEST['coalVerbose'])) {
+				echo '<br><br>Added coal ';
+			
+			}
+			echo $newCoalId;
+			et($postretrieval);
+			et($t);
+	if(isset($_REQUEST['coalVerbose'])) {		echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
+				echo '<br><h1>Log output:</h1><br><small>';
+				$l->e();
+				echo '</small><br>Coal intake handler completed step 8<br>';
+			}
 		}
     }
     else {
