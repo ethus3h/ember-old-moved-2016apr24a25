@@ -400,9 +400,9 @@ function CoalIntakeHandler()
 		$plb = st('CoalIntakeHandler pre-loop part B');
     	//based on http://www.tizag.com/phpT/fileupload.php?MAX_FILE_SIZE=100000&uploadedfile=
     	$target_path = "coal_temp/";
-    	$nextId = $db->getNextId('coal').'-'.guidv4();
+    	//$nextId = $db->getNextId('coal').'-'.guidv4();
     	//cot file extension â€” Coal temporary data file; can be any binary data
-		$target_path = $target_path . "data.".$nextId.".cot"; 
+		$target_path = $target_path . "data.".guidv4().".cot"; 
 		//print_r($_FILES);
 		$l->a('Coal intake handler completed step 1<br>');
 		et($plb);
@@ -479,17 +479,21 @@ function CoalIntakeHandler()
 		et($plt);
 		while(ftell($fhandle) < $length) {
 			$loopt = st('CoalIntakeHandler loop pre-insert');
+			$lfread = st('freading up to 4mb');
 			$chunk = fread($fhandle,4194304);
+			et($lfread);
 			$l->a('Coal intake handler begun step 4.1<br>');
 			//echo $chunk;
 			$chcount = 0;
 			chunk:
 			$chcount++;
 			$compression = "bzip2";
+			$lbz2 = st('compressing chunk using bzip2');
 			$compressed = bzcompress($chunk);
+			et($lbz2);
 			$l->a('Coal intake handler completed step 4.1<br>');
-			global $coalPrivateKey;
-			global $coalPublicKey;
+			// global $coalPrivateKey;
+// 			global $coalPublicKey;
 			// $rsa = new Crypt_RSA();
 // 			$rsa->loadKey($coalPublicKey); // public key
 // 			$plaintext = $compressed;
