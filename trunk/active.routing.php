@@ -79,6 +79,9 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'phpinfo') {
         PhpinfoWint();
     }
+    if ($wintNeeded == 'coalplistupload') {
+        coalplistupload();
+    }
 }
 
 // function logAdd($text){

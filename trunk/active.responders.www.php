@@ -391,6 +391,16 @@ function coaltestupload()
 enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="coalVerbose" value="1" /><input type="hidden" name="handlerNeeded" value="CoalIntake" /><br /><input type="submit" value="Upload File" /></form></body></html>';
 	}
 }
+function coalplistupload()
+{
+    $authorizationKey = $_REQUEST['authorizationKey'];
+    global $generalAuthKey;
+    if($authorizationKey == $generalAuthKey) {
+		//based partly on http://www.tizag.com/phpT/fileupload.php
+    	echo '<html><head><title>Smallify</title></head><body><center><h1>Smallify</h1>Select file:<br><form action="active.php" method="post"
+enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="outputwebloc" value="1" /><input type="hidden" name="handlerNeeded" value="CoalIntake" /><br /><input type="submit" value="Smallify!" /></form><br>When you want, double-click your Smallified file to expand it.</center></body></html>';
+	}
+}
 function coaltestdownload()
 {
     $authorizationKey = $_REQUEST['authorizationKey'];
