@@ -406,7 +406,9 @@ function retrieveChunk($id)
 		$chunkLocation = $chunkStoragePrefix.$chunkAddress;
 		//download chunk
 		if(strlen($chunkLocation) > 0) {
+			$dlt = st('Downloading chunk data');
  			$chunkData = get_url($chunkLocation);
+ 			et($dlt);
 		}
 		else {
 			$l->a('status 33<br>');
