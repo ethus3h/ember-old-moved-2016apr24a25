@@ -245,7 +245,7 @@ class cCoal
 
 class cCoalMeta
 {
-    function __construct($len=null,$md5=null,$sha=null,$s512=null,$blocks=null,$blockslen=null,$blocksmd5=null,$blockssha=null,$blockss512=null,$metadata=null,$filename=null,$type=null,$size=null,$ulfilename=null,$ultype=null,$ulsize=null,$tmp_name=null,$error=null,$smtime=null,$stats=null,$ctime=null,$mtime=null,$atime=null,$creatorversion=null)
+    function __construct($len=null,$md5=null,$sha=null,$s512=null,$blocks=null,$blockslen=null,$blocksmd5=null,$blockssha=null,$blockss512=null,$metadata=null,$filename=null,$type=null,$size=null,$ulfilename=null,$ultype=null,$ulsize=null,$tmpname=null,$error=null,$smtime=null,$stats=null,$ctime=null,$mtime=null,$atime=null,$compression=null,$creatorversion=null)
     {
         $this->len=$len;
         $this->md5=$md5;
@@ -270,6 +270,7 @@ class cCoalMeta
         $this->ctime=$ctime;
         $this->mtime=$mtime;
         $this->atime=$atime;
+        $this->compression=$compression;
         $this->creatorversion=$creatorversion;
     }
 }

@@ -192,7 +192,7 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 	}
 	else {
 		$db = new FractureDB('futuqiur_coalchunks');
-		$potentialDuplicates = $db->getColumns('chunks2', 'id', 'md5', $md5);
+		$potentialDuplicates = $db->getColumns('chunk2', 'id', 'md5', $md5);
 		$duplicateFound = false;
 		foreach ($potentialDuplicates as $potential) {
 			$potentialRecord = retrieveChunk($potential['id']);
@@ -264,7 +264,7 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 				$l->a('information code 28');
 				goto storechunk;
 			}
-			$db->setField('chunks2', 'address', 'ia:'.$identifier, $newChunkId);
+			$db->setField('chunk2', 'address', 'ia:'.$identifier, $newChunkId);
 // 			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
 // 			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
  			goto finished;
@@ -294,7 +294,7 @@ function retrieveChunk($id)
 		$rccount = 0;
 		$rcpcount = 0;
 		retrievechunk:
-		$chunkMetaRow = $db->getRow('chunks2', 'id', $id);
+		$chunkMetaRow = $db->getRow('chunk2', 'id', $id);
 		$chunkAddressBlock = $chunkMetaRow['address'];
 		$caExp = explode_escaped($chunkAddress,':');
 		$chunkStorage = $caExp[0];
@@ -317,7 +317,7 @@ function retrieveChunk($id)
 		$chunkDataR = mc_decrypt($chunkDataR,$chunkMasterKey);
 		$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
 		//help from http://stackoverflow.com/questions/4036036/php-substr-after-a-certain-char-a-substr-strpos-elegant-solution
-		$chunkMeta = unserialize(bzdecompress(substr(strstr($chunkDataR,'@CoalFragmentMarker@', true),0,-20)));
+		$chunkMeta = unserialize(base64_decode(bzdecompress(substr(strstr($chunkDataR,'@CoalFragmentMarker@', true),0,-20))));
 		$chunkData = substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
 		$rmd5 = amd5($chunkDataR);
 		$cklen = strlen($chunkData);
@@ -520,12 +520,12 @@ function coalFromFile($filename,$returnPath = true) {
 	else {
 		$error = 3;
 	}
-	$md5 = amd5f($target_path);
-	$sha = shaf($target_path);
-	$s512 = s512f($target_path);
-	$blockList = '';
-	$fhandle = fopen($target_path,"r");
-	while(ftell($fhandle) < $length) {
+	$md5 = amd5f($filename);
+	$sha = shaf($filename);
+	$s512 = s512f($filename);
+	$blocks = '';
+	$fhandle = fopen($filename,"r");
+	while(ftell($fhandle) < $size) {
 		$chunk = fread($fhandle,4194304);
 		$chcount = 0;
 		chunk:
@@ -538,7 +538,7 @@ function coalFromFile($filename,$returnPath = true) {
 		$ichunkcount = 0;
 		ichunk:
 		$ichunkcount++;
-		$icRes = insertChunk($compressed,$rmd5,$rsha,$rs512);
+		$icRes = insertChunk($compressed,$rmd5,$rsha,$rs512,$compression);
 		$newBlockId = $icRes[0];
 		$l->a('<br>insertChunk returned status '.$icRes[1].'.<br>');
 		if($icRes[1] != 0) {
@@ -552,7 +552,7 @@ function coalFromFile($filename,$returnPath = true) {
 			}
 		}
 		$bins = ',';
-		if(strlen($blockList) == 0) {
+		if(strlen($blocks) == 0) {
 			$bins = '';
 		}
 		$blocks = $blocks . $bins . $newBlockId;
@@ -562,9 +562,9 @@ function coalFromFile($filename,$returnPath = true) {
 	$blocksmd5 = amd5($blocks);
 	$blockssha = sha($blocks);
 	$blockss512 = s512($blocks);
-	$m = new cCoalMeta($size,$md5,$sha,$s512,$blocks,$blockslen,$blocksmd5,$blockssha,$blockss512,null,$filename,$type,$size,null,null,null,null,null,$smtime,$stats,$ctime,$mtime,$atime,$coalVersion);
+	$m = new cCoalMeta($size,$md5,$sha,$s512,$blocks,$blockslen,$blocksmd5,$blockssha,$blockss512,null,$filename,$type,$size,null,null,null,null,null,$smtime,$stats,$ctime,$mtime,$atime,$compression,$coalVersion);
 	if($returnPath) {
-		return array($target_path,$m);
+		return array($filename,$m);
 	}
 	else {
 		return $m;
@@ -573,6 +573,7 @@ function coalFromFile($filename,$returnPath = true) {
 
 function insertCoal($target = null) {
 	$db = new FractureDB('futuqiur_coal');
+	global $l;
 	$coalcount = 0;
 	coal:
 	$coalcount++;
@@ -584,14 +585,17 @@ function insertCoal($target = null) {
 		$res = coalFromFile($target);
 		$coalTraits = $res[1];
 	}
-	if($length == 0) {
+	if($coalTraits->len == 0) {
 		$coalTraits->blocks = '';
 	}
 	$ctEnc = bzcompress(serialize($coalTraits));
+	$md5 = amd5($ctEnc);
+	$sha = sha($ctEnc);
+	$s512 = s512($ctEnc);
 	$ichunkcount = 0;
 	ichunk:
 	$ichunkcount++;
-	$icRes = insertChunk($ctEnc);
+	$icRes = insertChunk($ctEnc,$md5,$sha,$s512,$coalTraits->compression);
 	$newBlockId = $icRes[0];
 	$l->a('<br>insertChunk for metadata returned status '.$icRes[1].'.<br>');
 	if($icRes[1] != 0) {
