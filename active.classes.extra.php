@@ -233,13 +233,11 @@ $baggage_claim = new baggage_claim;
 
 class cCoal
 {
-    function __construct($data,$len,$par,$md5,$crc,$sha,$s512)
+    function __construct($data,$len,$md5,$sha,$s512)
     {
         $this->data=$data;
         $this->len=$len;
-        $this->par=$par;
         $this->md5=$md5;
-        $this->crc=$crc;
         $this->sha=$sha;
         $this->s512=$s512;
     }
@@ -293,18 +291,16 @@ class cChunkMeta
 
 class cChunk
 {
-    function __construct($data,$len,$par,$md5,$crc,$sha,$s512,$disabled)
+    function __construct($data,$len,$md5,$sha,$s512)
     {
         $this->data=$data;
         $this->len=$len;
-        $this->par=$par;
         $this->md5=$md5;
-        $this->crc=$crc;
         $this->sha=$sha;
         $this->s512=$s512;
-        $this->disabled=$disabled;
     }
 }
+
 //from http://stackoverflow.com/questions/1148928/disable-warnings-when-loading-non-well-formed-html-by-domdocument-php
 class ErrorTrap {
   protected $callback;

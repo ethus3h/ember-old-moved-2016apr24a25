@@ -495,69 +495,31 @@ function retrieveChunk($id)
 function retrieveCoal($id)
 {
 	global $l;
-	$t = st('retrieveCoal');
-	$l->a('Coal retrieval function begun<br>');
-	$db               = new FractureDB('futuqiur_coal');
+	$error = 0;
+	$db = new FractureDB('futuqiur_coal');
 	$rctries = 0;
 	retrievec:
-	$rcerror = 0;
 	$rccount = 0;
 	$rcpcount = 0;
-	$l->a('Coal retrieval function completed step 1<br>');
 	retrievecoal:
-	//Get chunk address from database by ID
-	$coalMeta = $db->getRow('coal', 'id', $id);
-	$disabled = $coalMeta['disabled'];
-	if($disabled == '1') {
-		return null;
-	}
-	$recordpar = $coalMeta['parity'];
-	$recordlen = $coalMeta['length'];
-	$coalBlockList = $coalMeta['blocks'];
-	$cblen = $coalMeta['blockslen'];	
-	$cbpar = trim($coalMeta['blockspar']);
-	$cbmd5 = $coalMeta['blocksmd5'];
-	$cbsha = $coalMeta['blockssha'];
-	$cbcrc = $coalMeta['blockscrc'];
-	$cbs512 = $coalMeta['blocks512'];
-	$rblen = strlen($coalBlockList);
-	$rbpar = par($coalBlockList);
-	$rbmd5 = amd5($coalBlockList);
-	$rbsha = sha($coalBlockList);
-	$rbcrc = crc($coalBlockList);
-	$rbs512 = s512($coalBlockList);
-	$l->a('Coal retrieval function completed step 2<br>');
-//  echo $cblen;
-// 	echo '<br>';
-// 	echo $rblen;
-// 	echo '<br>';
-// 	echo $cbpar;
-// 	echo '<br>';
-// 	echo $rbpar;
-// 	echo '<br>';
-// 	echo $cbmd5;
-// 	echo '<br>';
-// 	echo $rbmd5;
-// 	echo '<br>';
-// 	echo $cbcrc;
-// 	echo '<br>';
-// 	echo $rbcrc;
-// 	echo '<br>';
-// 	echo $cbsha;
-// 	echo '<br>';
-// 	echo $rbsha;
-// 	echo '<br>';
-// 	echo $cbs512;
-// 	echo '<br>';
-// 	echo $rbs512;
-// 	echo '<br>';
-	if($cblen != $rblen) {$l->a('<br>len check failed<br>');}
-	if($cbpar != $rbpar) {$l->a('<br>par check failed<br>');}
-	if($cbmd5 != $rbmd5) {$l->a('<br>md5 check failed<br>');}
-	if($cbs512 != $rbs512) {$l->a('<br>s512 check failed<br>');}
-	if($cbsha != $rbsha) {$l->a('<br>sha check failed<br>');}
-	if($cbcrc != $rbcrc) {$l->a('<br>crc check failed<br>');}
-	if(($cblen != $rblen) || ($cbpar != $rbpar) || ($cbmd5 != $rbmd5) || ($cbsha != $rbsha) || ($cbcrc != $rbcrc) || ($cbs512 != $rbs512)) {
+	$coalInfo = $db->getRow('coal2', 'id', $id);
+	$coalchunk = $coalMeta['chunk'];
+	$coalmd5 = $coalMeta['md5'];
+	$m = bzdecompress(unserialize(retrieveChunk($coalchunk)));
+	$len = $m->len;
+	$md5 = $m->md5;
+	$sha = $m->sha;
+	$s512 = $m->s512;
+	$blocks = $m->blocks;
+	$blockslen = $m->blockslen;
+	$blocksmd5 = $m->blocksmd5;
+	$blockssha = $m->blockssha;
+	$blockss512 = $m->blockss512;
+	$rblen = strlen($blocks);
+	$rbmd5 = amd5($blocks);
+	$rbsha = sha($blocks);
+	$rbs512 = s512($blocks);
+	if(($blockslen != $rblen) || ($blocksmd5 != $rbmd5) || ($blockssha != $rbsha) || ($blockss512 != $rbs512)) {
 		$l->a('Retrieved coal failed blocklist checksum.<br>Retrieved len = '.$rblen.'; expected '.$cblen.'.<br>');
 		$l->a('Retrieved par = '.$rbpar.'; expected '.$cbpar.'.<br>');
 		$l->a('Retrieved sha = '.$rbsha.'; expected '.$cbsha.'.<br>');
@@ -570,11 +532,9 @@ function retrieveCoal($id)
 			goto resetstatus;
 		}
 		else {
-			$rcerror = 17;
+			$error = 17;
 		}
 	}
-	$l->a('Coal retrieval function completed step 3<br>');
-	$l->a('Coal block list: ' . $coalBlockList.'<br>');
 	if(strlen($coalBlockList)==0) {
 		$blockListExploded = array();
 	}
@@ -582,30 +542,20 @@ function retrieveCoal($id)
 		$blockListExploded = explode_esc(',',$coalBlockList);
 	}
 	$dataToReturn = '';
-	$l->a('Coal retrieval function completed step 4<br>');
 	foreach($blockListExploded as $blockId) {
-		$l->a('Coal retrieval function running from checkpoint 5a<br>');
 		requestblock:
-		$l->a('Coal retrieval function requesting chunk retrieval: begun step 5<br>');
-		//Request block
 		$blockData = retrieveChunk($blockId);
-		$l->a('Coal retrieval function completed step 5<br>');
-		//Check returned block data against returned block checksums
 		$rbdata = $blockData->data;
 		$rblen = $blockData->len;
-		$rbpar = $blockData->par;
 		$rbmd5 = $blockData->md5;
 		$rbsha = $blockData->sha;
-		$rbcrc = $blockData->crc;
 		$rbs512 = $blockData->s512;
 		$lblen = strlen($rbdata);
-		$lbpar = par($rbdata);
 		$lbmd5 = amd5($rbdata);
 		$lbsha = sha($rbdata);
-		$lbcrc = crc($rbdata);
 		$lbs512 = s512($rbdata);
 		$l->a('Coal retrieval function completed step 6<br>');
-		if(($rblen != $lblen) || ($rbpar != $lbpar) || ($rbmd5 != $lbmd5) || ($rbsha != $lbsha) || ($rbcrc != $lbcrc) || ($rbs512 != $lbs512)) {
+		if(($rblen != $lblen) || ($rbmd5 != $lbmd5) || ($rbsha != $lbsha) || ($rbs512 != $lbs512)) {
 			if($rccount < 10) {
 				$rccount++;
 				//potential error
@@ -616,46 +566,24 @@ function retrieveCoal($id)
 				$rcerror = 18;
 			}
 		}
-		$l->a('Coal retrieval function completed step 7<br>');
-		//Decrypt block data using record key
-		// global $coalPrivateKey;
-// 		$rsa = new Crypt_RSA();
-// 		$rsa->loadKey($coalPrivateKey); // private key
-// 		$ciphertext = $rbdata;
-// 		$plaintext = $rsa->decrypt($ciphertext);
-		$plaintext = $rbdata;
-		$l->a('Coal retrieval function completed step 8<br>');
-		//Decompress block data
-		$dcblockdata = bzdecompress($plaintext);
-		$l->a('Coal retrieval function completed step 9<br>');
-		//Append block data to record data to return
+		$dcblockdata = bzdecompress($rbdata);
 		$dataToReturn = $dataToReturn.$dcblockdata;
-		$l->a('Coal retrieval function completed step 10<br>');
 	}
-	//Check compiled record data against parity checksum
 	$clen = strlen($dataToReturn);
 	$cmd5 = amd5($dataToReturn);
 	$csha = sha($dataToReturn);
 	$cs512 = s512($dataToReturn);
-	if(($clen != $recordlen)) {
-		$l->a('Coal retrieval function reached status checkpoint 10a<br>');
-		$l->a('<br>Retrieved data: '.$dataToReturn.'<br><br>');				
-		$l->a('Retrieved len = '.$clen.'; expected '.$recordlen.'.<br>');
+	if(($clen != $len) || ($cmd5 != $md5) || ($csha != $sha) || ($cs512 != $s512)) {
 		if($rcpcount < 10) {
-			$l->a('Coal retrieval function reached status checkpoint 10b<br>');
 			$rcpcount++;
 			$rcperror = 23;
 			goto resetstatus;
 		}
 		else {
-			$l->a('Coal retrieval function reached status checkpoint 10c<br>');
 			$rcerror = 19;
 		}
 	}
-	$l->a('Coal retrieval function completed step 11<br>');
 	$db->close();
-	//return data and checksums
-	et($t);
 	return new cCoal ($dataToReturn,$clen,$cmd5,$csha,$cs512);
 	resetstatus:
 	$l->a('Coal retrieval function reached status checkpoint a<br>');
@@ -668,12 +596,10 @@ function retrieveCoal($id)
 	}
 	else {
 		$l->a('Coal retrieval function reached status checkpoint c<br>');
-		//Chunk retrieval failed too many times
-		//$rcerror = 16;
-		//echo 'Chunk retrieval failed: 
 		return array(16, $rcerror, $rcperror);
 	}
 }
+
 function coalFromUpload() {
     global $l;
 	$error = 0;
@@ -714,6 +640,7 @@ function coalFromUpload() {
 	$m->metadata = $metadata;
 	return array($target,$m);
 }
+
 function coalFromFile($filename,$returnPath = true) {
     global $l;
     global $coalVersion;
@@ -789,6 +716,7 @@ function coalFromFile($filename,$returnPath = true) {
 		return $m;
 	}
 }
+
 function insertCoal($target = null) {
 	$plt = st('CoalIntakeHandler pre-loop');
 	$pla = st('CoalIntakeHandler pre-loop part A');
