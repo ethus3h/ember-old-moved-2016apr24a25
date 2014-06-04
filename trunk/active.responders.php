@@ -374,7 +374,9 @@ function CoalIntakeHandler()
     $l = new llog;
     $t = st('CoalIntakeHandler');
     if($authorizationKey == $generalAuthKey) {
-    	$error = insertCoal();
+    	$icres = insertCoal();
+    	$error = $icres[0];
+    	$resrc = $icres[1];
     }
     else {
     	header("HTTP/1.0 403 Forbidden");
@@ -383,12 +385,12 @@ function CoalIntakeHandler()
     if(isset($_REQUEST['coalVerbose'])) {
 		if(($error !== 0) && (strlen($error) > 0)) {
 			echo '<br>An error code was returned: '.$error;
-			if(($error == 20) && (is_int($retrievedCoal) || is_array($retrievedCoal))) {
-				if(is_int($retrievedCoal)) {
-					echo '<br>retrieveCoal returned error code '.$retrievedCoal;
+			if(($error == 20) && (is_int($resrc) || is_array($resrc))) {
+				if(is_int($resrc)) {
+					echo '<br>retrieveCoal returned error code '.$resrc;
 				}
 				else {
-					echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$retrievedCoal[0].', '.$retrievedCoal[1].', and '.$retrievedCoal[2].'.';
+					echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$resrc[0].', '.$resrc[1].', and '.$resrc[2].'.';
 				}
 			}
 		}

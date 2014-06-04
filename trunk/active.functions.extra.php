@@ -241,7 +241,6 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 			$chcount = 0;
 			chunk:
 			global $coalVersion;
-			$newChunkId = $db->addRow('coalchunks', 'length, lengthpre, parity, paritypre, md5, sha, crc, s512, compression, chunkcreatorversion', '\''.strlen($ciphertext).'\', \''.strlen($data).'\', \''.$encpar.'\', \''.$par.'\', \''.$encmd5.'\', \''.$encsha.'\', \''.$enccrc.'\', \''.$encs512.'\', \''.$compression.'\', \''.$coalVersion.'\'');
 			$sccount = 0;
 			$sc27try = 0;
 			storechunk:
@@ -251,11 +250,15 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 			$randomInt = rand(0,1000);
 			$randomIntAlt = rand(0,1000);
 			$identifier = $identifierId.$randomInt.'.COALPROJECT.RECORD33';
+			$address = 'ia:'.$identifier;
 			$fallbackid = $identifierId.$randomIntAlt.'.COALPROJECT.RECORD33';
-			$filename = $newChunkId.'.coal4';
+			print_r($db->getNextId('chunk2'));
+			$nextId = $db->getNextId('chunk2');
+			$filename = $nextId[0].'.coal4';
 			global $iaAuthKey;
 			global $iaPrivateKey;
-			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$iaAuthKey,$iaPrivateKey,$title,$description,'texts',$keywords,true,'opensource');
+			echo 'Ciphetext added: '.md5($ciphertext);
+			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$iaAuthKey,$iaPrivateKey,null,null,'texts',null,true,'opensource');
 			if(($ulresult == 35) && ($sc27try < 10)) {
 				$l->a('information code 27');
 				goto storechunk;
@@ -264,7 +267,7 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 				$l->a('information code 28');
 				goto storechunk;
 			}
-			$db->setField('chunk2', 'address', 'ia:'.$identifier, $newChunkId);
+			$newChunkId = $db->addRow('chunk2', 'address, md5', '\''.$address.'\', UNHEX(\''.$encmd5.'\')');
 // 			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
 // 			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
  			goto finished;
@@ -296,7 +299,7 @@ function retrieveChunk($id)
 		retrievechunk:
 		$chunkMetaRow = $db->getRow('chunk2', 'id', $id);
 		$chunkAddressBlock = $chunkMetaRow['address'];
-		$caExp = explode_escaped($chunkAddress,':');
+		$caExp = explode_esc(':',$chunkAddressBlock);
 		$chunkStorage = $caExp[0];
 		$chunkAddress = $caExp[1];
 		$chunkStoragePrefix = '';
@@ -314,6 +317,7 @@ function retrieveChunk($id)
 			$l->a('status 33<br>');
 		}
 		global $chunkMasterKey;
+		echo 'Ciphertext retrieved: '.md5($chunkDataR);
 		$chunkDataR = mc_decrypt($chunkDataR,$chunkMasterKey);
 		$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
 		//help from http://stackoverflow.com/questions/4036036/php-substr-after-a-certain-char-a-substr-strpos-elegant-solution
@@ -358,8 +362,8 @@ function retrieveCoal($id)
 	$rcpcount = 0;
 	retrievecoal:
 	$coalInfo = $db->getRow('coal2', 'id', $id);
-	$coalchunk = $coalMeta['chunk'];
-	$coalmd5 = $coalMeta['md5'];
+	$coalchunk = $coalInfo['chunk'];
+	$coalmd5 = $coalInfo['md5'];
 	$m = unserialize(bzdecompress(retrieveChunk($coalchunk)));
 	$len = $m->len;
 	$md5 = $m->md5;
@@ -702,6 +706,12 @@ IconIndex=0';
 			echo '</small><br>Coal intake handler completed step 8<br>';
 		}
 	}
-	return $error;
+	if(is_int($retrievedCoal) || is_array($retrievedCoal)) {
+		$toReturn = array($error,$retrievedCoal);
+	}
+	else {
+		$toReturn = array($error,null);
+	}
+	return $toReturn;
 }
 ?>
