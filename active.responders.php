@@ -375,9 +375,39 @@ function CoalIntakeHandler()
     $t = st('CoalIntakeHandler');
     if($authorizationKey == $generalAuthKey) {
     	$icres = insertCoal();
-    	$error = $icres[0];
-    	$resrc = $icres[1];
-    }
+    	$newCoalId = $icres[0];
+    	$coalTraits = $icres[1];
+    	$error = $icres[2];
+    	$resrc = $icres[3];
+		if($error != 0) {
+			header("HTTP/1.0 525 Request failed");
+		}
+		if(isset($_REQUEST['outputwebloc'])) {
+			$filenamedec=base64_decode($coalTraits->filename);
+			header("Cache-Control: public");
+			header("Content-Description: File Transfer");
+			header("Content-Disposition: attachment; filename=$filenamedec".'.url');
+			header("Content-Type: application/octet-stream");
+			header("Content-Transfer-Encoding: binary");
+			$smallified='[InternetShortcut]
+	URL=http://futuramerlin.com/d/r/active.php?coalId='.$newCoalId.'&authorizationKey='.urlencode($generalAuthKey).'&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve
+	IconIndex=0';
+			header('Content-Length: ' . strlen($smallified));
+			echo $smallified;
+		}
+		else {
+			if(isset($_REQUEST['coalVerbose'])) {
+				echo 'Added coal: ';
+			}
+			echo $newCoalId.'|'.$coalTraits->len.'|'.$coalTraits->md5.'|'.$coalTraits->sha.'|'.$coalTraits->s512;
+			if(isset($_REQUEST['coalVerbose'])) {
+				echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
+				echo '<br><h1>Log output:</h1><br><small>';
+				$l->e();
+				echo '</small><br>Coal intake handler completed step 8<br>';
+			}
+		}
+	}
     else {
     	header("HTTP/1.0 403 Forbidden");
     	$error = 1;
