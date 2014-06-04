@@ -276,10 +276,8 @@ class cCoalMeta
 
 class cChunkMeta
 {
-    function __construct($lenpre,$md5pre,$len,$md5,$sha,$compression,$creatorversion)
+    function __construct($len,$md5,$sha,$s512,$compression,$creatorversion)
     {
-        $this->lenpre=$lenpre;
-        $this->md5pre=$md5pre;
         $this->len=$len;
         $this->md5=$md5;
         $this->sha=$sha;

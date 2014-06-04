@@ -179,102 +179,55 @@ function arcmaj3_barrel_expire($barrelId)
 }
 function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 	global $l;
-	global $chunkUploadDirty;
-	$chunkUploadDirty = false;
-	$t = st('insertChunk');
-	//$l->a('Chunk insertion requested; arguments: <br><pre>'.print_r(func_get_args(),true).'</pre><br>');
-	$l->a('Chunk insertion function begun step 1<br>');
-	//$l->a('NEW CHUNK DATA: '.$data);
-	$icerror = 0;
-	$rpar = par($data);
-	$par = crc($data);
-	$md5 = amd5($data);
-	$crc = crc($data);
-	$sha = sha($data);
+	$error = 0;
 	$len = strlen($data);
+	$md5 = amd5($data);
+	$sha = sha($data);
 	$s512 = s512($data);
-	$l->a('<br><br>Chunk insertion function completed step 1; calculated SHA512 hash as '.$s512.'.<br>');
 	$newChunkId = 0;
-	if(($spar != $rpar) || ($smd5 != $md5) || ($scrc != $crc) || ($ssha != $sha) || ($ss512 != $s512)) {
+	if(($smd5 != $md5) || ($ssha != $sha) || ($ss512 != $s512)) {
 		$l->a('Chunk insertion function reached status checkpoint 1a<br>');
 		$l->a('error 8');
-		$icerror = 8;
+		$error = 8;
 	}
 	else {
-		$l->a('Chunk insertion function begun step 2<br>');
-		$db               = new FractureDB('futuqiur_coalchunks');
-		//Retrieve potential duplicates
-		$potentialDuplicates = $db->getColumns('coalchunks', 'id', 'paritypre', $crc);
-		//help from http://stackoverflow.com/questions/9325067/store-print-r-result-into-a-variable-as-a-string-or-text
-		$l->a('<br>Potential duplicates: '.print_r($potentialDuplicates,true).'<br>');		
-		$l->a('Chunk insertion function completed step 2<br>');
-		//Check potentials for duplicate
+		$db = new FractureDB('futuqiur_coalchunks');
+		$potentialDuplicates = $db->getColumns('chunks2', 'id', 'md5', $md5);
 		$duplicateFound = false;
 		foreach ($potentialDuplicates as $potential) {
-			$l->a('<br>Chunk insertion function begun step 5; requesting chunk '.$potential['id'].'.<br>');
-			//Request potential from storage
-			//help from http://stackoverflow.com/questions/4207343/how-to-get-time-in-php-with-nanosecond-precision
-// 			$btime = microtime(true);
-// 			echo '<br>Begun chunk retrieval at '.$btime.'.<br>';
-			$s=st('Chunk retrieval requested at insertChunk step 5');
 			$potentialRecord = retrieveChunk($potential['id']);
-			et($s);
 			if(!is_null($potentialRecord)) {
-	// 			$etime = microtime(true);
-	// 			$tduration = $etime - $btime;
-	// 			echo '<br>Finished chunk retrieval at '.$etime.'; took '.$tduration.' seconds.<br>';
 				$potentialData = $potentialRecord->data;
 				$potentiallen = $potentialRecord->len;
-				$potentialpar = $potentialRecord->par;
 				$potentialmd5 = $potentialRecord->md5;
-				$potentialcrc = $potentialRecord->crc;
 				$potentialsha = $potentialRecord->sha;
 				$potentials512 = $potentialRecord->s512;
-				$pdisabled = $potentialRecord->disabled;
-				//$l->a('Provided data = '.$data.'; potential '.$potentialData.'.<br><br>');
 				$l->a('Provided data md5 = '.$md5.'; potential '.$potentialmd5.'.<br>');
 				$l->a('Provided data len = '.$len.'; potential '.$potentiallen.'.<br>');
-				$l->a('Provided data par = '.$rpar.'; potential '.$potentialpar.'.<br>');
 				$l->a('Provided data sha = '.$sha.'; potential '.$potentialsha.'.<br>');
-				$l->a('Provided data crc = '.$crc.'; potential '.$potentialcrc.'.<br>');
 				$l->a('Provided data s512 = '.$s512.'; potential '.$potentials512.'.<br>');
-				if(($potentialData === $data) && ($potentiallen == $len) && ($potentialpar == $rpar) && ($potentialmd5 == $md5) && ($potentialcrc == $crc) && ($potentialsha == $sha) && ($potentials512 == $s512)) {
+				if(($potentialData === $data) && ($potentiallen == $len) && ($potentialmd5 == $md5) && ($potentialsha == $sha) && ($potentials512 == $s512)) {
 					$duplicateFound = true;
 					$duplicateId = $potential['id'];
 					$l->a('information code 25<br>');
 					$l->a('Chunk insertion function reached status checkpoint 5a<br>');
 					goto duplicatefound;
 				}
-				$l->a('Chunk insertion function completed step 5<br>');
 			}
 		}
  		duplicatefound:
- 		$l->a('Chunk insertion function begun step 6<br>');
  		if($duplicateFound) {
 			$l->a('information code 26: duplicate found<br>');
 			$newChunkId = $duplicateId;
-			$l->a('Chunk insertion function reached status checkpoint 6a<br>');
  			goto finished;
  		}
  		else {
-			//encrypt record
-			//Can this be moved to after duplicate checking, so it's not unnecessarily encrypting $data when a duplicate is found?
-				//Hopefully so. :P
-	// 		global $chunkPrivateKey;
-	// 		global $chunkPublicKey;
-			$b = st('Encrypting chunk');
-			//$rsa = new Crypt_RSA();
-			// $rsa->loadKey($chunkPublicKey); // public key
-			//$plaintext = $data;
-	// 		$ciphertext = $rsa->encrypt($plaintext);
-			//$rsa->loadKey($chunkPrivateKey); // private key
+ 			global $coalVersion;
+ 			$md = new cChunkMeta($len,$md5,$sha,$s512,$compression,$coalVersion);
+ 			$mdt = base64_encode(bzcompress(serialize($md)));
 			global $chunkMasterKey;
-			$ciphertext = mc_encrypt($data,$chunkMasterKey);
-			et($b);
-			$c = st('Decrypting chunk for insertion check');
-			$l->a('Chunk insertion function completed step 3<br>');
-			//$dcrp = mc_decrypt($ciphertext,$chunkMasterKey);
-			if(mc_decrypt($ciphertext,$chunkMasterKey) != $data) {
+			$ciphertext = mc_encrypt($mdt.'@CoalFragmentMarker@'.$data,$chunkMasterKey);
+			if(mc_decrypt($ciphertext,$chunkMasterKey) != $mdt.'@CoalFragmentMarker@'.$data) {
 				if($chcount < 10) {
 					$l->a('Chunk insertion function status checkpoint 3a<br>');
 					goto chunk;
@@ -284,63 +237,25 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 					$icerror = 4;
 				}
 			}
-			// if($rsa->decrypt($ciphertext) != $plaintext) {
-	// 			if($chcount < 10) {
-	// 				$l->a('Chunk insertion function status checkpoint 3a<br>');
-	// 				goto chunk;
-	// 			}
-	// 			else {
-	// 				$l->a('error 4');
-	// 				$icerror = 4;
-	// 			}
-	// 		}
-			et($c);
-			$l->a('Chunk insertion function completed step 4<br>');
-			$enclen = strlen($ciphertext);
-			$encpar = par($ciphertext);
 			$encmd5 = amd5($ciphertext);
-			$enccrc = crc($ciphertext);
-			$encsha = sha($ciphertext);
-			$encs512 = s512($ciphertext);
-			$l->a('Chunk insertion function begun step 7<br>');
 			$chcount = 0;
 			chunk:
-			$l->a('Chunk insertion function reached status checkpoint 7a<br>');
-			// $chcount++;
-			//Add record w/ ID, parity checksum
-			$l->a('Chunk insertion function completed step 7<br>');
 			global $coalVersion;
 			$newChunkId = $db->addRow('coalchunks', 'length, lengthpre, parity, paritypre, md5, sha, crc, s512, compression, chunkcreatorversion', '\''.strlen($ciphertext).'\', \''.strlen($data).'\', \''.$encpar.'\', \''.$par.'\', \''.$encmd5.'\', \''.$encsha.'\', \''.$enccrc.'\', \''.$encs512.'\', \''.$compression.'\', \''.$coalVersion.'\'');
-			$l->a('Chunk insertion function completed step 8<br>');
-			//store chunk
 			$sccount = 0;
 			$sc27try = 0;
 			storechunk:
-			$l->a('<br>Chunk insertion function reached status checkpoint 8a<br>');
 			$sc27try++;
 			$sccount++;
 			$identifierId = $newChunkId / 1000;
 			$randomInt = rand(0,1000);
 			$randomIntAlt = rand(0,1000);
-			//"RECORD33" has no meaning, but it sounds kind of cool and hopefully helps avoid collisions (not that it's needed, really... :P)
 			$identifier = $identifierId.$randomInt.'.COALPROJECT.RECORD33';
-			$fallbackid = $identifierId.$randomIntAlt;
-// 			$identifier = $identifierId.guidv4();
-			//$fallbackid = $identifierId.guidv4();
-			$filename = $newChunkId.'.coal';
+			$fallbackid = $identifierId.$randomIntAlt.'.COALPROJECT.RECORD33';
+			$filename = $newChunkId.'.coal4';
 			global $iaAuthKey;
 			global $iaPrivateKey;
-			$accesskey = $iaAuthKey;
-			$secretkey = $iaPrivateKey;
-			$title = 'Coal chunks for '.$identifierId;
-			$description = $title;
-			$keywords = 'coal; data; coal chunks; ';
-			$l->a('Chunk insertion function completed step 8<br>');
-			$chunkUploadDirty = true;
-			$bt = st('Internet Archive chunk upload');
-			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,'texts',$keywords,true,'opensource');
-			et($bt);
-			$l->a('Chunk insertion function completed step 9; upload result code '.$ulresult.'<br>');
+			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$iaAuthKey,$iaPrivateKey,$title,$description,'texts',$keywords,true,'opensource');
 			if(($ulresult == 35) && ($sc27try < 10)) {
 				$l->a('information code 27');
 				goto storechunk;
@@ -349,11 +264,7 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 				$l->a('information code 28');
 				goto storechunk;
 			}
-			$l->a('Chunk insertion function completed step 10<br>');
-			$db->setField('coalchunks', 'storage', 'ia', $newChunkId);
-			$db->setField('coalchunks', 'address', $identifier.'/'.$filename, $newChunkId);
-			$l->a('Chunk insertion function completed step 11<br>');
-			$l->a('Chunk insertion function completed step 6<br>');
+			$db->setField('chunks2', 'address', 'ia:'.$identifier, $newChunkId);
 // 			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
 // 			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
  			goto finished;
@@ -362,81 +273,67 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
  	}
 	finished:
 	$l->a('Chunk insertion function reached status checkpoint a<br>');
-	if($icerror != 0) {
+	if($error != 0) {
 		$l->a('Chunk insertion function reached status checkpoint b<br>');
 		//header("HTTP/1.0 525 Request failed");
 	}
-	$l->a('Chunk insertion function returning new chunk ID '.$newChunkId.' and error code '.$icerror.'.<br>');
-	et($t);
-	return array($newChunkId, $icerror);
+	$l->a('Chunk insertion function returning new chunk ID '.$newChunkId.' and error code '.$error.'.<br>');
+	return array($newChunkId, $error);
 	$l->a('Chunk insertion function reached status checkpoint c<br>');
 }
+
 function retrieveChunk($id)
 {
 	global $l;
-	$t = st('retrieveChunk');
 	if(strlen($id) < 1) {
 		$l->a('information code 32<br>');
 	}
 	else {
-		$l->a('Chunk retrieval function begun; retrieving chunk '.$id.'.<br>');
 		$db               = new FractureDB('futuqiur_coalchunks');
 		$rcerror = 0;
 		$rccount = 0;
 		$rcpcount = 0;
-		$l->a('Chunk retrieval function completed step 1<br>');
 		retrievechunk:
-		$l->a('<br>Chunk retrieval function begun step 1b<br>');
-		//Get chunk address from database by ID
-		$l->a('<br>Getting metadata for chunk '.$id);
-		$chunkMeta = $db->getRow('coalchunks', 'id', $id);
-		if($chunkMeta['disabled'] == 1) {
-			return null;
-		}
-		//print_r($chunkMeta);
-		$l->a('<br>Chunk retrieval function completed step 2<br>');
-		$chunkStorage = $chunkMeta['storage'];
-		$chunkAddress = $chunkMeta['address'];
+		$chunkMetaRow = $db->getRow('chunks2', 'id', $id);
+		$chunkAddressBlock = $chunkMetaRow['address'];
+		$caExp = explode_escaped($chunkAddress,':');
+		$chunkStorage = $caExp[0];
+		$chunkAddress = $caExp[1];
 		$chunkStoragePrefix = '';
 		switch(trim($chunkStorage)) {
 			case "ia":
 				$chunkStoragePrefix = "http://archive.org/download/";
 				break;
 		}
-		$chunkLocation = $chunkStoragePrefix.$chunkAddress;
-		//download chunk
+		$chunkLocation = $chunkStoragePrefix.$chunkAddress.'/'.$id.'.coal';
+		$chunkDataR = null;
 		if(strlen($chunkLocation) > 0) {
-			$dlt = st('Downloading chunk data');
- 			$chunkData = get_url($chunkLocation);
- 			et($dlt);
+ 			$chunkDataR = get_url($chunkLocation);
 		}
 		else {
 			$l->a('status 33<br>');
 		}
- 		$l->a('Chunk retrieval function completed step 3<br>');
-		//check retrieved chunk checksums
+		global $chunkMasterKey;
+		$chunkDataR = mc_decrypt($chunkDataR,$chunkMasterKey);
+		$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
+		//help from http://stackoverflow.com/questions/4036036/php-substr-after-a-certain-char-a-substr-strpos-elegant-solution
+		$chunkMeta = unserialize(bzdecompress(substr(strstr($chunkDataR,'@CoalFragmentMarker@', true),0,-20)));
+		$chunkData = substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
+		$rmd5 = amd5($chunkDataR);
 		$cklen = strlen($chunkData);
-		$ckpar = par($chunkData);
 		$ckmd5 = amd5($chunkData);
-		$ckcrc = crc($chunkData);
 		$cksha = sha($chunkData);
 		$cks512 = s512($chunkData);
-		$chlen = $chunkMeta['length'];
-		$chpar = $chunkMeta['parity'];
-		$chmd5 = $chunkMeta['md5'];
-		$chsha = $chunkMeta['sha'];
-		$chcrc = $chunkMeta['crc'];
-		$chs512 = $chunkMeta['s512'];
-		$cdisabled = $chunkMeta['disabled'];
-		if(($cklen != $chlen) || ($ckpar != $chpar) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($ckcrc != $chcrc) || ($cks512 != $chs512)) {
+		$chlen = $chunkMeta->len;
+		$chmd5 = $chunkMeta->md5;
+		$chsha = $chunkMeta->sha;
+		$chs512 = $chunkMeta->s512;
+		if(($cklen != $chlen) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($cks512 != $chs512) || ($chunkRmd5 != $rmd5)) {
 			if($rccount < 10) {
 				$l->a('<br>information code 29.<br>');
-				//$l->a('<br>Retrieved data: '.$chunkData.'<br><br>');				
 				$l->a('Retrieved md5 = '.$ckmd5.'; expected '.$chmd5.'.<br>');
-				$l->a('Retrieved par = '.$ckpar.'; expected '.$chpar.'.<br>');
 				$l->a('Retrieved sha = '.$cksha.'; expected '.$chsha.'.<br>');
 				$l->a('Retrieved len = '.$cklen.'; expected '.$chlen.'.<br>');
-				$l->a('Retrieved crc = '.$ckcrc.'; expected '.$chcrc.'.<br>');
 				$l->a('Retrieved s512 = '.$cks512.'; expected '.$chs512.'.<br>');
 				$rccount++;
 				goto retrievechunk;
@@ -446,50 +343,8 @@ function retrieveChunk($id)
 				$rcerror = 15;
 			}
 		}
-		$l->a('<br>Chunk retrieval function completed step 4<br>');
-		//Decrypt chunk using chunk key
-		$b = st('Decrypting chunk for retrieval');
-		//global $chunkPrivateKey;
-		//help from http://www.php.net/manual/en/function.class-exists.php
-		// if(!class_exists('Crypt_RSA')) {
-// 			include('Crypt/RSA.php');
-// 		}
-		// $rsa = new Crypt_RSA();
-// 		$rsa->loadKey($chunkPrivateKey); // private key
-// 		$ciphertext = $chunkData;
-// 		$plaintext = $rsa->decrypt($ciphertext);
-		global $chunkMasterKey;
-		$plaintext = mc_decrypt($chunkData,$chunkMasterKey);
-		et($b);
-		$l->a('Chunk retrieval function completed step 5<br>');
-		//Check decrypted chunk against parity checksum from database
-		$ptlen = strlen($plaintext);
-		$ptpar = par($plaintext);
-		$ptmd5 = amd5($plaintext);
-		$ptcrc = crc($plaintext);
-		$ptsha = sha($plaintext);
-		$pts512 = s512($plaintext);
-		$plen = $chunkMeta['lengthpre'];
-		$ppar = $chunkMeta['paritypre'];
-		if(($plen != $ptlen) || ($ppar != $ptcrc)) {
-			if($rcpcount < 1) {
-				$l->a('information code 30<br>');
-				$l->a('<br>Retrieved data: '.$plaintext.'<br><br>');				
-				$l->a('Retrieved len = '.$ptlen.'; expected '.$plen.'.<br>');
-				$l->a('Retrieved par = '.$ptpar.'; expected '.$ppar.'.<br>');
-				$rcpcount++;
-				goto retrievechunk;
-			}
-			else {
-				$rcerror = 14;
-			}
-		}
-		$l->a('Chunk retrieval function completed step 6<br>');
 		$db->close();
-		$l->a('Chunk retrieval function completed step 7<br>');
-		//return data and checksums
-		et($t);
-		return new cChunk ($plaintext,$ptlen,$ptpar,$ptmd5,$ptcrc,$ptsha,$pts512,$cdisabled);
+		return new cChunk ($chunkData,$cklen,$ckmd5,$cksha,$cks512);
 	}
 }
 function retrieveCoal($id)
@@ -505,7 +360,7 @@ function retrieveCoal($id)
 	$coalInfo = $db->getRow('coal2', 'id', $id);
 	$coalchunk = $coalMeta['chunk'];
 	$coalmd5 = $coalMeta['md5'];
-	$m = bzdecompress(unserialize(retrieveChunk($coalchunk)));
+	$m = unserialize(bzdecompress(retrieveChunk($coalchunk)));
 	$len = $m->len;
 	$md5 = $m->md5;
 	$sha = $m->sha;
@@ -554,7 +409,6 @@ function retrieveCoal($id)
 		$lbmd5 = amd5($rbdata);
 		$lbsha = sha($rbdata);
 		$lbs512 = s512($rbdata);
-		$l->a('Coal retrieval function completed step 6<br>');
 		if(($rblen != $lblen) || ($rbmd5 != $lbmd5) || ($rbsha != $lbsha) || ($rbs512 != $lbs512)) {
 			if($rccount < 10) {
 				$rccount++;
@@ -718,9 +572,6 @@ function coalFromFile($filename,$returnPath = true) {
 }
 
 function insertCoal($target = null) {
-	$plt = st('CoalIntakeHandler pre-loop');
-	$pla = st('CoalIntakeHandler pre-loop part A');
-	$l->a('Coal intake handler begun<br>');
 	$db = new FractureDB('futuqiur_coal');
 	$coalcount = 0;
 	coal:
