@@ -177,7 +177,7 @@ function arcmaj3_barrel_expire($barrelId)
     echo 'Expired barrel ' . $barrelId . '.<br>' . "\n";
     $db->close();
 }
-function insertChunk($data,$spar,$smd5,$scrc,$ssha,$ss512,$compression) {
+function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 	global $l;
 	global $chunkUploadDirty;
 	$chunkUploadDirty = false;
@@ -634,16 +634,13 @@ function retrieveCoal($id)
 	}
 	//Check compiled record data against parity checksum
 	$clen = strlen($dataToReturn);
-	$cpar = par($dataToReturn);
 	$cmd5 = amd5($dataToReturn);
 	$csha = sha($dataToReturn);
-	$ccrc = crc($dataToReturn);
 	$cs512 = s512($dataToReturn);
-	if(($ccrc != $recordpar) || ($clen != $recordlen)) {
+	if(($clen != $recordlen)) {
 		$l->a('Coal retrieval function reached status checkpoint 10a<br>');
 		$l->a('<br>Retrieved data: '.$dataToReturn.'<br><br>');				
 		$l->a('Retrieved len = '.$clen.'; expected '.$recordlen.'.<br>');
-		$l->a('Retrieved crc = '.$ccrc.'; expected '.$recordpar.'.<br>');
 		if($rcpcount < 10) {
 			$l->a('Coal retrieval function reached status checkpoint 10b<br>');
 			$rcpcount++;
@@ -659,7 +656,7 @@ function retrieveCoal($id)
 	$db->close();
 	//return data and checksums
 	et($t);
-	return new cCoal ($dataToReturn,$clen,$cpar,$cmd5,$ccrc,$csha,$cs512);
+	return new cCoal ($dataToReturn,$clen,$cmd5,$csha,$cs512);
 	resetstatus:
 	$l->a('Coal retrieval function reached status checkpoint a<br>');
 	$blocklist = '';
@@ -676,5 +673,252 @@ function retrieveCoal($id)
 		//echo 'Chunk retrieval failed: 
 		return array(16, $rcerror, $rcperror);
 	}
+}
+function coalFromUpload() {
+    global $l;
+	$error = 0;
+	if(isset($_FILES['uploadedfile'])) {
+		$ulfilename = base64_encode($_FILES['uploadedfile']['name']);
+		$ultype = base64_encode($_FILES['uploadedfile']['type']);
+		$ulsize = base64_encode($_FILES['uploadedfile']['size']);
+		$tmpname = base64_encode($_FILES['uploadedfile']['tmp_name']);
+		$ferror = base64_encode($_FILES['uploadedfile']['error']);
+	}
+	else {
+		$ulfilename = null;
+		$ultype = null;
+		$ulsize = null;
+		$tmpname = null;
+		$ferror = null;
+	}
+	$metadata = base64_encode(var_export($_FILES,true));
+	$target = "coal_temp/";
+	$target = $target . "data.".guidv4().".cot";
+	if(isset($_FILES['uploadedfile'])) {		
+		if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target)) {
+		} else {
+			$error = 2;
+			$l->a("error 2<br>");
+		}
+	}
+	else {
+		$error = 6;
+		$l->a("error 6<br>");
+	}
+	$m = coalFromFile($target,false);
+	$m->ulfilename = $ulfilename;
+	$m->ultype = $ultype;
+	$m->ulsize = $ulsize;
+	$m->tmpname = $tmpname;
+	$m->error = $ferror;
+	$m->metadata = $metadata;
+	return array($target,$m);
+}
+function coalFromFile($filename,$returnPath = true) {
+    global $l;
+    global $coalVersion;
+	$error = 0;
+	$type = null;
+	$size = null;
+	$stat = null;
+	$smtime = null;
+	$stats = null;
+	$ctime = null;
+	$mtime = null;
+	$atime = null;
+	if(file_exists($filename)) {
+		$type = filetype($filename);
+		$size = filesize($filename);
+		$stat = stat( $filename );
+		$smtime = base64_encode($stat['mtime']);
+		$stats = bin2hex(var_export($stat,true));
+		$ctime = base64_encode(filectime($filename));
+		$mtime = base64_encode(filemtime($filename));
+		$atime = base64_encode(fileatime($filename));
+	}
+	else {
+		$error = 3;
+	}
+	$md5 = amd5f($target_path);
+	$sha = shaf($target_path);
+	$s512 = s512f($target_path);
+	$blockList = '';
+	$fhandle = fopen($target_path,"r");
+	while(ftell($fhandle) < $length) {
+		$chunk = fread($fhandle,4194304);
+		$chcount = 0;
+		chunk:
+		$chcount++;
+		$compression = "bzip2";
+		$compressed = bzcompress($chunk);
+		$rmd5 = amd5($compressed);
+		$rsha = sha($compressed);
+		$rs512 = s512($compressed);
+		$ichunkcount = 0;
+		ichunk:
+		$ichunkcount++;
+		$icRes = insertChunk($compressed,$rmd5,$rsha,$rs512);
+		$newBlockId = $icRes[0];
+		$l->a('<br>insertChunk returned status '.$icRes[1].'.<br>');
+		if($icRes[1] != 0) {
+			$l->a('<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>');
+			$error = 36;
+			if($ichunkcount < 10) {
+				goto ichunk;
+			}
+			else {
+				$error = 9;
+			}
+		}
+		$bins = ',';
+		if(strlen($blockList) == 0) {
+			$bins = '';
+		}
+		$blocks = $blocks . $bins . $newBlockId;
+	}
+	fclose($fhandle);
+	$blockslen = strlen($blocks);
+	$blocksmd5 = amd5($blocks);
+	$blockssha = sha($blocks);
+	$blockss512 = s512($blocks);
+	$m = new cCoalMeta($size,$md5,$sha,$s512,$blocks,$blockslen,$blocksmd5,$blockssha,$blockss512,null,$filename,$type,$size,null,null,null,null,null,$smtime,$stats,$ctime,$mtime,$atime,$coalVersion);
+	if($returnPath) {
+		return array($target_path,$m);
+	}
+	else {
+		return $m;
+	}
+}
+function insertCoal($target = null) {
+	$plt = st('CoalIntakeHandler pre-loop');
+	$pla = st('CoalIntakeHandler pre-loop part A');
+	$l->a('Coal intake handler begun<br>');
+	$db = new FractureDB('futuqiur_coal');
+	$coalcount = 0;
+	coal:
+	$coalcount++;
+	if(is_null($target)) {
+		$res = coalFromUpload();
+		$coalTraits = $res[1];
+	}
+	else {
+		$res = coalFromFile($target);
+		$coalTraits = $res[1];
+	}
+	if($length == 0) {
+		$coalTraits->blocks = '';
+	}
+	$ctEnc = bzcompress(serialize($coalTraits));
+	$ichunkcount = 0;
+	ichunk:
+	$ichunkcount++;
+	$icRes = insertChunk($ctEnc);
+	$newBlockId = $icRes[0];
+	$l->a('<br>insertChunk for metadata returned status '.$icRes[1].'.<br>');
+	if($icRes[1] != 0) {
+		$l->a('<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>');
+		$error = 36;
+		if($ichunkcount < 10) {
+			goto ichunk;
+		}
+		else {
+			$error = 9;
+		}
+	}
+	$newCoalId = $db->addRow('coal2', 'chunk, md5', '\''.$newBlockId.'\', UNHEX(\''.$coalTraits->md5.'\')');
+	sleep(3);
+	$ccoalcount = 0;
+	checkcoal:
+	$ccoalcount++;
+	$retrievedCoal = retrieveCoal($newCoalId);
+	if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
+		if($ccoalcount < 10) {
+			$l->a( 'information code 37');
+			global $chunkUploadDirty;
+			if($chunkUploadDirty) {
+				sleep($ccoalcount*10);
+			}
+			goto checkcoal;
+		}
+	}
+	else {
+		if(!is_null($retrievedCoal)) {
+			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+				$blockList = '';
+				if($ccoalcount < 10) {
+					$l->a( 'information code 37');
+					global $chunkUploadDirty;
+					if($chunkUploadDirty) {
+						sleep($ccoalcount*10);
+					}
+					goto checkcoal;
+				}
+			}
+		}
+		else {
+			if($ccoalcount < 10) {
+				$l->a( 'information code 37');
+				global $chunkUploadDirty;
+				if($chunkUploadDirty) {
+					sleep($ccoalcount*10);
+				}
+				goto checkcoal;
+			}
+		}
+	}
+	if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
+		$error = 20;
+	}
+	else {
+		if(!is_null($retrievedCoal)) {
+			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+				$blockList = '';
+				if($coalcount < 10) {
+					$l->a( 'information code 31');
+					goto coal;
+				}
+				else {
+					$error = 5;
+				}
+			}
+			else {
+				$l->a('Coal test retrieval was successful');
+			}
+		}
+		else {
+			$error = 7;
+		}
+	}
+	unlink($res[0]);
+	$db->close();
+	if($error != 0) {
+		header("HTTP/1.0 525 Request failed");
+	}
+	if(isset($_REQUEST['outputwebloc'])) {
+		$filenamedec=base64_decode($coalTraits->filename);
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=$filenamedec".'.url');
+		header("Content-Type: application/octet-stream");
+		header("Content-Transfer-Encoding: binary");
+		$smallified='[InternetShortcut]
+URL=http://futuramerlin.com/d/r/active.php?coalId='.$newCoalId.'&authorizationKey='.urlencode($generalAuthKey).'&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve
+IconIndex=0';
+		header('Content-Length: ' . strlen($smallified));
+		echo $smallified;
+	}
+	else {
+		if(isset($_REQUEST['coalVerbose'])) {
+			echo '<br><br>Added coal: ';
+		}
+		echo $newCoalId.'|'.$coalTraits->len.'|'.$coalTraits->md5.'|'.$coalTraits->sha.'|'.$coalTraits->s512;
+		if(isset($_REQUEST['coalVerbose'])) {
+			echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
+			echo '<br><h1>Log output:</h1><br><small>';
+			$l->e();
+			echo '</small><br>Coal intake handler completed step 8<br>';
+		}
+	}
+	return $error;
 }
 ?>

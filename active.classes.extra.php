@@ -245,6 +245,52 @@ class cCoal
     }
 }
 
+class cCoalMeta
+{
+    function __construct($len=null,$md5=null,$sha=null,$s512=null,$blocks=null,$blockslen=null,$blocksmd5=null,$blockssha=null,$blockss512=null,$metadata=null,$filename=null,$type=null,$size=null,$ulfilename=null,$ultype=null,$ulsize=null,$tmp_name=null,$error=null,$smtime=null,$stats=null,$ctime=null,$mtime=null,$atime=null,$creatorversion=null)
+    {
+        $this->len=$len;
+        $this->md5=$md5;
+        $this->sha=$sha;
+        $this->s512=$s512;
+        $this->blocks=$blocks;
+        $this->blockslen=$blockslen;
+        $this->blocksmd5=$blocksmd5;
+        $this->blockssha=$blockssha;
+        $this->blockss512=$blockss512;
+        $this->metadata=$metadata;
+        $this->filename=$filename;
+        $this->type=$type;
+        $this->size=$size;
+        $this->ulfilename=$ulfilename;
+        $this->ultype=$ultype;
+        $this->ulsize=$ulsize;
+        $this->tmpname=$tmpname;
+        $this->error=$error;
+        $this->smtime=$smtime;
+        $this->stats=$stats;
+        $this->ctime=$ctime;
+        $this->mtime=$mtime;
+        $this->atime=$atime;
+        $this->creatorversion=$creatorversion;
+    }
+}
+
+class cChunkMeta
+{
+    function __construct($lenpre,$md5pre,$len,$md5,$sha,$compression,$creatorversion)
+    {
+        $this->lenpre=$lenpre;
+        $this->md5pre=$md5pre;
+        $this->len=$len;
+        $this->md5=$md5;
+        $this->sha=$sha;
+        $this->s512=$s512;
+        $this->compression=$compression;
+        $this->creatorversion=$creatorversion;
+    }
+}
+
 class cChunk
 {
     function __construct($data,$len,$par,$md5,$crc,$sha,$s512,$disabled)
