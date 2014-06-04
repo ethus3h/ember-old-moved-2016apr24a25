@@ -322,6 +322,7 @@ function retrieveChunk($id)
 		}
 		global $chunkMasterKey;
 		//echo 'Ciphertext retrieved: '.md5($chunkDataR);
+		$rmd5 = amd5($chunkDataR);
 		$chunkDataR = mc_decrypt($chunkDataR,$chunkMasterKey);
 		$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
 		//help from http://stackoverflow.com/questions/4036036/php-substr-after-a-certain-char-a-substr-strpos-elegant-solution
@@ -331,7 +332,6 @@ function retrieveChunk($id)
 // 		echo '<br><br><br><br><br><br><br><br>Chunk data: '.substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
 // 		echo '<br><br><br><br><br><br><br><br>';
 		$chunkData = substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
-		$rmd5 = amd5($chunkDataR);
 		$cklen = strlen($chunkData);
 		$ckmd5 = amd5($chunkData);
 		$cksha = sha($chunkData);
@@ -343,10 +343,11 @@ function retrieveChunk($id)
 		if(($cklen != $chlen) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($cks512 != $chs512) || ($chunkRmd5 != $rmd5)) {
 			if($rccount < 1) {
 				$l->a('<br>information code 29.<br>');
+				$l->a('Retrieved len = '.$cklen.'; expected '.$chlen.'.<br>');
 				$l->a('Retrieved md5 = '.$ckmd5.'; expected '.$chmd5.'.<br>');
 				$l->a('Retrieved sha = '.$cksha.'; expected '.$chsha.'.<br>');
-				$l->a('Retrieved len = '.$cklen.'; expected '.$chlen.'.<br>');
 				$l->a('Retrieved s512 = '.$cks512.'; expected '.$chs512.'.<br>');
+				$l->a('Retrieved raw md5 = '.$chunkRmd5.'; expected '.$rmd5.'.<br>');
 				$rccount++;
 				goto retrievechunk;
 			}
@@ -688,39 +689,11 @@ function insertCoal($target = null) {
 // 	}
 	unlink($res[0]);
 	$db->close();
-	if($error != 0) {
-		header("HTTP/1.0 525 Request failed");
-	}
-	if(isset($_REQUEST['outputwebloc'])) {
-		$filenamedec=base64_decode($coalTraits->filename);
-		header("Cache-Control: public");
-		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=$filenamedec".'.url');
-		header("Content-Type: application/octet-stream");
-		header("Content-Transfer-Encoding: binary");
-		$smallified='[InternetShortcut]
-URL=http://futuramerlin.com/d/r/active.php?coalId='.$newCoalId.'&authorizationKey='.urlencode($generalAuthKey).'&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve
-IconIndex=0';
-		header('Content-Length: ' . strlen($smallified));
-		echo $smallified;
-	}
-	else {
-		if(isset($_REQUEST['coalVerbose'])) {
-			echo '<br><br>Added coal: ';
-		}
-		echo $newCoalId.'|'.$coalTraits->len.'|'.$coalTraits->md5.'|'.$coalTraits->sha.'|'.$coalTraits->s512;
-		if(isset($_REQUEST['coalVerbose'])) {
-			echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
-			echo '<br><h1>Log output:</h1><br><small>';
-			$l->e();
-			echo '</small><br>Coal intake handler completed step 8<br>';
-		}
-	}
 	if(is_int($retrievedCoal) || is_array($retrievedCoal)) {
-		$toReturn = array($error,$retrievedCoal);
+		$toReturn = array($newCoalId,$coalTraits,$error,$retrievedCoal);
 	}
 	else {
-		$toReturn = array($error,null);
+		$toReturn = array($newCoalId,$coalTraits,error,null);
 	}
 	return $toReturn;
 }

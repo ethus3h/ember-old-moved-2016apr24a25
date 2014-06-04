@@ -156,172 +156,27 @@ function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey
 {
 	global $l;
 	//note that the description options etc. aren't implemented
-	// 	echo '<br>ia_upload function arguments: <br><pre>';
-	// 	print_r(func_get_args());
-	// 	echo '</pre><br>';
-	$iaerror = 0;
+	$error = 0;
 	$bucketName=$identifier;
-	//based on the example.php file from amazon-s3-php-class
 	if (!defined('awsAccessKey')) define('awsAccessKey', $accesskey);
 	if (!defined('awsSecretKey')) define('awsSecretKey', $secretkey);
-	// Check for CURL
 	if (!extension_loaded('curl') && !@dl(PHP_SHLIB_SUFFIX == 'so' ? 'curl.so' : 'php_curl.dll')) {
 		exit("\nERROR: CURL extension not loaded\n\n");
 	}
-
-	// Instantiate the class
 	$s3 = new S3(awsAccessKey, awsSecretKey, true, 's3.us.archive.org');
-
-	// Create a bucket with public read access
 	if ($s3->putBucket($bucketName, S3::ACL_PUBLIC_READ)) {
 		$l->a("Created bucket {$bucketName}".PHP_EOL.'<br>');
-
-		// Put our file (also with public read access)
 		if ($s3->putObject($data, $bucketName, $filename, S3::ACL_PUBLIC_READ)) {
 			$l->a("S3::putObjectFile(): File copied to {$bucketName}/".$filename.PHP_EOL.'<br>');
 		} else {
 			$l->a("error code 34: S3::putObjectFile(): Failed to copy file\n<br>");
-			$iaerror = 34;
+			$error = 34;
 		}
 	} else {
 		$l->a("error code 35: S3::putBucket(): Unable to create bucket (it may already exist and/or be owned by someone else)\n<br>");
-		$iaerror = 35;
+		$error = 35;
 	}
-// 
-// 	echo '<br>ia_upload function arguments: <br><pre>';
-// 	print_r(func_get_args());
-// 	echo '</pre><br>';
-// 	//Keywords in $keywords should be separated by ;
-// 	$iaerror = 0;
-// 	//$bucketExists = false; //really, = irrelevant :P
-// 	//if(!$addToBucket) {
-// 		//Check for existing bucket
-// 		//based on the code in the try block below and on http://stackoverflow.com/questions/5043525/php-curl-http-put; help also from http://sriram-iyengar.blogspot.com/2011/07/aws-create-s3-bucket-using-curl.html
-// 		$ch = curl_init(); 
-// 		$bucket_url = 'http://s3.us.archive.org/' . $identifier . '/';
-// 		curl_setopt($ch, CURLOPT_VERBOSE, 1);
-// 		curl_setopt($ch, CURLOPT_URL, $bucket_url);
-// 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-// 		//help from http://stackoverflow.com/questions/3164405/show-curl-post-request-headers-is-there-a-way-to-do-this
-// 		curl_setopt($ch, CURLOPT_HEADER, true);
-// 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-// 			'x-amz-auto-make-bucket:1',
-// 			'x-archive-queue-derive:0',
-// 			'x-archive-size-hint:'.strlen($data),
-// 			'authorization: LOW '.$accesskey.':'.$secretkey,
-// 			'x-archive-meta-mediatype:'.$mediatype,
-// 			'x-archive-meta-collection:'.$collection,
-// 			'x-archive-meta-title:'.$title,
-// 			'x-archive-meta-description:'.$description,
-// 			'x-archive-meta-subject:'.$keywords,
-// 			'x-archive-meta-mediatype:'.$mediatype
-// 		));
-// 		
-// 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-// 		$response = curl_exec($ch);
-// 		//help from http://stackoverflow.com/questions/3164405/show-curl-post-request-headers-is-there-a-way-to-do-this
-// 		$information = curl_getinfo($ch);
-// 		echo '<br>CURL RESULT INFORMATION: <br><pre>';
-// 		print_r($information);
-// 		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 		echo '</pre><br>';
-// 		echo '<br>CURL RESPONSE: <br><pre>';
-// 		echo $response;
-// 		echo '</pre><br>';
-// 		curl_close($ch); 
-// 		//help from http://stackoverflow.com/questions/4366730/how-to-check-if-a-string-contains-specific-words
-// 		if(($http_status == 409) && (strpos($response,'BucketAlreadyOwnedByYou') !== false)) {
-// 			$myBucket = true;
-// 		}
-// 		else {
-// 			if($http_status != 200) {
-// 				//Not my bucket.
-// 				$iaerror = 10;
-// 				goto finished;
-// 			}
-// 		}
-// 	//}
-// 	
-// 	try {
-// 	    //based on http://stackoverflow.com/questions/1915653/uploading-to-s3-using-curl, http://frankkoehl.com/2009/09/http-status-code-curl-php/, the ARCMAJ3 client script, http://stackoverflow.com/questions/3085990/post-a-file-string-using-curl-in-php, and http://stackoverflow.com/questions/8115683/php-curl-custom-headers
-// 	    $ch = curl_init(); 
-// 	    // form field separator
-// 		$delimiter = '-------------' . uniqid();
-// 		// file upload fields: name => array(type=>'mime/type',content=>'raw data')
-// 		$fileFields = array(
-// 			'file1' => array(
-// 				'type' => 'application/octet-stream',
-// 				'content' => $data
-// 			), /* ... */
-// 		);
-// 		// all other fields (not file upload): name => value
-// 		$postFields = array(
-// 			/* ... */
-// 		);
-// 
-// 		$data = '';
-// 
-// 		// populate normal fields first (simpler)
-// 		foreach ($postFields as $name => $content) {
-// 		   $data .= "--" . $delimiter . "\r\n";
-// 			$data .= 'Content-Disposition: form-data; name="' . $name . '"';
-// 			// note: double endline
-// 			$data .= "\r\n\r\n";
-// 		}
-// 		// populate file fields
-// 		foreach ($fileFields as $name => $file) {
-// 			$data .= "--" . $delimiter . "\r\n";
-// 			// "filename" attribute is not essential; server-side scripts may use it
-// 			$data .= 'Content-Disposition: form-data; name="' . $name . '";' .
-// 					 ' filename="' . $name . '"' . "\r\n";
-// 			// this is, again, informative only; good practice to include though
-// 			$data .= 'Content-Type: ' . $file['type'] . "\r\n";
-// 			// this endline must be here to indicate end of headers
-// 			$data .= "\r\n";
-// 			// the file itself (note: there's no encoding of any kind)
-// 			$data .= $file['content'] . "\r\n";
-// 		}
-// 		// last delimiter
-// 		$data .= "--" . $delimiter . "--\r\n";
-// 	    curl_setopt($ch, CURLOPT_VERBOSE, 1);
-// 		curl_setopt($ch, CURLOPT_URL, $upload_url);
-// 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-// 		//help from http://stackoverflow.com/questions/3164405/show-curl-post-request-headers-is-there-a-way-to-do-this
-// 		curl_setopt($ch, CURLOPT_HEADER, true);
-// 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-// 			'x-amz-auto-make-bucket:1',
-// 			'x-archive-queue-derive:0',
-// 			'x-archive-size-hint:'.strlen($data),
-// 			'authorization: LOW '.$accesskey.':'.$secretkey,
-// 			'x-archive-meta-mediatype:'.$mediatype,
-// 			'x-archive-meta-collection:'.$collection,
-// 			'x-archive-meta-title:'.$title,
-// 			'x-archive-meta-description:'.$description,
-// 			'x-archive-meta-subject:'.$keywords,
-// 			'x-archive-meta-mediatype:'.$mediatype
-// 		));
-// 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-// 		$response = curl_exec($ch);
-// 		//help from http://stackoverflow.com/questions/3164405/show-curl-post-request-headers-is-there-a-way-to-do-this
-// 		$information = curl_getinfo($ch);
-// 		echo '<br>CURL RESULT INFORMATION: <br><pre>';
-// 		print_r($information);
-// 		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 		echo '</pre><br>';
-// 		echo '<br>CURL RESPONSE: <br><pre>';
-// 		echo $response;
-// 		echo '</pre><br>';
-// 		curl_close($ch); 
-// 		if(strlen($response) > 0 || $http_status != 200) {
-// 			throw new Exception('cURL request failed');
-// 			$iaerror = 12;
-// 		}
-// 	}
-// 	catch (Exception $e) {
-// 		$iaerror = 11;
-// 	}
-// 	finished:
-// 	return $iaerror;
+ 	return $error;
 }
 function get_domain($url)
 #from http://stackoverflow.com/questions/16027102/get-domain-name-from-full-url
