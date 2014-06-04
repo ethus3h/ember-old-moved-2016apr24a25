@@ -228,7 +228,7 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 			global $chunkMasterKey;
 			$ciphertext = mc_encrypt($mdt.'@CoalFragmentMarker@'.$data,$chunkMasterKey);
 			if(mc_decrypt($ciphertext,$chunkMasterKey) != $mdt.'@CoalFragmentMarker@'.$data) {
-				if($chcount < 10) {
+				if($chcount < 1) {
 					$l->a('Chunk insertion function status checkpoint 3a<br>');
 					goto chunk;
 				}
@@ -252,18 +252,22 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 			$identifier = $identifierId.$randomInt.'.COALPROJECT.RECORD33';
 			$address = 'ia:'.$identifier;
 			$fallbackid = $identifierId.$randomIntAlt.'.COALPROJECT.RECORD33';
-			print_r($db->getNextId('chunk2'));
+			//print_r($db->getNextId('chunk2'));
 			$nextId = $db->getNextId('chunk2');
-			$filename = $nextId[0].'.coal4';
+			$filename = $nextId[0]['Auto_increment'].'.coal4';
 			global $iaAuthKey;
 			global $iaPrivateKey;
-			echo 'Ciphetext added: '.md5($ciphertext);
+			//echo 'Ciphertext added: '.md5($ciphertext);
 			$ulresult = ia_upload($ciphertext,$identifier,$fallbackid,$filename,$iaAuthKey,$iaPrivateKey,null,null,'texts',null,true,'opensource');
-			if(($ulresult == 35) && ($sc27try < 10)) {
-				$l->a('information code 27');
-				goto storechunk;
-			}
-			if(($ulresult != 0) && ($ulresult != 35) && ($sccount < 10)) {
+			// if(($ulresult == 35) && ($sc27try < 10)) {
+// 				$l->a('information code 27');
+// 				goto storechunk;
+// 			}
+// 			if(($ulresult != 0) && ($ulresult != 35) && ($sccount < 10)) {
+// 				$l->a('information code 28');
+// 				goto storechunk;
+// 			}
+			if($ulresult != 0) {
 				$l->a('information code 28');
 				goto storechunk;
 			}
@@ -308,7 +312,7 @@ function retrieveChunk($id)
 				$chunkStoragePrefix = "http://archive.org/download/";
 				break;
 		}
-		$chunkLocation = $chunkStoragePrefix.$chunkAddress.'/'.$id.'.coal';
+		$chunkLocation = $chunkStoragePrefix.$chunkAddress.'/'.$id.'.coal4';
 		$chunkDataR = null;
 		if(strlen($chunkLocation) > 0) {
  			$chunkDataR = get_url($chunkLocation);
@@ -317,11 +321,15 @@ function retrieveChunk($id)
 			$l->a('status 33<br>');
 		}
 		global $chunkMasterKey;
-		echo 'Ciphertext retrieved: '.md5($chunkDataR);
+		//echo 'Ciphertext retrieved: '.md5($chunkDataR);
 		$chunkDataR = mc_decrypt($chunkDataR,$chunkMasterKey);
 		$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
 		//help from http://stackoverflow.com/questions/4036036/php-substr-after-a-certain-char-a-substr-strpos-elegant-solution
-		$chunkMeta = unserialize(base64_decode(bzdecompress(substr(strstr($chunkDataR,'@CoalFragmentMarker@', true),0,-20))));
+		$chunkMeta = unserialize(bzdecompress(base64_decode(strstr($chunkDataR,'@CoalFragmentMarker@', true))));
+// 		echo '<br><br><br><br><br><br><br><br>Chunk raw data: '.$chunkDataR;
+// 		echo '<br><br><br><br><br><br><br><br>Chunk metadata: '.strstr($chunkDataR,'@CoalFragmentMarker@', true);
+// 		echo '<br><br><br><br><br><br><br><br>Chunk data: '.substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
+// 		echo '<br><br><br><br><br><br><br><br>';
 		$chunkData = substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
 		$rmd5 = amd5($chunkDataR);
 		$cklen = strlen($chunkData);
@@ -333,7 +341,7 @@ function retrieveChunk($id)
 		$chsha = $chunkMeta->sha;
 		$chs512 = $chunkMeta->s512;
 		if(($cklen != $chlen) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($cks512 != $chs512) || ($chunkRmd5 != $rmd5)) {
-			if($rccount < 10) {
+			if($rccount < 1) {
 				$l->a('<br>information code 29.<br>');
 				$l->a('Retrieved md5 = '.$ckmd5.'; expected '.$chmd5.'.<br>');
 				$l->a('Retrieved sha = '.$cksha.'; expected '.$chsha.'.<br>');
@@ -364,7 +372,7 @@ function retrieveCoal($id)
 	$coalInfo = $db->getRow('coal2', 'id', $id);
 	$coalchunk = $coalInfo['chunk'];
 	$coalmd5 = $coalInfo['md5'];
-	$m = unserialize(bzdecompress(retrieveChunk($coalchunk)));
+	$m = unserialize(bzdecompress(retrieveChunk($coalchunk)->data));
 	$len = $m->len;
 	$md5 = $m->md5;
 	$sha = $m->sha;
@@ -385,7 +393,7 @@ function retrieveCoal($id)
 		$l->a('Retrieved md5 = '.$rbmd5.'; expected '.$cbmd5.'.<br>');
 		$l->a('Retrieved crc = '.$rbcrc.'; expected '.$cbcrc.'.<br>');
 		$l->a('Retrieved s512 = '.$rbs512.'; expected '.$cbs512.'.<br>');
-		if($rccount < 10) {
+		if($rccount < 1) {
 			$rccount++;
 			$rcperror = 24;
 			goto resetstatus;
@@ -394,11 +402,11 @@ function retrieveCoal($id)
 			$error = 17;
 		}
 	}
-	if(strlen($coalBlockList)==0) {
+	if(strlen($blocks)==0) {
 		$blockListExploded = array();
 	}
 	else {
-		$blockListExploded = explode_esc(',',$coalBlockList);
+		$blockListExploded = explode_esc(',',$blocks);
 	}
 	$dataToReturn = '';
 	foreach($blockListExploded as $blockId) {
@@ -414,7 +422,7 @@ function retrieveCoal($id)
 		$lbsha = sha($rbdata);
 		$lbs512 = s512($rbdata);
 		if(($rblen != $lblen) || ($rbmd5 != $lbmd5) || ($rbsha != $lbsha) || ($rbs512 != $lbs512)) {
-			if($rccount < 10) {
+			if($rccount < 1) {
 				$rccount++;
 				//potential error
 				$rcperror = 22;
@@ -432,7 +440,7 @@ function retrieveCoal($id)
 	$csha = sha($dataToReturn);
 	$cs512 = s512($dataToReturn);
 	if(($clen != $len) || ($cmd5 != $md5) || ($csha != $sha) || ($cs512 != $s512)) {
-		if($rcpcount < 10) {
+		if($rcpcount < 1) {
 			$rcpcount++;
 			$rcperror = 23;
 			goto resetstatus;
@@ -454,7 +462,7 @@ function retrieveCoal($id)
 	}
 	else {
 		$l->a('Coal retrieval function reached status checkpoint c<br>');
-		return array(16, $rcerror, $rcperror);
+		return array(16, $error, $rcperror);
 	}
 }
 
@@ -548,7 +556,7 @@ function coalFromFile($filename,$returnPath = true) {
 		if($icRes[1] != 0) {
 			$l->a('<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>');
 			$error = 36;
-			if($ichunkcount < 10) {
+			if($ichunkcount < 1) {
 				goto ichunk;
 			}
 			else {
@@ -592,6 +600,7 @@ function insertCoal($target = null) {
 	if($coalTraits->len == 0) {
 		$coalTraits->blocks = '';
 	}
+	//echo serialize($coalTraits);
 	$ctEnc = bzcompress(serialize($coalTraits));
 	$md5 = amd5($ctEnc);
 	$sha = sha($ctEnc);
@@ -605,7 +614,7 @@ function insertCoal($target = null) {
 	if($icRes[1] != 0) {
 		$l->a('<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>');
 		$error = 36;
-		if($ichunkcount < 10) {
+		if($ichunkcount < 1) {
 			goto ichunk;
 		}
 		else {
@@ -619,7 +628,7 @@ function insertCoal($target = null) {
 	$ccoalcount++;
 	$retrievedCoal = retrieveCoal($newCoalId);
 	if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
-		if($ccoalcount < 10) {
+		if($ccoalcount < 1) {
 			$l->a( 'information code 37');
 			global $chunkUploadDirty;
 			if($chunkUploadDirty) {
@@ -632,7 +641,7 @@ function insertCoal($target = null) {
 		if(!is_null($retrievedCoal)) {
 			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
 				$blockList = '';
-				if($ccoalcount < 10) {
+				if($ccoalcount < 1) {
 					$l->a( 'information code 37');
 					global $chunkUploadDirty;
 					if($chunkUploadDirty) {
@@ -643,7 +652,7 @@ function insertCoal($target = null) {
 			}
 		}
 		else {
-			if($ccoalcount < 10) {
+			if($ccoalcount < 1) {
 				$l->a( 'information code 37');
 				global $chunkUploadDirty;
 				if($chunkUploadDirty) {
@@ -660,7 +669,7 @@ function insertCoal($target = null) {
 		if(!is_null($retrievedCoal)) {
 			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
 				$blockList = '';
-				if($coalcount < 10) {
+				if($coalcount < 1) {
 					$l->a( 'information code 31');
 					goto coal;
 				}
