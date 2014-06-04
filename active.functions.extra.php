@@ -586,6 +586,7 @@ function coalFromFile($filename,$returnPath = true) {
 function insertCoal($target = null) {
 	$db = new FractureDB('futuqiur_coal');
 	global $l;
+	$error = 0;
 	$coalcount = 0;
 	coal:
 	$coalcount++;
@@ -626,65 +627,65 @@ function insertCoal($target = null) {
 	$ccoalcount = 0;
 	checkcoal:
 	$ccoalcount++;
-	$retrievedCoal = retrieveCoal($newCoalId);
-	if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
-		if($ccoalcount < 1) {
-			$l->a( 'information code 37');
-			global $chunkUploadDirty;
-			if($chunkUploadDirty) {
-				sleep($ccoalcount*10);
-			}
-			goto checkcoal;
-		}
-	}
-	else {
-		if(!is_null($retrievedCoal)) {
-			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
-				$blockList = '';
-				if($ccoalcount < 1) {
-					$l->a( 'information code 37');
-					global $chunkUploadDirty;
-					if($chunkUploadDirty) {
-						sleep($ccoalcount*10);
-					}
-					goto checkcoal;
-				}
-			}
-		}
-		else {
-			if($ccoalcount < 1) {
-				$l->a( 'information code 37');
-				global $chunkUploadDirty;
-				if($chunkUploadDirty) {
-					sleep($ccoalcount*10);
-				}
-				goto checkcoal;
-			}
-		}
-	}
-	if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
-		$error = 20;
-	}
-	else {
-		if(!is_null($retrievedCoal)) {
-			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
-				$blockList = '';
-				if($coalcount < 1) {
-					$l->a( 'information code 31');
-					goto coal;
-				}
-				else {
-					$error = 5;
-				}
-			}
-			else {
-				$l->a('Coal test retrieval was successful');
-			}
-		}
-		else {
-			$error = 7;
-		}
-	}
+ 	$retrievedCoal = retrieveCoal($newCoalId);
+// 	if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
+// 		if($ccoalcount < 1) {
+// 			$l->a( 'information code 37');
+// 			global $chunkUploadDirty;
+// 			if($chunkUploadDirty) {
+// 				sleep($ccoalcount*10);
+// 			}
+// 			goto checkcoal;
+// 		}
+// 	}
+// 	else {
+// 		if(!is_null($retrievedCoal)) {
+// 			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+// 				$blockList = '';
+// 				if($ccoalcount < 1) {
+// 					$l->a( 'information code 37');
+// 					global $chunkUploadDirty;
+// 					if($chunkUploadDirty) {
+// 						sleep($ccoalcount*10);
+// 					}
+// 					goto checkcoal;
+// 				}
+// 			}
+// 		}
+// 		else {
+// 			if($ccoalcount < 1) {
+// 				$l->a( 'information code 37');
+// 				global $chunkUploadDirty;
+// 				if($chunkUploadDirty) {
+// 					sleep($ccoalcount*10);
+// 				}
+// 				goto checkcoal;
+// 			}
+// 		}
+// 	}
+// 	if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
+// 		$error = 20;
+// 	}
+// 	else {
+// 		if(!is_null($retrievedCoal)) {
+// 			if(($retrievedCoal->len != $length) ||  ($retrievedCoal->par != $par) ||  ($retrievedCoal->md5 != $md5) || ($retrievedCoal->crc != $crc) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+// 				$blockList = '';
+// 				if($coalcount < 1) {
+// 					$l->a( 'information code 31');
+// 					goto coal;
+// 				}
+// 				else {
+// 					$error = 5;
+// 				}
+// 			}
+// 			else {
+// 				$l->a('Coal test retrieval was successful');
+// 			}
+// 		}
+// 		else {
+// 			$error = 7;
+// 		}
+// 	}
 	unlink($res[0]);
 	$db->close();
 	if($error != 0) {
