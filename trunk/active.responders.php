@@ -344,6 +344,7 @@ function arcmaj3_handler()
         echo 'Incorrect protocol auth ID';
     }
 }
+
 function DBSimpleSubmissionHandler()
 {
     $authorizationKey = $_REQUEST['authorizationKey'];
@@ -393,6 +394,7 @@ function CoalIntakeHandler()
 		}
 	}
 }
+
 function CoalRetrieveHandler()
 {
     $authorizationKey = $_REQUEST['authorizationKey'];
@@ -402,22 +404,21 @@ function CoalRetrieveHandler()
     $l = new llog();
     if($authorizationKey == $generalAuthKey) {
 		$db               = new FractureDB('futuqiur_coal');
-		$filename = base64_decode($db->getField('coal','filename',$_REQUEST['coalId']));
-		header("Cache-Control: public");
-		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=$filename");
-		header("Content-Type: application/octet-stream");
-		header("Content-Transfer-Encoding: binary");
-		$retrievedCoal = retrieveCoal($_REQUEST['coalId']);
+		$retrievedCoal = retrieveCoal($_REQUEST['coalId'],true);
 		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
 			$error = 20;
 		}
 		else {
 			if(is_null($retrievedCoal)) {
 					$error = 7;
-
 			}
 		}
+		$filename = base64_decode($db->getField('coal','filename',$_REQUEST['coalId']));
+		header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-Disposition: attachment; filename=$filename");
+		header("Content-Type: application/octet-stream");
+		header("Content-Transfer-Encoding: binary");
 		if($error != 0) {
 			header("HTTP/1.0 525 Request failed");
 		}
@@ -425,76 +426,11 @@ function CoalRetrieveHandler()
 		header('Content-Length: ' . strlen($retrievedCoal->data));
 		echo $retrievedCoal->data;
 		$db->close();
-
-
 	}
     else {
-    
-        			header("HTTP/1.0 403 Forbidden");
-
+		header("HTTP/1.0 403 Forbidden");
     	$error = 1;
     }
-
-}
-function CoalChunkIntakeHandler()
-{
-    $authorizationKey = $_REQUEST['authorizationKey'];
-    global $generalAuthKey;
-    global $error;
-    global $l;
-    $l = new llog();
-    if($authorizationKey == $generalAuthKey) {
-    	$spar = $_REQUEST['spar'];
-    	$smd5 = $_REQUEST['smd5'];
-    	$scrc = $_REQUEST['scrc'];
-    	$ssha = $_REQUEST['ssha'];
-    	$s512 = $_REQUEST['s512'];
-		$db               = new FractureDB('futuqiur_coalchunks');
-    	$nextId = $db->getNextId('coalchunks').'-'.guidv4();
-		$db->close();
-		$target_path = $target_path . "data.".$nextId.".cct"; 
-		if(isset($_FILES['uploadedfile'])) {		
-			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
-			} else {
-				$error = 2;
-			}
-		}
-		$data = null;
-		if(file_exists($target_path)) {
-    		$data = file_get_contents($target_path);
-    	}
-		$par = par($data);
-		$md5 = amd5($data);
-		$crc = crc($data);
-		$sha = sha($data);
-		$s512 = s512($data);
-		$ichunkcount = 0;
-		ichunk:
-		$ichunkcount++;
-		$icRes = insertChunk($data,$par,$md5,$crc,$sha,$s512);
-		$newChunkId = $icRes[0];
-		$l->a('<br>insertChunk returned status '.$icRes[1].'.<br>');
-		if($icRes[1] != 0) {
-			$l->a('<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>');
-			$error = 36;
-			if($ichunkcount < 10) {
-				goto ichunk;
-			}
-			else {
-				$error = 9;
-			}
-		}
-		else {
-		}
-		echo $newChunkId;
-    }
-    else {
-    	$error = 1;
-    }
-}
-function CoalChunkRetrieveHandler()
-{
-   
 }
 
 function emberBackend() {
