@@ -152,11 +152,10 @@ function get_url_dummy($url)
 	echo '<br>Data requested from URL: '.$url.'<br>';
 	return 'Fake data...';
 }
-function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey,$title,$description,$mediatype,$keywords,$addToBucket = false,$collection = 'opensource')
+function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey)
 {
 	global $l;
-	//note that the description options etc. aren't implemented
-	$error = 0;
+	$status = 0;
 	$bucketName=$identifier;
 	if (!defined('awsAccessKey')) define('awsAccessKey', $accesskey);
 	if (!defined('awsSecretKey')) define('awsSecretKey', $secretkey);
@@ -166,17 +165,17 @@ function ia_upload($data,$identifier,$fallbackid,$filename,$accesskey,$secretkey
 	$s3 = new S3(awsAccessKey, awsSecretKey, true, 's3.us.archive.org');
 	if ($s3->putBucket($bucketName, S3::ACL_PUBLIC_READ)) {
 		$l->a("Created bucket {$bucketName}".PHP_EOL.'<br>');
-		if ($s3->putObject($data, $bucketName, $filename, S3::ACL_PUBLIC_READ)) {
-			$l->a("S3::putObjectFile(): File copied to {$bucketName}/".$filename.PHP_EOL.'<br>');
-		} else {
-			$l->a("error code 34: S3::putObjectFile(): Failed to copy file\n<br>");
-			$error = 34;
-		}
+		
 	} else {
-		$l->a("error code 35: S3::putBucket(): Unable to create bucket (it may already exist and/or be owned by someone else)\n<br>");
-		$error = 35;
+		$l->a("information code 55: S3::putBucket(): Unable to create bucket\n<br>");
 	}
- 	return $error;
+	if ($s3->putObject($data, $bucketName, $filename, S3::ACL_PUBLIC_READ)) {
+		$l->a("S3::putObjectFile(): File copied to {$bucketName}/".$filename.PHP_EOL.'<br>');
+	} else {
+		$l->a("error code 34: S3::putObjectFile(): Failed to copy file\n<br>");
+		$status = 34;
+	}
+ 	return $status;
 }
 function get_domain($url)
 #from http://stackoverflow.com/questions/16027102/get-domain-name-from-full-url

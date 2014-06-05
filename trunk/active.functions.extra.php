@@ -177,131 +177,55 @@ function arcmaj3_barrel_expire($barrelId)
     echo 'Expired barrel ' . $barrelId . '.<br>' . "\n";
     $db->close();
 }
-function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
+
+function insertChunk($data,$csum) {
 	global $l;
-	$error = 0;
-	$len = strlen($data);
-	$md5 = amd5($data);
-	$sha = sha($data);
-	$s512 = s512($data);
-	$newChunkId = 0;
-	if(($smd5 != $md5) || ($ssha != $sha) || ($ss512 != $s512)) {
-		$l->a('Chunk insertion function reached status checkpoint 1a<br>');
-		$l->a('error 8');
-		$error = 8;
+	$status = 0;
+	$received_data_csum = new Csum($data);
+	if(!matches($csum,$received_data_csum) {
+		$status = 8;
 	}
 	else {
 		$db = new FractureDB('futuqiur_coalchunks');
 		$potentialDuplicates = $db->getColumnsUH('chunk2', 'id', 'md5', $md5);
-		$duplicateFound = false;
 		foreach ($potentialDuplicates as $potential) {
-			$l->a('Checking potential duplicate record '.$potential['id'].'.');
 			$potentialRecord = retrieveChunk($potential['id']);
 			if(!is_null($potentialRecord)) {
-				$potentialData = $potentialRecord->data;
-				$potentiallen = $potentialRecord->len;
-				$potentialmd5 = $potentialRecord->md5;
-				$potentialsha = $potentialRecord->sha;
-				$potentials512 = $potentialRecord->s512;
-				$l->a('Provided data md5 = '.$md5.'; potential '.$potentialmd5.'.<br>');
-				$l->a('Provided data len = '.$len.'; potential '.$potentiallen.'.<br>');
-				$l->a('Provided data sha = '.$sha.'; potential '.$potentialsha.'.<br>');
-				$l->a('Provided data s512 = '.$s512.'; potential '.$potentials512.'.<br>');
-				if(($potentialData === $data) && ($potentiallen == $len) && ($potentialmd5 == $md5) && ($potentialsha == $sha) && ($potentials512 == $s512)) {
-					$duplicateFound = true;
+				$potentialData = $potentialRecord['data'];
+				$potentialCsum = $potentialRecord['csum'];
+				if(($potentialData === $data) && matches($csum,$potentialCsum)) {
 					$duplicateId = $potential['id'];
-					$l->a('information code 25<br>');
-					$l->a('Chunk insertion function reached status checkpoint 5a<br>');
-					goto duplicatefound;
+					return array('id'=>$duplicateId,'status'=>$status);
 				}
 			}
 		}
- 		duplicatefound:
- 		if($duplicateFound) {
-			$l->a('information code 26: duplicate found<br>');
-			$newChunkId = $duplicateId;
- 			goto finished;
- 		}
- 		else {
- 			global $coalVersion;
- 			$md = new cChunkMeta($len,$md5,$sha,$s512,$compression,$coalVersion);
- 			$mdt = base64_encode(bzcompress(serialize($md)));
-			global $chunkMasterKey;
-			$ciphertext = mc_encrypt($mdt.'@CoalFragmentMarker@'.$data,$chunkMasterKey);
-			if(mc_decrypt($ciphertext,$chunkMasterKey) != $mdt.'@CoalFragmentMarker@'.$data) {
-				if($chcount < 1) {
-					$l->a('Chunk insertion function status checkpoint 3a<br>');
-					goto chunk;
-				}
-				else {
-					$l->a('error 4<br>');
-					$icerror = 4;
-				}
-			}
-			//$encmd5 = amd5($ciphertext);
-			$chcount = 0;
-			chunk:
-			global $coalVersion;
-			$sccount = 0;
-			$sc27try = 0;
-			storechunk:
-			$sc27try++;
-			$sccount++;
-			$identifierId = $newChunkId / 1000;
-			$randomInt = rand(0,1000);
-			$randomIntAlt = rand(0,1000);
-			$identifier = $identifierId.$randomInt.'.COALPROJECT.RECORD33';
-			$address = 'ia:'.$identifier;
-			$fallbackid = $identifierId.$randomIntAlt.'.COALPROJECT.RECORD33';
-			//print_r($db->getNextId('chunk2'));
-			$nextId = $db->getNextId('chunk2');
-			$nextIdFixedA = $nextId[0]['Auto_increment'];
- 			//$nextIdFixed = $nextIdFixedA+1;
- 			$filename = $nextIdFixedA.'.coal4';
-// 			echo $nextIdFixedA;
-// 			echo 'DOOOM';
-// 			echo $identifier.'/'.$filename;
-// 			echo 'DOOOOOM';
-			global $iaAuthKey;
-			global $iaPrivateKey;
-			//echo 'Ciphertext added: '.md5($ciphertext);
-			$ulresult = @ia_upload($ciphertext,$identifier,$fallbackid,$filename,$iaAuthKey,$iaPrivateKey,null,null,'texts',null,true,'opensource');
-			// if(($ulresult == 35) && ($sc27try < 10)) {
-// 				$l->a('information code 27');
-// 				goto storechunk;
-// 			}
-// 			if(($ulresult != 0) && ($ulresult != 35) && ($sccount < 10)) {
-// 				$l->a('information code 28');
-// 				goto storechunk;
-// 			}
-			$l->a('Upload result: '.$ulresult.'.<br><br>');
-			if($ulresult != 0) {
-				if($sccount < 2) {
-					$l->a('information code 28<br>');
-					sleep(10);
-					goto storechunk;
-				}
-				else {
-					$l->a('error 44<br>');
-					$error = 44;
-				}
-			}
-			$newChunkId = $db->addRow('chunk2', 'id, address, md5', '\''.$nextIdFixedA.'\', \''.$address.'\', UNHEX(\''.$md5.'\')');
-// 			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
-// 			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
- 			goto finished;
+		global $compression;
+		global $coalVersion;
+		$details = array('csum'=>$csum->export(),'compression'->$compression,'coalVersion'=>$coalVersion);
+		$prepared_details = base64_encode(bzcompress(serialize($details)));
+		global $chunkMasterKey;
+		$prepared_data = mc_encrypt($prepared_details.'@CoalFragmentMarker@'.$data,$chunkMasterKey);
+		if(mc_decrypt($prepared_data,$chunkMasterKey) != $prepared_details.'@CoalFragmentMarker@'.$data) {
+			$status = 53;
+		}
+		$identifierId = $newChunkId / 1000;
+		$randomInt = rand(0,10000);
+		$randomIntAlt = rand(0,10000);
+		$identifier = $identifierId.$randomInt.'.COALPROJECT.RECORD33';
+		$address = 'ia:'.$identifier;
+		$fallbackid = $identifierId.$randomIntAlt.'.COALPROJECT.RECORD33';
+		$id = $db->addRow('chunk2', 'address, md5', '\''.$address.'\', UNHEX(\''.$md5.'\')');
+		$filename = $id.'.coal4';
+		global $iaAuthKey;
+		global $iaPrivateKey;
+		$upload = @ia_upload($prepared_data,$identifier,$fallbackid,$filename,$iaAuthKey,$iaPrivateKey);
+		if($upload != 0) {
+			$db->dropRow('chunk2',$id);
+			$status = 54;
 		}
 		$db->close();
+		return array('id'=>$duplicateId,'status'=>$status);
  	}
-	finished:
-	$l->a('Chunk insertion function reached status checkpoint a<br>');
-	if($error != 0) {
-		$l->a('Chunk insertion function reached status checkpoint b<br>');
-		//header("HTTP/1.0 525 Request failed");
-	}
-	$l->a('Chunk insertion function returning new chunk ID '.$newChunkId.' and error code '.$error.'.<br>');
-	return array($newChunkId, $error);
-	$l->a('Chunk insertion function reached status checkpoint c<br>');
 }
 
 function retrieveChunk($id)
@@ -486,6 +410,11 @@ function coalFromFile($filename) {
 	$chunks_csum = new Csum($chunks);
 	$details = new array('csum'=>$csum->export(),'chunks'=>$chunks,'chunks_csum'=>$chunks_csum->export(),'filename'=>$filename,'type'=>$type,'size'=>$size,'smtime'=>$smtime,'stats'=>$stats,'ctime'=>$ctime,'mtime'=>$mtime,'atime'=>$atime);
 	return array('filename'=>$filename,'details'=>$details,'status'=>$status);
+}
+
+function checkCoal($id) {
+	sleep(3);
+	return check(retrieveCoal($id)['status']));
 }
 
 function insertCoal($file = null) {
