@@ -4,6 +4,7 @@
 ini_set('max_execution_time', 300);
 global $emberVersion;
 $activeVersion = $emberVersion;
+$l = new llog;
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #

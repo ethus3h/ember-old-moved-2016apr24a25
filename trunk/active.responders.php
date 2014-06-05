@@ -365,62 +365,33 @@ function DBSimpleSubmissionHandler()
 
 function CoalIntakeHandler()
 {
-	global $coalVersion;
-	$coalVersion = 4;
-    $authorizationKey = $_REQUEST['authorizationKey'];
-    global $generalAuthKey;
-    global $error;
-    global $l;
-    $l = new llog;
-    $t = st('CoalIntakeHandler');
-    if($authorizationKey == $generalAuthKey) {
-    	$icres = insertCoal();
-    	$newCoalId = $icres[0];
-    	$coalTraits = $icres[1];
-    	$error = $icres[2];
+	global $l;
+	if(authorized()) {
+		global $coalVersion;
+		$coalVersion = 4;
+    	$insertion = insertCoal();
+    	$id = $insertion['id'];
+    	$details = $insertion['details'];
+    	$status = $insertion['status'];
     	$resrc = $icres[3];
-		if($error != 0) {
-			header("HTTP/1.0 525 Request failed");
-		}
-		if(isset($_REQUEST['outputwebloc'])) {
-			$filenamedec=base64_decode($coalTraits->filename);
-			header("Cache-Control: public");
-			header("Content-Description: File Transfer");
-			header("Content-Disposition: attachment; filename=$filenamedec".'.url');
-			header("Content-Type: application/octet-stream");
-			header("Content-Transfer-Encoding: binary");
-			$smallified='[InternetShortcut]
-	URL=http://futuramerlin.com/d/r/active.php?coalId='.$newCoalId.'&authorizationKey='.urlencode($generalAuthKey).'&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve
-	IconIndex=0';
-			header('Content-Length: ' . strlen($smallified));
-			echo $smallified;
-		}
-		else {
-			if(isset($_REQUEST['coalVerbose'])) {
-				echo 'Added coal: ';
+    	if(check($status)) {
+			if(isset($_REQUEST['outputwebloc'])) {
+				$filename=base64_decode($details['filename']);
+				global $generalAuthKey;
+				$smallified="[InternetShortcut]\nURL=http://futuramerlin.com/d/r/active.php?coalId=".$id."&authorizationKey=".urlencode($generalAuthKey)."&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve\nIconIndex=0";
+				start_file_download($filename,strlen($smallified));
+				echo $smallified;
 			}
-			echo $newCoalId.'|'.$coalTraits->len.'|'.$coalTraits->md5.'|'.$coalTraits->sha.'|'.$coalTraits->s512;
-			if(isset($_REQUEST['coalVerbose'])) {
-				echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.';
-				echo '<br><h1>Log output:</h1><br><small>';
-				$l->e();
-				echo '</small><br>Coal intake handler completed step 8<br>';
-			}
-		}
-	}
-    else {
-    	header("HTTP/1.0 403 Forbidden");
-    	$error = 1;
-    }
-    if(isset($_REQUEST['coalVerbose'])) {
-		if(($error !== 0) && (strlen($error) > 0)) {
-			echo '<br>An error code was returned: '.$error;
-			if(($error == 20) && (is_int($resrc) || is_array($resrc))) {
-				if(is_int($resrc)) {
-					echo '<br>retrieveCoal returned error code '.$resrc;
-				}
-				else {
-					echo '<br>retrieveCoal returned error codes, potential error codes, and/or other status codes '.$resrc[0].', '.$resrc[1].', and '.$resrc[2].'.';
+			else {
+				if(check($status)) {
+					if(isset($_REQUEST['coalVerbose'])) {
+						echo 'Added coal: ';
+					}
+					echo $id.'|'.$details['len'].'|'.$details['md5'].'|'.$details['sha'].'|'.$details['s512'];
+					if(isset($_REQUEST['coalVerbose'])) {
+						echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.<br><h1>Log output:</h1><br><small>';
+						$l->e();
+					}
 				}
 			}
 		}
@@ -429,54 +400,32 @@ function CoalIntakeHandler()
 
 function CoalRetrieveHandler()
 {
-    $authorizationKey = $_REQUEST['authorizationKey'];
-    global $generalAuthKey;
-    global $error;
-    global $l;
-    $l = new llog();
-    if($authorizationKey == $generalAuthKey) {
-		$db               = new FractureDB('futuqiur_coal');
-		$retrievedCoal = retrieveCoal($_REQUEST['coalId'],true);
-		if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
-			$error = 20;
+	global $l;
+	if(authorized()) {
+		$coal = retrieveCoal($_REQUEST['coalId'],true);
+		if(is_array($coal) || is_int($coal)) {
+			$status = 20;
 		}
 		else {
-			if(is_null($retrievedCoal)) {
-					$error = 7;
+			if(is_null($coal)) {
+					$status = 7;
 			}
 		}
-		if(!is_object($retrievedCoal)) {
-			header("HTTP/1.0 525 Request failed");
-			echo '<br><h1>Request failed. Log output:</h1><br><small>';
-			$l->e();
+		if(!is_object($coal)) {
+			$status = 45;
 		}
-		else {
-			$filename = $retrievedCoal->filename;
-			//echo $filename;
+		if(check($status)) {
+			$filename = $coal['filename'];
 			if(isset($_REQUEST['cs'])) {
-				$filename = $filenamea . '.coalarc';
+				$filename = $filename . '.coalarc';
 			}
-			header("Cache-Control: public");
-			header("Content-Description: File Transfer");
-			header("Content-Disposition: attachment; filename=\"$filename\"");
-			header("Content-Type: application/octet-stream");
-			header("Content-Transfer-Encoding: binary");
-			if($error != 0) {
-				header("HTTP/1.0 525 Request failed");
-			}
-			//help from http://forums.mozillazine.org/viewtopic.php?f=37&t=27721 and http://www.rebol.net/cookbook/recipes/0059.html and http://stackoverflow.com/questions/1074898/mime-type-of-downloading-file
-			header('Content-Length: ' . strlen($retrievedCoal->data));
+			start_file_download($filename,strlen($coal['data']));
 			if(isset($_REQUEST['cs'])) {
-				echo $retrievedCoal->md5.'|'.$retrievedCoal->sha.'|'.$retrievedCoal->s512.'|';
+				echo $coal['md5'].'|'.$coal['sha'].'|'.$coal['s512'].'|';
 			}
-			echo $retrievedCoal->data;
-			$db->close();
+			echo $retrievedCoal['data'];
 		}
 	}
-    else {
-		header("HTTP/1.0 403 Forbidden");
-    	$error = 1;
-    }
 }
 
 function emberBackend() {
