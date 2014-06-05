@@ -255,7 +255,13 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 			$fallbackid = $identifierId.$randomIntAlt.'.COALPROJECT.RECORD33';
 			//print_r($db->getNextId('chunk2'));
 			$nextId = $db->getNextId('chunk2');
-			$filename = $nextId[0]['Auto_increment'].'.coal4';
+			$nextIdFixedA = $nextId[0]['Auto_increment'];
+// 			$nextIdFixed = $nextIdFixedA+1;
+// 			$filename = $nextIdFixed.'.coal4';
+// 			echo $nextIdFixedA;
+// 			echo 'DOOOM';
+// 			echo $identifier.'/'.$filename;
+// 			echo 'DOOOOOM';
 			global $iaAuthKey;
 			global $iaPrivateKey;
 			//echo 'Ciphertext added: '.md5($ciphertext);
@@ -269,11 +275,11 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 // 				goto storechunk;
 // 			}
 			$l->a('Upload result: '.$ulresult.'.<br><br>');
-			if(($ulresult != 0) && ($sccount < 10)) {
+			if(($ulresult != 0) && ($sccount < 2)) {
 				$l->a('information code 28<br>');
 				goto storechunk;
 			}
-			$newChunkId = $db->addRow('chunk2', 'address, md5', '\''.$address.'\', UNHEX(\''.$md5.'\')');
+			$newChunkId = $db->addRow('chunk2', 'id, address, md5', '\''.$nextIdFixedA.'\', \''.$address.'\', UNHEX(\''.$md5.'\')');
 // 			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
 // 			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
  			goto finished;
@@ -327,8 +333,13 @@ function retrieveChunk($id)
 		global $chunkMasterKey;
 		//echo 'Ciphertext retrieved: '.md5($chunkDataR);
 		//$rmd5 = amd5($chunkDataR);
+		echo '<br><br><br><br><br><br><br><br>Chunk encrypted data: '.$chunkDataR;
 		$chunkDataR = mc_decrypt($chunkDataR,$chunkMasterKey);
-		$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
+		echo '<br><br><br><br><br><br><br><br>Chunk raw data: '.$chunkDataR;
+		echo '<br><br><br><br><br><br><br><br>Chunk metadata: '.strstr($chunkDataR,'@CoalFragmentMarker@', true);
+		echo '<br><br><br><br><br><br><br><br>Chunk data: '.substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
+		echo '<br><br><br><br><br><br><br><br>';
+		//$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
 		//help from http://stackoverflow.com/questions/4036036/php-substr-after-a-certain-char-a-substr-strpos-elegant-solution
 		$chunkMeta = unserialize(bzdecompress(base64_decode(strstr($chunkDataR,'@CoalFragmentMarker@', true))));
 		if((!is_object($chunkMeta)) && ($deccount > 2)) {
@@ -373,6 +384,7 @@ function retrieveChunk($id)
 		return new cChunk ($chunkData,$cklen,$ckmd5,$cksha,$cks512);
 	}
 }
+
 function retrieveCoal($id)
 {
 	global $l;
