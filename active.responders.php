@@ -366,7 +366,9 @@ function DBSimpleSubmissionHandler()
 function CoalIntakeHandler()
 {
 	global $l;
-	if(authorized()) {
+	$l = new llog;
+	global $generalAuthKey;
+	if(authorized($generalAuthKey)) {
 		global $coalVersion;
 		$coalVersion = 5;
 		global $coalCompressionType;
@@ -378,7 +380,6 @@ function CoalIntakeHandler()
     	if(check($status)) {
 			if(isset($_REQUEST['outputwebloc'])) {
 				$filename=base64_decode($details['filename']);
-				global $generalAuthKey;
 				$smallified="[InternetShortcut]\nURL=http://futuramerlin.com/d/r/active.php?coalId=".$id."&authorizationKey=".urlencode($generalAuthKey)."&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve\nIconIndex=0";
 				start_file_download($filename,strlen($smallified));
 				echo $smallified;
@@ -402,7 +403,8 @@ function CoalIntakeHandler()
 function CoalRetrieveHandler()
 {
 	global $l;
-	if(authorized()) {
+	global $generalAuthKey;
+	if(authorized($generalAuthKey)) {
 		$coal = retrieveCoal($_REQUEST['coalId'],true);
 		if(is_array($coal) || is_int($coal)) {
 			$status = 20;

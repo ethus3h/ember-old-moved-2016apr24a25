@@ -182,12 +182,12 @@ function insertChunk($data,$csum) {
 	global $l;
 	$status = 0;
 	$received_data_csum = new Csum($data);
-	if(!matches($csum,$received_data_csum) {
+	if(!matches($csum,$received_data_csum)) {
 		$status = 8;
 	}
 	else {
 		$db = new FractureDB('futuqiur_coalchunks');
-		$potentialDuplicates = $db->getColumnsUH('chunk2', 'id', 'md5', $md5);
+		$potentialDuplicates = $db->getColumnsUH('chunk2', 'id', 'md5', $csum->md5);
 		foreach ($potentialDuplicates as $potential) {
 			$potentialRecord = retrieveChunk($potential['id']);
 			if(!is_null($potentialRecord)) {
@@ -201,7 +201,7 @@ function insertChunk($data,$csum) {
 		}
 		global $compression;
 		global $coalVersion;
-		$details = array('csum'=>$csum->export(),'compression'->$compression,'coalVersion'=>$coalVersion);
+		$details = array('csum'=>$csum->export(),'compression'=>$compression,'coalVersion'=>$coalVersion);
 		$prepared_details = base64_encode(bzcompress(serialize($details)));
 		global $chunkMasterKey;
 		$prepared_data = mc_encrypt($prepared_details.'@CoalFragmentMarker@'.$data,$chunkMasterKey);
@@ -260,7 +260,7 @@ function retrieveChunk($id)
 		$data = substr(strstr($rawData,'@CoalFragmentMarker@'),20);
 		$retr_csum = new Csum($chunkData);
 		$csum = $details['csum'];
-		if(!matches($csum,$retr_csum) {
+		if(!matches($csum,$retr_csum)) {
 			$status=52;
 		}
 		$db->close();
@@ -285,7 +285,7 @@ function retrieveCoal($id)
 	$chunks = $details['chunks'];
 	$chunks_csum = Csum_import($details['chunks_csum']);
 	$retr_chunks_csum = new Csum($chunks);
-	if(!matches($chunks_csum,$retr_chunks_csum) {
+	if(!matches($chunks_csum,$retr_chunks_csum)) {
 		$status=47;
 	}
 	if(strlen($chunks)==0) {
@@ -300,7 +300,7 @@ function retrieveCoal($id)
 		$chunk = $chunk_details['data'];
 		$chunk_csum = Csum_import($chunk_details['csum']);
 		$retr_chunk_csum = new Csum($chunk);
-		if(!matches($chunk_csum,$retr_chunk_csum) {
+		if(!matches($chunk_csum,$retr_chunk_csum)) {
 			$status=48;
 		}
 		$chunk_data = bzdecompress($chunk);
@@ -408,13 +408,14 @@ function coalFromFile($filename) {
 	}
 	fclose($fhandle);
 	$chunks_csum = new Csum($chunks);
-	$details = new array('csum'=>$csum->export(),'chunks'=>$chunks,'chunks_csum'=>$chunks_csum->export(),'filename'=>$filename,'type'=>$type,'size'=>$size,'smtime'=>$smtime,'stats'=>$stats,'ctime'=>$ctime,'mtime'=>$mtime,'atime'=>$atime);
+	$details = array('csum'=>$csum->export(),'chunks'=>$chunks,'chunks_csum'=>$chunks_csum->export(),'filename'=>$filename,'type'=>$type,'size'=>$size,'smtime'=>$smtime,'stats'=>$stats,'ctime'=>$ctime,'mtime'=>$mtime,'atime'=>$atime);
 	return array('filename'=>$filename,'details'=>$details,'status'=>$status);
 }
 
 function checkCoal($id) {
 	sleep(3);
-	return check(retrieveCoal($id)['status']));
+	$coal = retrieveCoal($id);
+	return check($coal['status']);
 }
 
 function insertCoal($file = null) {
@@ -449,7 +450,7 @@ function insertCoal($file = null) {
 		}
 	}
 	else {
-		$status = 45
+		$status = 45;
 	}
 	$db->close();
 	return array('id'=>$id,'details'=>$details,'status'=>$status);
