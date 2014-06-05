@@ -361,6 +361,8 @@ class Csum
 {
 	function __construct($data = null)
 	{
+		global $l;
+		$l->a('Creating new Csum.<br>');
 		if(!is_null($data)) {
 			$this->len = strlen($data);
 			$this->md5 = amd5($data);
@@ -378,7 +380,7 @@ class Csum
 	}
 	function export()
 	{
-		return base64_encode(serialize(this));
+		return base64_encode(serialize($this));
 	}
 }
 
