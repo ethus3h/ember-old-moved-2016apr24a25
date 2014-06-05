@@ -447,6 +447,8 @@ function CoalRetrieveHandler()
 		}
 		if(!is_object($retrievedCoal)) {
 			header("HTTP/1.0 525 Request failed");
+			echo '<br><h1>Request failed. Log output:</h1><br><small>';
+			$l->e();
 		}
 		else {
 			$filename = $retrievedCoal->filename;

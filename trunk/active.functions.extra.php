@@ -333,23 +333,27 @@ function retrieveChunk($id)
 		global $chunkMasterKey;
 		//echo 'Ciphertext retrieved: '.md5($chunkDataR);
 		//$rmd5 = amd5($chunkDataR);
-// 		echo '<br><br><br><br><br><br><br><br>Chunk encrypted data: '.$chunkDataR;
+ 		$l->a('<br><br><br><br><br><br><br><br>Chunk encrypted data: '.$chunkDataR);
 		$chunkDataR = mc_decrypt($chunkDataR,$chunkMasterKey);
-// 		echo '<br><br><br><br><br><br><br><br>Chunk raw data: '.$chunkDataR;
-// 		echo '<br><br><br><br><br><br><br><br>Chunk metadata: '.strstr($chunkDataR,'@CoalFragmentMarker@', true);
-// 		echo '<br><br><br><br><br><br><br><br>Chunk data: '.substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
-// 		echo '<br><br><br><br><br><br><br><br>';
+		$l->a('<br><br><br><br><br><br><br><br>Chunk raw data: '.$chunkDataR);
+		$l->a('<br><br><br><br><br><br><br><br>Chunk metadata: '.strstr($chunkDataR,'@CoalFragmentMarker@', true));
+		$l->a('<br><br><br><br><br><br><br><br>Chunk data: '.substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20));
+		$l->a('<br><br><br><br><br><br><br><br>Chunk unserialized: '.print_r(unserialize(bzdecompress(base64_decode(strstr($chunkDataR,'@CoalFragmentMarker@', true)))),true));
+		$l->a('<br><br><br><br><br><br><br><br>');
 		//$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
 		//help from http://stackoverflow.com/questions/4036036/php-substr-after-a-certain-char-a-substr-strpos-elegant-solution
 		$chunkMeta = unserialize(bzdecompress(base64_decode(strstr($chunkDataR,'@CoalFragmentMarker@', true))));
-		if((!is_object($chunkMeta)) && ($deccount > 2)) {
-			$l->a('status 38<br>');
-			goto retrievechunk;
-		}
-		else {
-			$l->a('error 39<br>');
-			$error = 39;
-			return null;
+		//$l->a(gettype($chunkMeta));
+		if(!is_object($chunkMeta)) {
+			if($deccount < 2) {
+				$l->a('status 38<br>');
+				goto retrievechunk;
+			}
+			else {
+				$l->a('error 39<br>');
+				$error = 39;
+				return null;
+			}
 		}
 // 		echo '<br><br><br><br><br><br><br><br>Chunk raw data: '.$chunkDataR;
 // 		echo '<br><br><br><br><br><br><br><br>Chunk metadata: '.strstr($chunkDataR,'@CoalFragmentMarker@', true);
@@ -401,24 +405,28 @@ function retrieveCoal($id)
 	$coalchunk = $coalInfo['chunk'];
 	$coalmd5 = $coalInfo['md5'];
 	$retrchunk = retrieveChunk($coalchunk);
-	if((!is_object($retrchunk)) && ($deccount > 2)) {
-		goto retrievecoal;
-		$l->a('status 42<br>');
-	}
-	else {
-		$l->a('error 43<br>');
-		$error = 43;
-		return null;
+	if(!is_object($retrchunk)) {
+		if($deccount < 2) {
+			goto retrievecoal;
+			$l->a('status 42<br>');
+		}
+		else {
+			$l->a('error 43<br>');
+			$error = 43;
+			return null;
+		}
 	}
 	$m = unserialize(bzdecompress($retrchunk->data));
-	if((!is_object($retrchunk)) && ($deccount > 2)) {
-		goto retrievecoal;
-		$l->a('status 40<br>');
-	}
-	else {
-		$l->a('error 41<br>');
-		$error = 41;
-		return null;
+	if(!is_object($retrchunk)) {
+		if($deccount > 2) {
+			goto retrievecoal;
+			$l->a('status 40<br>');
+		}
+		else {
+			$l->a('error 41<br>');
+			$error = 41;
+			return null;
+		}
 	}
 	$len = $m->len;
 	$md5 = $m->md5;
