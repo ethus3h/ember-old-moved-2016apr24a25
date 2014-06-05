@@ -445,10 +445,14 @@ function CoalRetrieveHandler()
 					$error = 7;
 			}
 		}
-		$filename = base64_decode($db->getField('coal','filename',$_REQUEST['coalId']));
+		$filename = $retrievedCoal->filename;
+		//echo $filename;
+		if(isset($_REQUEST['cs'])) {
+			$filename = $filenamea . '.coalarc';
+		}
 		header("Cache-Control: public");
 		header("Content-Description: File Transfer");
-		header("Content-Disposition: attachment; filename=$filename");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
 		header("Content-Type: application/octet-stream");
 		header("Content-Transfer-Encoding: binary");
 		if($error != 0) {
@@ -456,6 +460,9 @@ function CoalRetrieveHandler()
 		}
 		//help from http://forums.mozillazine.org/viewtopic.php?f=37&t=27721 and http://www.rebol.net/cookbook/recipes/0059.html and http://stackoverflow.com/questions/1074898/mime-type-of-downloading-file
 		header('Content-Length: ' . strlen($retrievedCoal->data));
+		if(isset($_REQUEST['cs'])) {
+			echo $retrievedCoal->md5.'|'.$retrievedCoal->sha.'|'.$retrievedCoal->s512.'|';
+		}
 		echo $retrievedCoal->data;
 		$db->close();
 	}

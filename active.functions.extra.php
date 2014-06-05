@@ -192,9 +192,10 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 	}
 	else {
 		$db = new FractureDB('futuqiur_coalchunks');
-		$potentialDuplicates = $db->getColumns('chunk2', 'id', 'md5', $md5);
+		$potentialDuplicates = $db->getColumnsUH('chunk2', 'id', 'md5', $md5);
 		$duplicateFound = false;
 		foreach ($potentialDuplicates as $potential) {
+			$l->a('Checking potential duplicate record '.$potential['id'].'.');
 			$potentialRecord = retrieveChunk($potential['id']);
 			if(!is_null($potentialRecord)) {
 				$potentialData = $potentialRecord->data;
@@ -237,7 +238,7 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 					$icerror = 4;
 				}
 			}
-			$encmd5 = amd5($ciphertext);
+			//$encmd5 = amd5($ciphertext);
 			$chcount = 0;
 			chunk:
 			global $coalVersion;
@@ -267,11 +268,12 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 // 				$l->a('information code 28');
 // 				goto storechunk;
 // 			}
-			if($ulresult != 0) {
-				$l->a('information code 28');
+			$l->a('Upload result: '.$ulresult.'.<br><br>');
+			if(($ulresult != 0) && ($sccount < 10)) {
+				$l->a('information code 28<br>');
 				goto storechunk;
 			}
-			$newChunkId = $db->addRow('chunk2', 'address, md5', '\''.$address.'\', UNHEX(\''.$encmd5.'\')');
+			$newChunkId = $db->addRow('chunk2', 'address, md5', '\''.$address.'\', UNHEX(\''.$md5.'\')');
 // 			//$db->setField('coalchunks', 'altstorage', 'none', $newChunkId);
 // 			//$db->setField('coalchunks', 'altaddress', 'none', $newChunkId);
  			goto finished;
@@ -300,7 +302,9 @@ function retrieveChunk($id)
 		$rcerror = 0;
 		$rccount = 0;
 		$rcpcount = 0;
+		$deccount = 0;
 		retrievechunk:
+		$deccount++;
 		$chunkMetaRow = $db->getRow('chunk2', 'id', $id);
 		$chunkAddressBlock = $chunkMetaRow['address'];
 		$caExp = explode_esc(':',$chunkAddressBlock);
@@ -322,11 +326,20 @@ function retrieveChunk($id)
 		}
 		global $chunkMasterKey;
 		//echo 'Ciphertext retrieved: '.md5($chunkDataR);
-		$rmd5 = amd5($chunkDataR);
+		//$rmd5 = amd5($chunkDataR);
 		$chunkDataR = mc_decrypt($chunkDataR,$chunkMasterKey);
 		$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
 		//help from http://stackoverflow.com/questions/4036036/php-substr-after-a-certain-char-a-substr-strpos-elegant-solution
 		$chunkMeta = unserialize(bzdecompress(base64_decode(strstr($chunkDataR,'@CoalFragmentMarker@', true))));
+		if((!is_object($chunkMeta)) && ($deccount > 2)) {
+			goto retrievechunk;
+			$l->a('status 38');
+		}
+		else {
+			$l->a('error 39');
+			$error = 39;
+			return null;
+		}
 // 		echo '<br><br><br><br><br><br><br><br>Chunk raw data: '.$chunkDataR;
 // 		echo '<br><br><br><br><br><br><br><br>Chunk metadata: '.strstr($chunkDataR,'@CoalFragmentMarker@', true);
 // 		echo '<br><br><br><br><br><br><br><br>Chunk data: '.substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
@@ -340,14 +353,14 @@ function retrieveChunk($id)
 		$chmd5 = $chunkMeta->md5;
 		$chsha = $chunkMeta->sha;
 		$chs512 = $chunkMeta->s512;
-		if(($cklen != $chlen) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($cks512 != $chs512) || ($chunkRmd5 != $rmd5)) {
+		if(($cklen != $chlen) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($cks512 != $chs512)) {
 			if($rccount < 1) {
 				$l->a('<br>information code 29.<br>');
 				$l->a('Retrieved len = '.$cklen.'; expected '.$chlen.'.<br>');
 				$l->a('Retrieved md5 = '.$ckmd5.'; expected '.$chmd5.'.<br>');
 				$l->a('Retrieved sha = '.$cksha.'; expected '.$chsha.'.<br>');
 				$l->a('Retrieved s512 = '.$cks512.'; expected '.$chs512.'.<br>');
-				$l->a('Retrieved raw md5 = '.$chunkRmd5.'; expected '.$rmd5.'.<br>');
+				//$l->a('Retrieved raw md5 = '.$chunkRmd5.'; expected '.$rmd5.'.<br>');
 				$rccount++;
 				goto retrievechunk;
 			}
@@ -451,7 +464,13 @@ function retrieveCoal($id)
 		}
 	}
 	$db->close();
-	return new cCoal ($dataToReturn,$clen,$cmd5,$csha,$cs512);
+	if(isset($m->ulfilename)) {
+		$cfilename = base64_decode($m->ulfilename);
+	}
+	else {
+		$cfilename = $m->filename;
+	}
+	return new cCoal ($dataToReturn,$clen,$cmd5,$csha,$cs512,$cfilename);
 	resetstatus:
 	$l->a('Coal retrieval function reached status checkpoint a<br>');
 	$blocklist = '';
@@ -693,7 +712,7 @@ function insertCoal($target = null) {
 		$toReturn = array($newCoalId,$coalTraits,$error,$retrievedCoal);
 	}
 	else {
-		$toReturn = array($newCoalId,$coalTraits,error,null);
+		$toReturn = array($newCoalId,$coalTraits,$error,null);
 	}
 	return $toReturn;
 }

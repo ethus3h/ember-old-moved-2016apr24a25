@@ -233,13 +233,14 @@ $baggage_claim = new baggage_claim;
 
 class cCoal
 {
-    function __construct($data,$len,$md5,$sha,$s512)
+    function __construct($data,$len,$md5,$sha,$s512,$filename)
     {
         $this->data=$data;
         $this->len=$len;
         $this->md5=$md5;
         $this->sha=$sha;
         $this->s512=$s512;
+        $this->filename=$filename;
     }
 }
 

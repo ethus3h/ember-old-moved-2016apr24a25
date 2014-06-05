@@ -310,6 +310,17 @@ class FractureDB
         //echo '<br>Requesting column from database with query '.$query.'.<br>';
         return $this->query($query);
     }
+    function getColumnsUH($table, $field, $filterField = '', $filterValue = '')
+    {
+        if (strlen($filterValue) !== 0) {
+            $queryInsert = ' WHERE ' . $filterField . ' = UNHEX(\'' . $filterValue . '\')';
+        } else {
+            $queryInsert = '';
+        }
+        $query = 'SELECT ' . $field . ' FROM ' . $table . ' ' . $queryInsert . ';';
+        //echo '<br>Requesting column from database with query '.$query.'.<br>';
+        return $this->query($query);
+    }
     function getColumns($table, $fields, $filterField = '', $filterValue = '')
     {
         return $this->getColumn($table, $fields, $filterField, $filterValue);
