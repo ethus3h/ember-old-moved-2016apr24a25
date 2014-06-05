@@ -373,7 +373,6 @@ function CoalIntakeHandler()
     	$id = $insertion['id'];
     	$details = $insertion['details'];
     	$status = $insertion['status'];
-    	$resrc = $icres[3];
     	if(check($status)) {
 			if(isset($_REQUEST['outputwebloc'])) {
 				$filename=base64_decode($details['filename']);
