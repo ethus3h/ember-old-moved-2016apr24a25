@@ -201,6 +201,36 @@ function get_domain_simple($url)
     echo "<br>\n<br>\nDetected potential project: $hostr<br>\n<br>\n";
     return $hostr;
 }
+global $generalAuthKey;
+function authorized($key = $generalAuthKey,$name='authorizationKey')
+{
+	if($_REQUEST[$name] == $key) {
+		return true;
+	}
+	else {
+		header("HTTP/1.0 403 Forbidden");
+		return false;
+	}
+}
+function check($status) {
+	if($status != 0) {
+		global $l;
+		header("HTTP/1.0 525 Request failed");
+		echo '<h1>Something went wrong: status '.$status.'. Please try your request again later.</h1><br><h2>Log output:</h2><br>';
+		$l->e();
+		return false;
+	}
+	return true;
+}
+function start_file_download($filename,$filesize)
+{
+	header("Cache-Control: public");
+	header("Content-Description: File Transfer");
+	header("Content-Disposition: attachment; filename=\"$filename\"");
+	header("Content-Type: application/octet-stream");
+	header("Content-Transfer-Encoding: binary");
+	header('Content-Length: ' . $filesize;
+}
 
 //from http://us1.php.net/manual/en/function.crc32.php#96262
 function get_signed_int($in) {
