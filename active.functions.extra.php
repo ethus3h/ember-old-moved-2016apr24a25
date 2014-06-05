@@ -234,7 +234,7 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 					goto chunk;
 				}
 				else {
-					$l->a('error 4');
+					$l->a('error 4<br>');
 					$icerror = 4;
 				}
 			}
@@ -298,7 +298,7 @@ function retrieveChunk($id)
 		$l->a('information code 32<br>');
 	}
 	else {
-		$db               = new FractureDB('futuqiur_coalchunks');
+		$db = new FractureDB('futuqiur_coalchunks');
 		$rcerror = 0;
 		$rccount = 0;
 		$rcpcount = 0;
@@ -333,10 +333,10 @@ function retrieveChunk($id)
 		$chunkMeta = unserialize(bzdecompress(base64_decode(strstr($chunkDataR,'@CoalFragmentMarker@', true))));
 		if((!is_object($chunkMeta)) && ($deccount > 2)) {
 			goto retrievechunk;
-			$l->a('status 38');
+			$l->a('status 38<br>');
 		}
 		else {
-			$l->a('error 39');
+			$l->a('error 39<br>');
 			$error = 39;
 			return null;
 		}
@@ -382,11 +382,32 @@ function retrieveCoal($id)
 	retrievec:
 	$rccount = 0;
 	$rcpcount = 0;
+	$deccount = 0;
 	retrievecoal:
+	$deccount++;
 	$coalInfo = $db->getRow('coal2', 'id', $id);
 	$coalchunk = $coalInfo['chunk'];
 	$coalmd5 = $coalInfo['md5'];
-	$m = unserialize(bzdecompress(retrieveChunk($coalchunk)->data));
+	$retrchunk = retrieveChunk($coalchunk);
+	if((!is_object($retrchunk)) && ($deccount > 2)) {
+		goto retrievecoal;
+		$l->a('status 42<br>');
+	}
+	else {
+		$l->a('error 43<br>');
+		$error = 43;
+		return null;
+	}
+	$m = unserialize(bzdecompress($retrchunk->data));
+	if((!is_object($retrchunk)) && ($deccount > 2)) {
+		goto retrievecoal;
+		$l->a('status 40<br>');
+	}
+	else {
+		$l->a('error 41<br>');
+		$error = 41;
+		return null;
+	}
 	$len = $m->len;
 	$md5 = $m->md5;
 	$sha = $m->sha;
