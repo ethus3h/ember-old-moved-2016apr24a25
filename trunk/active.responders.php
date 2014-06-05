@@ -377,7 +377,7 @@ function CoalIntakeHandler()
     	$id = $insertion['id'];
     	$details = $insertion['details'];
     	$status = $insertion['status'];
-    	if(check($status)) {
+    	if(check($status,true)) {
 			if(isset($_REQUEST['outputwebloc'])) {
 				$filename=base64_decode($details['filename']);
 				$smallified="[InternetShortcut]\nURL=http://futuramerlin.com/d/r/active.php?coalId=".$id."&authorizationKey=".urlencode($generalAuthKey)."&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve\nIconIndex=0";
@@ -385,7 +385,7 @@ function CoalIntakeHandler()
 				echo $smallified;
 			}
 			else {
-				if(check($status)) {
+				if(check($status,true)) {
 					if(isset($_REQUEST['coalVerbose'])) {
 						echo 'Added coal: ';
 					}
@@ -417,7 +417,7 @@ function CoalRetrieveHandler()
 		if(!is_object($coal)) {
 			$status = 45;
 		}
-		if(check($status)) {
+		if(check($status,true)) {
 			$filename = $coal['filename'];
 			if(isset($_REQUEST['cs'])) {
 				$filename = $filename . '.coalarc';

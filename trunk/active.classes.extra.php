@@ -369,6 +369,12 @@ class Csum
 			$this->sha = sha($data);
 			$this->s512 = s512($data);
 		}
+		else {
+			$this->len = null;
+			$this->md5 = null;
+			$this->sha = null;
+			$this->s512 = null;
+		}
 	}
 	function compare($csum)
 	{
