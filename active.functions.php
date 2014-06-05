@@ -210,12 +210,14 @@ function authorized($key,$name='authorizationKey')
 		return false;
 	}
 }
-function check($status) {
+function check($status,$hard=false) {
 	if($status != 0) {
 		global $l;
-		header("HTTP/1.0 525 Request failed");
-		echo '<h1>Something went wrong: status '.$status.'. Please try your request again later.</h1><br><h2>Log output:</h2><br>';
-		$l->e();
+		if($hard) {
+			header("HTTP/1.0 525 Request failed");
+			echo '<h1>Something went wrong: status '.$status.'. Please try your request again later.</h1><br><h2>Log output:</h2><br>';
+			$l->e();
+		}
 		return false;
 	}
 	return true;
