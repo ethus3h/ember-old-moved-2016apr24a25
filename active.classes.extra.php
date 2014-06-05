@@ -359,12 +359,14 @@ include('S3.php');
 
 class Csum
 {
-	function __construct($data)
+	function __construct($data = null)
 	{
-		$this->len = strlen($data);
-		$this->md5 = amd5($data);
-		$this->sha = sha($data);
-		$this->s512 = s512($data);
+		if(!is_null($data)) {
+			$this->len = strlen($data);
+			$this->md5 = amd5($data);
+			$this->sha = sha($data);
+			$this->s512 = s512($data);
+		}
 	}
 	function compare($csum)
 	{
