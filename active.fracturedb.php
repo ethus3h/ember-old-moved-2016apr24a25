@@ -161,6 +161,15 @@ class FractureDB
         $query = 'SELECT * FROM ' . $table . ' ORDER BY id;';
         return $this->query($query);
     }
+    function dropRow($table,$id)
+    {
+    	//Check length of $id. I'm not sure what this would do if $id was empty, and I don't want to find out.
+    	if(strlen($id)>0) {
+			//help from http://www.w3schools.com/sql/sql_delete.asp
+			$query = 'DELETE FROM ' . $table . ' WHERE id='.$id.';';
+			$this->query($query);
+		}
+    }
     function countTable($table, $filterField = '', $filterValue = '', $additions = '')
     {
         if ($filterField !== '') {
