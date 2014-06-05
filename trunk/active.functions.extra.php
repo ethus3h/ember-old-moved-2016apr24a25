@@ -307,111 +307,59 @@ function insertChunk($data,$smd5,$ssha,$ss512,$compression) {
 function retrieveChunk($id)
 {
 	global $l;
+	$status = 0;
 	if(strlen($id) < 1) {
-		$l->a('information code 32<br>');
+		$l->a('error 50<br>');
+		$status = 50;
 	}
 	else {
 		$db = new FractureDB('futuqiur_coalchunks');
-		$rcerror = 0;
-		$rccount = 0;
-		$rcpcount = 0;
-		$deccount = 0;
-		retrievechunk:
-		$deccount++;
-		$chunkMetaRow = $db->getRow('chunk2', 'id', $id);
-		$chunkAddressBlock = $chunkMetaRow['address'];
-		$caExp = explode_esc(':',$chunkAddressBlock);
-		$chunkStorage = $caExp[0];
-		$chunkAddress = $caExp[1];
-		$chunkStoragePrefix = '';
-		switch(trim($chunkStorage)) {
+		$info = $db->getRow('chunk2', 'id', $id);
+		$compiledLocation = $info['address'];
+		$locationArray = explode_esc(':',$compiledLocation);
+		$storage = $locationArray[0];
+		$address = $locationArray[1];
+		$storagePrefix = '';
+		switch(trim($storage)) {
 			case "ia":
-				$chunkStoragePrefix = "http://archive.org/download/";
+				$storagePrefix = "http://archive.org/download/";
 				break;
 		}
-		$chunkLocation = $chunkStoragePrefix.$chunkAddress.'/'.$id.'.coal4';
-		$chunkDataR = null;
-		if(strlen($chunkLocation) > 0) {
- 			$chunkDataR = get_url($chunkLocation);
-		}
-		else {
-			$l->a('status 33<br>');
-		}
+		$location = $storagePrefix.$address.'/'.$id.'.coal4';
+ 		$rawData = get_url($location);
 		global $chunkMasterKey;
-		//echo 'Ciphertext retrieved: '.md5($chunkDataR);
-		//$rmd5 = amd5($chunkDataR);
-//  		$l->a('<br><br><br><br><br><br><br><br>Chunk encrypted data: '.$chunkDataR);
-		$chunkDataR = @mc_decrypt($chunkDataR,$chunkMasterKey);
-// 		$l->a('<br><br><br><br><br><br><br><br>Chunk raw data: '.$chunkDataR);
-// 		$l->a('<br><br><br><br><br><br><br><br>Chunk metadata: '.strstr($chunkDataR,'@CoalFragmentMarker@', true));
-// 		$l->a('<br><br><br><br><br><br><br><br>Chunk data: '.substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20));
-// 		$l->a('<br><br><br><br><br><br><br><br>Chunk unserialized: '.print_r(unserialize(bzdecompress(base64_decode(strstr($chunkDataR,'@CoalFragmentMarker@', true)))),true));
-// 		$l->a('<br><br><br><br><br><br><br><br>');
-		//$chunkRmd5 = strtolower(bin2hex($chunkMetaRow['md5']));
-		//help from http://stackoverflow.com/questions/4036036/php-substr-after-a-certain-char-a-substr-strpos-elegant-solution
-		$chunkMeta = unserialize(bzdecompress(base64_decode(strstr($chunkDataR,'@CoalFragmentMarker@', true))));
-		//$l->a(gettype($chunkMeta));
-		if(!is_object($chunkMeta)) {
-			if($deccount < 2) {
-				$l->a('status 38<br>');
-				goto retrievechunk;
-			}
-			else {
-				$l->a('error 39<br>');
-				$error = 39;
-				return null;
-			}
+		$rawData = @mc_decrypt($rawData,$chunkMasterKey);
+		$details = unserialize(bzdecompress(base64_decode(strstr($rawData,'@CoalFragmentMarker@', true))));
+		if(!is_array($details)) {
+			$status=51;
 		}
-// 		echo '<br><br><br><br><br><br><br><br>Chunk raw data: '.$chunkDataR;
-// 		echo '<br><br><br><br><br><br><br><br>Chunk metadata: '.strstr($chunkDataR,'@CoalFragmentMarker@', true);
-// 		echo '<br><br><br><br><br><br><br><br>Chunk data: '.substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
-// 		echo '<br><br><br><br><br><br><br><br>';
-		$chunkData = substr(strstr($chunkDataR,'@CoalFragmentMarker@'),20);
-		$cklen = strlen($chunkData);
-		$ckmd5 = amd5($chunkData);
-		$cksha = sha($chunkData);
-		$cks512 = s512($chunkData);
-		$chlen = $chunkMeta->len;
-		$chmd5 = $chunkMeta->md5;
-		$chsha = $chunkMeta->sha;
-		$chs512 = $chunkMeta->s512;
-		if(($cklen != $chlen) || ($ckmd5 != $chmd5) || ($cksha != $chsha) || ($cks512 != $chs512)) {
-			if($rccount < 1) {
-				$l->a('<br>information code 29.<br>');
-				$l->a('Retrieved len = '.$cklen.'; expected '.$chlen.'.<br>');
-				$l->a('Retrieved md5 = '.$ckmd5.'; expected '.$chmd5.'.<br>');
-				$l->a('Retrieved sha = '.$cksha.'; expected '.$chsha.'.<br>');
-				$l->a('Retrieved s512 = '.$cks512.'; expected '.$chs512.'.<br>');
-				//$l->a('Retrieved raw md5 = '.$chunkRmd5.'; expected '.$rmd5.'.<br>');
-				$rccount++;
-				goto retrievechunk;
-			}
-			else {
-				$l->a('error 15<br>');
-				$rcerror = 15;
-			}
+		$data = substr(strstr($rawData,'@CoalFragmentMarker@'),20);
+		$retr_csum = new Csum($chunkData);
+		$csum = $details['csum'];
+		if(!matches($csum,$retr_csum) {
+			$status=52;
 		}
 		$db->close();
-		return new cChunk ($chunkData,$cklen,$ckmd5,$cksha,$cks512);
 	}
+	return array('status'=>$status,'data'=>$data,'csum'=>$csum,'details'=>$details);
 }
 
 function retrieveCoal($id)
 {
 	global $l;
-	$status = 0;
 	$db = new FractureDB('futuqiur_coal');
 	$coalInfo = $db->getRow('coal2', 'id', $id);
-	$metaChunkId = $coalInfo['chunk'];
+	$detailsChunkId = $coalInfo['chunk'];
 	$coalmd5 = $coalInfo['md5'];
-	$metaChunk = retrieveChunk($metaChunk);
-	$metadata = unserialize(bzdecompress($metaChunk['data']));
-	if(!is_array($metadata)) {
+	$detailsChunk = retrieveChunk($metaChunk);
+	$status = $detailsChunk['status'];
+	$details = unserialize(bzdecompress($detailsChunk['data']));
+	if(!is_array($details)) {
 		$status=46;
 	}
-	$csum = $metadata['csum'];
-	$chunks = $metadata['chunks'];
-	$chunks_csum = Csum_import($metadata['chunks_csum']);
+	$csum = $details['csum'];
+	$chunks = $details['chunks'];
+	$chunks_csum = Csum_import($details['chunks_csum']);
 	$retr_chunks_csum = new Csum($chunks);
 	if(!matches($chunks_csum,$retr_chunks_csum) {
 		$status=47;
@@ -439,9 +387,9 @@ function retrieveCoal($id)
 		$status=49;
 	}
 	$db->close();
-	$filename = $metadata['filename'];
-	if(isset($metadata['ulfilename'])) {
-		$filename = base64_decode($metadata['ulfilename']);
+	$filename = $details['filename'];
+	if(isset($details['ulfilename'])) {
+		$filename = base64_decode($details['ulfilename']);
 	}
 	return array('data'=>$data,'csum'=>$csum,'filename'=>$filename,'status'=>$status);
 }
