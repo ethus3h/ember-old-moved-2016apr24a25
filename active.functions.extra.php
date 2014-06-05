@@ -651,118 +651,39 @@ function coalFromFile($filename,$returnPath = true) {
 	}
 }
 
-function insertCoal($target = null) {
+function insertCoal($file = null) {
 	$db = new FractureDB('futuqiur_coal');
 	global $l;
-	$error = 0;
-	$coalcount = 0;
-	coal:
-	$coalcount++;
-	if(is_null($target)) {
-		$res = coalFromUpload();
-		$coalTraits = $res[1];
+	$status = 0;
+	if(is_null($file)) {
+		$coal = coalFromUpload();
+		$details = $coal['details'];
 	}
 	else {
-		$res = coalFromFile($target);
-		$coalTraits = $res[1];
+		$coal = coalFromFile($file);
+		$details = $coal['details'];
 	}
-	if($coalTraits->len == 0) {
-		$coalTraits->blocks = '';
+	if($details['len'] == 0) {
+		$details['blocks'] = '';
 	}
-	//echo serialize($coalTraits);
-	$ctEnc = bzcompress(serialize($coalTraits));
-	$len = strlen($ctEnc);
-	$md5 = amd5($ctEnc);
-	$sha = sha($ctEnc);
-	$s512 = s512($ctEnc);
-	$ichunkcount = 0;
-	ichunk:
-	$ichunkcount++;
-	$icRes = insertChunk($ctEnc,$md5,$sha,$s512,$coalTraits->compression);
-	$newBlockId = $icRes[0];
-	$l->a('<br>insertChunk for metadata returned status '.$icRes[1].'.<br>');
-	if($icRes[1] != 0) {
-		$l->a('<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>');
-		$error = 36;
-		if($ichunkcount < 1) {
-			goto ichunk;
-		}
-		else {
-			$error = 9;
-		}
-	}
-	$newCoalId = $db->addRow('coal2', 'chunk, md5', '\''.$newBlockId.'\', UNHEX(\''.$coalTraits->md5.'\')');
+	$compressed = bzcompress(serialize($details));
+	$len = strlen($compressed);
+	$md5 = amd5($compressed);
+	$sha = sha($compressed);
+	$s512 = s512($compressed);
+	$chunkInfo = insertChunk($compressed,$md5,$sha,$s512,$coal['compression']);
+	$chunkId = $chunkInfo[0];
+	$id = $db->addRow('coal2', 'chunk, md5', '\''.$chunkId.'\', UNHEX(\''.$details['md5'].'\')');
 	sleep(3);
-	$ccoalcount = 0;
-	checkcoal:
-	$ccoalcount++;
- 	$retrievedCoal = retrieveCoal($newCoalId);
-	if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
-		if($ccoalcount < 1) {
-			$l->a( 'information code 37');
-			global $chunkUploadDirty;
-			if($chunkUploadDirty) {
-				sleep($ccoalcount*10);
-			}
-			goto checkcoal;
+	if(checkCoal($id)) {
+		if(!is_null($file)) {
+			unlink($res[0]);
 		}
 	}
 	else {
-		if(!is_null($retrievedCoal)) {
-			if(($retrievedCoal->len != $len) || ($retrievedCoal->md5 != $md5) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
-				$blockList = '';
-				if($ccoalcount < 1) {
-					$l->a( 'information code 37');
-					global $chunkUploadDirty;
-					if($chunkUploadDirty) {
-						sleep($ccoalcount*10);
-					}
-					goto checkcoal;
-				}
-			}
-		}
-		else {
-			if($ccoalcount < 1) {
-				$l->a( 'information code 37');
-				global $chunkUploadDirty;
-				if($chunkUploadDirty) {
-					sleep($ccoalcount*10);
-				}
-				goto checkcoal;
-			}
-		}
+		$status = 45
 	}
-	if(is_array($retrievedCoal) || is_int($retrievedCoal)) {
-		$error = 20;
-	}
-	else {
-		if(!is_null($retrievedCoal)) {
-			if(($retrievedCoal->len != $len) || ($retrievedCoal->md5 != $md5) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
-				$blockList = '';
-				if($coalcount < 2) {
-					$l->a( 'information code 31');
-					goto coal;
-				}
-				else {
-					$error = 5;
-				}
-			}
-			else {
-				$l->a('Coal test retrieval was successful');
-			}
-		}
-		else {
-			$error = 7;
-		}
-	}
-	unlink($res[0]);
 	$db->close();
-	if(is_int($retrievedCoal) || is_array($retrievedCoal)) {
-		$toReturn = array($newCoalId,$coalTraits,$error,$retrievedCoal);
-	}
-	else {
-		$toReturn = array($newCoalId,$coalTraits,$error,null);
-	}
-	return $toReturn;
+	return array('id'=>$id,'details'=>$details,'status'=>$status);
 }
 ?>
