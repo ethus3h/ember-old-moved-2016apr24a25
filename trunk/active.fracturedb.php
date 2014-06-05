@@ -226,7 +226,18 @@ class FractureDB
         $rowData = $this->query($query);
         return $rowData;
     }
- 
+    function lockTable($table)
+    {
+		//help from http://stackoverflow.com/questions/443909/locking-a-mysql-database-so-only-one-person-at-once-can-run-a-query
+        $query   = 'LOCK TABLES ' . $table . ';';
+        $this->query($query);
+    }
+    function unlockTable($table)
+    {
+		//help from http://stackoverflow.com/questions/443909/locking-a-mysql-database-so-only-one-person-at-once-can-run-a-query
+        $query   = 'UNLOCK TABLES ' . $table . ';';
+        $this->query($query);
+    } 
      function LoadFromFile($filename, $table, $columnList)
     {
 
