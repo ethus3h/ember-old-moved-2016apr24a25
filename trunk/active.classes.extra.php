@@ -356,4 +356,32 @@ class llog
     }
 }
 include('S3.php');
+
+class Csum
+{
+	function __construct($data)
+	{
+		$this->len = strlen($data);
+		$this->md5 = amd5($data);
+		$this->sha = sha($data);
+		$this->s512 = s512($data);
+	}
+	function compare($csum)
+	{
+		return $this->matches($csum);
+	}
+	function matches($csum)
+	{
+		return matches($this,$csum);
+	}
+	function export()
+	{
+		return base64_encode(serialize(this));
+	}
+}
+
+function Csum_import($csum) {
+	//(in the classes file since it goes with the Csum class)
+	return unserialize(base64_decode($csum));
+}
 ?>
