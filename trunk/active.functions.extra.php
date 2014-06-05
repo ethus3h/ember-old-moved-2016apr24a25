@@ -401,137 +401,49 @@ function retrieveCoal($id)
 	global $l;
 	$status = 0;
 	$db = new FractureDB('futuqiur_coal');
-	$rctries = 0;
-	retrievec:
-	$rccount = 0;
-	$rcpcount = 0;
-	$deccount = 0;
-	retrievecoal:
-	$deccount++;
 	$coalInfo = $db->getRow('coal2', 'id', $id);
-	$coalchunk = $coalInfo['chunk'];
+	$metaChunkId = $coalInfo['chunk'];
 	$coalmd5 = $coalInfo['md5'];
-	$retrchunk = retrieveChunk($coalchunk);
-	if(!is_object($retrchunk)) {
-		if($deccount < 2) {
-			goto retrievecoal;
-			$l->a('status 42<br>');
-		}
-		else {
-			$l->a('error 43<br>');
-			$error = 43;
-			return null;
-		}
+	$metaChunk = retrieveChunk($metaChunk);
+	$metadata = unserialize(bzdecompress($metaChunk['data']));
+	if(!is_array($metadata)) {
+		$status=46;
 	}
-	$m = unserialize(bzdecompress($retrchunk->data));
-	if(!is_object($retrchunk)) {
-		if($deccount > 2) {
-			goto retrievecoal;
-			$l->a('status 40<br>');
-		}
-		else {
-			$l->a('error 41<br>');
-			$error = 41;
-			return null;
-		}
+	$csum = $metadata['csum'];
+	$chunks = $metadata['chunks'];
+	$chunks_csum = Csum_import($metadata['chunks_csum']);
+	$retr_chunks_csum = new Csum($chunks);
+	if(!matches($chunks_csum,$retr_chunks_csum) {
+		$status=47;
 	}
-	$len = $m->len;
-	$md5 = $m->md5;
-	$sha = $m->sha;
-	$s512 = $m->s512;
-	$blocks = $m->blocks;
-	$blockslen = $m->blockslen;
-	$blocksmd5 = $m->blocksmd5;
-	$blockssha = $m->blockssha;
-	$blockss512 = $m->blockss512;
-	$rblen = strlen($blocks);
-	$rbmd5 = amd5($blocks);
-	$rbsha = sha($blocks);
-	$rbs512 = s512($blocks);
-	if(($blockslen != $rblen) || ($blocksmd5 != $rbmd5) || ($blockssha != $rbsha) || ($blockss512 != $rbs512)) {
-		$l->a('Retrieved coal failed blocklist checksum.<br>Retrieved len = '.$rblen.'; expected '.$cblen.'.<br>');
-		$l->a('Retrieved par = '.$rbpar.'; expected '.$cbpar.'.<br>');
-		$l->a('Retrieved sha = '.$rbsha.'; expected '.$cbsha.'.<br>');
-		$l->a('Retrieved md5 = '.$rbmd5.'; expected '.$cbmd5.'.<br>');
-		$l->a('Retrieved crc = '.$rbcrc.'; expected '.$cbcrc.'.<br>');
-		$l->a('Retrieved s512 = '.$rbs512.'; expected '.$cbs512.'.<br>');
-		if($rccount < 1) {
-			$rccount++;
-			$rcperror = 24;
-			goto resetstatus;
-		}
-		else {
-			$error = 17;
-		}
-	}
-	if(strlen($blocks)==0) {
-		$blockListExploded = array();
+	if(strlen($chunks)==0) {
+		$chunk_array = array();
 	}
 	else {
-		$blockListExploded = explode_esc(',',$blocks);
+		$chunk_array = explode_esc(',',$chunks);
 	}
-	$dataToReturn = '';
-	foreach($blockListExploded as $blockId) {
-		requestblock:
-		$blockData = retrieveChunk($blockId);
-		$rbdata = $blockData->data;
-		$rblen = $blockData->len;
-		$rbmd5 = $blockData->md5;
-		$rbsha = $blockData->sha;
-		$rbs512 = $blockData->s512;
-		$lblen = strlen($rbdata);
-		$lbmd5 = amd5($rbdata);
-		$lbsha = sha($rbdata);
-		$lbs512 = s512($rbdata);
-		if(($rblen != $lblen) || ($rbmd5 != $lbmd5) || ($rbsha != $lbsha) || ($rbs512 != $lbs512)) {
-			if($rccount < 1) {
-				$rccount++;
-				//potential error
-				$rcperror = 22;
-				goto requestblock;
-			}
-			else {
-				$rcerror = 18;
-			}
+	$data = '';
+	foreach($chunk_array as $chunk_id) {
+		$chunk_details = retrieveChunk($blockId);
+		$chunk = $chunk_details['data'];
+		$chunk_csum = Csum_import($chunk_details['csum']);
+		$retr_chunk_csum = new Csum($chunk);
+		if(!matches($chunk_csum,$retr_chunk_csum) {
+			$status=48;
 		}
-		$dcblockdata = bzdecompress($rbdata);
-		$dataToReturn = $dataToReturn.$dcblockdata;
+		$chunk_data = bzdecompress($chunk);
+		$data = $data.$chunk_data;
 	}
-	$clen = strlen($dataToReturn);
-	$cmd5 = amd5($dataToReturn);
-	$csha = sha($dataToReturn);
-	$cs512 = s512($dataToReturn);
-	if(($clen != $len) || ($cmd5 != $md5) || ($csha != $sha) || ($cs512 != $s512)) {
-		if($rcpcount < 1) {
-			$rcpcount++;
-			$rcperror = 23;
-			goto resetstatus;
-		}
-		else {
-			$rcerror = 19;
-		}
+	$data_csum = new Csum($data);
+	if(!matches($csum,$data_csum)) {
+		$status=49;
 	}
 	$db->close();
-	if(isset($m->ulfilename)) {
-		$cfilename = base64_decode($m->ulfilename);
+	$filename = $metadata['filename'];
+	if(isset($metadata['ulfilename'])) {
+		$filename = base64_decode($metadata['ulfilename']);
 	}
-	else {
-		$cfilename = $m->filename;
-	}
-	return new cCoal ($dataToReturn,$clen,$cmd5,$csha,$cs512,$cfilename);
-	resetstatus:
-	$l->a('Coal retrieval function reached status checkpoint a<br>');
-	$blocklist = '';
-	$dataToReturn = '';
-	$rctries++;
-	if($rctries < 1) {
-		$l->a('Coal retrieval function reached status checkpoint b<br>');
-		goto retrievec;
-	}
-	else {
-		$l->a('Coal retrieval function reached status checkpoint c<br>');
-		return array(16, $error, $rcperror);
-	}
+	return array('data'=>$data,'csum'=>$csum,'filename'=>$filename,'status'=>$status);
 }
 
 function coalFromUpload() {
@@ -603,6 +515,11 @@ function coalFromFile($filename) {
 	$md5 = amd5f($filename);
 	$sha = shaf($filename);
 	$s512 = s512f($filename);
+	$csum = new Csum();
+	$csum->len=$size;
+	$csum->md5=$md5;
+	$csum->sha=$sha;
+	$csum->s512=$s512;
 	$chunks = '';
 	$fhandle = fopen($filename,"r");
 	while(ftell($fhandle) < $size) {
@@ -619,7 +536,7 @@ function coalFromFile($filename) {
 	}
 	fclose($fhandle);
 	$chunks_csum = new Csum($chunks);
-	$details = new array('len'=>$size,'md5'=>$md5,'sha'=>$sha,'s512'=>$s512,'chunks'=>$chunks,'chunks_csum'=>$chunks_csum->export(),'filename'=>$filename,'type'=>$type,'size'=>$size,'smtime'=>$smtime,'stats'=>$stats,'ctime'=>$ctime,'mtime'=>$mtime,'atime'=>$atime);
+	$details = new array('csum'=>$csum->export(),'chunks'=>$chunks,'chunks_csum'=>$chunks_csum->export(),'filename'=>$filename,'type'=>$type,'size'=>$size,'smtime'=>$smtime,'stats'=>$stats,'ctime'=>$ctime,'mtime'=>$mtime,'atime'=>$atime);
 	return array('filename'=>$filename,'details'=>$details,'status'=>$status);
 }
 
