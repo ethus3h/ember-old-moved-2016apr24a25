@@ -368,7 +368,9 @@ function CoalIntakeHandler()
 	global $l;
 	if(authorized()) {
 		global $coalVersion;
-		$coalVersion = 4;
+		$coalVersion = 5;
+		global $coalCompressionType;
+		$coalCompressionType='bz2';
     	$insertion = insertCoal();
     	$id = $insertion['id'];
     	$details = $insertion['details'];

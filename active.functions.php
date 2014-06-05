@@ -604,4 +604,19 @@ return $decrypted;
 // echo 'Decrypted Data: <pre>';
 // print_r(mc_decrypt($encrypted_data, ENCRYPTION_KEY));
 // echo '</pre>';
+
+function matches($csa,$csb) {
+	if(($csa->len == $csb->len) && ($csa->md5 == $csb->md5) && ($csa->sha == $csb->sha) && ($csa->s512 == $csb->s512)) {
+		return true;
+	}
+	return false;
+}
+
+function status_add($statusA, $statusB) {
+	//Add two status codes.
+	if($statusA == 0) {
+		return $statusB;
+	}
+	return $statusA;
+}
 ?>

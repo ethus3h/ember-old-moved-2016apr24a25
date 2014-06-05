@@ -399,7 +399,7 @@ function retrieveChunk($id)
 function retrieveCoal($id)
 {
 	global $l;
-	$error = 0;
+	$status = 0;
 	$db = new FractureDB('futuqiur_coal');
 	$rctries = 0;
 	retrievec:
@@ -536,7 +536,7 @@ function retrieveCoal($id)
 
 function coalFromUpload() {
     global $l;
-	$error = 0;
+	$status = 0;
 	if(isset($_FILES['uploadedfile'])) {
 		$ulfilename = base64_encode($_FILES['uploadedfile']['name']);
 		$ultype = base64_encode($_FILES['uploadedfile']['type']);
@@ -552,33 +552,33 @@ function coalFromUpload() {
 		$ferror = null;
 	}
 	$metadata = base64_encode(var_export($_FILES,true));
-	$target = "coal_temp/";
-	$target = $target . "data.".guidv4().".cot";
+	$filename = "coal_temp/"."data.".guidv4().".cot";
 	if(isset($_FILES['uploadedfile'])) {		
-		if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target)) {
+		if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $filename)) {
 		} else {
-			$error = 2;
+			$status = 2;
 			$l->a("error 2<br>");
 		}
 	}
 	else {
-		$error = 6;
+		$status = 6;
 		$l->a("error 6<br>");
 	}
-	$m = coalFromFile($target,false);
-	$m->ulfilename = $ulfilename;
-	$m->ultype = $ultype;
-	$m->ulsize = $ulsize;
-	$m->tmpname = $tmpname;
-	$m->error = $ferror;
-	$m->metadata = $metadata;
-	return array($target,$m);
+	$coal_creation = coalFromFile($filename);
+	$coal_creation['details']['ulfilename'] = $ulfilename;
+	$coal_creation['details']['ultype'] = $ultype;
+	$coal_creation['details']['ulsize'] = $ulsize;
+	$coal_creation['details']['tmpname'] = $tmpname;
+	$coal_creation['details']['error'] = $ferror;
+	$coal_creation['details']['metadata'] = $metadata;
+	$coal_creation['status'] = status_add($status,$coal_creation['status']);
+	return $coal_creation;
 }
 
-function coalFromFile($filename,$returnPath = true) {
+function coalFromFile($filename) {
     global $l;
     global $coalVersion;
-	$error = 0;
+	$status = 0;
 	$type = null;
 	$size = null;
 	$stat = null;
@@ -598,57 +598,29 @@ function coalFromFile($filename,$returnPath = true) {
 		$atime = base64_encode(fileatime($filename));
 	}
 	else {
-		$error = 3;
+		$status = 3;
 	}
 	$md5 = amd5f($filename);
 	$sha = shaf($filename);
 	$s512 = s512f($filename);
-	$blocks = '';
+	$chunks = '';
 	$fhandle = fopen($filename,"r");
 	while(ftell($fhandle) < $size) {
 		$chunk = fread($fhandle,4194304);
-		$chcount = 0;
-		chunk:
-		$chcount++;
-		$compression = "bzip2";
-		$compressed = bzcompress($chunk);
-		$rmd5 = amd5($compressed);
-		$rsha = sha($compressed);
-		$rs512 = s512($compressed);
-		$ichunkcount = 0;
-		ichunk:
-		$ichunkcount++;
-		$icRes = insertChunk($compressed,$rmd5,$rsha,$rs512,$compression);
-		$newBlockId = $icRes[0];
-		$l->a('<br>insertChunk returned status '.$icRes[1].'.<br>');
-		if($icRes[1] != 0) {
-			$l->a('<br>error 36: insertChunk returned non-zero status '.$icRes[1].'.<br>');
-			$error = 36;
-			if($ichunkcount < 1) {
-				goto ichunk;
-			}
-			else {
-				$error = 9;
-			}
+		$c = new Csum($chunk);
+		$chunkInfo = insertChunk($chunk,$c);
+		$chunkId = $chunkInfo['id'];
+		$status = status_add($status,$chunkInfo['status']);
+		$cins = ',';
+		if(strlen($chunks) == 0) {
+			$cins = '';
 		}
-		$bins = ',';
-		if(strlen($blocks) == 0) {
-			$bins = '';
-		}
-		$blocks = $blocks . $bins . $newBlockId;
+		$chunks = $chunks . $cins . $chunkId;
 	}
 	fclose($fhandle);
-	$blockslen = strlen($blocks);
-	$blocksmd5 = amd5($blocks);
-	$blockssha = sha($blocks);
-	$blockss512 = s512($blocks);
-	$m = new cCoalMeta($size,$md5,$sha,$s512,$blocks,$blockslen,$blocksmd5,$blockssha,$blockss512,null,$filename,$type,$size,null,null,null,null,null,$smtime,$stats,$ctime,$mtime,$atime,$compression,$coalVersion);
-	if($returnPath) {
-		return array($filename,$m);
-	}
-	else {
-		return $m;
-	}
+	$chunks_csum = new Csum($chunks);
+	$details = new array('len'=>$size,'md5'=>$md5,'sha'=>$sha,'s512'=>$s512,'chunks'=>$chunks,'chunks_csum'=>$chunks_csum->export(),'filename'=>$filename,'type'=>$type,'size'=>$size,'smtime'=>$smtime,'stats'=>$stats,'ctime'=>$ctime,'mtime'=>$mtime,'atime'=>$atime);
+	return array('filename'=>$filename,'details'=>$details,'status'=>$status);
 }
 
 function insertCoal($file = null) {
@@ -663,15 +635,17 @@ function insertCoal($file = null) {
 		$coal = coalFromFile($file);
 		$details = $coal['details'];
 	}
+	$status=status_add($status,$coal['status']);
+	global $coalCompressionType;
+	$details['compression'] = $coalCompressionType;
+	global $coalVersion;
+	$details['coalVersion'] = $coalVersion;
 	if($details['len'] == 0) {
 		$details['blocks'] = '';
 	}
 	$compressed = bzcompress(serialize($details));
-	$len = strlen($compressed);
-	$md5 = amd5($compressed);
-	$sha = sha($compressed);
-	$s512 = s512($compressed);
-	$chunkInfo = insertChunk($compressed,$md5,$sha,$s512,$coal['compression']);
+	$c = new Csum($compressed);
+	$chunkInfo = insertChunk($compressed,$c);
 	$chunkId = $chunkInfo[0];
 	$id = $db->addRow('coal2', 'chunk, md5', '\''.$chunkId.'\', UNHEX(\''.$details['md5'].'\')');
 	sleep(3);
