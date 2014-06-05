@@ -208,13 +208,13 @@ function insertChunk($data,$csum) {
 		if(mc_decrypt($prepared_data,$chunkMasterKey) != $prepared_details.'@CoalFragmentMarker@'.$data) {
 			$status = 53;
 		}
-		$identifierId = $newChunkId / 1000;
+		$address = 'ia:'.$identifier;
+		$id = $db->addRow('chunk2', 'address, md5', '\''.$address.'\', UNHEX(\''.$csum->md5.'\')');
+		$identifierId = $id / 1000;
 		$randomInt = rand(0,10000);
 		$randomIntAlt = rand(0,10000);
 		$identifier = $identifierId.$randomInt.'.COALPROJECT.RECORD33';
-		$address = 'ia:'.$identifier;
 		$fallbackid = $identifierId.$randomIntAlt.'.COALPROJECT.RECORD33';
-		$id = $db->addRow('chunk2', 'address, md5', '\''.$address.'\', UNHEX(\''.$md5.'\')');
 		$filename = $id.'.coal4';
 		global $iaAuthKey;
 		global $iaPrivateKey;
@@ -224,7 +224,7 @@ function insertChunk($data,$csum) {
 			$status = 54;
 		}
 		$db->close();
-		return array('id'=>$duplicateId,'status'=>$status);
+		return array('id'=>$id,'status'=>$status);
  	}
 }
 
@@ -235,6 +235,9 @@ function retrieveChunk($id)
 	if(strlen($id) < 1) {
 		$l->a('error 50<br>');
 		$status = 50;
+		$data = null;
+		$csum = null;
+		$details = null;
 	}
 	else {
 		$db = new FractureDB('futuqiur_coalchunks');
@@ -275,7 +278,7 @@ function retrieveCoal($id)
 	$coalInfo = $db->getRow('coal2', 'id', $id);
 	$detailsChunkId = $coalInfo['chunk'];
 	$coalmd5 = $coalInfo['md5'];
-	$detailsChunk = retrieveChunk($metaChunk);
+	$detailsChunk = retrieveChunk($detailsChunkId);
 	$status = $detailsChunk['status'];
 	$details = unserialize(bzdecompress($detailsChunk['data']));
 	if(!is_array($details)) {
@@ -435,7 +438,8 @@ function insertCoal($file = null) {
 	$details['compression'] = $coalCompressionType;
 	global $coalVersion;
 	$details['coalVersion'] = $coalVersion;
-	if($details['len'] == 0) {
+	$detailsCsum = Csum_import($details['csum']);
+	if($detailsCsum->len == 0) {
 		$details['blocks'] = '';
 	}
 	$compressed = bzcompress(serialize($details));
