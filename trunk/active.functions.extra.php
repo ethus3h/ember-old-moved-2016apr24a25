@@ -737,9 +737,9 @@ function insertCoal($target = null) {
 	}
 	else {
 		if(!is_null($retrievedCoal)) {
-			if(($retrievedCoal->len != $coalTraits->len) || ($retrievedCoal->md5 != $md5) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
+			if(($retrievedCoal->len != $len) || ($retrievedCoal->md5 != $md5) || ($retrievedCoal->sha != $sha) || ($retrievedCoal->s512 != $s512)) {
 				$blockList = '';
-				if($coalcount < 1) {
+				if($coalcount < 2) {
 					$l->a( 'information code 31');
 					goto coal;
 				}
