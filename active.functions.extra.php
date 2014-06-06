@@ -181,7 +181,9 @@ function arcmaj3_barrel_expire($barrelId)
 function insertChunk($data,$csum) {
 	$data=bzcompress($data);
 	global $l;
+	$l->a("Started insertChunk<br>");
 	$status = 0;
+	$id = null;
 	$received_data_csum = new Csum($data);
 	if(!matches($csum,$received_data_csum)) {
 		$status = 8;
@@ -228,13 +230,15 @@ function insertChunk($data,$csum) {
 			$db->setField('chunk2','address',$address,$id);
 		}
 		$db->close();
-		return array('id'=>$id,'status'=>$status);
  	}
+	$l->a("Finished insertChunk with status ".$status.'<br>');
+ 	return array('id'=>$id,'status'=>$status);
 }
 
 function retrieveChunk($id)
 {
 	global $l;
+	$l->a("Started retrieveChunk<br>");
 	$status = 0;
 	if(strlen($id) < 1) {
 		$l->a('error 50<br>');
@@ -246,32 +250,43 @@ function retrieveChunk($id)
 	else {
 		$db = new FractureDB('futuqiur_coalchunks');
 		$info = $db->getRow('chunk2', 'id', $id);
-		$compiledLocation = $info['address'];
-		$locationArray = explode_esc(':',$compiledLocation);
-		$storage = $locationArray[0];
-		$address = $locationArray[1];
-		$storagePrefix = '';
-		switch(trim($storage)) {
-			case "ia":
-				$storagePrefix = "http://archive.org/download/";
-				break;
+		//print_r($info);
+		if(isset($info[0])) {
+			//Row is empty
+			$status = 55;
+			$data = null;
+			$csum = new Csum();
+			$details = null;
 		}
-		$location = $storagePrefix.$address.'/'.$id.'.coal4';
- 		$rawData = get_url($location);
-		global $chunkMasterKey;
-		$rawData = @mc_decrypt($rawData,$chunkMasterKey);
-		$details = unserialize(bzdecompress(base64_decode(strstr($rawData,'@CoalFragmentMarker@', true))));
-		if(!is_array($details)) {
-			$status=51;
-		}
-		$data = substr(strstr($rawData,'@CoalFragmentMarker@'),20);
-		$retr_csum = new Csum($data);
-		$csum = Csum_import($details['csum']);
-		if(!matches($csum,$retr_csum)) {
-			$status=52;
+		else {
+			$compiledLocation = $info['address'];
+			$locationArray = explode_esc(':',$compiledLocation);
+			$storage = $locationArray[0];
+			$address = $locationArray[1];
+			$storagePrefix = '';
+			switch(trim($storage)) {
+				case "ia":
+					$storagePrefix = "http://archive.org/download/";
+					break;
+			}
+			$location = $storagePrefix.$address.'/'.$id.'.coal4';
+			$rawData = get_url($location);
+			global $chunkMasterKey;
+			$rawData = @mc_decrypt($rawData,$chunkMasterKey);
+			$details = unserialize(bzdecompress(base64_decode(strstr($rawData,'@CoalFragmentMarker@', true))));
+			if(!is_array($details)) {
+				$status=51;
+			}
+			$data = substr(strstr($rawData,'@CoalFragmentMarker@'),20);
+			$retr_csum = new Csum($data);
+			$csum = Csum_import($details['csum']);
+			if(!matches($csum,$retr_csum)) {
+				$status=52;
+			}
 		}
 		$db->close();
 	}
+	$l->a("Finished retrieveChunk<br>");
 	//TODO: $csum->export() — why isn't this working?!
 	return array('status'=>$status,'data'=>$data,'csum'=>$csum,'details'=>$details);
 }
@@ -279,6 +294,7 @@ function retrieveChunk($id)
 function retrieveCoal($id)
 {
 	global $l;
+	$l->a("Started retrieveCoal<br>");
 	$db = new FractureDB('futuqiur_coal');
 	$coalInfo = $db->getRow('coal2', 'id', $id);
 	$detailsChunkId = $coalInfo['chunk'];
@@ -287,15 +303,18 @@ function retrieveCoal($id)
 	$status = $detailsChunk['status'];
 	$details = unserialize(bzdecompress($detailsChunk['data']));
 	if(!is_array($details)) {
+		$l->a("Status 46<br>");
 		$status=46;
 	}
 	$csum = Csum_import($details['csum']);
 	$chunks = $details['chunks'];
 	$chunks_csum = Csum_import($details['chunks_csum']);
 	$retr_chunks_csum = new Csum($chunks);
+	$l->a("retrieveCoalcheckpointA<br>");
 	if(!matches($chunks_csum,$retr_chunks_csum)) {
 		$status=47;
 	}
+	$l->a("retrieveCoalcheckpointB<br>");
 	if(strlen($chunks)==0) {
 		$chunk_array = array();
 	}
@@ -323,12 +342,14 @@ function retrieveCoal($id)
 	if(isset($details['ulfilename'])) {
 		$filename = base64_decode($details['ulfilename']);
 	}
+	$l->a("Finished retrieveCoal<br>");
 	//TODO: $csum->export() — why isn't this working?!
 	return array('data'=>$data,'csum'=>$csum,'filename'=>$filename,'status'=>$status);
 }
 
 function coalFromUpload() {
     global $l;
+    $l->a("Started coalFromUpload<br>");
 	$status = 0;
 	if(isset($_FILES['uploadedfile'])) {
 		$ulfilename = base64_encode($_FILES['uploadedfile']['name']);
@@ -370,6 +391,7 @@ function coalFromUpload() {
 
 function coalFromFile($filename) {
     global $l;
+    $l->a("Started coalFromFile<br>");
     global $coalVersion;
 	$status = 0;
 	$type = null;
@@ -430,6 +452,7 @@ function checkCoal($id) {
 function insertCoal($file = null) {
 	$db = new FractureDB('futuqiur_coal');
 	global $l;
+	$l->a("Started insertCoal<br>");
 	$status = 0;
 	if(is_null($file)) {
 		$coal = coalFromUpload();
@@ -451,16 +474,19 @@ function insertCoal($file = null) {
 	$compressed = bzcompress(serialize($details));
 	$c = new Csum($compressed);
 	$chunkInfo = insertChunk($compressed,$c);
-	$chunkId = $chunkInfo['id'];
-	$id = $db->addRow('coal2', 'chunk, md5', '\''.$chunkId.'\', UNHEX(\''.$detailsCsum->md5.'\')');
-	sleep(3);
-	if(checkCoal($id)) {
-		if(!is_null($file)) {
-			unlink($res[0]);
+	$status=status_add($status,$chunkInfo['status']);
+	if(check($status,true)) {
+		$chunkId = $chunkInfo['id'];
+		$id = $db->addRow('coal2', 'chunk, md5', '\''.$chunkId.'\', UNHEX(\''.$detailsCsum->md5.'\')');
+		sleep(3);
+		if(checkCoal($id)) {
+			if(!is_null($file)) {
+				unlink($res[0]);
+			}
 		}
-	}
-	else {
-		$status = 45;
+		else {
+			$status = 45;
+		}
 	}
 	$db->close();
 	return array('id'=>$id,'details'=>$details,'status'=>$status);

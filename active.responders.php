@@ -367,6 +367,7 @@ function CoalIntakeHandler()
 {
 	global $l;
 	$l = new llog;
+	$l->a("Started CoalIntakeHandler<br>");
 	global $generalAuthKey;
 	if(authorized($generalAuthKey)) {
 		global $coalVersion;
@@ -403,6 +404,7 @@ function CoalIntakeHandler()
 function CoalRetrieveHandler()
 {
 	global $l;
+	$l->a("Started CoalRetrieveHandler<br>");
 	global $generalAuthKey;
 	if(authorized($generalAuthKey)) {
 		$coal = retrieveCoal($_REQUEST['coalId'],true);
