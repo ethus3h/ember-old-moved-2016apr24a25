@@ -59,7 +59,7 @@ class FractureDB
     }
     function query($query, $failed = False)
     {
-        #echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
+        echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        

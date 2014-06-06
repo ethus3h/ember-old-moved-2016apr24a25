@@ -347,6 +347,7 @@ class llog
     function a($text)
     {
     //append
+    echo $text;
     $this->data = $this->data.$text;
     }
     function e()
