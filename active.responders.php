@@ -407,11 +407,13 @@ function CoalIntakeHandler()
 function CoalRetrieveHandler()
 {
 	global $l;
+	$l = new llog;
 	$l->a("Started CoalRetrieveHandler<br>");
+	$status = 0;
 	global $generalAuthKey;
 	if(authorized($generalAuthKey)) {
 		$coal = retrieveCoal($_REQUEST['coalId'],true);
-		if(is_array($coal) || is_int($coal)) {
+		if(is_object($coal) || is_int($coal)) {
 			$status = 20;
 		}
 		else {
@@ -419,7 +421,7 @@ function CoalRetrieveHandler()
 					$status = 7;
 			}
 		}
-		if(!is_object($coal)) {
+		if(!is_array($coal)) {
 			$status = 45;
 		}
 		if(check($status,true)) {
@@ -431,7 +433,7 @@ function CoalRetrieveHandler()
 			if(isset($_REQUEST['cs'])) {
 				echo $coal['md5'].'|'.$coal['sha'].'|'.$coal['s512'].'|';
 			}
-			echo $retrievedCoal['data'];
+			echo $coal['data'];
 		}
 	}
 }
