@@ -622,21 +622,25 @@ function status_add($statusA, $statusB) {
 
 function store($data) {
 	$csum = new Csum($data);
+	$status = 0;
 	//Why I'm not doing this type of deduplication: It could lead to inaccurate metadata about the coal.
-// 	$db = new FractureDB('futuqiur_coalchunks');
-// 	$potentialDuplicates = $db->getColumnsUH('coal2', 'id', 'md5', $csum->md5);
-// 	foreach ($potentialDuplicates as $potential) {
-// 		$potentialRecord = retrieveCoal($potential['id']);
-// 		if(!is_null($potentialRecord)) {
-// 			$potentialData = $potentialRecord['data'];
-// 			$potentialCsum = Csum_import($potentialRecord['csum']);
-// 			if(($potentialData === $data) && matches($csum,$potentialCsum)) {
-// 				$duplicateId = $potential['id'];
-// 				return array('id'=>$duplicateId,'csum'=>$potentialRecord['csum'],'status'=>$status);
-// 			}
-// 		}
-// 	}
-// 	$db->close();
+	//Ya know, screw that. Coal *shouldn't support* file uploads — that should be handled by higher level software. I'm putting this back in for now, and just remember that the Coal file-level metadata is only an ugly, non-archival-quality, incomplete hack for while Ember doesn't exist yet to take care of that.
+	$db = new FractureDB('futuqiur_coal');
+	$potentialDuplicates = $db->getColumnsUH('coal2', 'id', 'md5', $csum->md5);
+	foreach ($potentialDuplicates as $potential) {
+		echo 'duplicate testing';
+		$potentialRecord = retrieveCoal($potential['id']);
+		if(!is_null($potentialRecord)) {
+			$potentialData = $potentialRecord['data'];
+			$potentialCsum = Csum_import($potentialRecord['csum']);
+			if(($potentialData === $data) && matches($csum,$potentialCsum)) {
+				$duplicateId = $potential['id'];
+				return array('id'=>$duplicateId,'csum'=>$potentialRecord['csum'],'status'=>$status);
+			}
+		}
+	}
+	$db->close();
+	echo 'gotten here';
 	$filename = 'coal_temp/'.uniqid().'.cstf';
 	file_put_contents($filename,$data);
 	return insertCoal($filename,$csum);
@@ -644,5 +648,31 @@ function store($data) {
 
 function retrieve($id) {
 	return retrieveCoal($id);
+}
+
+function lstore($data,$language) {
+	//Store a localizable string.
+	$db = new FractureDB('futuqiur_ember');
+	$store=store($data);
+	$sid = $store['id'];
+	$id = $db->addRow('strings', 'language, data', '\''.$language.'\', \''.$sid.'\'');
+	$store['id'] = $id;
+	return $store;
+}
+
+function lget($id,$language,$fallbackLanguage) {
+	//Retrieve a localizable string.
+	$db = new FractureDB('futuqiur_ember');
+	$ld = getRowDF('strings','id',$id,'language',$language);
+	if(is_null($ld)) {
+		$ld = getRowDF('strings','id',$id,'language',$fallbackLanguage);
+	}
+	if(is_null($ld)) {
+		$ld = getRow('strings','id',$id);
+	}
+	if(isset($ld[0])) {
+		return null;
+	}
+	return retrieve($ld['data']);
 }
 ?>

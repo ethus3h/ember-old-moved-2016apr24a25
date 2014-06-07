@@ -213,6 +213,17 @@ class FractureDB
 //         echo "\n\n~~~~\n\n";
         return $rowDataP;
     }
+    function getRowDF($table, $field, $value, $field2, $value2)
+    {
+        $query    = 'SELECT * FROM ' . $table . ' WHERE ' . $field . ' = \'' . $value . '\' AND ' . $field2 . ' = \'' . $value2 . '\';';
+        $rowData  = $this->query($query);
+        if(isset($rowData[0])) {
+        	return $rowData[0];
+        }
+        else {
+			return null;
+        }
+    }
     function getRows($table, $field, $value, $order = '')
     {
     	if ($order !== '') {
