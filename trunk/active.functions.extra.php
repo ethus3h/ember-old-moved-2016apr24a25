@@ -179,12 +179,11 @@ function arcmaj3_barrel_expire($barrelId)
 }
 
 function insertChunk($data,$csum) {
-	$data=bzcompress($data);
+	$received_data_csum = new Csum($data);
 	global $l;
 	$l->a("Started insertChunk<br>");
 	$status = 0;
 	$id = null;
-	$received_data_csum = new Csum($data);
 	if(!matches($csum,$received_data_csum)) {
 		$status = 8;
 	}
@@ -205,10 +204,11 @@ function insertChunk($data,$csum) {
 		global $compression;
 		global $coalVersion;
 		$details = array('csum'=>$csum->export(),'compression'=>$compression,'coalVersion'=>$coalVersion);
-		$prepared_details = base64_encode(bzcompress(serialize($details)));
+		$prepared_details = base64_encode(serialize($details));
 		global $chunkMasterKey;
-		$prepared_data = mc_encrypt($prepared_details.'@CoalFragmentMarker@'.$data,$chunkMasterKey);
-		if(mc_decrypt($prepared_data,$chunkMasterKey) != $prepared_details.'@CoalFragmentMarker@'.$data) {
+		$data = bzcompress($prepared_details.'@CoalFragmentMarker@'.$data);
+		$prepared_data = mc_encrypt($data,$chunkMasterKey);
+		if(mc_decrypt($prepared_data,$chunkMasterKey) != $data) {
 			$status = 53;
 		}
 		$id = $db->addRow('chunk2', 'md5', 'UNHEX(\''.$csum->md5.'\')');
@@ -272,8 +272,8 @@ function retrieveChunk($id)
 			$location = $storagePrefix.$address.'/'.$id.'.coal4';
 			$rawData = get_url($location);
 			global $chunkMasterKey;
-			$rawData = @mc_decrypt($rawData,$chunkMasterKey);
-			$details = unserialize(bzdecompress(base64_decode(strstr($rawData,'@CoalFragmentMarker@', true))));
+			$rawData = bzdecompress(@mc_decrypt($rawData,$chunkMasterKey));
+			$details = unserialize(base64_decode(strstr($rawData,'@CoalFragmentMarker@', true)));
 			if(!is_array($details)) {
 				$status=51;
 			}
@@ -288,7 +288,7 @@ function retrieveChunk($id)
 	}
 	$l->a("Finished retrieveChunk<br>");
 	//TODO: $csum->export() — why isn't this working?!
-	return array('status'=>$status,'data'=>$data,'csum'=>$csum,'details'=>$details);
+	return array('status'=>$status,'data'=>$data,'csum'=>$csum->export(),'details'=>$details);
 }
 
 function retrieveCoal($id)
@@ -301,7 +301,7 @@ function retrieveCoal($id)
 	$coalmd5 = $coalInfo['md5'];
 	$detailsChunk = retrieveChunk($detailsChunkId);
 	$status = $detailsChunk['status'];
-	$details = unserialize(bzdecompress($detailsChunk['data']));
+	$details = unserialize($detailsChunk['data']);
 	if(!is_array($details)) {
 		$l->a("Status 46<br>");
 		$status=46;
@@ -334,6 +334,8 @@ function retrieveCoal($id)
 		$data = $data.$chunk_data;
 	}
 	$data_csum = new Csum($data);
+	$l->a(print_r($data_csum,true));
+	$l->a(print_r($csum,true));
 	if(!matches($csum,$data_csum)) {
 		$status=49;
 	}
@@ -344,7 +346,7 @@ function retrieveCoal($id)
 	}
 	$l->a("Finished retrieveCoal<br>");
 	//TODO: $csum->export() — why isn't this working?!
-	return array('data'=>$data,'csum'=>$csum,'filename'=>$filename,'status'=>$status);
+	return array('data'=>$data,'csum'=>$csum->export(),'filename'=>$filename,'status'=>$status);
 }
 
 function coalFromUpload() {
@@ -444,8 +446,10 @@ function coalFromFile($filename) {
 }
 
 function checkCoal($id) {
+	global $l;
 	sleep(3);
 	$coal = retrieveCoal($id);
+	$l->a('checkCoal returned status: '.$coal['status'].'.<br>');
 	return check($coal['status']);
 }
 
@@ -454,6 +458,7 @@ function insertCoal($file = null) {
 	global $l;
 	$l->a("Started insertCoal<br>");
 	$status = 0;
+	$id = null;
 	if(is_null($file)) {
 		$coal = coalFromUpload();
 		$details = $coal['details'];
@@ -471,7 +476,7 @@ function insertCoal($file = null) {
 	if($detailsCsum->len == 0) {
 		$details['blocks'] = '';
 	}
-	$compressed = bzcompress(serialize($details));
+	$compressed = serialize($details);
 	$c = new Csum($compressed);
 	$chunkInfo = insertChunk($compressed,$c);
 	$status=status_add($status,$chunkInfo['status']);
