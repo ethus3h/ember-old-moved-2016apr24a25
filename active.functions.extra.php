@@ -323,19 +323,21 @@ function retrieveCoal($id)
 	}
 	$data = '';
 	foreach($chunk_array as $chunk_id) {
+		$l->a('<br>Retrieving chunk '.$chunk_id.'...<br>');
 		$chunk_details = retrieveChunk($chunk_id);
 		$chunk = $chunk_details['data'];
+		//$l->a("DATA OUT A: ".$chunk);
 		$chunk_csum = Csum_import($chunk_details['csum']);
 		$retr_chunk_csum = new Csum($chunk);
 		if(!matches($chunk_csum,$retr_chunk_csum)) {
 			$status=48;
 		}
-		$chunk_data = bzdecompress($chunk);
-		$data = $data.$chunk_data;
+		$data = $data.$chunk;
 	}
 	$data_csum = new Csum($data);
-	$l->a(print_r($data_csum,true));
-	$l->a(print_r($csum,true));
+	//$l->a("DATA OUT FINAL: ".$data);
+// 	$l->a(print_r($data_csum,true));
+// 	$l->a(print_r($csum,true));
 	if(!matches($csum,$data_csum)) {
 		$status=49;
 	}
@@ -426,6 +428,7 @@ function coalFromFile($filename) {
 	$csum->sha=$sha;
 	$csum->s512=$s512;
 	$chunks = '';
+	//$l->a("DATA IN: ".file_get_contents($filename));
 	$fhandle = fopen($filename,"r");
 	while(ftell($fhandle) < $size) {
 		$chunk = fread($fhandle,4194304);
