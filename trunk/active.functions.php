@@ -650,17 +650,23 @@ function retrieve($id) {
 	return retrieveCoal($id);
 }
 
-function lstore($data,$language) {
+function lstore($data,$language,$fallbackLanguage = 0) {
 	//Store a localizable string.
 	$db = new FractureDB('futuqiur_ember');
 	$store=store($data);
 	$sid = $store['id'];
-	$id = $db->addRow('strings', 'language, data', '\''.$language.'\', \''.$sid.'\'');
-	$store['id'] = $id;
+	//deduplicate rows here...
+	$test = ltest($language,$sid);
+	if(is_null($test)) {
+		$id = $db->addRow('strings', 'language, data', '\''.$language.'\', \''.$sid.'\'');
+		$store['id'] = $id;
+		return $store;
+	}
+	$store['id'] = $test;
 	return $store;
 }
 
-function lget($id,$language,$fallbackLanguage) {
+function lget($id,$language,$fallbackLanguage = 0) {
 	//Retrieve a localizable string.
 	$db = new FractureDB('futuqiur_ember');
 	$ld = getRowDF('strings','id',$id,'language',$language);
@@ -675,4 +681,15 @@ function lget($id,$language,$fallbackLanguage) {
 	}
 	return retrieve($ld['data']);
 }
+
+function ltest($language,$id) {
+	//Test for presence of a localizable string.
+	$db = new FractureDB('futuqiur_ember');
+	$res = getRowDF('strings','language',$language,'data',$id);
+	if(is_null($res)) {
+		return null;
+	}
+	return $res['id'];
+}
+
 ?>
