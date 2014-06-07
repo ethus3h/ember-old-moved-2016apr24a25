@@ -375,6 +375,7 @@ function CoalIntakeHandler()
 		global $coalCompressionType;
 		$coalCompressionType='bz2';
     	$insertion = insertCoal();
+    	//echo 'INSERTION: '. print_r($insertion,true);
     	$id = $insertion['id'];
     	$details = $insertion['details'];
     	$status = $insertion['status'];
@@ -390,7 +391,9 @@ function CoalIntakeHandler()
 					if(isset($_REQUEST['coalVerbose'])) {
 						echo 'Added coal: ';
 					}
-					echo $id.'|'.$details['len'].'|'.$details['md5'].'|'.$details['sha'].'|'.$details['s512'];
+					$csum = Csum_import($details['csum']);
+					//echo 'CSUM: '.print_r($csum,true);
+					echo $id.'|'.$csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512;
 					if(isset($_REQUEST['coalVerbose'])) {
 						echo '; used '.memory_get_peak_usage().' bytes of memory at peak; currently using '.memory_get_usage().' bytes of memory.<br><h1>Log output:</h1><br><small>';
 						$l->e();
