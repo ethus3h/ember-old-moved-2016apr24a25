@@ -244,7 +244,7 @@ function retrieveChunk($id)
 		$l->a('error 50<br>');
 		$status = 50;
 		$data = null;
-		$csum = new Csum();
+		$csume = null;
 		$details = null;
 	}
 	else {
@@ -255,7 +255,7 @@ function retrieveChunk($id)
 			//Row is empty
 			$status = 55;
 			$data = null;
-			$csum = new Csum();
+			$csume = null;
 			$details = null;
 		}
 		else {
@@ -283,12 +283,13 @@ function retrieveChunk($id)
 			if(!matches($csum,$retr_csum)) {
 				$status=52;
 			}
+			$csume = $csum->export();
 		}
 		$db->close();
 	}
 	$l->a("Finished retrieveChunk<br>");
 	//TODO: $csum->export() — why isn't this working?!
-	return array('status'=>$status,'data'=>$data,'csum'=>$csum->export(),'details'=>$details);
+	return array('status'=>$status,'data'=>$data,'csum'=>$csume,'details'=>$details);
 }
 
 function retrieveCoal($id)
@@ -421,7 +422,7 @@ function coalFromFile($filename,$csump) {
 		$status = 3;
 	}
 	$csum = new Csum(null,$filename);
-	if(!($csump->matches($csum)) {
+	if(!($csump->matches($csum))) {
 		$status = 57;
 	}
 	$chunks = '';

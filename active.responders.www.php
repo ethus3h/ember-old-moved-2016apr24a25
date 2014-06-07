@@ -387,6 +387,9 @@ function coaltestupload()
     global $generalAuthKey;
     if($authorizationKey == $generalAuthKey) {
 		//based partly on http://www.tizag.com/phpT/fileupload.php
+		global $l;
+		$l = new llog;
+		lstore('English',0);
     	echo '<html><head><title>Test coal upload form</title></head><body><form action="active.php" method="post"
 enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="coalVerbose" value="1" /><input type="hidden" name="handlerNeeded" value="CoalIntake" /><br /><input type="submit" value="Upload File" /></form></body></html>';
 	}
