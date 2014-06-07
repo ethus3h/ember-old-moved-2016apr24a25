@@ -619,4 +619,30 @@ function status_add($statusA, $statusB) {
 	}
 	return $statusA;
 }
+
+function store($data) {
+	$csum = new Csum($data);
+	//Why I'm not doing this type of deduplication: It could lead to inaccurate metadata about the coal.
+// 	$db = new FractureDB('futuqiur_coalchunks');
+// 	$potentialDuplicates = $db->getColumnsUH('coal2', 'id', 'md5', $csum->md5);
+// 	foreach ($potentialDuplicates as $potential) {
+// 		$potentialRecord = retrieveCoal($potential['id']);
+// 		if(!is_null($potentialRecord)) {
+// 			$potentialData = $potentialRecord['data'];
+// 			$potentialCsum = Csum_import($potentialRecord['csum']);
+// 			if(($potentialData === $data) && matches($csum,$potentialCsum)) {
+// 				$duplicateId = $potential['id'];
+// 				return array('id'=>$duplicateId,'csum'=>$potentialRecord['csum'],'status'=>$status);
+// 			}
+// 		}
+// 	}
+// 	$db->close();
+	$filename = 'coal_temp/'.uniqid().'.cstf';
+	file_put_contents($filename,$data);
+	return insertCoal($filename,$csum);
+}
+
+function retrieve($id) {
+	return retrieveCoal($id);
+}
 ?>
