@@ -360,7 +360,7 @@ include('S3.php');
 
 class Csum
 {
-	function __construct($data = null)
+	function __construct($data = null,$file = null)
 	{
 		global $l;
 		//$l->a('Creating new Csum.<br>');
@@ -371,10 +371,18 @@ class Csum
 			$this->s512 = s512($data);
 		}
 		else {
-			$this->len = null;
-			$this->md5 = null;
-			$this->sha = null;
-			$this->s512 = null;
+			if(is_null($file)) {
+				$this->len = null;
+				$this->md5 = null;
+				$this->sha = null;
+				$this->s512 = null;
+			}
+			else {
+				$this->len=filesize($file);
+				$this->md5=amd5f($file);
+				$this->sha=shaf($file);
+				$this->s512=s512f($file);
+			}
 		}
 	}
 	function compare($csum)

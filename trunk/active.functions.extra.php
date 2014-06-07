@@ -382,7 +382,8 @@ function coalFromUpload() {
 		$status = 6;
 		$l->a("error 6<br>");
 	}
-	$coal_creation = coalFromFile($filename);
+	$csum = new Csum(null,$filename);
+	$coal_creation = coalFromFile($filename,$csum);
 	$coal_creation['details']['ulfilename'] = $ulfilename;
 	$coal_creation['details']['ultype'] = $ultype;
 	$coal_creation['details']['ulsize'] = $ulsize;
@@ -393,7 +394,7 @@ function coalFromUpload() {
 	return $coal_creation;
 }
 
-function coalFromFile($filename) {
+function coalFromFile($filename,$csump) {
     global $l;
     $l->a("Started coalFromFile<br>");
     global $coalVersion;
@@ -419,14 +420,10 @@ function coalFromFile($filename) {
 	else {
 		$status = 3;
 	}
-	$md5 = amd5f($filename);
-	$sha = shaf($filename);
-	$s512 = s512f($filename);
-	$csum = new Csum();
-	$csum->len=$size;
-	$csum->md5=$md5;
-	$csum->sha=$sha;
-	$csum->s512=$s512;
+	$csum = new Csum(null,$filename);
+	if(!($csump->matches($csum)) {
+		$status = 57;
+	}
 	$chunks = '';
 	//$l->a("DATA IN: ".file_get_contents($filename));
 	$fhandle = fopen($filename,"r");
@@ -456,7 +453,7 @@ function checkCoal($id) {
 	return check($coal['status']);
 }
 
-function insertCoal($file = null) {
+function insertCoal($file = null, $csump = null) {
 	$db = new FractureDB('futuqiur_coal');
 	global $l;
 	$l->a("Started insertCoal<br>");
@@ -467,7 +464,7 @@ function insertCoal($file = null) {
 		$details = $coal['details'];
 	}
 	else {
-		$coal = coalFromFile($file);
+		$coal = coalFromFile($file,$csump);
 		$details = $coal['details'];
 	}
 	$status=status_add($status,$coal['status']);
@@ -497,6 +494,31 @@ function insertCoal($file = null) {
 		}
 	}
 	$db->close();
-	return array('id'=>$id,'details'=>$details,'status'=>$status);
+	return array('id'=>$id,'csum'=>$details['csum'],'status'=>$status);
 }
+
+// function coalQueue($file,$csump) {
+// 	$csumr = new Csum($file);
+// 	$csum = null;
+// 	$id = null;
+// 	$status = 0;
+// 	if(!($csumr->matches($csump))) {
+// 		$status = 56;
+// 	}
+// 	else {
+// 		$csum = $csumr->export();
+// 		$db = new FractureDB('futuqiur_coal');
+// 		$id = $db->addRow('coal2', '', '');
+// 		$db->addRow('scrub', 'file, csum', '\''.$file.'\', \''.$csum.'\'');
+// 	}
+// 	return array('id'=>$id,'csum'=>$csum,'status'=>$status);
+// }
+// 
+// function coalQueuePush() {
+// 	$status = 0;
+// 	$row = $db->getNextRow('scrub');
+// 	$res = insertCoal($row['file'],$row['csum']);
+// 	$status = $status_add($status,$res['status']);
+// 	return $status;
+// }
 ?>
