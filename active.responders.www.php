@@ -605,9 +605,16 @@ function PhpinfoWint()
 }
 function emberPlainWint()
 {
-$pageTitle = '';
-$pageBody = '';
-$ember->ui('home',$pageTitle,$pageBody);
+$parameters = array();
+$requestResult = $ember->ui($_REQUEST['emAction'],$parameters);
+$pageTitle = $requestResult['title'];
+if(is_null($pageTitle)) {
+	$pageTitle = 'Ember';
+}
+else {
+	$pageTitle = $pageTitle . ' — Ember';
+}
+$pageBody = $requestResult['body'];
 $page = new Document_F($pageBody,'',$pageTitle,'@NULL@','../../');
 $page->display();
 
@@ -635,6 +642,7 @@ function emberTestWint()
 //  test($ember->lstore('doom',null,0),null,'Lstore with null csum');
 //  test($ember->lretrieve(2,0),$prer,'Lretrieve');
   	test($ember->adduser('test','fracture'),false,'Add user');
+  	test($ember->ui('home',array()),array('title'=>null,'body'=>'Welcome to Ember'),'Add user');
 	echo '</body></html>';
 }
 ?>
