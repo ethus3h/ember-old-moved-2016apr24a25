@@ -631,7 +631,7 @@ function store($data,$csum) {
 	$db = new FractureDB('futuqiur_ember');
 	$potentialDuplicates = $db->getColumnsUH('strings', 'id', 'md5', $csum->md5);
 	foreach ($potentialDuplicates as $potential) {
-		echo 'duplicate testing';
+		//echo 'duplicate testing';
 		$potentialRecord = retrieveCoal($potential['id']);
 		if(!is_null($potentialRecord)) {
 			$potentialData = $potentialRecord['data'];
@@ -643,7 +643,7 @@ function store($data,$csum) {
 		}
 	}
 	$db->close();
-	echo 'gotten here';
+	//echo 'gotten here';
 	$filename = 'coal_temp/'.uniqid().'.cstf';
 	file_put_contents($filename,$data);
 	return insertCoal($filename,$csum);
