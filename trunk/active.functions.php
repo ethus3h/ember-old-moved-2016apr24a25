@@ -625,8 +625,8 @@ function store($data) {
 	$status = 0;
 	//Why I'm not doing this type of deduplication: It could lead to inaccurate metadata about the coal.
 	//Ya know, screw that. Coal *shouldn't support* file uploads — that should be handled by higher level software. I'm putting this back in for now, and just remember that the Coal file-level metadata is only an ugly, non-archival-quality, incomplete hack for while Ember doesn't exist yet to take care of that.
-	$db = new FractureDB('futuqiur_coal');
-	$potentialDuplicates = $db->getColumnsUH('coal2', 'id', 'md5', $csum->md5);
+	$db = new FractureDB('futuqiur_ember');
+	$potentialDuplicates = $db->getColumnsUH('strings', 'id', 'md5', $csum->md5);
 	foreach ($potentialDuplicates as $potential) {
 		echo 'duplicate testing';
 		$potentialRecord = retrieveCoal($potential['id']);
@@ -658,7 +658,7 @@ function lstore($data,$language,$fallbackLanguage = 0) {
 	//deduplicate rows here...
 	$test = ltest($language,$sid);
 	if(is_null($test)) {
-		$id = $db->addRow('strings', 'language, data', '\''.$language.'\', \''.$sid.'\'');
+		$id = $db->addRow('localized', 'language, data', '\''.$language.'\', \''.$sid.'\'');
 		$store['id'] = $id;
 		return $store;
 	}
@@ -669,12 +669,12 @@ function lstore($data,$language,$fallbackLanguage = 0) {
 function lget($id,$language,$fallbackLanguage = 0) {
 	//Retrieve a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$ld = getRowDF('strings','id',$id,'language',$language);
+	$ld = getRowDF('localized','id',$id,'language',$language);
 	if(is_null($ld)) {
-		$ld = getRowDF('strings','id',$id,'language',$fallbackLanguage);
+		$ld = getRowDF('localized','id',$id,'language',$fallbackLanguage);
 	}
 	if(is_null($ld)) {
-		$ld = getRow('strings','id',$id);
+		$ld = getRow('localized','id',$id);
 	}
 	if(isset($ld[0])) {
 		return null;
@@ -685,7 +685,7 @@ function lget($id,$language,$fallbackLanguage = 0) {
 function ltest($language,$id) {
 	//Test for presence of a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$res = getRowDF('strings','language',$language,'data',$id);
+	$res = getRowDF('localized','language',$language,'data',$id);
 	if(is_null($res)) {
 		return null;
 	}
