@@ -722,7 +722,7 @@ function test($value,$expected,$description = '',$f=false) {
 				echo '<font color="green">Test passed: '.$value.' is correct. '.$description.'</font><br>';
 			}
 			else {
-				echo '<font color="orange">Test may have passed: '.$value.' is possibly correct. '.$description.'</font><br>';
+				echo '<font color="red">Test failed: '.$valdbg.' is not the same type as the expected value '.$expdbg.'. '.$description.'</font><br>';
 			}
 		}
 		else {
