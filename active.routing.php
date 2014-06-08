@@ -82,7 +82,7 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'coalplistupload') {
         coalplistupload();
     }
-    if ($wintNeeded == 'emberPlainWint') {
+    if ($wintNeeded == 'emberWebView') {
         emberPlainWint();
     }
     if ($wintNeeded == 'emberTestWint') {

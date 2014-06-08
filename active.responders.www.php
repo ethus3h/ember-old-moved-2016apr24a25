@@ -612,7 +612,9 @@ function emberTestWint()
 {
 	//based partly on http://www.tizag.com/phpT/fileupload.php
 	echo '<html><head><title>Ember test suite</title></head><body>';
-	test(dummyReturnFunction("doom"),"doom");
+	test(dummyReturnFunction("dome"),"doom");
+	$ember = new emInterface();
+	test($ember->store('doom'),"");
 	echo '</body></html>';
 }
 ?>

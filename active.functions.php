@@ -620,9 +620,12 @@ function status_add($statusA, $statusB) {
 	return $statusA;
 }
 
-function store($data) {
-	$csum = new Csum($data);
+function store($data,$csum) {
 	$status = 0;
+	$csumn = new Csum($data);
+	if(!$csum->matches($csumn)) {
+		return null;
+	}
 	//Why I'm not doing this type of deduplication: It could lead to inaccurate metadata about the coal.
 	//Ya know, screw that. Coal *shouldn't support* file uploads — that should be handled by higher level software. I'm putting this back in for now, and just remember that the Coal file-level metadata is only an ugly, non-archival-quality, incomplete hack for while Ember doesn't exist yet to take care of that.
 	$db = new FractureDB('futuqiur_ember');
@@ -650,10 +653,14 @@ function retrieve($id) {
 	return retrieveCoal($id);
 }
 
-function lstore($data,$language,$fallbackLanguage = 0) {
+function lstore($data,$csum,$language,$fallbackLanguage = 0) {
 	//Store a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$store=store($data);
+	$csumn = new Csum($data);
+	if(!$csum->matches($csumn)) {
+		return null;
+	}
+	$store=store($data,$csum);
 	$sid = $store['id'];
 	//deduplicate rows here...
 	$test = ltest($language,$sid);
@@ -697,7 +704,7 @@ function test($value,$expected,$description = '') {
 		echo '<br><font color="green">Test passed: '.$value.' is correct. '.$description.'</font><br>';
 	}
 	else {
-		echo '<br><font color="red">Test failed: '.$value.' is not equivalent to the expected value '.$expected.'. '.$description.'</font><br>';
+		echo '<br><font color="red">Test failed: '.$value.' is not the same as the expected value '.$expected.'. '.$description.'</font><br>';
 	}
 }
 ?>
