@@ -41,7 +41,7 @@ class emInterface
     function adduser($name,$password,$record = null,$authorisation = 1) {
 		$hash = phash($password);
 		$username = amd5($name);
-		if(is_null($this->db->getRowUH('users', 'name', $username))) {
+		if(!is_null($this->db->getRowUH('users', 'name', $username))) {
 			return false;
 		}
 		return $this->db->addRow('users', 'name, password, record, authorisation', 'UNHEX(\''.$username.'\'), \''.$hash.'\', \''.$record.'\', \''.$authorisation.'\'');
