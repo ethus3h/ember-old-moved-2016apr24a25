@@ -213,6 +213,15 @@ class FractureDB
 //         echo "\n\n~~~~\n\n";
         return $rowDataP;
     }
+    function getRowUH($table, $field, $value)
+    {
+        $query    = 'SELECT * FROM ' . $table . ' WHERE ' . $field . ' = UNHEX(\'' . $value . '\');';
+        $rowData  = $this->query($query);
+        if(isset($rowData[0])) {
+        	return $rowData;
+        }
+		return null;
+	}
     function getRowDF($table, $field, $value, $field2, $value2)
     {
         $query    = 'SELECT * FROM ' . $table . ' WHERE ' . $field . ' = \'' . $value . '\' AND ' . $field2 . ' = \'' . $value2 . '\';';
