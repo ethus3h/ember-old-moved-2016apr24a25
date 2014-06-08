@@ -607,9 +607,7 @@ function emberPlainWint()
 {
 	global $l;
 	$l = new llog;
-	$parameters = array();
 	$ember = new emInterface();
-	$ember->ui($_REQUEST['emAction'],$parameters);
 	$ember->display();
 }
 function emberTestWint()
