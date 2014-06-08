@@ -48,11 +48,12 @@ class emInterface
     }
     
     function ui($action,$parameters = array()) {
-    	switch $action:
+    	switch ($action) {
     		case 'home':
     			$title = null;
     			$body = 'Welcome to Ember';
     			break;
+    	}
     	return array('title'=>$title,'body'=>$body);
     }
 }
