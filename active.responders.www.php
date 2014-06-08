@@ -605,6 +605,9 @@ function PhpinfoWint()
 }
 function emberPlainWint()
 {
+global $l;
+$l = new llog;
+$ember = new emInterface();
 $parameters = array();
 $requestResult = $ember->ui($_REQUEST['emAction'],$parameters);
 $pageTitle = $requestResult['title'];
@@ -642,7 +645,7 @@ function emberTestWint()
 //  test($ember->lstore('doom',null,0),null,'Lstore with null csum');
 //  test($ember->lretrieve(2,0),$prer,'Lretrieve');
   	test($ember->adduser('test','fracture'),false,'Add user');
-  	test($ember->ui('home',array()),array('title'=>null,'body'=>'Welcome to Ember'),'Add user');
+  	test($ember->ui('home',array()),array('title'=>null,'body'=>'Welcome to Ember'),'Ember home page');
 	echo '</body></html>';
 }
 ?>
