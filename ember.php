@@ -8,6 +8,7 @@ error_reporting(0);
 $displayDebugMessages = False;
 #Ember.
 $emberVersion = 'Version 8-0.91.32, 8 June 2014.';
+$websiteName = 'futuramerlin';
 $error = 0;
 include('Crypt/RSA.php');
 include('active.php');
