@@ -4,6 +4,8 @@ class emInterface
     function __construct()
     {
     	$this->db = new FractureDB('futuqiur_ember');
+    	$this->title = null;
+    	$this->body = '';
     }
 
     function store($data,$csum) {
@@ -47,14 +49,37 @@ class emInterface
 		return $this->db->addRow('users', 'name, password, record, authorisation', 'UNHEX(\''.$username.'\'), \''.$hash.'\', \''.$record.'\', \''.$authorisation.'\'');
     }
     
+    function append($text) {
+    	$this->body = $this->body.$text;
+    }
+    
+    function appendToTitle($text) {
+    	$this->title = $this->title.$text;
+    }
+
+    function home($parameters) {
+    	$this->test('doom','doom');
+    }
+
+    function test($value,$expected,$description = '',$f=false) {
+    	ob_start();
+    	test($value,$expected,$description,$f);
+    	$this->append(ob_get_clean());
+    }
+    
     function ui($action,$parameters = array()) {
-    	switch ($action) {
-    		case 'home':
-    			$title = null;
-    			$body = 'Welcome to Ember';
-    			break;
-    	}
-    	return array('title'=>$title,'body'=>$body);
+    	$this->$action($parameters);
+    }
+    
+    function display() {
+		if(is_null($this->title)) {
+			$this->title = 'Ember';
+		}
+		else {
+			$this->appendToTitle(' — Ember');
+		}
+		$page = new Document_F($this->body,'',$this->title,'@NULL@','../../');
+		$page->display();
     }
 }
 ?>
