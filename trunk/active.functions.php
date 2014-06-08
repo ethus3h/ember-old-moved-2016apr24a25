@@ -676,7 +676,7 @@ function lstore($data,$csum,$language,$fallbackLanguage = 0) {
 function lget($id,$language,$fallbackLanguage = 0) {
 	//Retrieve a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$ld = getRowDF('localized','id',$id,'language',$language);
+	$ld = $db->getRowDF('localized','id',$id,'language',$language);
 	if(is_null($ld)) {
 		$ld = getRowDF('localized','id',$id,'language',$fallbackLanguage);
 	}
@@ -692,19 +692,35 @@ function lget($id,$language,$fallbackLanguage = 0) {
 function ltest($language,$id) {
 	//Test for presence of a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$res = getRowDF('localized','language',$language,'data',$id);
+	$res = $db->getRowDF('localized','language',$language,'data',$id);
 	if(is_null($res)) {
 		return null;
 	}
 	return $res['id'];
 }
 
-function test($value,$expected,$description = '') {
-	if($value==$expected) {
-		echo '<br><font color="green">Test passed: '.$value.' is correct. '.$description.'</font><br>';
+function test($value,$expected,$f=false,$description = '') {
+	if($f) {
+		//test is intended to fail
+		if($value==$expected) {
+			echo '<font color="red">Test failed: '.print_r($value,true).' is not the same as the expected value '.print_r($expected,true).'. '.$description.'</font><br>';
+		}
+		else {
+			echo '<font color="green">Test passed: '.$value.' is correct. '.$description.'</font><br>';
+		}
 	}
 	else {
-		echo '<br><font color="red">Test failed: '.$value.' is not the same as the expected value '.$expected.'. '.$description.'</font><br>';
+		if($value==$expected) {
+			if($value===$expected) {
+				echo '<font color="green">Test passed: '.$value.' is correct. '.$description.'</font><br>';
+			}
+			else {
+				echo '<font color="orange">Test may have passed: '.$value.' is possibly correct. '.$description.'</font><br>';
+			}
+		}
+		else {
+			echo '<font color="red">Test failed: '.print_r($value,true).' is not the same as the expected value '.print_r($expected,true).'. '.$description.'</font><br>';
+		}
 	}
 }
 ?>
