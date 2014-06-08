@@ -603,4 +603,9 @@ function PhpinfoWint()
         header("HTTP/1.0 403 Forbidden");
     }
 }
+function emberPlainWint()
+{
+	//based partly on http://www.tizag.com/phpT/fileupload.php
+	echo '<html><head><title>Test coal download form</title></head><body><form action="active.php" method="get"><input name="coalId" type="text" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="coalVerbose" value="1" /><input type="hidden" name="handlerNeeded" value="CoalRetrieve" /><br /><input type="submit" value="Download File" /></form></body></html>';
+}
 ?>
