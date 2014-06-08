@@ -692,4 +692,12 @@ function ltest($language,$id) {
 	return $res['id'];
 }
 
+function test($value,$expected,$description = '') {
+	if($value==$expected) {
+		echo '<br><font color="green">Test passed: '.$value.' is correct. '.$description.'</font><br>';
+	}
+	else {
+		echo '<br><font color="red">Test failed: '.$value.' is not equivalent to the expected value '.$expected.'. '.$description.'</font><br>';
+	}
+}
 ?>

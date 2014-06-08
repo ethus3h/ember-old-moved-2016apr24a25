@@ -85,6 +85,9 @@ function runWints($wintNeeded)
     if ($wintNeeded == 'emberPlainWint') {
         emberPlainWint();
     }
+    if ($wintNeeded == 'emberTestWint') {
+        emberTestWint();
+    }
 }
 
 // function logAdd($text){

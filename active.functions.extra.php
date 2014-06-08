@@ -522,4 +522,7 @@ function insertCoal($file = null, $csump = null) {
 // 	$status = $status_add($status,$res['status']);
 // 	return $status;
 // }
+function dummyReturnFunction($value) {
+	return $value;
+}
 ?>
