@@ -610,11 +610,14 @@ function emberPlainWint()
 }
 function emberTestWint()
 {
-	//based partly on http://www.tizag.com/phpT/fileupload.php
+	global $l;
+	$l = new llog;
 	echo '<html><head><title>Ember test suite</title></head><body>';
-	test(dummyReturnFunction("dome"),"doom");
+	test(dummyReturnFunction("doom"),"doom");
 	$ember = new emInterface();
-	test($ember->store('doom'),"");
+	//print_r($ember->store('doom',new Csum('doom'));
+	$pres = array( 'id' => '3', 'csum' => 'Tzo0OiJDc3VtIjo0OntzOjM6ImxlbiI7aTo0O3M6MzoibWQ1IjtzOjMyOiJiNGY5NDU0MzNlYTRjMzY5YzEyNzQxZjYyYTIzY2NjMCI7czozOiJzaGEiO3M6NDA6ImZlMDQ2YTQwODY4OWQwNzA2NmQ1N2VmOTU4YWQ5MGQ4YzMyZjcwMTMiO3M6NDoiczUxMiI7czoxMjg6Ijk0ZGNmOTVhZWNhODBmYmUzZDZmMzQxYzAyY2UzNzg5ZmNkNmNhOGVmNTBkZTliNWM2MTM4YjhmYjg5NTVkNjJhYWEyMjVhODAyODk2MzkwOTU5ZWQxNjg4MTQwMzdhYTEwYTNhMzYxYjVhNTg0NDgxZTI0N2E5MGZiNjIwZTg5Ijt9', 'status' => '0');
+	test($ember->store('doom',new Csum('doom')),$pres);
 	echo '</body></html>';
 }
 ?>
