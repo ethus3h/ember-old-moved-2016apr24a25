@@ -405,4 +405,5 @@ function Csum_import($csum) {
 }
 
 include('active.emInterface.php');
+require 'PasswordHash.php';
 ?>

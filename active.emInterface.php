@@ -36,5 +36,14 @@ class emInterface
     function lretrieve($id,$language,$fallbackLanguage = 0) {
     	return lget($id,$language,$fallbackLanguage);
     }
+    
+    function adduser($name,$password,$record = null,$authorisation = 1) {
+		$hash = phash($password);
+		$username = amd5($name);
+		if(is_null($db->getRowUH('users', 'name', $username))) {
+			return null;
+		}
+		return $db->addRow('users', 'name, password, record, authorisation', 'UNHEX(\''.$username.'\'), \''.$hash.'\', \''.$record.'\', \''.$authorisation.'\'');
+    }
 }
 ?>

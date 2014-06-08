@@ -699,11 +699,18 @@ function ltest($language,$id) {
 	return $res['id'];
 }
 
-function test($value,$expected,$f=false,$description = '') {
+function test($value,$expected,$description = '',$f=false) {
+	//help from http://stackoverflow.com/questions/139474/how-can-i-capture-the-result-of-var-dump-to-a-string
+	ob_start();
+	var_dump($value);
+	$valdbg = ob_get_clean();
+	ob_start();
+	var_dump($expected);
+	$expdbg = ob_get_clean();
 	if($f) {
 		//test is intended to fail
 		if($value==$expected) {
-			echo '<font color="red">Test failed: '.print_r($value,true).' is not the same as the expected value '.print_r($expected,true).'. '.$description.'</font><br>';
+			echo '<font color="red">Test failed: '.$valdbg.' is not the same as the expected value '.$expdbg.'. '.$description.'</font><br>';
 		}
 		else {
 			echo '<font color="green">Test passed: '.$value.' is correct. '.$description.'</font><br>';
@@ -719,8 +726,18 @@ function test($value,$expected,$f=false,$description = '') {
 			}
 		}
 		else {
-			echo '<font color="red">Test failed: '.print_r($value,true).' is not the same as the expected value '.print_r($expected,true).'. '.$description.'</font><br>';
+			echo '<font color="red">Test failed: '.$valdbg.' is not the same as the expected value '.$expdbg.'. '.$description.'</font><br>';
 		}
 	}
+}
+
+function phash($password) {
+	//using PHPass (http://www.openwall.com/articles/PHP-Users-Passwords)
+	$hasher = new PasswordHash(8, FALSE);
+	$hash = $hasher->HashPassword($password);
+	if (strlen($hash) < 20)
+		fail('Failed to hash new password');
+	unset($hasher);
+	return $hash;
 }
 ?>
