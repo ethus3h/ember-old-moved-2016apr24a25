@@ -403,4 +403,6 @@ function Csum_import($csum) {
 	//(in the classes file since it goes with the Csum class)
 	return unserialize(base64_decode($csum));
 }
+
+include('active.emInterface.php');
 ?>
