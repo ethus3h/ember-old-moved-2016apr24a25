@@ -46,5 +46,14 @@ class emInterface
 		}
 		return $this->db->addRow('users', 'name, password, record, authorisation', 'UNHEX(\''.$username.'\'), \''.$hash.'\', \''.$record.'\', \''.$authorisation.'\'');
     }
+    
+    function ui($action,$parameters = array()) {
+    	switch $action:
+    		case 'home':
+    			$title = null;
+    			$body = 'Welcome to Ember';
+    			break;
+    	return array('title'=>$title,'body'=>$body);
+    }
 }
 ?>
