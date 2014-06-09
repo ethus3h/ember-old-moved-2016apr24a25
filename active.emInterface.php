@@ -66,14 +66,13 @@ class emInterface
     	return lstore($data,$csum,$language,$fallbackLanguage);
     }
     
-    function lretrieve($id,$language = $this->locale,$fallbackLanguage = 0) {
+    function lretrieve($id,$language = null,$fallbackLanguage = 0) {
+    	if(is_null($language)) {
+    		$language = $this->locale;
+    	}
     	return lget($id,$language,$fallbackLanguage);
     }
 
-    function i($id,$language = $this->locale,$fallbackLanguage = 0) {
-    	return lget($id,$language,$fallbackLanguage);
-    }
-    
     function adduser($name,$password,$record = null,$authorisation = 1) {
 		$hash = phash($password);
 		$username = amd5($name);
@@ -107,6 +106,11 @@ class emInterface
     	$this->append(ob_get_clean());
     }
     
+    function getRecordProperty($id,$property) {
+    	return 'dummy value';
+    }
+    
+    
     function runTests() {
     	$this->append('<p><br>');
 // 		$pres = array( 'id' => '3', 'csum' => 'Tzo0OiJDc3VtIjo0OntzOjM6ImxlbiI7aTo0O3M6MzoibWQ1IjtzOjMyOiJiNGY5NDU0MzNlYTRjMzY5YzEyNzQxZjYyYTIzY2NjMCI7czozOiJzaGEiO3M6NDA6ImZlMDQ2YTQwODY4OWQwNzA2NmQ1N2VmOTU4YWQ5MGQ4YzMyZjcwMTMiO3M6NDoiczUxMiI7czoxMjg6Ijk0ZGNmOTVhZWNhODBmYmUzZDZmMzQxYzAyY2UzNzg5ZmNkNmNhOGVmNTBkZTliNWM2MTM4YjhmYjg5NTVkNjJhYWEyMjVhODAyODk2MzkwOTU5ZWQxNjg4MTQwMzdhYTEwYTNhMzYxYjVhNTg0NDgxZTI0N2E5MGZiNjIwZTg5Ijt9', 'status' => 0);
@@ -123,50 +127,54 @@ class emInterface
     }
     
     function ui_logo_fragment() {
-		$this->append('<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><table border="0" width="100%"><tbody><tr><td style="vertical-align:top">');
+		$this->oappend('<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><table border="0" width="100%"><tbody><tr><td style="vertical-align:top">');
 		if ($login == 1) {
-			$this->append('<form target="ember.php" action="post"><input type="hidden" name="wint" value="1"><input type="hidden" name="wintNeeded" value="emberWebView"><input type="hidden" name="emAction" value="home"><input type="hidden" name="wvSession" value="');
-			$this->append(fv('emSession'));
+			$this->oappend('<form target="ember.php" action="post"><input type="hidden" name="wint" value="1"><input type="hidden" name="wintNeeded" value="emberWebView"><input type="hidden" name="emAction" value="home"><input type="hidden" name="wvSession" value="');
+			$this->oappend(fv('emSession'));
 			/* This contains the logo link */
-			$this->append('"><input type="hidden" name="login" value="1"><input type="image" src="d/w.png" width="132" height="57"></form>');
+			$this->oappend('"><input type="hidden" name="login" value="1"><input type="image" src="d/w.png" width="132" height="57"></form>');
 		} else {
 			$this->addLink('home', '', '<img src="d/w.png" alt="Weave" width="132" height="57" border="0">');
 		}
 		if ($login == 1) {
-			$this->append('&nbsp;&nbsp;(logged in)&nbsp;&nbsp;');
+			$this->oappend('&nbsp;&nbsp;(logged in)&nbsp;&nbsp;');
 			$this->addLink('15', '', 'Log out…');
-			$this->append('&#32;');
+			$this->oappend('&#32;');
 			$this->addLink('11', '', 'Operation index… ');
 		} else {
-			$this->append('&nbsp;&nbsp;(not logged in)&nbsp;&nbsp;');
+			$this->oappend('&nbsp;&nbsp;(not logged in)&nbsp;&nbsp;');
 			$this->addLink('3', 'recordId=' . fv('recordId') . '&', 'Log in…');
-			$this->append('&#32;');
+			$this->oappend('&#32;');
 			$this->addLink('4', '', 'New user…');
-			$this->append('&#32;');
+			$this->oappend('&#32;');
 			$this->addLink('11', '', 'Operation index… ');
 		}
     }
     
     function ui_breadcrumb_fragment() {
     	//Breadcrumb navigation
-		$emActionDispName = itr(qry('operation', 'operation_disp_name', 'operation_id', fv('a')));
+		$emActionDispName = $_REQUEST['emAction'];
 		$breadSeparator = ' → ';
 		if(!isset($disambigStr)) {
 			$disambigStr = null;
 		}
-		$recordBCTitle = $recordId . '. ' . c(shorten($this->getRecordTitle($recordId)) . $this->getRecordDisambigString($recordId));
+		$recordBCTitle = $recordId . '. ' . shorten($this->getRecordProperty($recordId,'title') . $this->getRecordProperty($recordId,'disambigstring'));
 		if (!strlen(fv('recordId')) > 0) {
 			$recordNameTag = "";
 		} else {
 			$recordNameTag = '?' . buildLink(6, '&recordId=' . fv('recordId') . '&', $recordBCTitle);
 		}
 		$actionlinkid = fv('emAction');
-		e(str_replace('&a=6&locale', '&a=19&locale', '<br><small>' . buildLink(1, '', 'Ember') . ' ' . $breadSeparator . ' ' . buildLink($actionlinkid, '', $emActionDispName) . $recordNameTag));
+		$this->oappend(str_replace('&a=6&locale', '&a=19&locale', '<br><small>'));
+		$this->addLink(1,'','Ember');
+		$this->oappend(' ' . $breadSeparator . ' ');
+		$this->addLink($actionlinkid, '', $emActionDispName);
+		$this->oappend($recordNameTag);
 		if(!isset($pageMenu)) {
 			$pageMenu = null;
 		}
 		echo $pageMenu;
-		$this->append('</td></tr></tbody></table><h1>');
+		$this->oappend('</td></tr></tbody></table><h1>');
     }
     
     function ui($action) {
@@ -196,7 +204,7 @@ class emInterface
 		else {
 			$this->appendToTitle(' — Ember');
 		}
-		$page = new Document_F($this->body,'',$this->title,'@NULL@','../../');
+		$page = new Document_F($this->page,'',$this->title,'@NULL@','../../');
 		$page->display();
     }
     
