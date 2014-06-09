@@ -127,6 +127,7 @@ class emInterface
     }
     
     function ui_logo_fragment() {
+    	$login = fv('login');
 		$this->oappend('<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><table border="0" width="100%"><tbody><tr><td style="vertical-align:top">');
 		if ($login == 1) {
 			$this->oappend('<form target="ember.php" action="post"><input type="hidden" name="wint" value="1"><input type="hidden" name="wintNeeded" value="emberWebView"><input type="hidden" name="emAction" value="home"><input type="hidden" name="wvSession" value="');
@@ -153,6 +154,7 @@ class emInterface
     
     function ui_breadcrumb_fragment() {
     	//Breadcrumb navigation
+    	$recordId = fv('recordId');
 		$emActionDispName = $_REQUEST['emAction'];
 		$breadSeparator = ' → ';
 		if(!isset($disambigStr)) {
@@ -202,9 +204,9 @@ class emInterface
 			$this->title = 'Ember';
 		}
 		else {
-			$this->appendToTitle(' — Ember');
+			$title(' — Ember');
 		}
-		$page = new Document_F($this->page,'',$this->title,'@NULL@','../../');
+		$page = new Document_F($this->page,'',$title,'@NULL@','../../');
 		$page->display();
     }
     
