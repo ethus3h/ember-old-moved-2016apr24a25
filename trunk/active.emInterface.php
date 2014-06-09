@@ -33,6 +33,8 @@ class emInterface
 		else {
 			$this->locale=0;
 		}
+		$temporary = $this->getUserDetailsByName(fv('emUserName'));
+		$this->auth = $temporary['authorisation'];
 		$parameters = array();
 		$this->ui($_REQUEST['emAction'],$parameters);
     }
@@ -106,10 +108,32 @@ class emInterface
     }
     
     function operationIndex() {
-    	$pageBody = '<h3>Basic actions</h3><ul><li>' . $this->addLink('19', '', 'Node index') . '</li></ul><h3>Moderator actions</h3><ul><li>' . $this->addLink('5', '', 'New node') . '</li></ul><h3>Administrator actions</h3><ul><li>' . $this->addLink('9', '', 'New interface') . '</li><li>' . $this->addLink('20', '', 'New character') . '</li><li>' . $this->addLink('24', '', 'New character category') . '</li><li>' . $this->addLink('22', '', 'New script') . '</li></ul>';
+    	$this->append('<h3>Basic actions</h3><ul><li>' . $this->addLink('nodeIndex', '', 'Node index') . '</li></ul><h3>Moderator actions</h3><ul><li>' . $this->addLink('newNode', '', 'New node') . '</li></ul><h3>Administrator actions</h3><ul><li>' . $this->addLink('newLocalised', '', 'New localisable string') . '</li><li>' . $this->addLink('newCharacter', '', 'New character') . '</li><li>' . $this->addLink('newCharCat', '', 'New character category') . '</li><li>' . $this->addLink('newScript', '', 'New script') . '</li></ul>');
         $this->title = 'Operation index';
     }
+    
+    function authorized($auth) {
+    	//TODO
+    	return true;
+    }
+    
+    function newLocalised() {
+    	if($this->authorized(3)) {
+    	    $this->title = 'Add localisable string';
+    		$this->append($this->startForm().'<input type="hidden" name="emAction" value="newLocalisedExec"><br>Content: <textarea rows="20" cols="80" name="intfContent"></textarea><br>'.$this->finishForm());
+    	}
+    	else {
+    		$this->fail('not authorized');
+    	}
+    }
+    
+    function startForm() {
+    	return '<form action="ember.php" method="get" enctype="multipart/form-data"><input type="hidden" name="wint" value="1"><input type="hidden" name="wintNeeded" value="emberWebView"><input type="hidden" name="login" value="1"><input type="hidden" name="emSession" value="'.fv('emSession').'"><input type="hidden" name="locale" value="'.fv('locale').'">';
+    }
 
+	function finishForm() {
+		return '<input type="submit"></form>';
+	}
     function test($value,$expected,$description = '',$f=false) {
     	ob_start();
     	test($value,$expected,$description,$f);
@@ -117,9 +141,22 @@ class emInterface
     }
     
     function getRecordProperty($id,$property) {
+    	//TODO
     	return 'dummy value';
     }
+
+    function getUserDetailsByName($username) {
+    	//TODO
+    	return array('authorisation'=>6);
+    }
     
+    function index($id,$type,$text) {
+    	$res=$this->db->getRowDF('index', 'type', $type, 'itemid', $id);
+    	if(!is_set($res[0])) {
+			return $res['id'];
+		}
+    	return $this->db->addRow('index', 'type, itemid, fulltext', '\''.$type.'\', \''.$id.'\', \''.$text.'\'');
+    }
     
     function runTests() {
     	$this->append('<p><br>');
