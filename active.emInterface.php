@@ -27,7 +27,12 @@ class emInterface
 			} else {
 			}
 		}
-		$this->locale = $_REQUEST['locale'];
+		if(isset($_REQUEST['locale'])) {
+			$this->locale = $_REQUEST['locale'];
+		}
+		else {
+			$this->locale=0;
+		}
 		$parameters = array();
 		$this->ui($_REQUEST['emAction'],$parameters);
     }
@@ -123,40 +128,43 @@ class emInterface
 // 		$this->test($this->lstore('doom',null,0),null,'Lstore with null csum');
 // 		$this->test($this->lretrieve(2,0),$prer,'Lretrieve');
 // 		$this->test($this->adduser('test','fracture'),false,'Add user');
+ 		$this->test($this->ui_logo_fragment(),'<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><table border="0" width="100%"><tbody><tr><td style="vertical-align:top"><a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=home&locale=0"><img src="d/w.png" alt="Ember" width="132" height="57" border="0"></a>&nbsp;&nbsp;(not logged in)&nbsp;&nbsp;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=3&recordId=&locale=0">Log in…</a>&#32;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=4&locale=0">New user…</a>&#32;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=11&locale=0">Operation index… </a>','UI logo fragment');
+ 		$this->test($this->ui_breadcrumb_fragment(),'<br><small><a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=1&locale=0">Ember</a> &#x02192; <a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=runTests&locale=0">runTests</a></td></tr></tbody></table><h1>','UI breadcrumb fragment');
     	$this->append('</p>');
     }
     
     function ui_logo_fragment() {
     	$login = fv('login');
-		$this->oappend('<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><table border="0" width="100%"><tbody><tr><td style="vertical-align:top">');
+		$ret='<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><table border="0" width="100%"><tbody><tr><td style="vertical-align:top">';
 		if ($login == 1) {
-			$this->oappend('<form target="ember.php" action="post"><input type="hidden" name="wint" value="1"><input type="hidden" name="wintNeeded" value="emberWebView"><input type="hidden" name="emAction" value="home"><input type="hidden" name="wvSession" value="');
-			$this->oappend(fv('emSession'));
+			$ret=$ret.'<form target="ember.php" action="post"><input type="hidden" name="wint" value="1"><input type="hidden" name="wintNeeded" value="emberWebView"><input type="hidden" name="emAction" value="home"><input type="hidden" name="wvSession" value="';
+			$ret=$ret.fv('emSession');
 			/* This contains the logo link */
-			$this->oappend('"><input type="hidden" name="login" value="1"><input type="image" src="d/w.png" width="132" height="57"></form>');
+			$ret=$ret.'"><input type="hidden" name="login" value="1"><input type="image" src="d/w.png" width="132" height="57"></form>';
 		} else {
-			$this->addLink('home', '', '<img src="d/w.png" alt="Weave" width="132" height="57" border="0">');
+			$ret=$ret.$this->addLink('home', '', '<img src="d/w.png" alt="Ember" width="132" height="57" border="0">');
 		}
 		if ($login == 1) {
-			$this->oappend('&nbsp;&nbsp;(logged in)&nbsp;&nbsp;');
-			$this->addLink('15', '', 'Log out…');
-			$this->oappend('&#32;');
-			$this->addLink('11', '', 'Operation index… ');
+			$ret=$ret.'&nbsp;&nbsp;(logged in)&nbsp;&nbsp;';
+			$ret=$ret.$this->addLink('15', '', 'Log out…');
+			$ret=$ret.'&#32;';
+			$ret=$ret.$this->addLink('11', '', 'Operation index… ');
 		} else {
-			$this->oappend('&nbsp;&nbsp;(not logged in)&nbsp;&nbsp;');
-			$this->addLink('3', 'recordId=' . fv('recordId') . '&', 'Log in…');
-			$this->oappend('&#32;');
-			$this->addLink('4', '', 'New user…');
-			$this->oappend('&#32;');
-			$this->addLink('11', '', 'Operation index… ');
+			$ret=$ret.'&nbsp;&nbsp;(not logged in)&nbsp;&nbsp;';
+			$ret=$ret.$this->addLink('3', 'recordId=' . fv('recordId') . '&', 'Log in…');
+			$ret=$ret.'&#32;';
+			$ret=$ret.$this->addLink('4', '', 'New user…');
+			$ret=$ret.'&#32;';
+			$ret=$ret.$this->addLink('11', '', 'Operation index… ');
 		}
+		return $ret;
     }
     
     function ui_breadcrumb_fragment() {
     	//Breadcrumb navigation
     	$recordId = fv('recordId');
 		$emActionDispName = $_REQUEST['emAction'];
-		$breadSeparator = ' → ';
+		$breadSeparator = ' &#x02192; ';
 		if(!isset($disambigStr)) {
 			$disambigStr = null;
 		}
@@ -164,27 +172,28 @@ class emInterface
 		if (!strlen(fv('recordId')) > 0) {
 			$recordNameTag = "";
 		} else {
-			$recordNameTag = '?' . buildLink(6, '&recordId=' . fv('recordId') . '&', $recordBCTitle);
+			$recordNameTag = '?' . $this->addLink(6, '&recordId=' . fv('recordId') . '&', $recordBCTitle);
 		}
 		$actionlinkid = fv('emAction');
-		$this->oappend(str_replace('&a=6&locale', '&a=19&locale', '<br><small>'));
-		$this->addLink(1,'','Ember');
-		$this->oappend(' ' . $breadSeparator . ' ');
-		$this->addLink($actionlinkid, '', $emActionDispName);
-		$this->oappend($recordNameTag);
-		if(!isset($pageMenu)) {
-			$pageMenu = null;
-		}
-		echo $pageMenu;
-		$this->oappend('</td></tr></tbody></table><h1>');
+		$ret=str_replace('&a=6&locale', '&a=19&locale', '<br><small>');
+ 		$ret=$ret.$this->addLink(1,'','Ember');
+ 		$ret=$ret.' ' . $breadSeparator . ' ';
+ 		$ret=$ret.$this->addLink($actionlinkid, '', $emActionDispName);
+// 		$ret=$ret.$recordNameTag;
+// 		if(!isset($pageMenu)) {
+// 			$pageMenu = null;
+// 		}
+// 		$ret=$ret.$pageMenu;
+		$ret=$ret.'</td></tr></tbody></table><h1>';
+		return $ret;
     }
     
     function ui($action) {
-    	$this->$action();
-    	$this->ui_logo_fragment();
-    	$this->ui_breadcrumb_fragment();
-    	$this->oappend($this->title);
-    	$this->oappend('</h1>');
+     	$this->$action();
+//     	$this->ui_logo_fragment();
+//     	$this->ui_breadcrumb_fragment();
+//     	$this->oappend($this->title);
+//     	$this->oappend('</h1>');
     	$this->oappend($this->body);
     }
     
@@ -201,10 +210,10 @@ class emInterface
     
     function display() {
 		if(is_null($this->title)) {
-			$this->title = 'Ember';
+			$title = 'Ember';
 		}
 		else {
-			$title(' — Ember');
+			$title = ' — Ember';
 		}
 		$page = new Document_F($this->page,'',$title,'@NULL@','../../');
 		$page->display();
@@ -259,7 +268,7 @@ class emInterface
 			}
 			$linkGenerated = str_replace('&&', '&', '<form action="ember.php" method="post"><input type="hidden" name="wint" value="1"><input type="hidden" name="wintNeeded" value="emberWebView"><input type="hidden" name="emAction" value="' . $action . str_replace('&', '"><input type="hidden" name="', str_replace('=', '" value="', $options)) . '"><input type="hidden" name="login" value="1"><button type="submit" class="t">' . $caption . '</button></form>');
 		}
-		$this->append($linkGenerated);
+		return($linkGenerated);
     }
 
 }
