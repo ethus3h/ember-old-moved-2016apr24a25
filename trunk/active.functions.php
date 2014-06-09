@@ -710,23 +710,23 @@ function test($value,$expected,$description = '',$f=false) {
 	if($f) {
 		//test is intended to fail
 		if($value==$expected) {
-			echo '<font color="red">Test failed: '.$valdbg.' is not the same as the expected value '.$expdbg.'. '.$description.'</font><br>';
+			echo '<font color="red">Test failed: '.base64_encode($valdbg).' is not the same as the expected value '.base64_encode($expdbg).'. '.$description.'</font><br>';
 		}
 		else {
-			echo '<font color="green">Test passed: '.$value.' is correct. '.$description.'</font><br>';
+			echo '<font color="green">Test passed: is correct. '.$description.'</font><br>';
 		}
 	}
 	else {
 		if($value==$expected) {
 			if($value===$expected) {
-				echo '<font color="green">Test passed: '.$value.' is correct. '.$description.'</font><br>';
+				echo '<font color="green">Test passed: is correct. '.$description.'</font><br>';
 			}
 			else {
-				echo '<font color="red">Test failed: '.$valdbg.' is not the same type as the expected value '.$expdbg.'. '.$description.'</font><br>';
+				echo '<font color="red">Test failed: '.base64_encode($valdbg).' is not the same type as the expected value '.base64_encode($expdbg).'. '.$description.'</font><br>';
 			}
 		}
 		else {
-			echo '<font color="red">Test failed: '.$valdbg.' is not the same as the expected value '.$expdbg.'. '.$description.'</font><br>';
+			echo '<font color="red">Test failed: '.base64_encode($valdbg).' is not the same as the expected value '.base64_encode($expdbg).'. '.$description.'</font><br>';
 		}
 	}
 }
