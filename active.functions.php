@@ -620,18 +620,15 @@ function status_add($statusA, $statusB) {
 	return $statusA;
 }
 
-function store($data,$csum) {
+function store($data) {
+	$csum = new Csum($data);
 	$status = 0;
-	$csumn = new Csum($data);
-	if(!$csum->matches($csumn)) {
-		return null;
-	}
 	//Why I'm not doing this type of deduplication: It could lead to inaccurate metadata about the coal.
 	//Ya know, screw that. Coal *shouldn't support* file uploads â€”Â that should be handled by higher level software. I'm putting this back in for now, and just remember that the Coal file-level metadata is only an ugly, non-archival-quality, incomplete hack for while Ember doesn't exist yet to take care of that.
-	$db = new FractureDB('futuqiur_ember');
-	$potentialDuplicates = $db->getColumnsUH('strings', 'id', 'md5', $csum->md5);
+	$db = new FractureDB('futuqiur_coal');
+	$potentialDuplicates = $db->getColumnsUH('coal2', 'id', 'md5', $csum->md5);
 	foreach ($potentialDuplicates as $potential) {
-		//echo 'duplicate testing';
+		echo 'duplicate testing';
 		$potentialRecord = retrieveCoal($potential['id']);
 		if(!is_null($potentialRecord)) {
 			$potentialData = $potentialRecord['data'];
@@ -643,7 +640,7 @@ function store($data,$csum) {
 		}
 	}
 	$db->close();
-	//echo 'gotten here';
+	echo 'gotten here';
 	$filename = 'coal_temp/'.uniqid().'.cstf';
 	file_put_contents($filename,$data);
 	return insertCoal($filename,$csum);
@@ -653,19 +650,15 @@ function retrieve($id) {
 	return retrieveCoal($id);
 }
 
-function lstore($data,$csum,$language,$fallbackLanguage = 0) {
+function lstore($data,$language,$fallbackLanguage = 0) {
 	//Store a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$csumn = new Csum($data);
-	if(!$csum->matches($csumn)) {
-		return null;
-	}
-	$store=store($data,$csum);
+	$store=store($data);
 	$sid = $store['id'];
 	//deduplicate rows here...
 	$test = ltest($language,$sid);
 	if(is_null($test)) {
-		$id = $db->addRow('localized', 'language, data', '\''.$language.'\', \''.$sid.'\'');
+		$id = $db->addRow('strings', 'language, data', '\''.$language.'\', \''.$sid.'\'');
 		$store['id'] = $id;
 		return $store;
 	}
@@ -676,12 +669,12 @@ function lstore($data,$csum,$language,$fallbackLanguage = 0) {
 function lget($id,$language,$fallbackLanguage = 0) {
 	//Retrieve a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$ld = $db->getRowDF('localized','id',$id,'language',$language);
+	$ld = getRowDF('strings','id',$id,'language',$language);
 	if(is_null($ld)) {
-		$ld = getRowDF('localized','id',$id,'language',$fallbackLanguage);
+		$ld = getRowDF('strings','id',$id,'language',$fallbackLanguage);
 	}
 	if(is_null($ld)) {
-		$ld = getRow('localized','id',$id);
+		$ld = getRow('strings','id',$id);
 	}
 	if(isset($ld[0])) {
 		return null;
@@ -692,177 +685,11 @@ function lget($id,$language,$fallbackLanguage = 0) {
 function ltest($language,$id) {
 	//Test for presence of a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$res = $db->getRowDF('localized','language',$language,'data',$id);
+	$res = getRowDF('strings','language',$language,'data',$id);
 	if(is_null($res)) {
 		return null;
 	}
 	return $res['id'];
 }
 
-function test($value,$expected,$description = '',$f=false) {
-	//help from http://stackoverflow.com/questions/139474/how-can-i-capture-the-result-of-var-dump-to-a-string
-	ob_start();
-	var_dump($value);
-	$valdbg = ob_get_clean();
-	ob_start();
-	var_dump($expected);
-	$expdbg = ob_get_clean();
-	if($f) {
-		//test is intended to fail
-		if($value==$expected) {
-			echo '<font color="red">Test failed: '.base64_encode($valdbg).' is not the same as the expected value '.base64_encode($expdbg).'. '.$description.'</font><br>';
-		}
-		else {
-			echo '<font color="green">Test passed: is correct. '.$description.'</font><br>';
-		}
-	}
-	else {
-		if($value==$expected) {
-			if($value===$expected) {
-				echo '<font color="green">Test passed: is correct. '.$description.'</font><br>';
-			}
-			else {
-				echo '<font color="red">Test failed: '.base64_encode($valdbg).' is not the same type as the expected value '.base64_encode($expdbg).'. '.$description.'</font><br>';
-			}
-		}
-		else {
-			echo '<font color="red">Test failed: '.base64_encode($valdbg).' is not the same as the expected value '.base64_encode($expdbg).'. '.$description.'</font><br>';
-		}
-	}
-}
-
-function phash($password) {
-	//using PHPass (http://www.openwall.com/articles/PHP-Users-Passwords)
-	$hasher = new PasswordHash(8, FALSE);
-	$hash = $hasher->HashPassword($password);
-	if (strlen($hash) < 20)
-		fail('Failed to hash new password');
-	unset($hasher);
-	return $hash;
-}
-
-function getmusic($id){
-    global $dataDirectory;
-$musicdata= @file_get_contents($dataDirectory . '/s/music/r/'.$id.'.html');
-
-#reencode to utf8 if necessary
-
-if(strpos($musicdata,'ISO-8859-1')){
-$musicdata=str_replace("ISO-8859-1","UTF-8",iconv("ISO-8859-1","UTF-8",$musicdata));
-}
-
-#clean up html mess
-$musicdata=str_replace('<html>','',$musicdata);
-$musicdata=str_replace('</html>','',$musicdata);
-$musicdata=str_replace('<head>','',$musicdata);
-$musicdata=str_replace('</head>','',$musicdata);
-$musicdata=str_replace('<body>','',$musicdata);
-$musicdata=str_replace('</body>','',$musicdata);
-$musicdata=str_replace('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">','',$musicdata);
-$musicdata=str_replace('<meta content="text/html; charset=UTF-8" http-equiv="content-type">','',$musicdata);
-$musicdata = preg_replace("/<title(.*)<\/title>/iUs", "", $musicdata);
-//$musicdata = preg_replace('/<a target="_blank" href="http:\/\/archive.org\/download\/(.*)"flac">&#128266;<\/a>/', '<a target="_blank" href="http://archive.org/download/' . '$1' . 'mp3">&#128266;</a>', $musicdata);
-
-$musicdata = preg_replace('/<a href="http:\/\/archive.org\/download\/(.*)\/(.*).flac">/', '<audio src="http://archive.org/download/$1/$2.mp3" preload="none" class="audioplayer">Could not start audio player. Does your browser support it?</audio><a href="http://archive.org/download/$1/$2.flac">', $musicdata);
-$musicdata=str_replace('&#128266;</a>','Losslessâ€¦</a>',$musicdata);
-
-
-
-$musicdata=str_replace('cellpadding="2" cellspacing="2"','',$musicdata);
-
-$musicdata= str_replace('AnoeyFuturamerlincom','anoeyfuturamerlincommedium,AnoeyFuturamerlincom',str_replace('<img',' <img',str_replace('src="a/','class="mlefti" src="d/s/music/r/a/',str_replace('href="a/','class="mlefti" href="d/s/music/r/a/',str_replace('href="../','href="d/s/music/',str_replace('href=','target="_blank" href=',str_replace('</h1>','</h2>',str_replace('<h1>','<h2>',$musicdata))))))));
-return $musicdata;
-}
-function e($content,$pageVersionDirect = "")
-{
-    global $websiteName;
-    global $cssFile;
-    global $serverUrl;
-    global $pageClass;
-    if ($pageClass == 'w') {
-        $tbl = '';
-    } else {
-        $tbl = '<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><h1>';
-    }
-    $univNeedles = array('href="' . $serverUrl, "\t", "\n", "\r", "  ", "  ", "  ", "> <", '@p1@', '@p2@', '@p3@', '@p4@', '@cssFile@', '@websiteName@', '@tbl@', '@l@', '@n@', 'https://futuramerlincom.fatcow.com','@greenhead@','@sylfan2@','@bonnou@','@bonnousuper@','@fullmoon@','@yy@','@sumquiaestis@','@128@','@flautrock@','@taito@','@itfaen@','.css";</style></title>');
-
-
-
-    $univHaystacks = array('href="', " ", " ", " ", " ", " ", " ", '><', res('1.d' . $pageVersionDirect), res('2.d' . $pageVersionDirect), res('3.d' . $pageVersionDirect), res('4.d' . $pageVersionDirect), $cssFile, $websiteName, $tbl, '<a href="r.php?', '">', 'http://localhost','<div class="greenpage"></div><div class="fh"><a href="/" id="tl"><i>futuramerlin</i></a></div>',getmusic('sylfan2'),getmusic('bonnou'),getmusic('bonnousuper'),getmusic('fullmoon'),getmusic('yy'),getmusic('sumquiaestis'),getmusic('128'),getmusic('flautrock'),getmusic('taito'),getmusic('itfaen'),'.css";</style>');
-
-
-    echo trim(str_replace("\n",' ',str_replace($univNeedles, $univHaystacks, $content)));
-}
-
-function fv($var)
-{
-    //global $$var;
-    if(isset($_SESSION[$var])) {
-		if ($_SESSION[$var]) {
-			$$var = $_SESSION[$var];
-		} else {
-			$$var = $_REQUEST[$var];
-		}
-	}
-	else {
-	    if(isset($_REQUEST[$var])) {
-			$$var = $_REQUEST[$var];
-		}
-		else {
-			$$var = null;
-		}
-	}
-    return $$var;
-}
-
-// Returns a trunctated version of $str up to $max chars, excluding $trunc.
-//Not written by me.
-// $strict = FALSE will allow longer strings to fit the last word.
-function str_trunc($str, $max, $strict = FALSE, $trunc = '')
-{
-    if (strlen($str) <= $max) {
-        return $str;
-    } else {
-        if ($strict) {
-            return substr($str, 0, strrposlimit($str, ' ', 0, $max + 1)) . $trunc;
-        } else {
-            $strloc = strpos($str, ' ', $max);
-            if (strlen($strloc) != 0) {
-                return substr($str, 0, $strloc) . $trunc;
-            } else {
-                return $str;
-            }
-        }
-    }
-}
-// Works like strrpos, but allows a limit
-//Not written by me.
-function strrposlimit($haystack, $needle, $offset = 0, $limit = NULL)
-{
-    if ($limit === NULL) {
-        return strrpos($haystack, $needle, $offset);
-    } else {
-        $search = substr($haystack, $offset, $limit);
-        return strrpos($search, $needle, 0);
-    }
-}
-//Shorten a string
-function shorten($content)
-{
-    if (strlen($content) > 32) {
-        //trim to 64 but round by words
-        $shortenedstring = str_trunc($content, 32) . itr(1493);
-        global $baggage_claim;
-        $baggage_claim->check_luggage('Shortened', 'true');
-        if (strlen($shortenedstring) > 40) {
-            //trim to 64
-            $shortenedstring = substr($content, 0, 32) . itr(1493);
-        }
-    } else {
-        $shortenedstring = $content;
-        global $baggage_claim;
-        $baggage_claim->check_luggage('Shortened', 'false');
-    }
-    return $shortenedstring;
-}
 ?>
