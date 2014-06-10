@@ -303,8 +303,8 @@ function s512f($file)
 * BEST PRACTICE - Break up operation into more than one statement for ease of development.
 */
 
-// Original Title Case script Â© John Gruber <daringfireball.net>
-// JavaScript port Â© David Gouch <individed.com>
+// Original Title Case script © John Gruber <daringfireball.net>
+// JavaScript port © David Gouch <individed.com>
 // PHP port of the above by Kroc Camen <camendesign.com>
 
 function titleCase ($title) {
@@ -315,7 +315,7 @@ function titleCase ($title) {
     $title = preg_replace ($regx, '', $title);
   
   // Find each word (including punctuation attached).
-    preg_match_all ('/[\w\p{L}&`\'â€˜â€™"â€œ\.@:\/\{\(\[<>_]+-? */u', $title, $m1, PREG_OFFSET_CAPTURE);
+    preg_match_all ('/[\w\p{L}&`\'‘’"“\.@:\/\{\(\[<>_]+-? */u', $title, $m1, PREG_OFFSET_CAPTURE);
     foreach ($m1[0] as &$m2) {
       // Shorthand these- "match" and "index".
         list ($m, $i) = $m2;
@@ -330,7 +330,7 @@ function titleCase ($title) {
         ? // And convert them to lowercase.
           mb_strtolower ($m, 'UTF-8')
         : // Else: brackets and other wrappers.
-          (preg_match ('/[\'"_{(\[â€˜â€œ]/u', mb_substr ($title, max (0, $i-1), 3, 'UTF-8'))
+          (preg_match ('/[\'"_{(\[‘“]/u', mb_substr ($title, max (0, $i-1), 3, 'UTF-8'))
             ? // Convert first letter within wrapper to uppercase.
               mb_substr ($m, 0, 1, 'UTF-8').
               mb_strtoupper (mb_substr ($m, 1, 1, 'UTF-8'), 'UTF-8').
@@ -624,7 +624,7 @@ function store($data) {
 	$csum = new Csum($data);
 	$status = 0;
 	//Why I'm not doing this type of deduplication: It could lead to inaccurate metadata about the coal.
-	//Ya know, screw that. Coal *shouldn't support* file uploads â€”Â that should be handled by higher level software. I'm putting this back in for now, and just remember that the Coal file-level metadata is only an ugly, non-archival-quality, incomplete hack for while Ember doesn't exist yet to take care of that.
+	//Ya know, screw that. Coal *shouldn't support* file uploads — that should be handled by higher level software. I'm putting this back in for now, and just remember that the Coal file-level metadata is only an ugly, non-archival-quality, incomplete hack for while Ember doesn't exist yet to take care of that.
 	$db = new FractureDB('futuqiur_coal');
 	$potentialDuplicates = $db->getColumnsUH('coal2', 'id', 'md5', $csum->md5);
 	foreach ($potentialDuplicates as $potential) {
@@ -650,23 +650,17 @@ function retrieve($id) {
 	return retrieveCoal($id);
 }
 
-function lstore($data,$language,$fallbackLanguage = 0) {
+function lstore($data,$language) {
 	//Store a localizable string.
 	$db = new FractureDB('futuqiur_ember');
 	$store=store($data);
 	$sid = $store['id'];
-	//deduplicate rows here...
-	$test = ltest($language,$sid);
-	if(is_null($test)) {
-		$id = $db->addRow('strings', 'language, data', '\''.$language.'\', \''.$sid.'\'');
-		$store['id'] = $id;
-		return $store;
-	}
-	$store['id'] = $test;
+	$id = $db->addRow('strings', 'language, data', '\''.$language.'\', \''.$sid.'\'');
+	$store['id'] = $id;
 	return $store;
 }
 
-function lget($id,$language,$fallbackLanguage = 0) {
+function lget($id,$language,$fallbackLanguage) {
 	//Retrieve a localizable string.
 	$db = new FractureDB('futuqiur_ember');
 	$ld = getRowDF('strings','id',$id,'language',$language);
@@ -681,15 +675,4 @@ function lget($id,$language,$fallbackLanguage = 0) {
 	}
 	return retrieve($ld['data']);
 }
-
-function ltest($language,$id) {
-	//Test for presence of a localizable string.
-	$db = new FractureDB('futuqiur_ember');
-	$res = getRowDF('strings','language',$language,'data',$id);
-	if(is_null($res)) {
-		return null;
-	}
-	return $res['id'];
-}
-
 ?>
