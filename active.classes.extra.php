@@ -403,7 +403,13 @@ class Csum
 
 function Csum_import($csum) {
 	//(in the classes file since it goes with the Csum class)
-	return unserialize(base64_decode($csum));
+	$try= unserialize(base64_decode($csum));
+	if(is_object($try)) {
+		print_r($try);
+		echo 'FAILED TO IMPART/DECERIALIZE CSUM! IS NOT OJBECT';
+	}
+	return $try;
+	//return unserialize($csum);
 }
 
 include('active.emInterface.php');

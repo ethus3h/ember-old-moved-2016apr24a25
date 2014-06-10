@@ -16,7 +16,7 @@ function convert_binary_raw_to_dc($data)
     $counter = 0;
     $dcb64 = '203';
     while ($counter < strlen($data)) {
-        $dcb64 = $dcb64 . ',' . $Base64_to_Dc[substr($base64, $counter, 1) ];
+        $dcb64 = $dcb64 . ',' . $Base64_to_Dc[substr($data, $counter, 1) ];
         $counter++;
     }
     $dcb64 = $dbc64 . '204';
