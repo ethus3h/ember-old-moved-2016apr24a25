@@ -621,6 +621,7 @@ function status_add($statusA, $statusB) {
 }
 
 function store($data,$csum) {
+	//echo 'store';
 	$status = 0;
 	$csumn = new Csum($data);
 	if(!$csum->matches($csumn)) {
@@ -653,7 +654,8 @@ function retrieve($id) {
 	return retrieveCoal($id);
 }
 
-function lstore($data,$csum,$language,$fallbackLanguage = 0) {
+function lstore($data,$csum,$language,$existing = false,$appString = false) {
+	//echo 'lstore';
 	//Store a localizable string.
 	$db = new FractureDB('futuqiur_ember');
 	$csumn = new Csum($data);
@@ -665,8 +667,19 @@ function lstore($data,$csum,$language,$fallbackLanguage = 0) {
 	//deduplicate rows here...
 	$test = ltest($language,$sid);
 	if(is_null($test)) {
-		$id = $db->addRow('localized', 'language, data', '\''.$language.'\', \''.$sid.'\'');
-		$store['id'] = $id;
+		if($existing) {
+			$lid = $existing;
+		}
+		else {
+			if($appString) {
+				$lid = $db->addRow('localised', 'applicationString', '\'1\'');
+			}
+			else {
+				$lid = $db->addRow('localised', 'applicationString', '\'0\'');
+			}
+		}
+		$id = $db->addRow('localisedmap', 'string, language, data', '\''.$lid.'\', \''.$language.'\', \''.$sid.'\'');
+		$store['id'] = $lid;
 		return $store;
 	}
 	$store['id'] = $test;
@@ -676,12 +689,13 @@ function lstore($data,$csum,$language,$fallbackLanguage = 0) {
 function lget($id,$language,$fallbackLanguage = 0) {
 	//Retrieve a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$ld = $db->getRowDF('localized','id',$id,'language',$language);
+	$lidr = $db->getRow('localised','id',$lid);
+	$ld = $db->getRowDF('localisedmap','string',$lid,'language',$language);
 	if(is_null($ld)) {
-		$ld = getRowDF('localized','id',$id,'language',$fallbackLanguage);
+		$ld = $db->getRowDF('localisedmap','string',$lid,'language',$fallbackLanguage);
 	}
 	if(is_null($ld)) {
-		$ld = getRow('localized','id',$id);
+		$ld = $db->getRow('localisedmap','string',$lid);
 	}
 	if(isset($ld[0])) {
 		return null;
@@ -690,13 +704,14 @@ function lget($id,$language,$fallbackLanguage = 0) {
 }
 
 function ltest($language,$id) {
+	//echo 'ltest';
 	//Test for presence of a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$res = $db->getRowDF('localized','language',$language,'data',$id);
+	$res = $db->getRowDF('localisedmap','language',$language,'data',$id);
 	if(is_null($res)) {
 		return null;
 	}
-	return $res['id'];
+	return $res['string'];
 }
 
 function test($value,$expected,$description = '',$f=false) {
