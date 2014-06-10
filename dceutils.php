@@ -207,7 +207,7 @@ dceutils. Note that  those  versions  probably do not work  as well as
 version 2.4…
 
 ENDOFHELP;
-require ('baggage_claim.php');
+//require ('baggage_claim.php');
 require ('dceutils_config.php');
 require ('dceutils_support.php');
 require ('dceutils_tools.php');

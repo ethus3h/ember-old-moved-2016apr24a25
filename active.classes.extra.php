@@ -214,23 +214,23 @@ class Discography
 }
 
 //baggage_claim is a hacky utility class for transferring data from one part of a script to another without worrying about variable scope
-class baggage_claim
-{
-    public $temp_temp_table;
-    public $tableid;
-    public $table;
-    public $next;
-    function check_luggage($variable, $new_content)
-    {
-        $this->$variable = $new_content;
-    }
-    function claim_luggage($variable)
-    {
-        return $this->$variable;
-    }
-}
-global $baggage_claim;
-$baggage_claim = new baggage_claim;
+// class baggage_claim
+// {
+//     public $temp_temp_table;
+//     public $tableid;
+//     public $table;
+//     public $next;
+//     function check_luggage($variable, $new_content)
+//     {
+//         $this->$variable = $new_content;
+//     }
+//     function claim_luggage($variable)
+//     {
+//         return $this->$variable;
+//     }
+// }
+// global $baggage_claim;
+// $baggage_claim = new baggage_claim;
 
 
 class cCoal
