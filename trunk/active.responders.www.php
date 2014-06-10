@@ -164,7 +164,7 @@ which for some reason italicization would be undesirable.</li>
   <li>This list uses Unicode to display its content, and assumes that
 support for its characters is fairly complete in your computer.</li>
   <li>This list assumes the presence of the following specialty
-typefaces in your computer for displaying text in Anoé (<small><span style="font-family: AnoeyFuturamerlincom;">anoé</span></small>/<small><small><small><span style="font-family: AnoeyTuinelanFuturamerlincom;">anoé</span></small></small></small>)
+typefaces in your computer for displaying text in AnoÃ© (<small><span style="font-family: AnoeyFuturamerlincom;">anoÃ©</span></small>/<small><small><small><span style="font-family: AnoeyTuinelanFuturamerlincom;">anoÃ©</span></small></small></small>)
 and Japanese, and for displaying other unusual characters:</li>
   <ul>
     <li><a href="http://futuramerlin.com/d/s/typefaces/AnoeyFuturamerlincom2.61.ttf">AnoeyFuturamerlincom</a>
@@ -175,7 +175,7 @@ and Japanese, and for displaying other unusual characters:</li>
   </ul>
   <li>In addition, the following Wreathe typeface family might be
 useful, with the&nbsp; useful components in bold (the rest are provided
-for completeness) — using these typefaces will provide rudimentary
+for completeness) â€” using these typefaces will provide rudimentary
 support for all of Unicode with the exceptions of Kaithi, Sora Sompeng,
 Chakma, Sharada, Miao, and mathematical symbols for Arabic:</li>
   <ul>
@@ -212,7 +212,7 @@ Han B JP</a> (version 1.0 provided) (a Han Unicode typeface)</li>
   <li>Many of the computer files provided herein are in proprietary
 formats that
 may prove challenging to open. At some point I plan to provide all the
-files reëncoded using the Free Lossless Audio Codec, but I have not yet
+files reÃ«ncoded using the Free Lossless Audio Codec, but I have not yet
 done that.</li>
   <li>The years of composition on some of the track listings shown in
 the artwork are often approximate.</li>
@@ -235,59 +235,59 @@ numbering system, designed to not conflict with either earlier system. <br>
   <ol>
     <li>Availability:</li>
     <ol>
-      <li>✓ = This release is now available</li>
+      <li>âœ“ = This release is now available</li>
     </ol>
     <li>Audio:</li>
     <ol>
-      <li>(👂) = lossy, low quality, or partial CD/DVD/cassette
+      <li>(ðŸ‘‚) = lossy, low quality, or partial CD/DVD/cassette
 rips or audio files provided<br>
       </li>
-      <li>👂 = complete lossless audio or archival quality
+      <li>ðŸ‘‚ = complete lossless audio or archival quality
 CD/DVD/cassette rips
 provided</li>
     </ol>
     <li>Source audio files:</li>
     <ol>
-      <li>(🎧) = low quality or partial source audio files provided</li>
-      <li>🎧 = complete source audio files provided<br>
+      <li>(ðŸŽ§) = low quality or partial source audio files provided</li>
+      <li>ðŸŽ§ = complete source audio files provided<br>
       </li>
     </ol>
     <li>Artwork:</li>
     <ol>
-      <li>(👁) =
+      <li>(ðŸ‘) =
 lossy, poor-quality, or partial artwork provided</li>
-      <li> 👁 =
+      <li> ðŸ‘ =
 complete lossless artwork provided (including, for digital media, any
 artwork embedded in the release data)<br>
       </li>
     </ol>
     <li>Artwork scans:</li>
     <ol>
-      <li>(📷) = lossy, low quality, or partial artwork scans provided</li>
-      <li>📷 = complete archival quality artwork scans provided</li>
+      <li>(ðŸ“·) = lossy, low quality, or partial artwork scans provided</li>
+      <li>ðŸ“· = complete archival quality artwork scans provided</li>
     </ol>
     <li>Source artwork files:</li>
     <ol>
-      <li>(📄) = low quality or partial source artwork files provided</li>
-      <li>📄 = complete source artwork files (including media artwork
+      <li>(ðŸ“„) = low quality or partial source artwork files provided</li>
+      <li>ðŸ“„ = complete source artwork files (including media artwork
 source files) provided</li>
     </ol>
     <li>Media images:</li>
     <ol>
-      <li>(💿) = lossy, low quality, or partial media images (scans or
+      <li>(ðŸ’¿) = lossy, low quality, or partial media images (scans or
 photographs) provided</li>
-      <li>💿 = complete archival quality media images (scans or
+      <li>ðŸ’¿ = complete archival quality media images (scans or
 photographs) provided</li>
     </ol>
     <li>Video:</li>
     <ol>
-      <li>(🎥) = lossy, low quality, or partial video files provided</li>
-      <li>🎥 = complete archival quality video files provided</li>
+      <li>(ðŸŽ¥) = lossy, low quality, or partial video files provided</li>
+      <li>ðŸŽ¥ = complete archival quality video files provided</li>
     </ol>
     <li>Source video files:</li>
     <ol>
-      <li>(🎬) = low quality or partial source video files provided</li>
-      <li>🎬 = complete archival quality source video files provided</li>
+      <li>(ðŸŽ¬) = low quality or partial source video files provided</li>
+      <li>ðŸŽ¬ = complete archival quality source video files provided</li>
     </ol>
     <li>ZIP files</li>
     <ol>
@@ -304,7 +304,7 @@ originally released as ZIP files)</li>
 
 <br>
 
-͠
+Í 
 <br>
 EOD;
 		$main->append($intro);
@@ -602,33 +602,5 @@ function PhpinfoWint()
     else {
         header("HTTP/1.0 403 Forbidden");
     }
-}
-function emberPlainWint()
-{
-	global $l;
-	$l = new llog;
-	$ember = new emInterface();
-	$ember->display();
-}
-function emberTestWint()
-{
-	global $l;
-	$l = new llog;
-	echo '<html><head><title>Ember test suite</title></head><body>';
-	$ember = new emInterface();
-// 	$pres = array( 'id' => '3', 'csum' => 'Tzo0OiJDc3VtIjo0OntzOjM6ImxlbiI7aTo0O3M6MzoibWQ1IjtzOjMyOiJiNGY5NDU0MzNlYTRjMzY5YzEyNzQxZjYyYTIzY2NjMCI7czozOiJzaGEiO3M6NDA6ImZlMDQ2YTQwODY4OWQwNzA2NmQ1N2VmOTU4YWQ5MGQ4YzMyZjcwMTMiO3M6NDoiczUxMiI7czoxMjg6Ijk0ZGNmOTVhZWNhODBmYmUzZDZmMzQxYzAyY2UzNzg5ZmNkNmNhOGVmNTBkZTliNWM2MTM4YjhmYjg5NTVkNjJhYWEyMjVhODAyODk2MzkwOTU5ZWQxNjg4MTQwMzdhYTEwYTNhMzYxYjVhNTg0NDgxZTI0N2E5MGZiNjIwZTg5Ijt9', 'status' => 0);
-// 	test($ember->store('doom',new Csum('doom')),$pres,'Store');
-// 	//print_r($ember->retrieve(3));
-// 	$prer = array ( 'data' => 'doom', 'csum' => 'Tzo0OiJDc3VtIjo0OntzOjM6ImxlbiI7aTo0O3M6MzoibWQ1IjtzOjMyOiJiNGY5NDU0MzNlYTRjMzY5YzEyNzQxZjYyYTIzY2NjMCI7czozOiJzaGEiO3M6NDA6ImZlMDQ2YTQwODY4OWQwNzA2NmQ1N2VmOTU4YWQ5MGQ4YzMyZjcwMTMiO3M6NDoiczUxMiI7czoxMjg6Ijk0ZGNmOTVhZWNhODBmYmUzZDZmMzQxYzAyY2UzNzg5ZmNkNmNhOGVmNTBkZTliNWM2MTM4YjhmYjg5NTVkNjJhYWEyMjVhODAyODk2MzkwOTU5ZWQxNjg4MTQwMzdhYTEwYTNhMzYxYjVhNTg0NDgxZTI0N2E5MGZiNjIwZTg5Ijt9','filename'=>'coal_temp/5393f4ff63987.cstf','status' => 0 );
-// 	test($ember->store('doom',null),null,'Store with null csum');
-//  test($ember->retrieve(3),$prer,'Retrieve');
-//  //print_r($ember->lstore('doom',new Csum('doom'),0));
-//  $prel = array ( 'id' => '2', 'csum' => 'Tzo0OiJDc3VtIjo0OntzOjM6ImxlbiI7aTo0O3M6MzoibWQ1IjtzOjMyOiJiNGY5NDU0MzNlYTRjMzY5YzEyNzQxZjYyYTIzY2NjMCI7czozOiJzaGEiO3M6NDA6ImZlMDQ2YTQwODY4OWQwNzA2NmQ1N2VmOTU4YWQ5MGQ4YzMyZjcwMTMiO3M6NDoiczUxMiI7czoxMjg6Ijk0ZGNmOTVhZWNhODBmYmUzZDZmMzQxYzAyY2UzNzg5ZmNkNmNhOGVmNTBkZTliNWM2MTM4YjhmYjg5NTVkNjJhYWEyMjVhODAyODk2MzkwOTU5ZWQxNjg4MTQwMzdhYTEwYTNhMzYxYjVhNTg0NDgxZTI0N2E5MGZiNjIwZTg5Ijt9','status' => 0 );
-//  test($ember->lstore('doom',new Csum('doom'),0),$prel,'Lstore');
-//  test($ember->lstore('doom',null,0),null,'Lstore with null csum');
-//  test($ember->lretrieve(2,0),$prer,'Lretrieve');
-  	test($ember->adduser('test','fracture'),false,'Add user');
-  	test($ember->ui('home',array()),array('title'=>null,'body'=>'Welcome to Ember'),'Ember home page');
-	echo '</body></html>';
 }
 ?>
