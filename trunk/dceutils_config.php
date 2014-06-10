@@ -23,8 +23,21 @@ $serverprefix='http://127.0.0.1/dceutils/';
 //Dceutils version
 $dceutilsversion='EmberEmbedded';
 //##############################################################################
-// $baggage_claim = new baggage_claim();
+class baggage_claime
+{
+    public $serverprefix;
+    public $dceutilsversion;
+    function check_luggage($variable, $new_content)
+    {
+        $this->$variable = $new_content;
+    }
+    function claim_luggage($variable)
+    {
+        return $this->$variable;
+    }
+}
 global $baggage_claim;
+$baggage_claim = new baggage_claime;
 global $serverprefix;
 global $dceutilsversion;
 $baggage_claim->check_luggage('serverprefix', $serverprefix);

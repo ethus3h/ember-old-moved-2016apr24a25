@@ -279,6 +279,7 @@ function retrieveChunk($id)
 			}
 			$data = substr(strstr($rawData,'@CoalFragmentMarker@'),20);
 			$retr_csum = new Csum($data);
+			print_r($details);
 			$csum = Csum_import($details['csum']);
 			if(!matches($csum,$retr_csum)) {
 				$status=52;

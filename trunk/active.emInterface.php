@@ -209,6 +209,7 @@ class emInterface
     }
     
     function runTests() {
+    	$this->title = 'Welcome to Ember.';
     	$this->append('<p><br>');
 // 		$pres = array( 'id' => '3', 'csum' => 'Tzo0OiJDc3VtIjo0OntzOjM6ImxlbiI7aTo0O3M6MzoibWQ1IjtzOjMyOiJiNGY5NDU0MzNlYTRjMzY5YzEyNzQxZjYyYTIzY2NjMCI7czozOiJzaGEiO3M6NDA6ImZlMDQ2YTQwODY4OWQwNzA2NmQ1N2VmOTU4YWQ5MGQ4YzMyZjcwMTMiO3M6NDoiczUxMiI7czoxMjg6Ijk0ZGNmOTVhZWNhODBmYmUzZDZmMzQxYzAyY2UzNzg5ZmNkNmNhOGVmNTBkZTliNWM2MTM4YjhmYjg5NTVkNjJhYWEyMjVhODAyODk2MzkwOTU5ZWQxNjg4MTQwMzdhYTEwYTNhMzYxYjVhNTg0NDgxZTI0N2E5MGZiNjIwZTg5Ijt9', 'status' => 0);
 // 		$this->test($this->store('doom',new Csum('doom')),$pres,'Store');
@@ -222,7 +223,7 @@ class emInterface
 // 		$this->test($this->adduser('test','fracture'),false,'Add user');
 //  		$this->test($this->ui_logo_fragment(),'<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><table border="0" width="100%"><tbody><tr><td style="vertical-align:top"><a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=home&locale=0"><img src="d/w.png" alt="Ember" width="132" height="57" border="0"></a>&nbsp;&nbsp;(not logged in)&nbsp;&nbsp;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=3&recordId=&locale=0">Log in…</a>&#32;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=4&locale=0">New user…</a>&#32;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=11&locale=0">Operation index… </a>','UI logo fragment');
 //  		$this->test($this->ui_breadcrumb_fragment(),'<br><small><a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=1&locale=0">Ember</a> &#x02192; <a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=runTests&locale=0">runTests</a></td></tr></tbody></table><h1>','UI breadcrumb fragment');
- 		$this->test($this->cstore('test'),'','cstore');
+ 		$this->test($this->cstore('test',new Csum('test')),'','cstore');
  		$this->test($this->cretrieve('test'),'','cretrieve');
     	$this->append('</p>');
     }
