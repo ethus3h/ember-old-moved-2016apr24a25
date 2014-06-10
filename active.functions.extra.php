@@ -279,7 +279,6 @@ function retrieveChunk($id)
 			}
 			$data = substr(strstr($rawData,'@CoalFragmentMarker@'),20);
 			$retr_csum = new Csum($data);
-			print_r($details);
 			$csum = Csum_import($details['csum']);
 			if(!matches($csum,$retr_csum)) {
 				$status=52;
@@ -289,7 +288,7 @@ function retrieveChunk($id)
 		$db->close();
 	}
 	$l->a("Finished retrieveChunk<br>");
-	//TODO: $csum->export() — why isn't this working?!
+	//TODO: $csum->export() â€” why isn't this working?!
 	return array('status'=>$status,'data'=>$data,'csum'=>$csume,'details'=>$details);
 }
 
@@ -349,7 +348,7 @@ function retrieveCoal($id)
 		$filename = base64_decode($details['ulfilename']);
 	}
 	$l->a("Finished retrieveCoal<br>");
-	//TODO: $csum->export() — why isn't this working?!
+	//TODO: $csum->export() â€” why isn't this working?!
 	return array('data'=>$data,'csum'=>$csum->export(),'filename'=>$filename,'status'=>$status);
 }
 

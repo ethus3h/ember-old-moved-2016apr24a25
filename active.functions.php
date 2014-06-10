@@ -303,8 +303,8 @@ function s512f($file)
 * BEST PRACTICE - Break up operation into more than one statement for ease of development.
 */
 
-// Original Title Case script © John Gruber <daringfireball.net>
-// JavaScript port © David Gouch <individed.com>
+// Original Title Case script Â© John Gruber <daringfireball.net>
+// JavaScript port Â© David Gouch <individed.com>
 // PHP port of the above by Kroc Camen <camendesign.com>
 
 function titleCase ($title) {
@@ -315,7 +315,7 @@ function titleCase ($title) {
     $title = preg_replace ($regx, '', $title);
   
   // Find each word (including punctuation attached).
-    preg_match_all ('/[\w\p{L}&`\'‘’"“\.@:\/\{\(\[<>_]+-? */u', $title, $m1, PREG_OFFSET_CAPTURE);
+    preg_match_all ('/[\w\p{L}&`\'â€˜â€™"â€œ\.@:\/\{\(\[<>_]+-? */u', $title, $m1, PREG_OFFSET_CAPTURE);
     foreach ($m1[0] as &$m2) {
       // Shorthand these- "match" and "index".
         list ($m, $i) = $m2;
@@ -330,7 +330,7 @@ function titleCase ($title) {
         ? // And convert them to lowercase.
           mb_strtolower ($m, 'UTF-8')
         : // Else: brackets and other wrappers.
-          (preg_match ('/[\'"_{(\[‘“]/u', mb_substr ($title, max (0, $i-1), 3, 'UTF-8'))
+          (preg_match ('/[\'"_{(\[â€˜â€œ]/u', mb_substr ($title, max (0, $i-1), 3, 'UTF-8'))
             ? // Convert first letter within wrapper to uppercase.
               mb_substr ($m, 0, 1, 'UTF-8').
               mb_strtoupper (mb_substr ($m, 1, 1, 'UTF-8'), 'UTF-8').
@@ -621,14 +621,13 @@ function status_add($statusA, $statusB) {
 }
 
 function store($data,$csum) {
-	//echo 'store';
 	$status = 0;
 	$csumn = new Csum($data);
 	if(!$csum->matches($csumn)) {
 		return null;
 	}
 	//Why I'm not doing this type of deduplication: It could lead to inaccurate metadata about the coal.
-	//Ya know, screw that. Coal *shouldn't support* file uploads — that should be handled by higher level software. I'm putting this back in for now, and just remember that the Coal file-level metadata is only an ugly, non-archival-quality, incomplete hack for while Ember doesn't exist yet to take care of that.
+	//Ya know, screw that. Coal *shouldn't support* file uploads â€”Â that should be handled by higher level software. I'm putting this back in for now, and just remember that the Coal file-level metadata is only an ugly, non-archival-quality, incomplete hack for while Ember doesn't exist yet to take care of that.
 	$db = new FractureDB('futuqiur_ember');
 	$potentialDuplicates = $db->getColumnsUH('strings', 'id', 'md5', $csum->md5);
 	foreach ($potentialDuplicates as $potential) {
@@ -654,8 +653,7 @@ function retrieve($id) {
 	return retrieveCoal($id);
 }
 
-function lstore($data,$csum,$language,$existing = false,$appString = false) {
-	//echo 'lstore';
+function lstore($data,$csum,$language,$fallbackLanguage = 0) {
 	//Store a localizable string.
 	$db = new FractureDB('futuqiur_ember');
 	$csumn = new Csum($data);
@@ -667,19 +665,8 @@ function lstore($data,$csum,$language,$existing = false,$appString = false) {
 	//deduplicate rows here...
 	$test = ltest($language,$sid);
 	if(is_null($test)) {
-		if($existing) {
-			$lid = $existing;
-		}
-		else {
-			if($appString) {
-				$lid = $db->addRow('localised', 'applicationString', '\'1\'');
-			}
-			else {
-				$lid = $db->addRow('localised', 'applicationString', '\'0\'');
-			}
-		}
-		$id = $db->addRow('localisedmap', 'string, language, data', '\''.$lid.'\', \''.$language.'\', \''.$sid.'\'');
-		$store['id'] = $lid;
+		$id = $db->addRow('localized', 'language, data', '\''.$language.'\', \''.$sid.'\'');
+		$store['id'] = $id;
 		return $store;
 	}
 	$store['id'] = $test;
@@ -689,13 +676,12 @@ function lstore($data,$csum,$language,$existing = false,$appString = false) {
 function lget($id,$language,$fallbackLanguage = 0) {
 	//Retrieve a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$lidr = $db->getRow('localised','id',$lid);
-	$ld = $db->getRowDF('localisedmap','string',$lid,'language',$language);
+	$ld = $db->getRowDF('localized','id',$id,'language',$language);
 	if(is_null($ld)) {
-		$ld = $db->getRowDF('localisedmap','string',$lid,'language',$fallbackLanguage);
+		$ld = getRowDF('localized','id',$id,'language',$fallbackLanguage);
 	}
 	if(is_null($ld)) {
-		$ld = $db->getRow('localisedmap','string',$lid);
+		$ld = getRow('localized','id',$id);
 	}
 	if(isset($ld[0])) {
 		return null;
@@ -704,14 +690,13 @@ function lget($id,$language,$fallbackLanguage = 0) {
 }
 
 function ltest($language,$id) {
-	//echo 'ltest';
 	//Test for presence of a localizable string.
 	$db = new FractureDB('futuqiur_ember');
-	$res = $db->getRowDF('localisedmap','language',$language,'data',$id);
+	$res = $db->getRowDF('localized','language',$language,'data',$id);
 	if(is_null($res)) {
 		return null;
 	}
-	return $res['string'];
+	return $res['id'];
 }
 
 function test($value,$expected,$description = '',$f=false) {
@@ -779,7 +764,7 @@ $musicdata = preg_replace("/<title(.*)<\/title>/iUs", "", $musicdata);
 //$musicdata = preg_replace('/<a target="_blank" href="http:\/\/archive.org\/download\/(.*)"flac">&#128266;<\/a>/', '<a target="_blank" href="http://archive.org/download/' . '$1' . 'mp3">&#128266;</a>', $musicdata);
 
 $musicdata = preg_replace('/<a href="http:\/\/archive.org\/download\/(.*)\/(.*).flac">/', '<audio src="http://archive.org/download/$1/$2.mp3" preload="none" class="audioplayer">Could not start audio player. Does your browser support it?</audio><a href="http://archive.org/download/$1/$2.flac">', $musicdata);
-$musicdata=str_replace('&#128266;</a>','Lossless…</a>',$musicdata);
+$musicdata=str_replace('&#128266;</a>','Losslessâ€¦</a>',$musicdata);
 
 
 
