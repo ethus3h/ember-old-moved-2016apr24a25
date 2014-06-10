@@ -11,6 +11,7 @@ function convert_cdce_to_dc($data)
 
 function convert_binary_raw_to_dc($data)
 {
+	$data = base64_encode($data);
     global $Base64_to_Dc;
     $counter = 0;
     $dcb64 = '203';

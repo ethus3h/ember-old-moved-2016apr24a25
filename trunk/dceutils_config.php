@@ -4,10 +4,10 @@
 if(isset($_REQUEST['silenti'])|isset($_REQUEST['tools'])){$help=false;$debug=false;}else{
 //BASIC SETTINGS:
 //Show help?
-$help = true;
+$help = false;
 //
 //Show error messages? (Overridden by $debug.)
-$errors = true;}
+$errors = false;}
 //
 //TECHNICAL SETTINGS:
 //
@@ -21,8 +21,9 @@ $tests = false;
 $serverprefix='http://127.0.0.1/dceutils/';
 
 //Dceutils version
-$dceutilsversion='2.6';
+$dceutilsversion='EmberEmbedded';
 //##############################################################################
+// $baggage_claim = new baggage_claim();
 global $baggage_claim;
 global $serverprefix;
 global $dceutilsversion;

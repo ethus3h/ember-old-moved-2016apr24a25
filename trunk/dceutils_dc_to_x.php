@@ -180,5 +180,5 @@ function convert_dc_to_binary_raw($data)
 		$dcb64 = $dcb64 . $Dc_to_Base64[$dcarray[$counter]];
 		$counter++;
 	}
-    return $dcb64;
+    return base64_decode($dcb64);
 }

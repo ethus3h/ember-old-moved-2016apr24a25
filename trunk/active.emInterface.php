@@ -77,6 +77,10 @@ class emInterface
     	return retrieveCoal($id);
     }
     
+    function cretrieve($id) {
+    	return dce_convert(retrieveCoal($id),'3_03a','binary_raw');
+    }
+
     function api() {
     	ob_start();
     	$this->display();
@@ -216,8 +220,10 @@ class emInterface
 // 		$this->test($this->lstore('doom',null,0),null,'Lstore with null csum');
 // 		$this->test($this->lretrieve(2,0),$prer,'Lretrieve');
 // 		$this->test($this->adduser('test','fracture'),false,'Add user');
- 		$this->test($this->ui_logo_fragment(),'<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><table border="0" width="100%"><tbody><tr><td style="vertical-align:top"><a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=home&locale=0"><img src="d/w.png" alt="Ember" width="132" height="57" border="0"></a>&nbsp;&nbsp;(not logged in)&nbsp;&nbsp;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=3&recordId=&locale=0">Log in…</a>&#32;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=4&locale=0">New user…</a>&#32;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=11&locale=0">Operation index… </a>','UI logo fragment');
- 		$this->test($this->ui_breadcrumb_fragment(),'<br><small><a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=1&locale=0">Ember</a> &#x02192; <a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=runTests&locale=0">runTests</a></td></tr></tbody></table><h1>','UI breadcrumb fragment');
+//  		$this->test($this->ui_logo_fragment(),'<table border="0" cellpadding="24" width="100%"><tbody><tr><td><br><table border="0" width="100%"><tbody><tr><td style="vertical-align:top"><a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=home&locale=0"><img src="d/w.png" alt="Ember" width="132" height="57" border="0"></a>&nbsp;&nbsp;(not logged in)&nbsp;&nbsp;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=3&recordId=&locale=0">Log in…</a>&#32;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=4&locale=0">New user…</a>&#32;<a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=11&locale=0">Operation index… </a>','UI logo fragment');
+//  		$this->test($this->ui_breadcrumb_fragment(),'<br><small><a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=1&locale=0">Ember</a> &#x02192; <a href="ember.php?wintNeeded=emberWebView&wint=1&emAction=runTests&locale=0">runTests</a></td></tr></tbody></table><h1>','UI breadcrumb fragment');
+ 		$this->test($this->cstore('test'),'','cstore');
+ 		$this->test($this->cretrieve('test'),'','cretrieve');
     	$this->append('</p>');
     }
     
