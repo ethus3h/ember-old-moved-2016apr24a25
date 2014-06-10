@@ -216,7 +216,7 @@ function arcmaj3_handler()
             $db->setField('am_barrels', 'status', 1, $barrelId);
             $db->close();
             if (count($barrelData) < 2) {
-                echo 'Barrel upload failed. Expiring barrel ' . $barrelId . 'Ã¢â‚¬Â¦';
+                echo 'Barrel upload failed. Expiring barrel ' . $barrelId . 'â€¦';
                 #The barrel data array should always have at least two things in it, I'm saying. Could be a one-URL barrel I suppose, but even that should get listed twice (once for Wget, once for Heritrix)
                 arcmaj3_barrel_expire($barrelId);
                 echo 'Expired barrel ' . $barrelId . '.';

@@ -288,7 +288,7 @@ function retrieveChunk($id)
 		$db->close();
 	}
 	$l->a("Finished retrieveChunk<br>");
-	//TODO: $csum->export() â€” why isn't this working?!
+	//TODO: $csum->export() — why isn't this working?!
 	return array('status'=>$status,'data'=>$data,'csum'=>$csume,'details'=>$details);
 }
 
@@ -348,7 +348,7 @@ function retrieveCoal($id)
 		$filename = base64_decode($details['ulfilename']);
 	}
 	$l->a("Finished retrieveCoal<br>");
-	//TODO: $csum->export() â€” why isn't this working?!
+	//TODO: $csum->export() — why isn't this working?!
 	return array('data'=>$data,'csum'=>$csum->export(),'filename'=>$filename,'status'=>$status);
 }
 
