@@ -450,9 +450,9 @@ function DataRetrieveHandler()
 		$l->a("Started DataRetrieveHandler<br>");
 		$status = 0;
 		$insertion = retrieve($_REQUEST['id']);
-		$id = $insertion['id'];
+		//print_r($insertion);
 		$status = $insertion['status'];
-		$csum = $insertion['csum'];
+		$csum = Csum_import($insertion['csum']);
 		if(check($status,true)) {
 			echo $csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512.'|'.$insertion['data'];
 		}
