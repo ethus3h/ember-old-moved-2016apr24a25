@@ -394,6 +394,23 @@ function coaltestupload()
 enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="coalVerbose" value="1" /><input type="hidden" name="handlerNeeded" value="CoalIntake" /><br /><input type="submit" value="Upload File" /></form></body></html>';
 	}
 }
+function storetestupload()
+{
+    $authorizationKey = $_REQUEST['authorizationKey'];
+    global $generalAuthKey;
+    if($authorizationKey == $generalAuthKey) {
+    	echo '<html><head><title>Test data upload form</title></head><body><form action="active.php" method="post"
+enctype="multipart/form-data"><input name="uploadedfile" type="file" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="handlerNeeded" value="DataIntake" /><br /><input type="submit" value="Upload File" /></form></body></html>';
+	}
+}
+function storetestdownload()
+{
+    $authorizationKey = $_REQUEST['authorizationKey'];
+    global $generalAuthKey;
+    if($authorizationKey == $generalAuthKey) {
+    	echo '<html><head><title>Test data download form</title></head><body><form action="active.php" method="get"><input name="id" type="text" /><input type="hidden" name="authorizationKey" value="'.$generalAuthKey.'" /><input type="hidden" name="handler" value="1" /><input type="hidden" name="handlerNeeded" value="DataRetrieve" /><br /><input type="submit" value="Download File" /></form></body></html>';
+	}
+}
 function coalplistupload()
 {
     $authorizationKey = $_REQUEST['authorizationKey'];

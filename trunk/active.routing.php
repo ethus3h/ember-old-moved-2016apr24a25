@@ -29,6 +29,12 @@ function runHandlers($handlerNeeded)
     if ($handlerNeeded == 'CoalChunkRetrieve') {
         CoalChunkRetrieveHandler();
     }
+    if ($handlerNeeded == 'DataIntake') {
+        DataIntakeHandler();
+    }
+    if ($handlerNeeded == 'DataRetrieve') {
+        DataRetrieveHandler();
+    }
 }
 
 function runWints($wintNeeded)
@@ -81,6 +87,12 @@ function runWints($wintNeeded)
     }
     if ($wintNeeded == 'coalplistupload') {
         coalplistupload();
+    }
+    if ($wintNeeded == 'storetestupload') {
+        storetestupload();
+    }
+    if ($wintNeeded == 'storetestdownload') {
+        storetestdownload();
     }
 }
 

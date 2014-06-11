@@ -620,13 +620,16 @@ function status_add($statusA, $statusB) {
 	return $statusA;
 }
 
-function store($data) {
+function store($data,$csumb) {
 	$csum = new Csum($data);
+	if(!$csum->matches($csumb)) {
+		return null;
+	}
 	$status = 0;
 	//Why I'm not doing this type of deduplication: It could lead to inaccurate metadata about the coal.
 	//Ya know, screw that. Coal *shouldn't support* file uploads — that should be handled by higher level software. I'm putting this back in for now, and just remember that the Coal file-level metadata is only an ugly, non-archival-quality, incomplete hack for while Ember doesn't exist yet to take care of that.
-	$db = new FractureDB('futuqiur_coal');
-	$potentialDuplicates = $db->getColumnsUH('coal2', 'id', 'md5', $csum->md5);
+	$db = new FractureDB('futuqiur_ember');
+	$potentialDuplicates = $db->getColumnsUH('strings', 'id', 'md5', $csum->md5);
 	foreach ($potentialDuplicates as $potential) {
 		echo 'duplicate testing';
 		$potentialRecord = retrieveCoal($potential['id']);

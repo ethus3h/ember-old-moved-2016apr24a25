@@ -188,8 +188,8 @@ function insertChunk($data,$csum) {
 		$status = 8;
 	}
 	else {
-		$db = new FractureDB('futuqiur_coalchunks');
-		$potentialDuplicates = $db->getColumnsUH('chunk2', 'id', 'md5', $csum->md5);
+		$db = new FractureDB('futuqiur_emberchunks');
+		$potentialDuplicates = $db->getColumnsUH('chunks', 'id', 'md5', $csum->md5);
 		foreach ($potentialDuplicates as $potential) {
 			$potentialRecord = retrieveChunk($potential['id']);
 			if(!is_null($potentialRecord)) {
@@ -211,7 +211,7 @@ function insertChunk($data,$csum) {
 		if(mc_decrypt($prepared_data,$chunkMasterKey) != $data) {
 			$status = 53;
 		}
-		$id = $db->addRow('chunk2', 'md5', 'UNHEX(\''.$csum->md5.'\')');
+		$id = $db->addRow('chunks', 'md5', 'UNHEX(\''.$csum->md5.'\')');
 		$identifierId = $id / 1000;
 		$randomInt = rand(0,10000);
 		$randomIntAlt = rand(0,10000);
@@ -224,10 +224,10 @@ function insertChunk($data,$csum) {
 		$upload = @ia_upload($prepared_data,$identifier,$fallbackid,$filename,$iaAuthKey,$iaPrivateKey);
 		if($upload != 0) {
 			$status = 54;
-			$db->dropRow('chunk2',$id);
+			$db->dropRow('chunks',$id);
 		}
 		else {
-			$db->setField('chunk2','address',$address,$id);
+			$db->setField('chunks','address',$address,$id);
 		}
 		$db->close();
  	}
@@ -248,8 +248,8 @@ function retrieveChunk($id)
 		$details = null;
 	}
 	else {
-		$db = new FractureDB('futuqiur_coalchunks');
-		$info = $db->getRow('chunk2', 'id', $id);
+		$db = new FractureDB('futuqiur_emberchunks');
+		$info = $db->getRow('chunks', 'id', $id);
 		//print_r($info);
 		if(isset($info[0])) {
 			//Row is empty
@@ -296,8 +296,8 @@ function retrieveCoal($id)
 {
 	global $l;
 	$l->a("Started retrieveCoal<br>");
-	$db = new FractureDB('futuqiur_coal');
-	$coalInfo = $db->getRow('coal2', 'id', $id);
+	$db = new FractureDB('futuqiur_ember');
+	$coalInfo = $db->getRow('strings', 'id', $id);
 	$detailsChunkId = $coalInfo['chunk'];
 	$coalmd5 = $coalInfo['md5'];
 	$detailsChunk = retrieveChunk($detailsChunkId);
@@ -455,7 +455,7 @@ function checkCoal($id) {
 }
 
 function insertCoal($file = null, $csump = null) {
-	$db = new FractureDB('futuqiur_coal');
+	$db = new FractureDB('futuqiur_ember');
 	global $l;
 	$l->a("Started insertCoal<br>");
 	$status = 0;
@@ -483,7 +483,7 @@ function insertCoal($file = null, $csump = null) {
 	$status=status_add($status,$chunkInfo['status']);
 	if(check($status,true)) {
 		$chunkId = $chunkInfo['id'];
-		$id = $db->addRow('coal2', 'chunk, md5', '\''.$chunkId.'\', UNHEX(\''.$detailsCsum->md5.'\')');
+		$id = $db->addRow('strings', 'chunk, md5', '\''.$chunkId.'\', UNHEX(\''.$detailsCsum->md5.'\')');
 		sleep(3);
 		if(checkCoal($id)) {
 			if(!is_null($file)) {
@@ -495,7 +495,7 @@ function insertCoal($file = null, $csump = null) {
 		}
 	}
 	$db->close();
-	return array('id'=>$id,'csum'=>$details['csum'],'status'=>$status);
+	return array('id'=>$id,'csum'=>$details['csum'],'filename'=>$details['filename'],'status'=>$status);
 }
 
 // function coalQueue($file,$csump) {
@@ -508,8 +508,8 @@ function insertCoal($file = null, $csump = null) {
 // 	}
 // 	else {
 // 		$csum = $csumr->export();
-// 		$db = new FractureDB('futuqiur_coal');
-// 		$id = $db->addRow('coal2', '', '');
+// 		$db = new FractureDB('futuqiur_ember');
+// 		$id = $db->addRow('strings', '', '');
 // 		$db->addRow('scrub', 'file, csum', '\''.$file.'\', \''.$csum.'\'');
 // 	}
 // 	return array('id'=>$id,'csum'=>$csum,'status'=>$status);
