@@ -377,11 +377,10 @@ function CoalIntakeHandler()
     	$insertion = insertCoal();
     	//echo 'INSERTION: '. print_r($insertion,true);
     	$id = $insertion['id'];
-    	$details = $insertion['details'];
     	$status = $insertion['status'];
     	if(check($status,true)) {
 			if(isset($_REQUEST['outputwebloc'])) {
-				$filename=base64_decode($details['filename']);
+				$filename=base64_decode($insertion['filename']);
 				$smallified="[InternetShortcut]\nURL=http://futuramerlin.com/d/r/active.php?coalId=".$id."&authorizationKey=".urlencode($generalAuthKey)."&handler=1&coalVerbose=1&handlerNeeded=CoalRetrieve\nIconIndex=0";
 				start_file_download($filename,strlen($smallified));
 				echo $smallified;
@@ -391,7 +390,7 @@ function CoalIntakeHandler()
 					if(isset($_REQUEST['coalVerbose'])) {
 						echo 'Added coal: ';
 					}
-					$csum = Csum_import($details['csum']);
+					$csum = Csum_import($insertion['csum']);
 					//echo 'CSUM: '.print_r($csum,true);
 					echo $id.'|'.$csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512;
 					if(isset($_REQUEST['coalVerbose'])) {
@@ -400,6 +399,62 @@ function CoalIntakeHandler()
 					}
 				}
 			}
+		}
+	}
+}
+
+function DataIntakeHandler()
+{
+	global $l;
+	$l = new llog;
+	global $generalAuthKey;
+	if(authorized($generalAuthKey)) {
+		$l->a("Started DataIntakeHandler<br>");
+		$status = 0;
+		if(isset($_FILES['uploadedfile'])) {
+			$ulfilename = base64_encode($_FILES['uploadedfile']['name']);
+			$ulsize = base64_encode($_FILES['uploadedfile']['size']);
+		}
+		else {
+			$ulfilename = null;
+			$ulsize = null;
+		}
+		$filename = "coal_temp/"."data.".guidv4().".stt";
+		if(isset($_FILES['uploadedfile'])) {		
+			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $filename)) {
+			} else {
+				$status = 2;
+				$l->a("error 2<br>");
+			}
+		}
+		else {
+			$status = 6;
+			$l->a("error 6<br>");
+		}
+		$csum = new Csum(null,$filename);
+		$insertion = store(file_get_contents($filename),$csum);
+		$id = $insertion['id'];
+		$status = $insertion['status'];
+		if(check($status,true)) {
+			echo $id.'|'.$csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512;
+		}
+	}
+}
+
+function DataRetrieveHandler()
+{
+	global $l;
+	$l = new llog;
+	global $generalAuthKey;
+	if(authorized($generalAuthKey)) {
+		$l->a("Started DataRetrieveHandler<br>");
+		$status = 0;
+		$insertion = retrieve($_REQUEST['id']);
+		$id = $insertion['id'];
+		$status = $insertion['status'];
+		$csum = $insertion['csum'];
+		if(check($status,true)) {
+			echo $csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512.'|'.$insertion['data'];
 		}
 	}
 }
