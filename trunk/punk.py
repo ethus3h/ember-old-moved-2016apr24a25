@@ -49,11 +49,6 @@ if action.lower().strip() == 'save':
 		return False #because you finished the search without finding anything
 		
 	def sendChunk(tempfilename,name,tdl):
-		#help from http://unix.stackexchange.com/questions/48535/can-grep-return-true-false-or-are-there-alternative-methods and http://stackoverflow.com/questions/4940032/search-for-string-in-txt-file-python
-		if len(tdl) > 0:
-			if check('.snapshots.punkset/'+tdl+'.punkdb',csum,name):
-				print "Chunk has not changed since last snapshot, skipping"
-				return
 		csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
 		res = subprocess.check_output('curl -F "authorizationKey='+ad+'" -F "handler=1" -F "handlerNeeded=DataIntake" -F "uploadedfile=@'+tempfilename+'" http://futuramerlin.com/d/r/active.php', shell = True).strip()
 		if not re.match('[0-9]+\|',res.strip()):
@@ -62,10 +57,23 @@ if action.lower().strip() == 'save':
 			sys.exit("Checksum failed; please make a new snapshot later to continue.")
 		return res
 	
-	def send(name,w,tdl):
+	def send(name,w,tdl,timedb):
 		#format: filename, res of metadata, res of each chunk
 		filenm = base64.b64encode(name)
-		command = "sed -i.bak 's/^"+base64.b64encode(name).replace('.','\\.')+"*$//' .snapshots.punkset/"+now+".punkdb"
+		os.system('grep '+filenm+' '+timedb+' > ./.filtered.punktimedb')
+		fb = open('./.filtered.punktimedb','rb')
+		timeopt = fb.read()
+		#based on http://stackoverflow.com/questions/11833266/how-do-i-read-the-first-line-of-a-string
+		timemod = timeopt.split('\n',1)[0]
+		timemodb = timemod[timemod.find('|'):]
+		rtm = os.path.getmtime(name)
+		if rtm == timemodb:
+			print 'Skipping unchanged file'
+			return
+		command = "sed -i.bak 's/^"+filenm.replace('.','\\.')+"*$//' "+timedb
+		wr = open(timedb,'wb')
+		wr.write(filenm+'|'+str(os.path.getmtime(name)))
+		command = "sed -i.bak 's/^"+filenm.replace('.','\\.')+"*$//' .snapshots.punkset/"+now+".punkdb"
 		print name
 		if (name.startswith('./.snapshots.punkset/') and name.endswith('.punkdb')) or name == './.latest.punksr' or name == './.snapshots.punkset' or name == tempDir+'/.temp.punkd' or name == './.temp.punkp' or name == './.this.punkak':
 			print 'Skipping punk database file'
@@ -90,78 +98,6 @@ if action.lower().strip() == 'save':
 			w.write(resf)
 		f.close()
 
-	def send(name, w, tdl):
-		#format: filename, res of metadata, res of each chunk
-		filenm = base64.b64encode(name)
-		print name
-		if (name.startswith('./.snapshots.punkset/') and name.endswith('.punkdb')) or name == './.latest.punksr' or name == './.snapshots.punkset' or name == tempDir+'/.temp.punkd' or name == './.temp.punkp' or name == './.this.punkak':
-			print 'Skipping punk database file'
-			return
-		ft = open(tempDir+'/.temp.punksp')
-		fd = ft.read()
-		csum = '|'+str(len(fd))+'|'+hashlib.md5(fd).hexdigest()+'|'+hashlib.sha1(fd).hexdigest()+'|'+hashlib.sha512(fd).hexdigest()
-		#help from http://unix.stackexchange.com/questions/48535/can-grep-return-true-false-or-are-there-alternative-methods and http://stackoverflow.com/questions/4940032/search-for-string-in-txt-file-python
-		if len(tdl) > 0:
-			if check('.snapshots.punkset/'+tdl+'.punkdb',csum,filenm):
-				print "Chunk has not changed since last snapshot, skipping"
-				return
-		wr = open('.temp.punksp', 'wb')
-		wr.write(fd)
-		wr.close()
-		#based on http://stackoverflow.com/questions/12667797/using-curl-to-upload-post-data-with-files
-		res = subprocess.check_output('curl -F "authorizationKey='+ad+'" -F "handler=1" -F "handlerNeeded=DataIntake" -F "uploadedfile=@.temp.punkp" http://futuramerlin.com/d/r/active.php', shell = True).strip()
-		#print res
-		#if not re.match('[0-9]+\|[0-9a-f]{32}\|[0-9a-f]{40}\|[0-9a-f]{128}',res):
-		if not re.match('[0-9]+\|',res.strip()):
-			sys.exit("Could not send data to server; please make a new snapshot later to continue.")
-		#help from http://stackoverflow.com/questions/3221891/how-can-i-find-the-first-occurrence-of-a-sub-string-in-a-python-string and https://docs.python.org/release/1.5.1p1/tut/strings.html
-		print res[res.find('|'):]
-		print len(res[res.find('|'):])
-		print isinstance(res[res.find('|'):],str)
-		print csum
-		print len(csum)
-		print isinstance(csum,str)
-		if res[res.find('|'):] != csum:
-			sys.exit("Checksum failed; please make a new snapshot later to continue.")
-		# based on http://stackoverflow.com/questions/415511/how-to-get-current-time-in-python
-		# strftime("%Y-%m-%d %H:%M:%S", gmtime())
-		
-		print command
-		os.system(command)
-		f = open(name)
-		for piece in read_in_chunks(f):
-			csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
-			#help from http://unix.stackexchange.com/questions/48535/can-grep-return-true-false-or-are-there-alternative-methods and http://stackoverflow.com/questions/4940032/search-for-string-in-txt-file-python
-			if len(tdl) > 0:
-				if check('.snapshots.punkset/'+tdl+'.punkdb',csum):
-					print "Chunk has not changed since last snapshot, skipping"
-					return
-			wr = open('.temp.punkp', 'wb')
-			wr.write(piece)
-			wr.close()
-			#based on http://stackoverflow.com/questions/12667797/using-curl-to-upload-post-data-with-files
-			res = subprocess.check_output('curl -F "authorizationKey='+ad+'" -F "handler=1" -F "handlerNeeded=DataIntake" -F "uploadedfile=@.temp.punkp" http://futuramerlin.com/d/r/active.php', shell = True).strip()
-			#print res
-			#if not re.match('[0-9]+\|[0-9a-f]{32}\|[0-9a-f]{40}\|[0-9a-f]{128}',res):
-			if not re.match('[0-9]+\|',res.strip()):
-				sys.exit("Could not send data to server; please make a new snapshot later to continue.")
-			#help from http://stackoverflow.com/questions/3221891/how-can-i-find-the-first-occurrence-of-a-sub-string-in-a-python-string and https://docs.python.org/release/1.5.1p1/tut/strings.html
-			print res[res.find('|'):]
-			print len(res[res.find('|'):])
-			print isinstance(res[res.find('|'):],str)
-			print csum
-			print len(csum)
-			print isinstance(csum,str)
-			if res[res.find('|'):] != csum:
-				sys.exit("Checksum failed; please make a new snapshot later to continue.")
-			# based on http://stackoverflow.com/questions/415511/how-to-get-current-time-in-python
-			# strftime("%Y-%m-%d %H:%M:%S", gmtime())
-			command = "sed -i.bak 's/^"+base64.b64encode(name).replace('.','\\.')+"*$//' .snapshots.punkset/"+now+".punkdb"
-			print command
-			os.system(command)
-			resf = base64.b64encode(name)+'|'+res+'\n'
-			w.write(resf)
-
 	# based on http://stackoverflow.com/questions/120656/directory-listing-in-python
 	now = strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())
 	if not os.path.exists('.latest.punksr'):
@@ -172,20 +108,22 @@ if action.lower().strip() == 'save':
 		w = open('.latest.punksr', 'rb')
 		tdl = w.read()
 		os.system('cp .snapshots.punkset/'+tdl+'.punkdb .snapshots.punkset/'+now+'.punkdb')
+		os.system('cp .snapshots.punkset/'+tdl+'.punktimedb .snapshots.punkset/'+now+'.punktimedb')
 	#help from http://stackoverflow.com/questions/273192/check-if-a-directory-exists-and-create-it-if-necessary
 	if not os.path.exists('.snapshots.punkset'):
 		os.makedirs('.snapshots.punkset')
 	w = open('.snapshots.punkset/'+now+'.punkdb', 'ab')
-	send('.', w, tdl)
+	timedb = '.snapshots.punkset/'+now+'.punktimedb'
+	send('.', w, tdl, timedb)
 	for dirname, dirnames, filenames in os.walk('.'):
 		# print path to all subdirectories first.
 		for subdirname in dirnames:
 			cfilename = os.path.join(dirname, subdirname)
-			send(cfilename, w, tdl)
+			send(cfilename, w, tdl, timedb)
 		# print path to all filenames.
 		for filename in filenames:
 			cfilename = os.path.join(dirname, filename)
-			send(cfilename, w, tdl)
+			send(cfilename, w, tdl, timedb)
 	nres = "Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."
 	w.write(nres)
 	w = open('.latest.punksr', 'wb')
