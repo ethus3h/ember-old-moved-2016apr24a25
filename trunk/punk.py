@@ -103,7 +103,7 @@ while running == True:
 			csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
 			#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
 			res = subprocess.check_output('curl --connect-timeout 30 -m 180 -F "authorizationKey='+ad+'" -F "handler=1" -F "handlerNeeded=DataIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php', shell = True).strip()
-			print res
+ 			print res
 			if not re.match('[0-9]+\|',res.strip()):
 				sys.exit("Could not send data to server; please make a new snapshot later to continue.")
 			if res[res.find('|'):] != csum:
@@ -146,13 +146,18 @@ while running == True:
 			lenf = os.path.getsize(name)
 			lenp = os.path.getsize(tempDir+'/.temp.punkd')
 			lenr = lenp - lenf
-			print 'total file size: '+str(lenf)
-			print 'total pax size: '+str(lenp)
+# 			print 'total file size: '+str(lenf)
+# 			print 'total pax size: '+str(lenp)
 			if os.path.isdir(name):
 				lenr = 0
-			print 'computed pax header length: '+str(lenr)
+# 			print 'computed pax header length: '+str(lenr)
 			#based on http://www.unix.com/shell-programming-and-scripting/66466-remove-first-n-bytes-last-n-bytes-binary-file-aix.html
 			os.system('dd if='+tempDir+'/.temp.punkd of='+tempDir+'/.temp.punksp bs=1 count='+str(lenr))
+			os.system('dd if='+tempDir+'/.temp.punkd of='+tempDir+'/.temp.punksb bs=1 skip='+str(lenr))
+			lena = os.path.getsize(tempDir+'/.temp.punksp')
+			lenb = os.path.getsize(tempDir+'/.temp.punksb')
+			print 'pax header size: '+str(lena)			
+			print 'pax body size: '+str(lenb)
 			
 # 			mt = open('.temp.punksp')
 # 			mtd = mt.read()
@@ -165,22 +170,22 @@ while running == True:
 			wr.write(filenm+'|'+str(os.path.getmtime(name)))
 			#help from http://stackoverflow.com/questions/3204782/how-to-check-if-a-file-is-a-directory-or-regular-file-in-python
 			w.write(resf)
-			if os.path.isfile(name):
-				f = open(name)
-				for piece in read_in_chunks(f):
-					wr = open('.temp.punkp', 'wb')
-					wr.write(piece)
-					wr.close()
-					
+# 			if os.path.isfile(name):
+			f = open(tempDir+'/.temp.punksb')
+			for piece in read_in_chunks(f):
+				wr = open('.temp.punkp', 'wb')
+				wr.write(piece)
+				wr.close()
+				
 # 					ct = open('.temp.punkp')
 # 					ctd = ct.read()
 # 					ct.close()
 # 					print 'Chunk data: '+ctd
-					
-					resp = sendChunk('.temp.punkp',filenm,tdl)
-					resf = filenm+'|'+resp+'\n'
-					w.write(resf)
-				f.close()
+				
+				resp = sendChunk('.temp.punkp',filenm,tdl)
+				resf = filenm+'|'+resp+'\n'
+				w.write(resf)
+			f.close()
 
 		# based on http://stackoverflow.com/questions/120656/directory-listing-in-python
 		now = strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())
@@ -203,18 +208,22 @@ while running == True:
 		w = open('.snapshots.punkset/'+now+'.punkdb', 'ab')
 		timedb = '.snapshots.punkset/'+now+'.punktimedb'
 		send('.', w, tdl, timedb)
+		print 'Finished sending record.\n\n\n'
 		for dirname, dirnames, filenames in os.walk('.'):
 			# print path to all subdirectories first.
 			for subdirname in dirnames:
 				cfilename = os.path.join(dirname, subdirname)
 				send(cfilename, w, tdl, timedb)
+				print 'Finished sending record.\n\n\n'
 			# print path to all filenames.
 			for filename in filenames:
 				cfilename = os.path.join(dirname, filename)
 				send(cfilename, w, tdl, timedb)
+				print 'Finished sending record.\n\n\n'
 		print '\033[95mSnapshot data:\033[0m'
 		os.system('tar -c -j -f .temp.punkdbz2 --no-recursion --format pax .snapshots.punkset/'+now+'.punkdb .snapshots.punkset/'+now+'.punktimedb')
 		sendChunk('.temp.punkdbz2','',tdl)
+		print 'Finished sending record.\n\n\n'
 		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."+'\033[0m'
 		w.write(nres)
 		sys.exit(nres)
