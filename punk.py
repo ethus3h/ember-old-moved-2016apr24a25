@@ -64,7 +64,7 @@ while running == True:
 		except:
 			pass
 		if len(sn) < 1:
-			sn = raw_input('set name? ');
+			sn = raw_input('collection name? ');
 			snx = open('.this.punksn','wb')
 			snx.write(sn)
 		
@@ -100,19 +100,19 @@ while running == True:
 					return True
 			return False #because you finished the search without finding anything
 		
-		def sendChunk(tempfilename,name,tdl):
+		def sendChunk(tempfilename,name,tdl,un='',sn=''):
 			r = open(tempfilename,'rb')
 			piece = r.read()
 			csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
 			#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
-			res = subprocess.check_output('curl --connect-timeout 30 -m 180 -F "authorizationKey='+ad+'" -F "handler=1" -F "handlerNeeded=DataIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php', shell = True).strip()
+			res = subprocess.check_output('curl --connect-timeout 30 -m 180 -F "authorizationKey='+ad+'" -F "handler=1" -F "punkUser='+un+'" -F "punkCollection='+sn+'" -F "handlerNeeded=DataIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php', shell = True).strip()
  			print res
 			if not re.match('[0-9]+\|',res.strip()):
 				sys.exit("Could not send data to server; please make a new snapshot later to continue.")
 			if res[res.find('|'):] != csum:
 				sys.exit("Checksum failed; please make a new snapshot later to continue.")
 			return res
-	
+
 		def send(name,w,tdl,timedb):
 			print '\033[95m'+name+":"+'\033[0m'
 			if (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.latest.punksr' or name == './.temp.punksp' or name == './.filtered.punktimedb' or name == './.this.punkun' or name == './.this.punksn' or name == './.temp.punkdbz2' or name == './.snapshots.punkset' or name == tempDir+'/.temp.punkd' or name == './.temp.punksb' or name == './.temp.punkp' or name == './.this.punkak':
@@ -225,7 +225,7 @@ while running == True:
 				print 'Finished processing record.\n\n\n'
 		print '\033[95mSnapshot data:\033[0m'
 		os.system('tar -c -j -f .temp.punkdbz2 --no-recursion --format pax .snapshots.punkset/'+now+'.punkdb .snapshots.punkset/'+now+'.punktimedb')
-		sendChunk('.temp.punkdbz2','',tdl)
+		sendChunk('.temp.punkdbz2','',tdl,un,sn)
 		print 'Finished processing record.\n\n\n'
 		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."+'\033[0m'
 		w.write(nres)
