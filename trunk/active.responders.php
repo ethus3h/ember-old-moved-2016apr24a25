@@ -473,6 +473,8 @@ function PunkRecordIntakeHandler()
 		$insertion = store(file_get_contents($filename),$csum);
 		$id = $insertion['id'];
 		$status = $insertion['status'];
+		$db = new FractureDB('futuqiur_ember');
+		$addedTree = $db->addRow('trees', 'user, collection, number, csum', "'" . $_REQUEST['punkUser'] . "', '" . $_REQUEST['punkCollection'] . "', '" . $_REQUEST['punkCollection'] . "', '" . $id . "', '" . $csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512 . "'");
 		if(check($status,true)) {
 			echo $id.'|'.$csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512;
 		}
