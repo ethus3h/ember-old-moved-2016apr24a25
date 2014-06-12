@@ -441,6 +441,44 @@ function DataIntakeHandler()
 	}
 }
 
+function PunkRecordIntakeHandler()
+{
+	global $l;
+	$l = new llog;
+	global $generalAuthKey;
+	if(authorized($generalAuthKey)) {
+		$l->a("Started DataIntakeHandler<br>");
+		$status = 0;
+		if(isset($_FILES['uploadedfile'])) {
+			$ulfilename = base64_encode($_FILES['uploadedfile']['name']);
+			$ulsize = base64_encode($_FILES['uploadedfile']['size']);
+		}
+		else {
+			$ulfilename = null;
+			$ulsize = null;
+		}
+		$filename = "coal_temp/"."data.".guidv4().".stt";
+		if(isset($_FILES['uploadedfile'])) {		
+			if(move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $filename)) {
+			} else {
+				$status = 2;
+				$l->a("error 2<br>");
+			}
+		}
+		else {
+			$status = 6;
+			$l->a("error 6<br>");
+		}
+		$csum = new Csum(null,$filename);
+		$insertion = store(file_get_contents($filename),$csum);
+		$id = $insertion['id'];
+		$status = $insertion['status'];
+		if(check($status,true)) {
+			echo $id.'|'.$csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512;
+		}
+	}
+}
+
 function DataRetrieveHandler()
 {
 	global $l;

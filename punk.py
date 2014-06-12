@@ -6,6 +6,9 @@ import base64
 import hashlib
 import subprocess
 from time import sleep, gmtime, strftime
+#from http://stackoverflow.com/questions/35817/how-to-escape-os-system-calls-in-python
+def shellquote(s):
+    return "'" + s.replace("'", "'\\''") + "'"
 def checkf(filename,needle):
 	datafile = file(filename)
 	found = False #this isn't really necessary 
@@ -112,7 +115,7 @@ while running == True:
 	
 		def send(name,w,tdl,timedb):
 			print '\033[95m'+name+":"+'\033[0m'
-			if (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.latest.punksr' or name == './.temp.punksp' or name == './.filtered.punktimedb' or name == './.this.punkun' or name == './.this.punksn' or name == './.temp.punkdbz2' or name == './.snapshots.punkset' or name == tempDir+'/.temp.punkd' or name == './.temp.punkp' or name == './.this.punkak':
+			if (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.latest.punksr' or name == './.temp.punksp' or name == './.filtered.punktimedb' or name == './.this.punkun' or name == './.this.punksn' or name == './.temp.punkdbz2' or name == './.snapshots.punkset' or name == tempDir+'/.temp.punkd' or name == './.temp.punksb' or name == './.temp.punkp' or name == './.this.punkak':
 				print 'Skipping punk database file'
 				return
 			filenm = base64.b64encode(name)
@@ -141,7 +144,7 @@ while running == True:
 			os.system(command)
 			command = "sed -i.punkbakdb 's/^"+filenm.replace('.','\\.')+"*$//' .snapshots.punkset/"+now+".punkdb"
 			os.system(command)
-			os.system('tar -c -f '+tempDir+'/.temp.punkd --no-recursion --format pax '+name)
+			os.system('tar -c -f '+tempDir+'/.temp.punkd --no-recursion --format pax '+shellquote(name))
 			#based on http://stackoverflow.com/questions/6591931/getting-file-size-in-python
 			lenf = os.path.getsize(name)
 			lenp = os.path.getsize(tempDir+'/.temp.punkd')
@@ -208,22 +211,22 @@ while running == True:
 		w = open('.snapshots.punkset/'+now+'.punkdb', 'ab')
 		timedb = '.snapshots.punkset/'+now+'.punktimedb'
 		send('.', w, tdl, timedb)
-		print 'Finished sending record.\n\n\n'
+		print 'Finished processing record.\n\n\n'
 		for dirname, dirnames, filenames in os.walk('.'):
 			# print path to all subdirectories first.
 			for subdirname in dirnames:
 				cfilename = os.path.join(dirname, subdirname)
 				send(cfilename, w, tdl, timedb)
-				print 'Finished sending record.\n\n\n'
+				print 'Finished processing record.\n\n\n'
 			# print path to all filenames.
 			for filename in filenames:
 				cfilename = os.path.join(dirname, filename)
 				send(cfilename, w, tdl, timedb)
-				print 'Finished sending record.\n\n\n'
+				print 'Finished processing record.\n\n\n'
 		print '\033[95mSnapshot data:\033[0m'
 		os.system('tar -c -j -f .temp.punkdbz2 --no-recursion --format pax .snapshots.punkset/'+now+'.punkdb .snapshots.punkset/'+now+'.punktimedb')
 		sendChunk('.temp.punkdbz2','',tdl)
-		print 'Finished sending record.\n\n\n'
+		print 'Finished processing record.\n\n\n'
 		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."+'\033[0m'
 		w.write(nres)
 		sys.exit(nres)
