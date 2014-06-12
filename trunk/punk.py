@@ -103,7 +103,7 @@ while running == True:
 			csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
 			#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
 			res = subprocess.check_output('curl --connect-timeout 30 -m 180 -F "authorizationKey='+ad+'" -F "handler=1" -F "handlerNeeded=DataIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php', shell = True).strip()
-			#print res
+			print res
 			if not re.match('[0-9]+\|',res.strip()):
 				sys.exit("Could not send data to server; please make a new snapshot later to continue.")
 			if res[res.find('|'):] != csum:
@@ -112,7 +112,7 @@ while running == True:
 	
 		def send(name,w,tdl,timedb):
 			print '\033[95m'+name+":"+'\033[0m'
-			if (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.latest.punksr' or name == './.temp.punksp' or name == './.filtered.punktimedb' or name == './.snapshots.punkset' or name == tempDir+'/.temp.punkd' or name == './.temp.punkp' or name == './.this.punkak':
+			if (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.latest.punksr' or name == './.temp.punksp' or name == './.filtered.punktimedb' or name == './.this.punkun' or name == './.this.punksn' or name == './.temp.punkdbz2' or name == './.snapshots.punkset' or name == tempDir+'/.temp.punkd' or name == './.temp.punkp' or name == './.this.punkak':
 				print 'Skipping punk database file'
 				return
 			filenm = base64.b64encode(name)
@@ -131,10 +131,11 @@ while running == True:
 				print 'Skipping unchanged file'
 				return
 
-			nt = open(name)
-			ntd = nt.read()
-			nt.close()
-			print 'File data: '+ntd
+# 			if os.path.isfile(name):
+# 				nt = open(name)
+# 				ntd = nt.read()
+# 				nt.close()
+# 				print 'File data: '+ntd
 
 			command = "sed -i.punkbaktimedb 's/^"+filenm.replace('.','\\.')+"*$//' "+timedb
 			os.system(command)
@@ -145,13 +146,18 @@ while running == True:
 			lenf = os.path.getsize(name)
 			lenp = os.path.getsize(tempDir+'/.temp.punkd')
 			lenr = lenp - lenf
+			print 'total file size: '+str(lenf)
+			print 'total pax size: '+str(lenp)
+			if os.path.isdir(name):
+				lenr = 0
+			print 'computed pax header length: '+str(lenr)
 			#based on http://www.unix.com/shell-programming-and-scripting/66466-remove-first-n-bytes-last-n-bytes-binary-file-aix.html
 			os.system('dd if='+tempDir+'/.temp.punkd of='+tempDir+'/.temp.punksp bs=1 count='+str(lenr))
 			
-			mt = open('.temp.punksp')
-			mtd = mt.read()
-			mt.close()
-			print 'Metadata: '+mtd
+# 			mt = open('.temp.punksp')
+# 			mtd = mt.read()
+# 			mt.close()
+# 			print 'Metadata: '+mtd
 			
 			resmeta = sendChunk(tempDir+'/.temp.punksp',filenm,tdl)
 			resf = filenm+'|'+resmeta+'\n'
@@ -166,10 +172,10 @@ while running == True:
 					wr.write(piece)
 					wr.close()
 					
-					ct = open('.temp.punkp')
-					ctd = ct.read()
-					ct.close()
-					print 'Chunk data: '+ctd
+# 					ct = open('.temp.punkp')
+# 					ctd = ct.read()
+# 					ct.close()
+# 					print 'Chunk data: '+ctd
 					
 					resp = sendChunk('.temp.punkp',filenm,tdl)
 					resf = filenm+'|'+resp+'\n'
@@ -219,5 +225,4 @@ while running == True:
 		if restq.lower().strip() =='overwrite' or restq.lower().strip() =='overfuckingwrite':
 			overwrite = True
 
-	sys.exit("That wasn't a suggested input; I don't know what to do.")
-	running = False
+	print "That wasn't a suggested input; I don't know what to do."
