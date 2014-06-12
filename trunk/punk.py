@@ -50,15 +50,22 @@ if action.lower().strip() == 'save':
 		
 	def sendChunk(tempfilename,name,tdl):
 		#help from http://unix.stackexchange.com/questions/48535/can-grep-return-true-false-or-are-there-alternative-methods and http://stackoverflow.com/questions/4940032/search-for-string-in-txt-file-python
-			if len(tdl) > 0:
-				if check('.snapshots.punkset/'+tdl+'.punkdb',csum,name):
-					print "Chunk has not changed since last snapshot, skipping"
-					return
-		return resf
+		if len(tdl) > 0:
+			if check('.snapshots.punkset/'+tdl+'.punkdb',csum,name):
+				print "Chunk has not changed since last snapshot, skipping"
+				return
+		csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
+		res = subprocess.check_output('curl -F "authorizationKey='+ad+'" -F "handler=1" -F "handlerNeeded=DataIntake" -F "uploadedfile=@'+tempfilename+'" http://futuramerlin.com/d/r/active.php', shell = True).strip()
+		if not re.match('[0-9]+\|',res.strip()):
+			sys.exit("Could not send data to server; please make a new snapshot later to continue.")
+		if res[res.find('|'):] != csum:
+			sys.exit("Checksum failed; please make a new snapshot later to continue.")
+		return res
 	
 	def send(name,w,tdl):
 		#format: filename, res of metadata, res of each chunk
 		filenm = base64.b64encode(name)
+		command = "sed -i.bak 's/^"+base64.b64encode(name).replace('.','\\.')+"*$//' .snapshots.punkset/"+now+".punkdb"
 		print name
 		if (name.startswith('./.snapshots.punkset/') and name.endswith('.punkdb')) or name == './.latest.punksr' or name == './.snapshots.punkset' or name == tempDir+'/.temp.punkd' or name == './.temp.punkp' or name == './.this.punkak':
 			print 'Skipping punk database file'
@@ -71,13 +78,17 @@ if action.lower().strip() == 'save':
 		#based on http://www.unix.com/shell-programming-and-scripting/66466-remove-first-n-bytes-last-n-bytes-binary-file-aix.html
 		os.system('dd if='+tempDir+'/.temp.punkd of='+tempDir+'/.temp.punksp bs=1 count='+lenr)
 		resmeta = sendChunk(tempDir+'/.temp.punksp',filenm,tdl)
-		resf = filenm+'|'+resmeta
+		resf = filenm+'|'+resmeta+'\n'
+		w.write(resf)
 		f = open(name)
 		for piece in read_in_chunks(f):
-			csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
 			wr = open('.temp.punkp', 'wb')
 			wr.write(piece)
 			wr.close()
+			resp = sendChunk('.temp.punkp')
+			resf = filenm+'|'+resp+'\n'
+			w.write(resf)
+		f.close()
 
 	def send(name, w, tdl):
 		#format: filename, res of metadata, res of each chunk
@@ -114,7 +125,7 @@ if action.lower().strip() == 'save':
 			sys.exit("Checksum failed; please make a new snapshot later to continue.")
 		# based on http://stackoverflow.com/questions/415511/how-to-get-current-time-in-python
 		# strftime("%Y-%m-%d %H:%M:%S", gmtime())
-		command = "sed -i.bak 's/^"+base64.b64encode(name).replace('.','\\.')+"*$//' .snapshots.punkset/"+now+".punkdb"
+		
 		print command
 		os.system(command)
 		f = open(name)
