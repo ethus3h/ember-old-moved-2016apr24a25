@@ -40,6 +40,8 @@ while running == True:
 		sys.exit()
 
 	if action.lower().strip() == 'save':
+		if not os.path.exists('.ember.punkdb/.snapshots.punkset'):
+			os.makedirs('.ember.punkdb/.snapshots.punkset')
 		tempDir = raw_input('where to save big temporary files (default: here)? ');
 		if len(tempDir) < 1:
 			tempDir = '.'
@@ -238,42 +240,65 @@ while running == True:
 		os.system('tar -c -j -f .ember.punkdb/.temp.punkdbz2 --no-recursion --format pax .ember.punkdb/.snapshots.punkset/'+now+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb')
 		fres = sendChunk('.ember.punkdb/.temp.punkdbz2','',tdl,un,sn)
 		print 'Finished processing record.\n\n\n'
-		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."
-		print 'Snapshot ID: '+fres[:fres.find('|')]+'.\033[0m'
+		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."+'\n'+'Snapshot ID: '+fres[:fres.find('|')]+'.\n'+'\033[0m'
 		w.write(nres)
 		sys.exit(nres)
 
 	if action.lower().strip() == 'restore':
+		if not os.path.exists('.ember.punkdb/.snapshots.punkset'):
+			os.makedirs('.ember.punkdb/.snapshots.punkset')
+		ad = ''
+		try:
+			ak = open('.ember.punkdb/.this.punkak','rb')
+			ad = ak.read()
+		except:
+			pass
+		if len(ad) < 1:
+			ad = raw_input('authkey? ');
+			ax = open('.ember.punkdb/.this.punkak','wb')
+			ax.write(ad)
 		snq = raw_input('Restore from a specific snapshot? Type the snapshot ID if so. (default: no) ');
 		ssnap = False
-		if int(snq.lower().strip()) != 0:
+		if (snq.lower().strip() != '') and (snq.lower().strip() != 'no'):
 			ssnap = True
-			print 'Using snapshot '+str(int(snq.lower().strip()))+'.'
+			restq = raw_input('Using snapshot '+str(int(snq.lower().strip()))+'. Continue? (yes/no) ');
+			if restq.lower().strip() !='yes':
+				sys.exit("Restore canceled.")
 			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+str(int(snq.lower().strip()))+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
 			w = open('.ember.punkdb/.restore.punkdb', 'wb')
 			w.write(res)
 			w.close()
 			sndata = '.ember.punkdb/.restore.punkdb'
 		else:
-			if not os.path.exists('.latest.punksr'):
+			if not os.path.exists('.ember.punkdb/.latest.punksr'):
 				sys.exit("No snapshots found.")
 			w = open('.ember.punkdb/.latest.punksr', 'rb')
 			tdl = w.read()
-			print 'Using latest snapshot from '+tdl+'.'
+			restq = raw_input('Using latest snapshot from '+tdl+'. Continue? (yes/no) ');
+			if restq.lower().strip() !='yes':
+				sys.exit("Restore canceled.")
 			#print 'Restoring latest snapshot: '+
 			sndata = '.ember.punkdb/.snapshots.punkset/'+tdl+'.punkdb'
-		restq = raw_input('What to do with existing files here, if any (overwrite/leave)? ("leave" will make not restored files of the same name) ');
-		overwrite = False
-		if restq.lower().strip() =='overwrite' or restq.lower().strip() =='overfuckingwrite':
-			overwrite = True
+# 		restq = raw_input('What to do with existing files here, if any (overwrite/leave)? ("leave" will make not restored files of the same name) ');
+# 		overwrite = False
+		overwrite = True
+# 		if restq.lower().strip() =='overwrite' or restq.lower().strip() =='overfuckingwrite':
+# 			overwrite = True
+		restq = raw_input('Existing files will be replaced with the snapshot. Continue? (yes/no) ');
+		if restq.lower().strip() !='yes':
+			sys.exit("Restore canceled.")
 		def processRestore(data,overwrite,prevfilename):
 			thisfilename = data[:data.find('|')]
+			print 'Filename: '+thisfilename
+			recordId = data[data.find('|'):][:data.find('|')][1:]
+			print 'Record ID: '+recordId
 			if prevfilename != thisfilename:
 				#Push last restored file into place (unpack pax)
-				os.system('tar -x -f '+tempDir+'/.ember.punkdb/.restore.punkd --format pax')				
+				os.system('tar -x -f .ember.punkdb/.restore.punkd --format pax')
+				print 'Restored '+base64.b64decode(prevfilename)+'.'
 			#Append this part of next file to temporary pax
 			chunk = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+recordId+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
-			w = open(tempDir+'/.ember.punkdb/.restore.punkd', 'ab')
+			w = open('.ember.punkdb/.restore.punkd', 'ab')
 			w.write(chunk)
 			w.close()
 			return newfilename
@@ -282,6 +307,7 @@ while running == True:
 		for line in open(sndata):
 			resr = processRestore(line,overwrite,thisfilename)
 			thisfilename = resr
-    		
+		nres='\033[92m'+'Completed restore.\n'+'\033[0m'
+    	sys.exit(nres)
 
 	print "That wasn't a suggested input; I don't know what to do."
