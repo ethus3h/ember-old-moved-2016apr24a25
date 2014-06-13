@@ -6,6 +6,8 @@ import base64
 import hashlib
 import subprocess
 from time import sleep, gmtime, strftime
+#TODO: Fix: New records are not correctly updated in the db, so files from previous snapshots are getting restored in place of the copy of the file from the newer snapshot.
+#TODO: Fix: Truncated tar archive error; checksum mismatch on restore. See "checksum mismatch info folder created 13 June 2014 a.mn.".
 #from http://stackoverflow.com/questions/35817/how-to-escape-os-system-calls-in-python
 def shellquote(s):
     return "'" + s.replace("'", "'\\''") + "'"
@@ -43,6 +45,11 @@ while running == True:
 		if not os.path.exists('.ember.punkdb/.snapshots.punkset'):
 			os.makedirs('.ember.punkdb/.snapshots.punkset')
 		tempDir = raw_input('where to save big temporary files (omit trailing /) (default: here)? ');
+		print 'Saving checksums of directory state...'
+		# help from http://www.linuxquestions.org/questions/linux-software-2/bash-how-to-redirect-output-to-file-and-still-have-it-on-screen-412611/
+		now = strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())
+		os.system('md5deep -r . | tee .ember.punkdb/.snapshots.punkset/.snapshot.'+now+'.punkcsum')
+		print 'Finished saving checksums of directory state.'
 		if len(tempDir) < 1:
 			tempDir = '.'
 		else:
@@ -122,7 +129,7 @@ while running == True:
 
 		def send(name,w,tdl,timedb):
 			print '\033[95m'+name+":"+'\033[0m'
-			if (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.ember.punkdb/.latest.punksr' or name == './.ember.punkdb/.temp.punksp' or name == './.ember.punkdb/.filtered.punktimedb' or name == './.ember.punkdb/.restore.punkd.pax' or name == './.ember.punkdb/.this.punkun' or name == './.ember.punkdb/.this.punksn' or name == './punk.py' or name == './.ember.punkdb/.temp.punkdbz2' or name == './.ember.punkdb/.snapshots.punkset' or name == tempDir+'/.ember.punkdb/.temp.punkd' or name == './.ember.punkdb' or name == './.ember.punkdb/.temp.punksb' or name == './.ember.punkdb/.restore.punkdb' or name == './.ember.punkdb/.temp.punkd' or name == './.ember.punkdb/.temp.punkp' or name == './.ember.punkdb/.this.punkak':
+			if (name.startswith('./.ember.punkdb/.snapshots.punkset/.snapshot.') and name.endswith('.punkcsum')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.ember.punkdb/.latest.punksr' or name == './.ember.punkdb/.temp.punksp' or name == './.ember.punkdb/.filtered.punktimedb' or name == './.ember.punkdb/.restore.punkd.pax' or name == './.ember.punkdb/.this.punkun' or name == './.ember.punkdb/.this.punksn' or name == './punk.py' or name == './.ember.punkdb/.temp.punkdbz2' or name == './.ember.punkdb/.restored.punkcsum' or name == './.ember.punkdb/.snapshots.punkset' or name == tempDir+'/.ember.punkdb/.temp.punkd' or name == './.ember.punkdb' or name == './.ember.punkdb/.temp.punksb' or name == './.ember.punkdb/.restore.punkdb.gz' or name == './.ember.punkdb/.restore.punkdb' or name == './.ember.punkdb/.temp.punkd' or name == './.ember.punkdb/.temp.punkp' or name == './.ember.punkdb/.this.punkak':
 				print 'Skipping punk system file'
 				return
 			filenm = base64.b64encode(name)
@@ -237,9 +244,11 @@ while running == True:
 				send(cfilename, w, tdl, timedb)
 				print 'Finished processing record.\n\n\n'
 		print '\033[95mSnapshot data:\033[0m'
-# 		os.system('tar -c -j -f .ember.punkdb/.temp.punkdbz2 --no-recursion --format pax .ember.punkdb/.snapshots.punkset/'+now+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb')
-# 		fres = sendChunk('.ember.punkdb/.temp.punkdbz2','',tdl,un,sn)
- 		fres = sendChunk('.ember.punkdb/.snapshots.punkset/'+now+'.punkdb','',tdl,un,sn)
+ 		os.system('tar -c -j -f .ember.punkdb/.temp.punkdbz2 --no-recursion --format pax .ember.punkdb/.snapshots.punkset/'+now+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb .ember.punkdb/.snapshots.punkset/'+now+'.punkcsum')
+ 		sendChunk('.ember.punkdb/.temp.punkdbz2','',tdl,un,sn)
+		#help from https://en.wikibooks.org/wiki/Guide_to_Unix/Commands/File_Compression#gzip
+		os.system('gzip -9 -c .ember.punkdb/.snapshots.punkset/'+now+'.punkdb > .ember.punkdb/.restore.punkdb.gz')
+ 		fres = sendChunk('.ember.punkdb/.restore.punkdb.gz','',tdl,un,sn)
 		print 'Finished processing record.\n\n\n'
 		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."+'\n'+'Snapshot ID: '+fres[:fres.find('|')]+'.\n'+'\033[0m'+'\033[0m'
 		w.write(nres)
@@ -266,9 +275,12 @@ while running == True:
 			if restq.lower().strip() !='yes':
 				sys.exit("Restore canceled.")
 			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+str(int(snq.lower().strip()))+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
-			w = open('.ember.punkdb/.restore.punkdb', 'wb')
+			w = open('.ember.punkdb/.restore.punkdb.gz', 'wb')
 			w.write(res)
 			w.close()
+			#help from https://en.wikibooks.org/wiki/Guide_to_Unix/Commands/File_Compression#gzip
+			os.remove('.ember.punkdb/.restore.punkdb')
+			os.system('gunzip .ember.punkdb/.restore.punkdb.gz')
 			sndata = '.ember.punkdb/.restore.punkdb'
 		else:
 			if not os.path.exists('.ember.punkdb/.latest.punksr'):
@@ -292,7 +304,7 @@ while running == True:
 		os.remove('.ember.punkdb/.restore.punkd.pax')
 		def processRestore(data,overwrite,prevfilename):
 			thisfilename = data[:data.find('|')]
- 			print 'Filename: '+thisfilename
+ 			#print 'Filename: '+thisfilename
 			recordId = data[data.find('|'):][:data.find('|')][1:][:data.find('|')]
 			records512 = data[data.rfind('|'):][1:]
 # 			print 'Record ID: '+recordId
@@ -321,6 +333,11 @@ while running == True:
 		for line in open(sndata):
 			resr = processRestore(line,overwrite,thisfilename)
 			thisfilename = resr
+		print 'Saving checksums of restored directory state...'
+		# help from http://www.linuxquestions.org/questions/linux-software-2/bash-how-to-redirect-output-to-file-and-still-have-it-on-screen-412611/
+		now = strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())
+		os.system('md5deep -r . | tee .ember.punkdb/.snapshots.punkset/.restored.punkcsum')
+		print 'Finished saving checksums of restored directory state.\n\n\n'
 		nres='\033[92m'+'Completed restore.\n'+'\033[0m'
 		sys.exit(nres)
 
