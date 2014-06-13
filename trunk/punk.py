@@ -105,7 +105,7 @@ while running == True:
 			piece = r.read()
 			csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
 			#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
-			res = subprocess.check_output('curl --connect-timeout 30 -m 180 -F "authorizationKey='+ad+'" -F "handler=1" -F "punkUser='+un+'" -F "punkCollection='+sn+'" -F "handlerNeeded=DataIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php', shell = True).strip()
+			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "punkUser='+un+'" -F "punkCollection='+sn+'" -F "handlerNeeded=DataIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php', shell = True).strip()
  			print res
 			if not re.match('[0-9]+\|',res.strip()):
 				sys.exit("Could not send data to server; please make a new snapshot later to continue.")
@@ -155,8 +155,11 @@ while running == True:
 				lenr = 0
 # 			print 'computed pax header length: '+str(lenr)
 			#based on http://www.unix.com/shell-programming-and-scripting/66466-remove-first-n-bytes-last-n-bytes-binary-file-aix.html
-			os.system('dd if='+tempDir+'/.temp.punkd of='+tempDir+'/.temp.punksp bs=1 count='+str(lenr))
-			os.system('dd if='+tempDir+'/.temp.punkd of='+tempDir+'/.temp.punksb bs=1 skip='+str(lenr))
+# 			os.system('dd if='+tempDir+'/.temp.punkd of='+tempDir+'/.temp.punksp bs=1 count='+str(lenr))
+# 			os.system('dd if='+tempDir+'/.temp.punkd of='+tempDir+'/.temp.punksb bs=1 skip='+str(lenr))
+			# based on http://stackoverflow.com/questions/4411014/how-to-get-only-the-first-ten-bytes-of-a-binary-file
+			os.system('head -c '+str(lenr)+' '+tempDir+'/.temp.punkd > '+tempDir+'/.temp.punksp')
+			os.system('tail -c+'+str(lenr+1)+' '+tempDir+'/.temp.punkd > '+tempDir+'/.temp.punksb')
 			lena = os.path.getsize(tempDir+'/.temp.punksp')
 			lenb = os.path.getsize(tempDir+'/.temp.punksb')
 			print 'pax header size: '+str(lena)			
