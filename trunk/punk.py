@@ -42,12 +42,12 @@ while running == True:
 	if action.lower().strip() == 'save':
 		if not os.path.exists('.ember.punkdb/.snapshots.punkset'):
 			os.makedirs('.ember.punkdb/.snapshots.punkset')
-		tempDir = raw_input('where to save big temporary files (default: here)? ');
+		tempDir = raw_input('where to save big temporary files (omit trailing /) (default: here)? ');
 		if len(tempDir) < 1:
 			tempDir = '.'
 		else:
-			if not os.path.exists(tempDir):
-				os.makedirs(tempDir)
+			if not os.path.exists(tempDir+'/'+'.ember.punkdb'):
+				os.makedirs(tempDir+'/'+'.ember.punkdb')
 		ad = ''
 		try:
 			ak = open('.ember.punkdb/.this.punkak','rb')
@@ -122,8 +122,8 @@ while running == True:
 
 		def send(name,w,tdl,timedb):
 			print '\033[95m'+name+":"+'\033[0m'
-			if (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.ember.punkdb/.latest.punksr' or name == './.ember.punkdb/.temp.punksp' or name == './.ember.punkdb/.filtered.punktimedb' or name == './.ember.punkdb/.this.punkun' or name == './.ember.punkdb/.this.punksn' or name == './.ember.punkdb/.temp.punkdbz2' or name == './.ember.punkdb/.snapshots.punkset' or name == tempDir+'/.ember.punkdb/.temp.punkd' or name == './.ember.punkdb' or name == './.ember.punkdb/.temp.punksb' or name == './.ember.punkdb/.temp.punkp' or name == './.ember.punkdb/.this.punkak':
-				print 'Skipping punk database file'
+			if (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.ember.punkdb/.latest.punksr' or name == './.ember.punkdb/.temp.punksp' or name == './.ember.punkdb/.filtered.punktimedb' or name == './.ember.punkdb/.restore.punkd.pax' or name == './.ember.punkdb/.this.punkun' or name == './.ember.punkdb/.this.punksn' or name == './punk.py' or name == './.ember.punkdb/.temp.punkdbz2' or name == './.ember.punkdb/.snapshots.punkset' or name == tempDir+'/.ember.punkdb/.temp.punkd' or name == './.ember.punkdb' or name == './.ember.punkdb/.temp.punksb' or name == './.ember.punkdb/.restore.punkdb' or name == './.ember.punkdb/.temp.punkd' or name == './.ember.punkdb/.temp.punkp' or name == './.ember.punkdb/.this.punkak':
+				print 'Skipping punk system file'
 				return
 			filenm = base64.b64encode(name)
 			#print 'Working with new time database: '+timedb
@@ -237,10 +237,11 @@ while running == True:
 				send(cfilename, w, tdl, timedb)
 				print 'Finished processing record.\n\n\n'
 		print '\033[95mSnapshot data:\033[0m'
-		os.system('tar -c -j -f .ember.punkdb/.temp.punkdbz2 --no-recursion --format pax .ember.punkdb/.snapshots.punkset/'+now+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb')
-		fres = sendChunk('.ember.punkdb/.temp.punkdbz2','',tdl,un,sn)
+# 		os.system('tar -c -j -f .ember.punkdb/.temp.punkdbz2 --no-recursion --format pax .ember.punkdb/.snapshots.punkset/'+now+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb')
+# 		fres = sendChunk('.ember.punkdb/.temp.punkdbz2','',tdl,un,sn)
+ 		fres = sendChunk('.ember.punkdb/.snapshots.punkset/'+now+'.punkdb','',tdl,un,sn)
 		print 'Finished processing record.\n\n\n'
-		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."+'\n'+'Snapshot ID: '+fres[:fres.find('|')]+'.\n'+'\033[0m'
+		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."+'\n'+'Snapshot ID: '+fres[:fres.find('|')]+'.\n'+'\033[0m'+'\033[0m'
 		w.write(nres)
 		sys.exit(nres)
 
@@ -261,7 +262,7 @@ while running == True:
 		ssnap = False
 		if (snq.lower().strip() != '') and (snq.lower().strip() != 'no'):
 			ssnap = True
-			restq = raw_input('Using snapshot '+str(int(snq.lower().strip()))+'. Continue? (yes/no) ');
+			restq = raw_input('Using snapshot '+str(int(snq.lower().strip()))+'. Existing files will be replaced with the snapshot. Continue? (yes/no) ');
 			if restq.lower().strip() !='yes':
 				sys.exit("Restore canceled.")
 			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+str(int(snq.lower().strip()))+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
@@ -274,7 +275,7 @@ while running == True:
 				sys.exit("No snapshots found.")
 			w = open('.ember.punkdb/.latest.punksr', 'rb')
 			tdl = w.read()
-			restq = raw_input('Using latest snapshot from '+tdl+'. Continue? (yes/no) ');
+			restq = raw_input('Using latest snapshot from '+tdl+'. Existing files will be replaced with the snapshot. Continue? (yes/no) ');
 			if restq.lower().strip() !='yes':
 				sys.exit("Restore canceled.")
 			#print 'Restoring latest snapshot: '+
@@ -284,14 +285,14 @@ while running == True:
 		overwrite = True
 # 		if restq.lower().strip() =='overwrite' or restq.lower().strip() =='overfuckingwrite':
 # 			overwrite = True
-		restq = raw_input('Existing files will be replaced with the snapshot. Continue? (yes/no) ');
-		if restq.lower().strip() !='yes':
-			sys.exit("Restore canceled.")
+# 		restq = raw_input('Existing files will be replaced with the snapshot. Continue? (yes/no) ');
+# 		if restq.lower().strip() !='yes':
+# 			sys.exit("Restore canceled.")
 		#help from http://stackoverflow.com/questions/6996603/how-do-i-delete-a-file-or-folder-in-python
 		os.remove('.ember.punkdb/.restore.punkd.pax')
 		def processRestore(data,overwrite,prevfilename):
 			thisfilename = data[:data.find('|')]
-# 			print 'Filename: '+thisfilename
+ 			print 'Filename: '+thisfilename
 			recordId = data[data.find('|'):][:data.find('|')][1:][:data.find('|')]
 			records512 = data[data.rfind('|'):][1:]
 # 			print 'Record ID: '+recordId
