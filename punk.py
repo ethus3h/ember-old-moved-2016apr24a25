@@ -291,24 +291,26 @@ while running == True:
 		os.remove('.ember.punkdb/.restore.punkd.pax')
 		def processRestore(data,overwrite,prevfilename):
 			thisfilename = data[:data.find('|')]
-			print 'Filename: '+thisfilename
-			recordId = data[data.find('|'):][:data.find('|')][1:]
+# 			print 'Filename: '+thisfilename
+			recordId = data[data.find('|'):][:data.find('|')][1:][:data.find('|')]
 			records512 = data[data.rfind('|'):][1:]
-			print 'Record ID: '+recordId
-			print 'SHA-512: '+records512
+# 			print 'Record ID: '+recordId
+# 			print 'SHA-512: '+records512
 			if prevfilename != thisfilename:
 				#Push last restored file into place (unpack pax)
 				os.system('tar -x -f .ember.punkdb/.restore.punkd.pax')
 				print 'Restored '+base64.b64decode(prevfilename)+'.'
-				sleep(15)
+# 				sleep(15)
 				w = open('.ember.punkdb/.restore.punkd.pax', 'wb')
 			else:
 				w = open('.ember.punkdb/.restore.punkd.pax', 'ab')
 			#Append this part of next file to temporary pax
 			chunk = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+recordId+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
-			print 'Retrieved chunk data: '+chunk
-			print 'Retrieved chunk sha512: '+hashlib.sha512(chunk).hexdigest()
-			if(hashlib.sha512(chunk).hexdigest() != records512):
+			#help from http://stackoverflow.com/questions/15478127/remove-final-character-from-string-python
+			chunk = chunk[:-1]
+# 			print 'Retrieved chunk data: '+chunk
+# 			print 'Retrieved chunk sha512: '+hashlib.sha512(chunk).hexdigest()
+			if(hashlib.sha512(chunk).hexdigest().lower().strip() != records512.lower().strip()):
 				sys.exit('Could not restore file '+base64.b64decode(thisfilename)+'.')
 			w.write(chunk)
 			w.close()
@@ -319,6 +321,6 @@ while running == True:
 			resr = processRestore(line,overwrite,thisfilename)
 			thisfilename = resr
 		nres='\033[92m'+'Completed restore.\n'+'\033[0m'
-    	sys.exit(nres)
+		sys.exit(nres)
 
 	print "That wasn't a suggested input; I don't know what to do."
