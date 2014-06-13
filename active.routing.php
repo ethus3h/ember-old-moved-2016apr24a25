@@ -35,6 +35,12 @@ function runHandlers($handlerNeeded)
     if ($handlerNeeded == 'DataRetrieve') {
         DataRetrieveHandler();
     }
+    if ($handlerNeeded == 'PunkRecordIntake') {
+        PunkRecordIntakeHandler();
+    }
+    if ($handlerNeeded == 'PunkRecordRetrieve') {
+        PunkeRecordRetrieveHandler();
+    }
 }
 
 function runWints($wintNeeded)
