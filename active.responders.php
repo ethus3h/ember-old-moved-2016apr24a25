@@ -485,6 +485,8 @@ function PunkRecordIntakeHandler()
 
 function PunkRecordRetrieveHandler()
 {
+	global $l;
+	$l = new llog;
 	global $generalAuthKey;
 	if(authorized($generalAuthKey)) {
 		echo retrieve($_REQUEST['recordId'])['data'];

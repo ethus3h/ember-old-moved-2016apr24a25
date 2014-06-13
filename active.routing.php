@@ -39,7 +39,7 @@ function runHandlers($handlerNeeded)
         PunkRecordIntakeHandler();
     }
     if ($handlerNeeded == 'PunkRecordRetrieve') {
-        PunkeRecordRetrieveHandler();
+        PunkRecordRetrieveHandler();
     }
 }
 
