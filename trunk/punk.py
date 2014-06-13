@@ -103,9 +103,12 @@ while running == True:
 		def sendChunk(tempfilename,name,tdl,un='',sn=''):
 			r = open(tempfilename,'rb')
 			piece = r.read()
+			uninsert = ''
+			if len(un) > 0:
+				 uninsert = '-F "punkUser='+un+'"'
 			csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
 			#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
-			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "punkUser='+un+'" -F "punkCollection='+sn+'" -F "handlerNeeded=DataIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php', shell = True).strip()
+			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1"'+uninsert+' -F "punkCollection='+sn+'" -F "handlerNeeded=PunkRecordIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php', shell = True).strip()
  			print res
 			if not re.match('[0-9]+\|',res.strip()):
 				sys.exit("Could not send data to server; please make a new snapshot later to continue.")
@@ -228,16 +231,52 @@ while running == True:
 				print 'Finished processing record.\n\n\n'
 		print '\033[95mSnapshot data:\033[0m'
 		os.system('tar -c -j -f .temp.punkdbz2 --no-recursion --format pax .snapshots.punkset/'+now+'.punkdb .snapshots.punkset/'+now+'.punktimedb')
-		sendChunk('.temp.punkdbz2','',tdl,un,sn)
+		fres = sendChunk('.temp.punkdbz2','',tdl,un,sn)
 		print 'Finished processing record.\n\n\n'
-		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."+'\033[0m'
+		nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."
+		print 'Snapshot ID: '+fres[:fres.find('|')]+'.\033[0m'
 		w.write(nres)
 		sys.exit(nres)
 
 	if action.lower().strip() == 'restore':
+		snq = raw_input('Restore from a specific snapshot? Type the snapshot ID if so. (default: no) ');
+		ssnap = False
+		if int(snq.lower().strip()) != 0:
+			ssnap = True
+			print 'Using snapshot '+str(int(snq.lower().strip()))+'.'
+			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+str(int(snq.lower().strip()))+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
+			w = open('.restore.punkdb', 'wb')
+			w.write(res)
+			w.close()
+			sndata = '.restore.punkdb'
+		else:
+			if not os.path.exists('.latest.punksr'):
+				sys.exit("No snapshots found.")
+			w = open('.latest.punksr', 'rb')
+			tdl = w.read()
+			print 'Using latest snapshot from '+tdl+'.'
+			#print 'Restoring latest snapshot: '+
+			sndata = '.snapshots.punkset/'+tdl+'.punkdb'
 		restq = raw_input('What to do with existing files here, if any (overwrite/leave)? ("leave" will make not restored files of the same name) ');
 		overwrite = False
 		if restq.lower().strip() =='overwrite' or restq.lower().strip() =='overfuckingwrite':
 			overwrite = True
+		def processRestore(data,overwrite,prevfilename):
+			thisfilename = data[:data.find('|')]
+			if prevfilename != thisfilename:
+				#Push last restored file into place (unpack pax)
+				os.system('tar -x -f '+tempDir+'/.restore.punkd --format pax')				
+			#Append this part of next file to temporary pax
+			chunk = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+recordId+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
+			w = open(tempDir+'/.restore.punkd', 'ab')
+			w.write(chunk)
+			w.close()
+			return newfilename
+		# based on http://stackoverflow.com/questions/519633/lazy-method-for-reading-big-file-in-python
+		thisfilename = ''
+		for line in open(sndata):
+			resr = processRestore(line,overwrite,thisfilename)
+			thisfilename = resr
+    		
 
 	print "That wasn't a suggested input; I don't know what to do."

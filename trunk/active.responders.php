@@ -474,10 +474,20 @@ function PunkRecordIntakeHandler()
 		$id = $insertion['id'];
 		$status = $insertion['status'];
 		$db = new FractureDB('futuqiur_ember');
-		$addedTree = $db->addRow('trees', 'user, collection, number, csum', "'" . $_REQUEST['punkUser'] . "', '" . $_REQUEST['punkCollection'] . "', '" . $_REQUEST['punkCollection'] . "', '" . $id . "', '" . $csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512 . "'");
+		if(isset($_REQUEST['punkUser'])) {
+			$addedTree = $db->addRow('trees', 'user, collection, number, csum', "'" . $_REQUEST['punkUser'] . "', '" . $_REQUEST['punkCollection'] . "', '" . $id . "', '" . $csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512 . "'");
+		}
 		if(check($status,true)) {
 			echo $id.'|'.$csum->len.'|'.$csum->md5.'|'.$csum->sha.'|'.$csum->s512;
 		}
+	}
+}
+
+function PunkRecordRetrieveHandler()
+{
+	global $generalAuthKey;
+	if(authorized($generalAuthKey)) {
+		echo retrieve($_REQUEST['recordId'])['data'];
 	}
 }
 
