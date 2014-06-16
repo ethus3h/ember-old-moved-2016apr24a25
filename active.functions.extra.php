@@ -276,7 +276,7 @@ function retrieveChunk($id)
 			$details = unserialize(base64_decode(strstr($rawData,'@CoalFragmentMarker@', true)));
 			if(!is_array($details)) {
 				$status=51;
-				echo 'Failed to unserialize metadata';
+				echo 'Failed to unserialize metadata. Raw data was: '.$rawData.'<br>\n\n<br>\n\n<br>\n\n';
 			}
 			$data = substr(strstr($rawData,'@CoalFragmentMarker@'),20);
 			$retr_csum = new Csum($data);
