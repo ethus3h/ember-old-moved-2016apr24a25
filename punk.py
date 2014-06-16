@@ -117,7 +117,7 @@ while running == True:
 				 uninsert = ' -F "punkUser='+un+'"'
 			csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
 			#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
-			ccmd = 'curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1"'+uninsert+' -F "punkCollection='+sn+'" -F "handlerNeeded=PunkRecordIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php'
+			ccmd = 'curl --connect-timeout 30 -m 1024 -F "authorizationKey='+ad+'" -F "handler=1"'+uninsert+' -F "punkCollection='+sn+'" -F "handlerNeeded=PunkRecordIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php'
 			#print ccmd
 			res = subprocess.check_output(ccmd, shell = True).strip()
  			print res
@@ -186,8 +186,6 @@ while running == True:
 			
 			resmeta = sendChunk(tempDir+'/.ember.punkdb/.temp.punksp',filenm,tdl)
 			resf = filenm+'|'+resmeta+'\n'
-			wr = open(timedb,'ab')
-			wr.write(filenm+'|'+str(os.path.getmtime(name)))
 			#help from http://stackoverflow.com/questions/3204782/how-to-check-if-a-file-is-a-directory-or-regular-file-in-python
 			dataFile = open(".ember.punkdb/.snapshots.punkset/"+now+".punkdb",'ab')
 			#w.write(resf)
@@ -209,6 +207,8 @@ while running == True:
 				#w.write(resf)
 				dataFile.write(resf)
 			f.close()
+			wr = open(timedb,'ab')
+			wr.write(filenm+'|'+str(os.path.getmtime(name)))
 
 		# based on http://stackoverflow.com/questions/120656/directory-listing-in-python
 		now = strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())
