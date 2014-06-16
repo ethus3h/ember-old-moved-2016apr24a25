@@ -344,10 +344,10 @@ def run():
 
 		print "That wasn't a suggested input; I don't know what to do."
 
-    while True:
-    	#help from http://stackoverflow.com/questions/2083987/how-to-retry-after-exception-in-python and http://stackoverflow.com/questions/5119751/in-python-whats-the-difference-between-except-exception-as-e-and-except-exc
-        try:
-            run()
-        except Exception, e:
-            continue
-        break
+while True:
+	#help from http://stackoverflow.com/questions/2083987/how-to-retry-after-exception-in-python and http://stackoverflow.com/questions/5119751/in-python-whats-the-difference-between-except-exception-as-e-and-except-exc
+	try:
+		run()
+	except Exception, e:
+		continue
+	break
