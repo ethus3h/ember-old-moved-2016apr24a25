@@ -224,7 +224,8 @@ function insertChunk($data,$csum) {
 		$upload = @ia_upload($prepared_data,$identifier,$fallbackid,$filename,$iaAuthKey,$iaPrivateKey);
 		if($upload != 0) {
 			$status = 54;
-			$db->dropRow('chunks',$id);
+			echo 'Failed to add coal. Upload returned status code '.$upload.'.';
+ 			$db->dropRow('chunks',$id);
 		}
 		else {
 			$db->setField('chunks','address',$address,$id);
@@ -276,7 +277,8 @@ function retrieveChunk($id)
 			$details = unserialize(base64_decode(strstr($rawData,'@CoalFragmentMarker@', true)));
 			if(!is_array($details)) {
 				$status=51;
-				echo 'Failed to unserialize metadata. Raw data was: '.$rawData.'<br>\n\n<br>\n\n<br>\n\n';
+				echo 'Failed to unserialize metadata. Raw data was: '.$rawData."<br>\n\n<br>\n\n<br>\n\n";
+				$l->e();
 			}
 			$data = substr(strstr($rawData,'@CoalFragmentMarker@'),20);
 			$retr_csum = new Csum($data);
@@ -449,7 +451,7 @@ function coalFromFile($filename,$csump) {
 
 function checkCoal($id) {
 	global $l;
-	sleep(3);
+	sleep(6);
 	$coal = retrieveCoal($id);
 	$l->a('checkCoal returned status: '.$coal['status'].'.<br>');
 	return check($coal['status']);

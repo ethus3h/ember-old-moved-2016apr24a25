@@ -6,43 +6,43 @@ import base64
 import hashlib
 import subprocess
 from time import sleep, gmtime, strftime
-def run():
-	#TODO: Fix: New records are not correctly updated in the db, so files from previous snapshots are getting restored in place of the copy of the file from the newer snapshot.
-	#TODO: Fix: Truncated tar archive error; checksum mismatch on restore. See "checksum mismatch info folder created 13 June 2014 a.mn.".
-	#from http://stackoverflow.com/questions/35817/how-to-escape-os-system-calls-in-python
-	def shellquote(s):
-		return "'" + s.replace("'", "'\\''") + "'"
-	def checkf(filename,needle):
-		datafile = file(filename)
-		found = False #this isn't really necessary 
-		for line in datafile:
-			if needle in line:
-				#found = True #not necessary 
-				return True
-		return False #because you finished the search without finding anything
-	#help from http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
-	hp = os.path.expanduser("~/.bash_profile")
-	# os.system('mv '+hp+' .ember.punkdb/.profile.punkbpbk')
-	# os.system('cp .ember.punkdb/.profile.punkbpbk '+hp)
-	if not os.path.exists(hp):
-		w = open(hp, 'wb')
-		w.write('export CLICOLOR=1\n')
-		w.close()
-	# else:
-	# 	if not checkf(hp,'export CLICOLOR=1'):
-	# 		w = open(hp, 'ab')
-	# 		w.write('export CLICOLOR=1\n')
-	# 		w.close()
+#TODO: Fix: New records are not correctly updated in the db, so files from previous snapshots are getting restored in place of the copy of the file from the newer snapshot.
+#TODO: Fix: Truncated tar archive error; checksum mismatch on restore. See "checksum mismatch info folder created 13 June 2014 a.mn.".
+#from http://stackoverflow.com/questions/35817/how-to-escape-os-system-calls-in-python
+def shellquote(s):
+	return "'" + s.replace("'", "'\\''") + "'"
+def checkf(filename,needle):
+	datafile = file(filename)
+	found = False #this isn't really necessary 
+	for line in datafile:
+		if needle in line:
+			#found = True #not necessary 
+			return True
+	return False #because you finished the search without finding anything
+#help from http://stackoverflow.com/questions/287871/print-in-terminal-with-colors-using-python
+hp = os.path.expanduser("~/.bash_profile")
+# os.system('mv '+hp+' .ember.punkdb/.profile.punkbpbk')
+# os.system('cp .ember.punkdb/.profile.punkbpbk '+hp)
+if not os.path.exists(hp):
+	w = open(hp, 'wb')
+	w.write('export CLICOLOR=1\n')
+	w.close()
+# else:
+# 	if not checkf(hp,'export CLICOLOR=1'):
+# 		w = open(hp, 'ab')
+# 		w.write('export CLICOLOR=1\n')
+# 		w.close()
 
-	print '\033[91m'+'IMPORTANT WARNING: If you have existing files or directories with name extension beginning with "punk" they may be overwritten!'+'\033[0m'
-	running = True
-	while running == True:
-		action = raw_input('action (save/restore/nothing)? ');
+print '\033[91m'+'IMPORTANT WARNING: If you have existing files or directories with name extension beginning with "punk" they may be overwritten!'+'\033[0m'
+running = True
+while running == True:
+	action = raw_input('action (save/restore/nothing)? ');
 
-		if action.lower().strip() == 'nothing' or action.lower().strip() == 'quit' or action.lower().strip() == 'close':
-			sys.exit()
+	if action.lower().strip() == 'nothing' or action.lower().strip() == 'quit' or action.lower().strip() == 'close':
+		sys.exit()
 
-		if action.lower().strip() == 'save':
+	if action.lower().strip() == 'save':
+		def run():
 			if not os.path.exists('.ember.punkdb/.snapshots.punkset'):
 				os.makedirs('.ember.punkdb/.snapshots.punkset')
 			tempDir = raw_input('where to save big temporary files (omit trailing /) (default: here)? ');
@@ -77,7 +77,7 @@ def run():
 				sn = raw_input('collection name? ');
 				snx = open('.ember.punkdb/.this.punksn','wb')
 				snx.write(sn)
-		
+	
 			un = ''
 			try:
 				unl = open('.ember.punkdb/.this.punkun','rb')
@@ -109,7 +109,7 @@ def run():
 						#found = True #not necessary 
 						return True
 				return False #because you finished the search without finding anything
-		
+	
 			def sendChunk(tempfilename,name,tdl,un='',sn=''):
 				r = open(tempfilename,'rb')
 				piece = r.read()
@@ -179,12 +179,12 @@ def run():
 				lenb = os.path.getsize(tempDir+'/.ember.punkdb/.temp.punksb')
 				print 'pax header size: '+str(lena)			
 				print 'pax body size: '+str(lenb)
-			
+		
 	# 			mt = open('.temp.punksp')
 	# 			mtd = mt.read()
 	# 			mt.close()
 	# 			print 'Metadata: '+mtd
-			
+		
 				resmeta = sendChunk(tempDir+'/.ember.punkdb/.temp.punksp',filenm,tdl)
 				resf = filenm+'|'+resmeta+'\n'
 				#help from http://stackoverflow.com/questions/3204782/how-to-check-if-a-file-is-a-directory-or-regular-file-in-python
@@ -197,12 +197,12 @@ def run():
 					wr = open('.ember.punkdb/.temp.punkp', 'wb')
 					wr.write(piece)
 					wr.close()
-				
+			
 	# 					ct = open('.ember.punkdb/.temp.punkp')
 	# 					ctd = ct.read()
 	# 					ct.close()
 	# 					print 'Chunk data: '+ctd
-				
+			
 					resp = sendChunk('.ember.punkdb/.temp.punkp',filenm,tdl)
 					resf = filenm+'|'+resp+'\n'
 					#w.write(resf)
@@ -254,100 +254,100 @@ def run():
 			nres = '\033[92m'+"Completed snapshot at "+strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())+"."+'\n'+'Snapshot ID: '+fres[:fres.find('|')]+'.\n'+'\033[0m'+'\033[0m'
 			w.write(nres)
 			sys.exit(nres)
-
-		if action.lower().strip() == 'restore':
-			if not os.path.exists('.ember.punkdb/.snapshots.punkset'):
-				os.makedirs('.ember.punkdb/.snapshots.punkset')
-			ad = ''
+			
+		while True:
+			#help from http://stackoverflow.com/questions/2083987/how-to-retry-after-exception-in-python and http://stackoverflow.com/questions/5119751/in-python-whats-the-difference-between-except-exception-as-e-and-except-exc
 			try:
-				ak = open('.ember.punkdb/.this.punkak','rb')
-				ad = ak.read()
-			except:
-				pass
-			if len(ad) < 1:
-				ad = raw_input('authkey? ');
-				ax = open('.ember.punkdb/.this.punkak','wb')
-				ax.write(ad)
-			snq = raw_input('Restore from a specific snapshot? Type the snapshot ID if so. (default: no) ');
-			ssnap = False
-			if (snq.lower().strip() != '') and (snq.lower().strip() != 'no'):
-				ssnap = True
-				restq = raw_input('Using snapshot '+str(int(snq.lower().strip()))+'. Existing files will be replaced with the snapshot. Continue? (yes/no) ');
-				if restq.lower().strip() !='yes':
-					sys.exit("Restore canceled.")
-				res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+str(int(snq.lower().strip()))+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
-				w = open('.ember.punkdb/.restore.punkdb.gz', 'wb')
-				w.write(res)
-				w.close()
-				#help from https://en.wikibooks.org/wiki/Guide_to_Unix/Commands/File_Compression#gzip
-				os.remove('.ember.punkdb/.restore.punkdb')
-				os.system('gunzip .ember.punkdb/.restore.punkdb.gz')
-				sndata = '.ember.punkdb/.restore.punkdb'
+				run()
+			except Exception, e:
+				continue
+			break
+
+	if action.lower().strip() == 'restore':
+		if not os.path.exists('.ember.punkdb/.snapshots.punkset'):
+			os.makedirs('.ember.punkdb/.snapshots.punkset')
+		ad = ''
+		try:
+			ak = open('.ember.punkdb/.this.punkak','rb')
+			ad = ak.read()
+		except:
+			pass
+		if len(ad) < 1:
+			ad = raw_input('authkey? ');
+			ax = open('.ember.punkdb/.this.punkak','wb')
+			ax.write(ad)
+		snq = raw_input('Restore from a specific snapshot? Type the snapshot ID if so. (default: no) ');
+		ssnap = False
+		if (snq.lower().strip() != '') and (snq.lower().strip() != 'no'):
+			ssnap = True
+			restq = raw_input('Using snapshot '+str(int(snq.lower().strip()))+'. Existing files will be replaced with the snapshot. Continue? (yes/no) ');
+			if restq.lower().strip() !='yes':
+				sys.exit("Restore canceled.")
+			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+str(int(snq.lower().strip()))+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
+			w = open('.ember.punkdb/.restore.punkdb.gz', 'wb')
+			w.write(res)
+			w.close()
+			#help from https://en.wikibooks.org/wiki/Guide_to_Unix/Commands/File_Compression#gzip
+			os.remove('.ember.punkdb/.restore.punkdb')
+			os.system('gunzip .ember.punkdb/.restore.punkdb.gz')
+			sndata = '.ember.punkdb/.restore.punkdb'
+		else:
+			if not os.path.exists('.ember.punkdb/.latest.punksr'):
+				sys.exit("No snapshots found.")
+			w = open('.ember.punkdb/.latest.punksr', 'rb')
+			tdl = w.read()
+			restq = raw_input('Using latest snapshot from '+tdl+'. Existing files will be replaced with the snapshot. Continue? (yes/no) ');
+			if restq.lower().strip() !='yes':
+				sys.exit("Restore canceled.")
+			#print 'Restoring latest snapshot: '+
+			sndata = '.ember.punkdb/.snapshots.punkset/'+tdl+'.punkdb'
+# 		restq = raw_input('What to do with existing files here, if any (overwrite/leave)? ("leave" will make not restored files of the same name) ');
+# 		overwrite = False
+		overwrite = True
+# 		if restq.lower().strip() =='overwrite' or restq.lower().strip() =='overfuckingwrite':
+# 			overwrite = True
+# 		restq = raw_input('Existing files will be replaced with the snapshot. Continue? (yes/no) ');
+# 		if restq.lower().strip() !='yes':
+# 			sys.exit("Restore canceled.")
+		#help from http://stackoverflow.com/questions/6996603/how-do-i-delete-a-file-or-folder-in-python
+		os.remove('.ember.punkdb/.restore.punkd.pax')
+		def processRestore(data,overwrite,prevfilename):
+			thisfilename = data[:data.find('|')]
+			#print 'Filename: '+thisfilename
+			recordId = data[data.find('|'):][:data.find('|')][1:][:data.find('|')]
+			records512 = data[data.rfind('|'):][1:]
+# 			print 'Record ID: '+recordId
+# 			print 'SHA-512: '+records512
+			if prevfilename != thisfilename:
+				#Push last restored file into place (unpack pax)
+				os.system('tar -x -f .ember.punkdb/.restore.punkd.pax')
+				print 'Restored '+base64.b64decode(prevfilename)+'.'
+# 				sleep(15)
+				w = open('.ember.punkdb/.restore.punkd.pax', 'wb')
 			else:
-				if not os.path.exists('.ember.punkdb/.latest.punksr'):
-					sys.exit("No snapshots found.")
-				w = open('.ember.punkdb/.latest.punksr', 'rb')
-				tdl = w.read()
-				restq = raw_input('Using latest snapshot from '+tdl+'. Existing files will be replaced with the snapshot. Continue? (yes/no) ');
-				if restq.lower().strip() !='yes':
-					sys.exit("Restore canceled.")
-				#print 'Restoring latest snapshot: '+
-				sndata = '.ember.punkdb/.snapshots.punkset/'+tdl+'.punkdb'
-	# 		restq = raw_input('What to do with existing files here, if any (overwrite/leave)? ("leave" will make not restored files of the same name) ');
-	# 		overwrite = False
-			overwrite = True
-	# 		if restq.lower().strip() =='overwrite' or restq.lower().strip() =='overfuckingwrite':
-	# 			overwrite = True
-	# 		restq = raw_input('Existing files will be replaced with the snapshot. Continue? (yes/no) ');
-	# 		if restq.lower().strip() !='yes':
-	# 			sys.exit("Restore canceled.")
-			#help from http://stackoverflow.com/questions/6996603/how-do-i-delete-a-file-or-folder-in-python
-			os.remove('.ember.punkdb/.restore.punkd.pax')
-			def processRestore(data,overwrite,prevfilename):
-				thisfilename = data[:data.find('|')]
-				#print 'Filename: '+thisfilename
-				recordId = data[data.find('|'):][:data.find('|')][1:][:data.find('|')]
-				records512 = data[data.rfind('|'):][1:]
-	# 			print 'Record ID: '+recordId
-	# 			print 'SHA-512: '+records512
-				if prevfilename != thisfilename:
-					#Push last restored file into place (unpack pax)
-					os.system('tar -x -f .ember.punkdb/.restore.punkd.pax')
-					print 'Restored '+base64.b64decode(prevfilename)+'.'
-	# 				sleep(15)
-					w = open('.ember.punkdb/.restore.punkd.pax', 'wb')
-				else:
-					w = open('.ember.punkdb/.restore.punkd.pax', 'ab')
-				#Append this part of next file to temporary pax
-				chunk = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+recordId+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
-				#help from http://stackoverflow.com/questions/15478127/remove-final-character-from-string-python
-				chunk = chunk[:-1]
-	# 			print 'Retrieved chunk data: '+chunk
-	# 			print 'Retrieved chunk sha512: '+hashlib.sha512(chunk).hexdigest()
-				if(hashlib.sha512(chunk).hexdigest().lower().strip() != records512.lower().strip()):
-					sys.exit('Could not restore file '+base64.b64decode(thisfilename)+'.')
-				w.write(chunk)
-				w.close()
-				return thisfilename
-			# based on http://stackoverflow.com/questions/519633/lazy-method-for-reading-big-file-in-python
-			thisfilename = ''
-			for line in open(sndata):
-				resr = processRestore(line,overwrite,thisfilename)
-				thisfilename = resr
-			print 'Saving checksums of restored directory state...'
-			# help from http://www.linuxquestions.org/questions/linux-software-2/bash-how-to-redirect-output-to-file-and-still-have-it-on-screen-412611/
-			now = strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())
-			os.system('md5deep -r . | tee .ember.punkdb/.snapshots.punkset/.restored.punkcsum')
-			print 'Finished saving checksums of restored directory state.\n\n\n'
-			nres='\033[92m'+'Completed restore.\n'+'\033[0m'
-			sys.exit(nres)
+				w = open('.ember.punkdb/.restore.punkd.pax', 'ab')
+			#Append this part of next file to temporary pax
+			chunk = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+recordId+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
+			#help from http://stackoverflow.com/questions/15478127/remove-final-character-from-string-python
+			chunk = chunk[:-1]
+# 			print 'Retrieved chunk data: '+chunk
+# 			print 'Retrieved chunk sha512: '+hashlib.sha512(chunk).hexdigest()
+			if(hashlib.sha512(chunk).hexdigest().lower().strip() != records512.lower().strip()):
+				sys.exit('Could not restore file '+base64.b64decode(thisfilename)+'.')
+			w.write(chunk)
+			w.close()
+			return thisfilename
+		# based on http://stackoverflow.com/questions/519633/lazy-method-for-reading-big-file-in-python
+		thisfilename = ''
+		for line in open(sndata):
+			resr = processRestore(line,overwrite,thisfilename)
+			thisfilename = resr
+		print 'Saving checksums of restored directory state...'
+		# help from http://www.linuxquestions.org/questions/linux-software-2/bash-how-to-redirect-output-to-file-and-still-have-it-on-screen-412611/
+		now = strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())
+		os.system('md5deep -r . | tee .ember.punkdb/.snapshots.punkset/.restored.punkcsum')
+		print 'Finished saving checksums of restored directory state.\n\n\n'
+		nres='\033[92m'+'Completed restore.\n'+'\033[0m'
+		sys.exit(nres)
 
-		print "That wasn't a suggested input; I don't know what to do."
-
-while True:
-	#help from http://stackoverflow.com/questions/2083987/how-to-retry-after-exception-in-python and http://stackoverflow.com/questions/5119751/in-python-whats-the-difference-between-except-exception-as-e-and-except-exc
-	try:
-		run()
-	except Exception, e:
-		continue
-	break
+	print "That wasn't a suggested input; I don't know what to do."
