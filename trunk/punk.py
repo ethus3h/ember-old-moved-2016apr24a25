@@ -111,21 +111,32 @@ while running == True:
 				return False #because you finished the search without finding anything
 	
 			def sendChunk(tempfilename,name,tdl,un='',sn=''):
-				r = open(tempfilename,'rb')
-				piece = r.read()
-				uninsert = ''
-				if len(un) == 0:
-					 uninsert = ' -F "punkUser='+un+'"'
-				csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
-				#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
-				ccmd = 'curl --connect-timeout 30 -m 1024 -F "authorizationKey='+ad+'" -F "handler=1"'+uninsert+' -F "punkCollection='+sn+'" -F "handlerNeeded=PunkRecordIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php'
-				#print ccmd
-				res = subprocess.check_output(ccmd, shell = True).strip()
-				print res
-				if not re.match('[0-9]+\|',res.strip()):
-					sys.exit("Could not send data to server; please make a new snapshot later to continue.")
-				if res[res.find('|'):] != csum:
-					sys.exit("Checksum failed; please make a new snapshot later to continue.")
+				def sendChunkOp(tempfilename,name,tdl,un='',sn=''):
+					r = open(tempfilename,'rb')
+					piece = r.read()
+					uninsert = ''
+					if len(un) == 0:
+						 uninsert = ' -F "punkUser='+un+'"'
+					csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
+					#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
+					ccmd = 'curl --connect-timeout 30 -m 1024 -F "authorizationKey='+ad+'" -F "handler=1"'+uninsert+' -F "punkCollection='+sn+'" -F "handlerNeeded=PunkRecordIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php'
+					#print ccmd
+					res = subprocess.check_output(ccmd, shell = True).strip()
+					return res
+				res = ''
+				tca = 0
+				tcb = 0
+				while (not re.match('[0-9]+\|',res.strip())) and (tca<10):
+					tca=tca+1
+					while (res[res.find('|'):] != csum) and (tcb<10):
+						tcb=tcb+1
+						res = sendChunkOp(tempfilename,name,tdl,un='',sn='')
+						print res
+						return res
+						if res[res.find('|'):] != csum:
+							print "Checksum failed; retrying "+str(10-tca)+" more times."
+					if not re.match('[0-9]+\|',res.strip()):
+						print "Could not send data to server; retrying "+str(10-tcb)+" more times."
 				return res
 
 			def send(name,w,tdl,timedb):
