@@ -110,33 +110,60 @@ while running == True:
 						return True
 				return False #because you finished the search without finding anything
 	
+			def sendChunkOp(tempfilename,name,tdl,un='',sn=''):
+# 				print 'Running sendChunkOp'
+				r = open(tempfilename,'rb')
+				piece = r.read()
+				uninsert = ''
+				if len(un) == 0:
+					 uninsert = ' -F "punkUser='+un+'"'
+				#help from http://effbot.org/pyfaq/what-are-the-rules-for-local-and-global-variables-in-python.htm and http://stackoverflow.com/questions/423379/using-global-variables-in-a-function-other-than-the-one-that-created-them
+				csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
+				#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
+				ccmd = 'curl --connect-timeout 30 -m 1024 -F "authorizationKey='+ad+'" -F "handler=1"'+uninsert+' -F "punkCollection='+sn+'" -F "handlerNeeded=PunkRecordIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php'
+				#print ccmd
+				res = subprocess.check_output(ccmd, shell = True).strip()
+				#help from http://stackoverflow.com/questions/1493007/identical-string-return-false-with-in-python-why
+# 				print 'Csum:' +repr(csum.strip())
+# 				print 'resf:' +repr(res[res.find('|'):].strip())
+# 				print 'test:' +res[res.find('|'):].strip() == csum.strip()
+				bleh = res[res.find('|'):].strip()
+				blah = csum.strip()
+# 				blah = ''
+				blr = (bleh!=blah)
+# 				print 'bleh:'+repr(bleh)
+# 				print 'blah:'+repr(blah)
+# 				print 'blr:'+str(blr)
+				if blr:
+					res = ''
+				return res
 			def sendChunk(tempfilename,name,tdl,un='',sn=''):
-				def sendChunkOp(tempfilename,name,tdl,un='',sn=''):
-					r = open(tempfilename,'rb')
-					piece = r.read()
-					uninsert = ''
-					if len(un) == 0:
-						 uninsert = ' -F "punkUser='+un+'"'
-					csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
-					#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
-					ccmd = 'curl --connect-timeout 30 -m 1024 -F "authorizationKey='+ad+'" -F "handler=1"'+uninsert+' -F "punkCollection='+sn+'" -F "handlerNeeded=PunkRecordIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php'
-					#print ccmd
-					res = subprocess.check_output(ccmd, shell = True).strip()
-					return res
+				csum = ''
+ 				print 'Sending chunk'
 				res = ''
 				tca = 0
 				tcb = 0
+# 				print 'Csum: '+csum
+# 				print 'Testing step 1 loop'
 				while (not re.match('[0-9]+\|',res.strip())) and (tca<10):
-					tca=tca+1
-					while (res[res.find('|'):] != csum) and (tcb<10):
-						tcb=tcb+1
+# 					print 'Step 1 loop matched'
+					#help from http://stackoverflow.com/questions/14011149/python-variable-increment-while-loop
+					tca+=1
+# 					print tca
+# 					print 'Csum: '+csum
+					#help from http://stackoverflow.com/questions/4967580/pythonhow-to-get-the-size-of-a-string-before-writing-to-a-file
+					while (len(res) == 0) and (tcb<10):
+# 						print 'Step 2 loop matched'
+						tcb+=1
 						res = sendChunkOp(tempfilename,name,tdl,un='',sn='')
-						print res
-						return res
-						if res[res.find('|'):] != csum:
-							print "Checksum failed; retrying "+str(10-tca)+" more times."
+# 						print res
+# 						return res
+						if len(res) == 0:
+							print "Failed sending; retrying "+str(10-tcb)+" more times."
 					if not re.match('[0-9]+\|',res.strip()):
-						print "Could not send data to server; retrying "+str(10-tcb)+" more times."
+						print "Could not send data to server; retrying "+str(10-tca)+" more times."
+				if (tca > 9) or (tcb > 9):
+					sys.exit('Failed sending data')
 				return res
 
 			def send(name,w,tdl,timedb):
@@ -268,11 +295,12 @@ while running == True:
 			
 		while True:
 			#help from http://stackoverflow.com/questions/2083987/how-to-retry-after-exception-in-python and http://stackoverflow.com/questions/5119751/in-python-whats-the-difference-between-except-exception-as-e-and-except-exc
-			try:
-				run()
-			except Exception, e:
-				continue
-			break
+			run()
+			# try:
+# 				run()
+# 			except Exception, e:
+# 				continue
+# 			break
 
 	if action.lower().strip() == 'restore':
 		if not os.path.exists('.ember.punkdb/.snapshots.punkset'):
