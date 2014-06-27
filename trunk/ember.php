@@ -7,7 +7,7 @@ ini_set("display_errors", 0);
 error_reporting(0);
 $displayDebugMessages = False;
 #Ember.
-$emberVersion = 'Version 8-0.91.39, 26 June 2014.';
+$emberVersion = 'Version 8-0.91.40, 27 June 2014.';
 $error = 0;
 include('Crypt/RSA.php');
 include('active.php');
