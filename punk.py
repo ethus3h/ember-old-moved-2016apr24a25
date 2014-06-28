@@ -135,6 +135,9 @@ while running == True:
 # 				print 'blah:'+repr(blah)
 # 				print 'blr:'+str(blr)
 				if blr:
+					print 'bleh:'+repr(bleh)
+					print 'blah:'+repr(blah)
+					print 'blr:'+str(blr)
 					res = ''
 				return res
 			def sendChunk(tempfilename,name,tdl,un='',sn=''):
@@ -160,8 +163,13 @@ while running == True:
 # 						return res
 						if len(res) == 0:
 							print "Failed sending; retrying "+str(10-tcb)+" more times."
+							print "Sleeping "+str((300*tcb)/60)+"min."
+							sleep(300*tcb)
 					if not re.match('[0-9]+\|',res.strip()):
+						print 'res: '+res
 						print "Could not send data to server; retrying "+str(10-tca)+" more times."
+						print "Sleeping "+str((300*tca)/60)+"min."
+						sleep(300*tca)
 				if (tca > 9) or (tcb > 9):
 					sys.exit('Failed sending data')
 				return res
@@ -327,6 +335,7 @@ while running == True:
 			w.write(res)
 			w.close()
 			#help from https://en.wikibooks.org/wiki/Guide_to_Unix/Commands/File_Compression#gzip
+			os.system('touch .ember.punkdb/.restore.punkdb')
 			os.remove('.ember.punkdb/.restore.punkdb')
 			os.system('gunzip .ember.punkdb/.restore.punkdb.gz')
 			sndata = '.ember.punkdb/.restore.punkdb'
@@ -349,6 +358,7 @@ while running == True:
 # 		if restq.lower().strip() !='yes':
 # 			sys.exit("Restore canceled.")
 		#help from http://stackoverflow.com/questions/6996603/how-do-i-delete-a-file-or-folder-in-python
+		os.system('touch .ember.punkdb/.restore.punkd.pax')
 		os.remove('.ember.punkdb/.restore.punkd.pax')
 		def processRestore(data,overwrite,prevfilename):
 			thisfilename = data[:data.find('|')]
@@ -372,6 +382,9 @@ while running == True:
 # 			print 'Retrieved chunk data: '+chunk
 # 			print 'Retrieved chunk sha512: '+hashlib.sha512(chunk).hexdigest()
 			if(hashlib.sha512(chunk).hexdigest().lower().strip() != records512.lower().strip()):
+ 				print 'Retrieved chunk data: '+chunk
+				print 'Retrieved SHA512: '+hashlib.sha512(chunk).hexdigest().lower().strip()
+				print 'Record SHA512: '+records512.lower().strip()
 				sys.exit('Could not restore file '+base64.b64decode(thisfilename)+'.')
 			w.write(chunk)
 			w.close()
