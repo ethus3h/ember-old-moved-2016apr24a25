@@ -168,9 +168,9 @@ while running == True:
 
 			def send(name,w,tdl,timedb):
 				print '\033[95m'+name+":"+'\033[0m'
-				if (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.ember.punkdb/.latest.punksr' or name == './.ember.punkdb/.temp.punksp' or name == './.ember.punkdb/.filtered.punktimedb' or name == './.ember.punkdb/.restore.punkd.pax' or name == './.ember.punkdb/.this.punkun' or name == './.ember.punkdb/.this.punksn' or name == './punk.py' or name == './.ember.punkdb/.temp.punkdbz2' or name == './.ember.punkdb/.restored.punkcsum' or name == './.ember.punkdb/.snapshots.punkset' or name == tempDir+'/.ember.punkdb/.temp.punkd' or name == './.ember.punkdb' or name == './.ember.punkdb/.temp.punksb' or name == './.ember.punkdb/.restore.punkdb.gz' or name == './.ember.punkdb/.restore.punkdb' or name == './.ember.punkdb/.temp.punkd' or name == './.ember.punkdb/.temp.punkp' or name == './.ember.punkdb/.this.punkak':
-					print 'Skipping punk system file'
-					return
+# 				if (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbaktimedb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkbakdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punkdb')) or (name.startswith('./.ember.punkdb/.snapshots.punkset/') and name.endswith('.punktimedb')) or name == './.ember.punkdb/.latest.punksr' or name == './.ember.punkdb/.temp.punksp' or name == './.ember.punkdb/.filtered.punktimedb' or name == './.ember.punkdb/.restore.punkd.pax' or name == './.ember.punkdb/.this.punkun' or name == './.ember.punkdb/.this.punksn' or name == './punk.py' or name == './.ember.punkdb/.temp.punkdbz2' or name == './.ember.punkdb/.restored.punkcsum' or name == './.ember.punkdb/.snapshots.punkset' or name == tempDir+'/.ember.punkdb/.temp.punkd' or name == './.ember.punkdb' or name == './.ember.punkdb/.temp.punksb' or name == './.ember.punkdb/.restore.punkdb.gz' or name == './.ember.punkdb/.restore.punkdb' or name == './.ember.punkdb/.temp.punkd' or name == './.ember.punkdb/.temp.punkp' or name == './.ember.punkdb/.this.punkak':
+# 					print 'Skipping punk system file'
+# 					return
 				filenm = base64.b64encode(name)
 				#print 'Working with new time database: '+timedb
 				os.system('grep '+filenm+' '+timedb+' > ./.ember.punkdb/.filtered.punktimedb')
@@ -283,7 +283,7 @@ while running == True:
 					send(cfilename, w, tdl, timedb)
 					print 'Finished processing record.\n\n\n'
 			print '\033[95mSnapshot data:\033[0m'
-			os.system('tar -c -j -f .ember.punkdb/.temp.punkdbz2 --no-recursion --format pax .ember.punkdb/.snapshots.punkset/'+now+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb .ember.punkdb/.snapshots.punkset/'+now+'.punkcsum')
+			os.system('tar -c -j -f .ember.punkdb/.temp.punkdbz2 --no-recursion --format pax .ember.punkdb/.snapshots.punkset/'+now+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb .ember.punkdb/.snapshots.punkset/.snapshot.'+now+'.punkcsum')
 			sendChunk('.ember.punkdb/.temp.punkdbz2','',tdl,un,sn)
 			#help from https://en.wikibooks.org/wiki/Guide_to_Unix/Commands/File_Compression#gzip
 			os.system('gzip -9 -c .ember.punkdb/.snapshots.punkset/'+now+'.punkdb > .ember.punkdb/.restore.punkdb.gz')
