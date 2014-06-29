@@ -110,7 +110,15 @@ while running == True:
 						#found = True #not necessary 
 						return True
 				return False #because you finished the search without finding anything
-	
+			
+			def runCurlSendOp(ad,uninsert,sn,tempfilename):
+				#help from http://stackoverflow.com/questions/7575284/check-output-from-calledprocesserror
+				try:
+					ccmd = 'curl --connect-timeout 30 -m 1024 -F "authorizationKey='+ad+'" -F "handler=1"'+uninsert+' -F "punkCollection='+sn+'" -F "handlerNeeded=PunkRecordIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php'
+				except subprocess.CalledProcessError:
+					ccmd = ''
+				return ccmd
+
 			def sendChunkOp(tempfilename,name,tdl,un='',sn=''):
 # 				print 'Running sendChunkOp'
 				r = open(tempfilename,'rb')
@@ -121,7 +129,9 @@ while running == True:
 				#help from http://effbot.org/pyfaq/what-are-the-rules-for-local-and-global-variables-in-python.htm and http://stackoverflow.com/questions/423379/using-global-variables-in-a-function-other-than-the-one-that-created-them
 				csum = '|'+str(len(piece))+'|'+hashlib.md5(piece).hexdigest()+'|'+hashlib.sha1(piece).hexdigest()+'|'+hashlib.sha512(piece).hexdigest()
 				#help from http://unix.stackexchange.com/questions/94604/does-curl-have-a-timeout
-				ccmd = 'curl --connect-timeout 30 -m 1024 -F "authorizationKey='+ad+'" -F "handler=1"'+uninsert+' -F "punkCollection='+sn+'" -F "handlerNeeded=PunkRecordIntake" -F "uploadedfile=@'+tempfilename+'" http://localhost:8888/d/r/active.php'
+				ccmd = ''
+				while ccmd == '':
+					ccmd = runCurlSendOp(ad,uninsert,sn,tempfilename)
 				#print ccmd
 				res = subprocess.check_output(ccmd, shell = True).strip()
 				#help from http://stackoverflow.com/questions/1493007/identical-string-return-false-with-in-python-why
