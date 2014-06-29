@@ -49,6 +49,7 @@ while running == True:
 			print 'Saving checksums of directory state...'
 			# help from http://www.linuxquestions.org/questions/linux-software-2/bash-how-to-redirect-output-to-file-and-still-have-it-on-screen-412611/
 			now = strftime("%Y.%m.%d.%H.%M.%S.%f.%z", gmtime())
+			tnosw = now
 			os.system('md5deep -r . | tee .ember.punkdb/.snapshots.punkset/.snapshot.'+now+'.punkcsum')
 			print 'Finished saving checksums of directory state.'
 			if len(tempDir) < 1:
@@ -135,6 +136,7 @@ while running == True:
 # 				print 'blah:'+repr(blah)
 # 				print 'blr:'+str(blr)
 				if blr:
+					print 'res:'+repr(res)
 					print 'bleh:'+repr(bleh)
 					print 'blah:'+repr(blah)
 					print 'blr:'+str(blr)
@@ -163,13 +165,13 @@ while running == True:
 # 						return res
 						if len(res) == 0:
 							print "Failed sending; retrying "+str(10-tcb)+" more times."
-							print "Sleeping "+str((300*tcb)/60)+"min."
-							sleep(300*tcb)
+							print "Sleeping "+str((300*(tcb-1))/60)+"min."
+							sleep(300*(tcb-1))
 					if not re.match('[0-9]+\|',res.strip()):
 						print 'res: '+res
 						print "Could not send data to server; retrying "+str(10-tca)+" more times."
-						print "Sleeping "+str((300*tca)/60)+"min."
-						sleep(300*tca)
+						print "Sleeping "+str((300*(tca-1))/60)+"min."
+						sleep(300*(tca-1))
 				if (tca > 9) or (tcb > 9):
 					sys.exit('Failed sending data')
 				return res
@@ -192,7 +194,11 @@ while running == True:
 				#print 'Last modified: '+str(rtm)
 				#print 'Recorded modification time: '+timemodb
 				if str(rtm) == str(timemodb):
+					#help from http://www.tldp.org/LDP/abs/html/io-redirection.html
+					os.system('grep '+filenm+' .ember.punkdb/.snapshots.punkset/.temp_old.punkdb >> .ember.punkdb/.snapshots.punkset/'+now+'.punkdb')
 					print 'Skipping unchanged file'
+					print 'Appending metadata rows to database: '
+					os.system('grep '+filenm+' .ember.punkdb/.snapshots.punkset/.temp_old.punkdb')
 					return
 
 	# 			if os.path.isfile(name):
@@ -201,10 +207,10 @@ while running == True:
 	# 				nt.close()
 	# 				print 'File data: '+ntd
 
-				command = "sed -i.punkbaktimedb 's/^"+filenm.replace('.','\\.')+"*$//' "+timedb
-				os.system(command)
-				command = "sed -i.punkbakdb 's/^"+filenm.replace('.','\\.')+"*$//' .ember.punkdb/.snapshots.punkset/"+now+".punkdb"
-				os.system(command)
+# 				command = "sed -i.punkbaktimedb 's/^"+filenm.replace('.','\\.')+"*$//' "+timedb
+# 				os.system(command)
+# 				command = "sed -i.punkbakdb 's/^"+filenm.replace('.','\\.')+"*$//' .ember.punkdb/.snapshots.punkset/"+now+".punkdb"
+# 				os.system(command)
 				os.system('tar -c -f '+tempDir+'/.ember.punkdb/.temp.punkd --no-recursion --format pax '+shellquote(name))
 				#based on http://stackoverflow.com/questions/6591931/getting-file-size-in-python
 				lenf = os.path.getsize(name)
@@ -233,6 +239,7 @@ while running == True:
 		
 				resmeta = sendChunk(tempDir+'/.ember.punkdb/.temp.punksp',filenm,tdl)
 				resf = filenm+'|'+resmeta+'\n'
+				print 'Appending metadata rows to database: '+resf
 				#help from http://stackoverflow.com/questions/3204782/how-to-check-if-a-file-is-a-directory-or-regular-file-in-python
 				dataFile = open(".ember.punkdb/.snapshots.punkset/"+now+".punkdb",'ab')
 				#w.write(resf)
@@ -248,9 +255,10 @@ while running == True:
 	# 					ctd = ct.read()
 	# 					ct.close()
 	# 					print 'Chunk data: '+ctd
-			
+					#print 'data: '+repr(piece)
 					resp = sendChunk('.ember.punkdb/.temp.punkp',filenm,tdl)
 					resf = filenm+'|'+resp+'\n'
+					print 'Appending metadata rows to database: '+resf
 					#w.write(resf)
 					dataFile.write(resf)
 				f.close()
@@ -266,7 +274,7 @@ while running == True:
 			else:
 				w = open('.ember.punkdb/.latest.punksr', 'rb')
 				tdl = w.read()
-				os.system('cp .ember.punkdb/.snapshots.punkset/'+tdl+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punkdb')
+ 				os.system('cp .ember.punkdb/.snapshots.punkset/'+tdl+'.punkdb .ember.punkdb/.snapshots.punkset/.temp_old.punkdb')
 				#print 'Working with existing time database: '+'.snapshots.punkset/'+tdl+'.punktimedb'
 				os.system('cp .ember.punkdb/.snapshots.punkset/'+tdl+'.punktimedb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb')
 			w = open('.ember.punkdb/.latest.punksr', 'wb')
@@ -291,7 +299,7 @@ while running == True:
 					send(cfilename, w, tdl, timedb)
 					print 'Finished processing record.\n\n\n'
 			print '\033[95mSnapshot data:\033[0m'
-			os.system('tar -c -j -f .ember.punkdb/.temp.punkdbz2 --no-recursion --format pax .ember.punkdb/.snapshots.punkset/'+now+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb .ember.punkdb/.snapshots.punkset/.snapshot.'+now+'.punkcsum')
+			os.system('tar -c -j -f .ember.punkdb/.temp.punkdbz2 --no-recursion --format pax .ember.punkdb/.snapshots.punkset/'+now+'.punkdb .ember.punkdb/.snapshots.punkset/'+now+'.punktimedb .ember.punkdb/.snapshots.punkset/.snapshot.'+tnosw+'.punkcsum')
 			sendChunk('.ember.punkdb/.temp.punkdbz2','',tdl,un,sn)
 			#help from https://en.wikibooks.org/wiki/Guide_to_Unix/Commands/File_Compression#gzip
 			os.system('gzip -9 -c .ember.punkdb/.snapshots.punkset/'+now+'.punkdb > .ember.punkdb/.restore.punkdb.gz')
@@ -330,7 +338,7 @@ while running == True:
 			restq = raw_input('Using snapshot '+str(int(snq.lower().strip()))+'. Existing files will be replaced with the snapshot. Continue? (yes/no) ');
 			if restq.lower().strip() !='yes':
 				sys.exit("Restore canceled.")
-			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+str(int(snq.lower().strip()))+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
+			res = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+str(int(snq.lower().strip()))+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/ember.php', shell = True)
 			w = open('.ember.punkdb/.restore.punkdb.gz', 'wb')
 			w.write(res)
 			w.close()
@@ -361,24 +369,27 @@ while running == True:
 		os.system('touch .ember.punkdb/.restore.punkd.pax')
 		os.remove('.ember.punkdb/.restore.punkd.pax')
 		def processRestore(data,overwrite,prevfilename):
+# 			print 'Line as recieved: '+data
 			thisfilename = data[:data.find('|')]
 			#print 'Filename: '+thisfilename
-			recordId = data[data.find('|'):][:data.find('|')][1:][:data.find('|')]
+			#recordId = data[data.find('|'):][:data.find('|')][1:][:data.find('|')]
+			recordId=data[(data.find('|')+1):][:(data[(data.find('|')+1):].find('|'))]
 			records512 = data[data.rfind('|'):][1:]
 # 			print 'Record ID: '+recordId
 # 			print 'SHA-512: '+records512
 			if prevfilename != thisfilename:
 				#Push last restored file into place (unpack pax)
 				os.system('tar -x -f .ember.punkdb/.restore.punkd.pax')
-				print 'Restored '+base64.b64decode(prevfilename)+'.'
+				print '\033[95mRestored '+base64.b64decode(prevfilename)+'.\033[0m'
 # 				sleep(15)
 				w = open('.ember.punkdb/.restore.punkd.pax', 'wb')
 			else:
 				w = open('.ember.punkdb/.restore.punkd.pax', 'ab')
 			#Append this part of next file to temporary pax
-			chunk = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+recordId+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/active.php', shell = True)
+			#print 'curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+recordId+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/ember.php'
+			chunk = subprocess.check_output('curl --connect-timeout 30 -m 512 -F "authorizationKey='+ad+'" -F "handler=1" -F "recordId='+recordId+'" -F "handlerNeeded=PunkRecordRetrieve" http://localhost:8888/d/r/ember.php', shell = True)
 			#help from http://stackoverflow.com/questions/15478127/remove-final-character-from-string-python
-			chunk = chunk[:-1]
+			#chunk = chunk[:-1]
 # 			print 'Retrieved chunk data: '+chunk
 # 			print 'Retrieved chunk sha512: '+hashlib.sha512(chunk).hexdigest()
 			if(hashlib.sha512(chunk).hexdigest().lower().strip() != records512.lower().strip()):
@@ -392,6 +403,9 @@ while running == True:
 		# based on http://stackoverflow.com/questions/519633/lazy-method-for-reading-big-file-in-python
 		thisfilename = ''
 		for line in open(sndata):
+# 			print 'Processing restore: '
+# 			print 'Line: '+line
+# 			print 'Filename: '+thisfilename
 			resr = processRestore(line,overwrite,thisfilename)
 			thisfilename = resr
 		print 'Saving checksums of restored directory state...'
