@@ -212,9 +212,9 @@ function insertChunk($data,$csum) {
 			$status = 53;
 		}
 		$id = $db->addRow('chunks', 'md5', 'UNHEX(\''.$csum->md5.'\')');
-		$identifierId = $id / 1000;
-		$randomInt = rand(0,100);
-		$randomIntAlt = rand(0,100);
+		$identifierId = substr($id / 1000,0,1)/5;
+		$randomInt = substr(rand(0,10),0,1);
+		$randomIntAlt = substr(rand(0,10),0,1);
 		$identifier = $identifierId.$randomInt.'.COALPROJECT.RECORD33';
 		$fallbackid = $identifierId.$randomIntAlt.'.COALPROJECT.RECORD33';
 		$address = 'ia:'.$identifier;
