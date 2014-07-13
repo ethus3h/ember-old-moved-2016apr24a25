@@ -146,10 +146,10 @@ while running == True:
 # 				print 'blah:'+repr(blah)
 # 				print 'blr:'+str(blr)
 				if blr:
-					print 'res:'+repr(res)
-					print 'bleh:'+repr(bleh)
-					print 'blah:'+repr(blah)
-					print 'blr:'+str(blr)
+					#print 'res:'+repr(res)
+					#print 'bleh:'+repr(bleh)
+					#print 'blah:'+repr(blah)
+					#print 'blr:'+str(blr)
 					res = ''
 				return res
 			def sendChunk(tempfilename,name,tdl,un='',sn=''):
@@ -178,7 +178,7 @@ while running == True:
 							print "Sleeping "+str((6*(tcb-1)))+"sec."
 							sleep(6*(tcb-1))
 					if not re.match('[0-9]+\|',res.strip()):
-						print 'res: '+res
+						#print 'res: '+res
 						print "Could not send data to server; retrying "+str(30-tca)+" more times."
 						print "Sleeping "+str((6*(tca-1)))+"sec."
 						sleep(6*(tca-1))
