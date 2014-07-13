@@ -487,7 +487,7 @@ function insertCoal($file = null, $csump = null) {
 	if(check($status,true)) {
 		$chunkId = $chunkInfo['id'];
 		$id = $db->addRow('strings', 'chunk, md5', '\''.$chunkId.'\', UNHEX(\''.$detailsCsum->md5.'\')');
-		sleep(3);
+		sleep(6);
 		if(!checkCoal($id)) {
 			$status = 45;
 		}
