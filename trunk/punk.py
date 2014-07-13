@@ -160,6 +160,7 @@ while running == True:
 				tcb = 0
 # 				print 'Csum: '+csum
 # 				print 'Testing step 1 loop'
+#TODO (FIXME): Something in here is screwed up: it's getting through ten tries (down to thirty), then the output changes, and it does another ten tries (down to thirty).... Then, it neglects to notice that it failed, and writes a new metadata record erroneously. Also, errors up the wazoo.
 				while (not re.match('[0-9]+\|',res.strip())) and (tca<10):
 # 					print 'Step 1 loop matched'
 					#help from http://stackoverflow.com/questions/14011149/python-variable-increment-while-loop
