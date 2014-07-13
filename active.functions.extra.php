@@ -452,7 +452,7 @@ function coalFromFile($filename,$csump) {
 function checkCoal($id) {
 	global $l;
 	$l->a('Begun checking coal...');
-	sleep(10);
+	sleep(6);
 	$coal = retrieveCoal($id);
 	$l->a('checkCoal returned status: '.$coal['status'].'.<br>');
 	return check($coal['status']);
