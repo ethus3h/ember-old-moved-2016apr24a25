@@ -451,7 +451,8 @@ function coalFromFile($filename,$csump) {
 
 function checkCoal($id) {
 	global $l;
-	sleep(6);
+	$l->a('Begun checking coal...');
+	sleep(10);
 	$coal = retrieveCoal($id);
 	$l->a('checkCoal returned status: '.$coal['status'].'.<br>');
 	return check($coal['status']);
@@ -487,7 +488,7 @@ function insertCoal($file = null, $csump = null) {
 	if(check($status,true)) {
 		$chunkId = $chunkInfo['id'];
 		$id = $db->addRow('strings', 'chunk, md5', '\''.$chunkId.'\', UNHEX(\''.$detailsCsum->md5.'\')');
-		sleep(6);
+		//sleep(6);
 		if(!checkCoal($id)) {
 			$status = 45;
 		}
