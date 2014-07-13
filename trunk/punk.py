@@ -174,14 +174,14 @@ while running == True:
 # 						print res
 # 						return res
 						if len(res) == 0:
-							print "Failed sending; retrying "+str(20-tcb)+" more times."
-							print "Sleeping "+str((15*(tcb-1)))+"sec."
-							sleep(15*(tcb-1))
+							print "Failed sending; retrying "+str(30-tcb)+" more times."
+							print "Sleeping "+str((5*(tcb-1)))+"sec."
+							sleep(5*(tcb-1))
 					if not re.match('[0-9]+\|',res.strip()):
 						print 'res: '+res
-						print "Could not send data to server; retrying "+str(20-tca)+" more times."
-						print "Sleeping "+str((15*(tca-1)))+"sec."
-						sleep(15*(tca-1))
+						print "Could not send data to server; retrying "+str(30-tca)+" more times."
+						print "Sleeping "+str((5*(tca-1)))+"sec."
+						sleep(5*(tca-1))
 				if (tca > 9) or (tcb > 9):
 					sys.exit('Failed sending data')
 				return res
