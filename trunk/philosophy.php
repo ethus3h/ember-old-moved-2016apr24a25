@@ -94,7 +94,7 @@ function ec() {
 <?php
 p('pc','Sometimes one premise will conflict with another.');
 p('pf','People have a right to freedom.');
-p('popinion','People have opinions that differ from one another.');
+p('pwhy','People\'s beliefs are based on their perceptions/experiences.');
 ?>
 </p>
 <hr>
@@ -102,13 +102,23 @@ p('popinion','People have opinions that differ from one another.');
 <hr>
 <p>
 <?php
+nc('copinion');
+b('pwhy');
+c('People have opinions that differ from one another.');
+ec();
+
 nc('cnoreality');
-b('popinion');
+b('copinion');
 c('There is no one universal reality that holds true for all people.');
 ec();
 
+nc('cmanipulable');
+b('pwhy');
+c('People\'s beliefs and opinions can easily be manipulated by other people.');
+ec();
+
 nc('ctruth');
-b('popinion');
+b('copinion');
 c('Truth is not absolute, and is known through the finding of consensus between people.');
 ec();
 
