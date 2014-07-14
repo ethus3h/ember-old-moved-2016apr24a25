@@ -48,6 +48,7 @@ span.ornament {
 <body>
 <?php
 $postulates=array();
+$currentcid = '';
 function p($id,$caption) {
 	global $postulates;
 	$postulates[$id] = $caption;
@@ -66,14 +67,17 @@ function b($id,$ending="solo") {
 	}
 	echo '<a class="pr" href="#'.$id.'">'.substr(strtolower($postulates[$id]),0,-1).'</a>'.$affix;
 }
-function c($id,$caption) {
-	echo '<div class="conclusion" id="'.$id.'"><a href="#'.$id.'">'.$caption.'</a></div>';	
+function c($caption) {
+	global $currentcid;
+	echo '<div class="conclusion"><a href="#'.$currentcid.'">'.$caption.'</a></div>';	
 }
-function nc() {
-	echo 'Because ';
+function nc($id) {
+	global $currentcid;
+	$currentcid = $id;
+	echo '<span id="'.$id.'">Because</span> ';
 }
 function ec() {
-	echo '<span class="ornament">~ &#x2744; ~</span>';
+	echo '<span class="ornament">~ &#x2744; ~</span><br><br>';
 }
 ?>
 <h1>Some Philosophical Premises:</h1>
@@ -89,14 +93,14 @@ p('pllh','People have a right to life, liberty, and happiness.');
 <hr>
 <p>
 <?php
-nc();
+nc('cec');
 b('pcr');
-c('cec','It is sometimes difficult for a person, government, society, or other entity to choose an ethical course of action.');
+c('It is sometimes difficult for a person, government, society, or other entity to choose an ethical course of action.');
 ec();
 
-nc();
+nc('ctr');
 b('pllh');
-c('ctr','People have a right to a tranquil society.');
+c('People have a right to a tranquil society.');
 ec();
 
 
