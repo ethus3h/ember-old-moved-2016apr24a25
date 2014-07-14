@@ -23,11 +23,13 @@ div.postulate {
 	/*help from http://stackoverflow.com/questions/5664877/creating-spacing-between-an-element-and-its-border */
 	padding:0.3rem;
 	font-size:2rem;
+	background-color:#DDDDFF;
 }
 div.conclusion {
 	border:0.05rem solid gray;
 	padding:0.3rem;
 	font-size:2rem;
+	background-color:#BBFFBB;
 }
 a {
 	text-decoration:none;
@@ -54,7 +56,7 @@ function p($id,$caption) {
 	$postulates[$id] = $caption;
 	echo '<div class="postulate" id="'.$id.'"><a href="#'.$id.'">'.$caption.'</a></div>';
 }
-function b($id,$ending="solo") {
+function b($id,$ending="solo",$conclusion=false) {
 	global $postulates;
 	if($ending===true) {
 		$affix=', ';
@@ -62,13 +64,19 @@ function b($id,$ending="solo") {
 	if($ending==="solo") {
 		$affix=', ';
 	}
-	if($ending==="false") {
-		$affix=', and ';
+	if($ending===false) {
+		$affix=' and ';
 	}
 	echo '<a class="pr" href="#'.$id.'">'.substr(strtolower($postulates[$id]),0,-1).'</a>'.$affix;
 }
+function bc($id,$ending="solo") {
+	b($id,$ending,true);
+}
 function c($caption) {
 	global $currentcid;
+	global $postulates;
+	$postulates[$currentcid] = $caption;
+// 	print_r($postulates);
 	echo '<div class="conclusion"><a href="#'.$currentcid.'">'.$caption.'</a></div>';	
 }
 function nc($id) {
@@ -84,8 +92,8 @@ function ec() {
 <hr>
 <p>
 <?php
-p('pcr','Sometimes one right will conflict with another.');
-p('pllh','People have a right to life, liberty, and happiness.');
+p('pc','Sometimes one premise will conflict with another.');
+p('pf','People have a right to freedom.');
 ?>
 </p>
 <hr>
@@ -94,12 +102,28 @@ p('pllh','People have a right to life, liberty, and happiness.');
 <p>
 <?php
 nc('cec');
-b('pcr');
+b('pc');
 c('It is sometimes difficult for a person, government, society, or other entity to choose an ethical course of action.');
 ec();
 
+nc('cl');
+b('pf');
+c('People have a right to their physical and mental wellbeing.');
+ec();
+
+nc('cg');
+b('pf');
+c('An institution and social contract should be established by the consensus of society to protect people\' freedom.');
+ec();
+
+nc('co');
+b('pf',false);
+bc('cg');
+c('A person may opt out of the social contract thus established, but in doing so sacrifices any protection it grants.');
+ec();
+
 nc('ctr');
-b('pllh');
+b('pf');
 c('People have a right to a tranquil society.');
 ec();
 
