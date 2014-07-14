@@ -124,8 +124,8 @@ function get_url($url)
 # and from http://stackoverflow.com/questions/13988365/what-are-the-possible-reasons-for-curl-error-60-on-an-https-site
 {
 	//echo '<br>Data requested from URL: '.$url.'<br>';
-	global $l;
-	$l->a('<br>Data requested from URL: '.$url.'<br>');
+	// global $l;
+// 	$l->a('<br>Data requested from URL: '.$url.'<br>');
     $userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
     $crl       = curl_init();
     $timeout   = 30;
