@@ -6,46 +6,62 @@ body,p {
 }
 h1 {
 	font-family:'Lato';
-	font-size:4em;
+	font-size:3em;
 }
 h2 {
 	font-family:'Lato';
-	font-size:3.5em;
+	font-size:2.7em;
 }
-span {
+div {
 	font-family:'Lato';
+	margin:2em;
 }
-span.postulate {
+div.postulate {
 	border:0.05em solid gray;
 	/*help from http://stackoverflow.com/questions/5664877/creating-spacing-between-an-element-and-its-border */
 	padding:0.3em;
 	font-size:2em;
+}
+div.conclusion {
+	border:0.05em solid gray;
+	/*help from http://stackoverflow.com/questions/5664877/creating-spacing-between-an-element-and-its-border */
+	padding:0.3em;
+	font-size:2em;
+}
+.anchor {
+	font-family:'Lato';
+	font-size:1.5em;
+	color:#666666;
 }
 </style>
 <title>Philosophy</title></head>
 <body>
 <?php
 function addPostulate($id,$caption) {
-	echo '<span class="postulate" id="'.$id.'">'.$caption.'</span><br>';
+	echo '<div class="postulate" id="'.$id.'">'.$caption.'</div><br>';
 }
 function referencePostulate($id) {
 	
 }
-function addConclusion($caption) {
-	
+function addConclusion($id,$caption) {
+	echo '<div class="conclusion" id="'.$id.'">'.$caption.'</div> <span class="anchor"><a class="anchor" href="#'.$id.'">#</a></span><br>';	
 }
 ?>
 <h1>Some Philosophical Premises</h1>
-<br><br>
 <hr>
 <br><br>
 <p>
 <?php
-addPostulate('ptest','Test');
+addPostulate('ptr','Sometimes peoples\' rights will conflict with other rights.');
+addPostulate('ptr','People have a right to a tranquil society.');
 ?>
 </p>
+<hr>
 <h2>On the basis of these assumptions, I conclude that:</h2>
 <p>
+<?php
+addConclusion('cec','It is sometimes difficult for a person, government, society, or other entity to choose an ethical course of action.')
+?>
 </p>
 </body>
 </html>
