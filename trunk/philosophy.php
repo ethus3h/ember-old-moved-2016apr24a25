@@ -94,6 +94,7 @@ function ec() {
 <?php
 p('pc','Sometimes one premise will conflict with another.');
 p('pf','People have a right to freedom.');
+p('popinion','People have opinions that differ from one another.');
 ?>
 </p>
 <hr>
@@ -101,6 +102,16 @@ p('pf','People have a right to freedom.');
 <hr>
 <p>
 <?php
+nc('cnoreality');
+b('popinion');
+c('There is no one universal reality that holds true for all people.');
+ec();
+
+nc('ctruth');
+b('popinion');
+c('Truth is not absolute, and is known through the finding of consensus between people.');
+ec();
+
 nc('cec');
 b('pc');
 c('It is sometimes difficult for a person, government, society, or other entity to choose an ethical course of action.');
@@ -113,13 +124,19 @@ ec();
 
 nc('cg');
 b('pf');
-c('An institution and social contract should be established by the consensus of society to protect people\' freedom.');
+c('An institution and social contract should be established by the consensus of society to protect people\'s freedom.');
+ec();
+
+nc('cgr');
+b('pf',false);
+bc('cg');
+c('If the institution and social contract thus established fail to fulfill their purpose of protecting people\'s freedom, or act in a manner not in accordance with this objective, they may be discarded and replaced at the discretion of the consensus of society.');
 ec();
 
 nc('co');
 b('pf',false);
 bc('cg');
-c('A person may opt out of the social contract thus established, but in doing so sacrifices any protection it grants.');
+c('A person may opt out of the institution and social contract thus established, and in doing so sacrifice any protection promised by them.');
 ec();
 
 nc('ctr');
