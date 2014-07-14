@@ -24,13 +24,11 @@ div.postulate {
 }
 div.conclusion {
 	border:0.05em solid gray;
-	/*help from http://stackoverflow.com/questions/5664877/creating-spacing-between-an-element-and-its-border */
 	padding:0.3em;
 	font-size:2em;
 }
-.anchor {
-	font-family:'Lato';
-	font-size:1.5em;
+a {
+	text-decoration:none;
 	color:#666666;
 }
 </style>
@@ -49,7 +47,6 @@ function addConclusion($id,$caption) {
 ?>
 <h1>Some Philosophical Premises</h1>
 <hr>
-<br><br>
 <p>
 <?php
 addPostulate('pcr','Sometimes peoples\' rights will conflict with other rights.');
