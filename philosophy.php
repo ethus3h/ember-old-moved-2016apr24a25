@@ -4,50 +4,56 @@
 body,p {
 	text-align:center;
 	font-family:'Lato';
-	font-size:1.7em;
+	font-size:1.7rem;
 }
 h1 {
 	font-family:'Lato';
-	font-size:3em;
+	font-size:3rem;
 }
 h2 {
 	font-family:'Lato';
-	font-size:2.7em;
+	font-size:2.7rem;
 }
 div {
 	font-family:'Lato';
-	margin:2em;
+	margin:2rem;
 }
 div.postulate {
-	border:0.05em solid gray;
+	border:0.05rem solid gray;
 	/*help from http://stackoverflow.com/questions/5664877/creating-spacing-between-an-element-and-its-border */
-	padding:0.3em;
-	font-size:2em;
+	padding:0.3rem;
+	font-size:2rem;
 }
 div.conclusion {
-	border:0.05em solid gray;
-	padding:0.3em;
-	font-size:2em;
+	border:0.05rem solid gray;
+	padding:0.3rem;
+	font-size:2rem;
 }
 a {
 	text-decoration:none;
 	color:#666666;
 }
+a.pr{
+	color:#853030;
+}
 a.pr:hover {
 	text-decoration:underline;
-	color:#666666;
+}
+span.ornament {
+	color:#777777;
+	font-size:2.35rem;
 }
 </style>
 <title>Philosophy</title></head>
 <body>
 <?php
 $postulates=array();
-function addPostulate($id,$caption) {
+function p($id,$caption) {
 	global $postulates;
 	$postulates[$id] = $caption;
 	echo '<div class="postulate" id="'.$id.'"><a href="#'.$id.'">'.$caption.'</a></div>';
 }
-function p($id,$ending="solo") {
+function b($id,$ending="solo") {
 	global $postulates;
 	if($ending===true) {
 		$affix=', ';
@@ -60,22 +66,22 @@ function p($id,$ending="solo") {
 	}
 	echo '<a class="pr" href="#'.$id.'">'.substr(strtolower($postulates[$id]),0,-1).'</a>'.$affix;
 }
-function addConclusion($id,$caption) {
+function c($id,$caption) {
 	echo '<div class="conclusion" id="'.$id.'"><a href="#'.$id.'">'.$caption.'</a></div>';	
 }
 function nc() {
 	echo 'Because ';
 }
 function ec() {
-	echo '<br>&#x2744;';
+	echo '<span class="ornament">~ &#x2744; ~</span>';
 }
 ?>
 <h1>Some Philosophical Premises:</h1>
 <hr>
 <p>
 <?php
-addPostulate('pcr','Sometimes peoples\' rights will conflict with other rights.');
-addPostulate('ptr','People have a right to a tranquil society.');
+p('pcr','Sometimes one right will conflict with another.');
+p('pllh','People have a right to life, liberty, and happiness.');
 ?>
 </p>
 <hr>
@@ -84,8 +90,13 @@ addPostulate('ptr','People have a right to a tranquil society.');
 <p>
 <?php
 nc();
-p('pcr');
-addConclusion('cec','It is sometimes difficult for a person, government, society, or other entity to choose an ethical course of action.');
+b('pcr');
+c('cec','It is sometimes difficult for a person, government, society, or other entity to choose an ethical course of action.');
+ec();
+
+nc();
+b('pllh');
+c('ctr','People have a right to a tranquil society.');
 ec();
 
 
