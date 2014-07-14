@@ -38,13 +38,13 @@ div.conclusion {
 <body>
 <?php
 function addPostulate($id,$caption) {
-	echo '<div class="postulate" id="'.$id.'">'.$caption.'</div><br>';
+	echo '<div class="postulate" id="'.$id.'"><a href="#'.$id.'">'.$caption.'</a></div>';
 }
 function referencePostulate($id) {
 	
 }
 function addConclusion($id,$caption) {
-	echo '<div class="conclusion" id="'.$id.'">'.$caption.'</div> <span class="anchor"><a class="anchor" href="#'.$id.'">#</a></span><br>';	
+	echo '<div class="conclusion" id="'.$id.'"><a href="#'.$id.'">'.$caption.'</a></div>';	
 }
 ?>
 <h1>Some Philosophical Premises</h1>
@@ -52,7 +52,7 @@ function addConclusion($id,$caption) {
 <br><br>
 <p>
 <?php
-addPostulate('ptr','Sometimes peoples\' rights will conflict with other rights.');
+addPostulate('pcr','Sometimes peoples\' rights will conflict with other rights.');
 addPostulate('ptr','People have a right to a tranquil society.');
 ?>
 </p>
