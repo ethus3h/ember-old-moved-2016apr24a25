@@ -3,6 +3,8 @@
 @font-face {font-family:"Lato";font-style:normal;font-weight:100;src: local("Lato Hairline"),local("Lato-Hairline"),url(/d/f/lh.woff) format("woff");}
 body,p {
 	text-align:center;
+	font-family:'Lato';
+	font-size:1.7em;
 }
 h1 {
 	font-family:'Lato';
@@ -31,21 +33,44 @@ a {
 	text-decoration:none;
 	color:#666666;
 }
+a.pr:hover {
+	text-decoration:underline;
+	color:#666666;
+}
 </style>
 <title>Philosophy</title></head>
 <body>
 <?php
+$postulates=array();
 function addPostulate($id,$caption) {
+	global $postulates;
+	$postulates[$id] = $caption;
 	echo '<div class="postulate" id="'.$id.'"><a href="#'.$id.'">'.$caption.'</a></div>';
 }
-function referencePostulate($id) {
-	
+function p($id,$ending="solo") {
+	global $postulates;
+	if($ending===true) {
+		$affix=', ';
+	}
+	if($ending==="solo") {
+		$affix=', ';
+	}
+	if($ending==="false") {
+		$affix=', and ';
+	}
+	echo '<a class="pr" href="#'.$id.'">'.substr(strtolower($postulates[$id]),0,-1).'</a>'.$affix;
 }
 function addConclusion($id,$caption) {
 	echo '<div class="conclusion" id="'.$id.'"><a href="#'.$id.'">'.$caption.'</a></div>';	
 }
+function nc() {
+	echo 'Because ';
+}
+function ec() {
+	echo '<br>&#x2744;';
+}
 ?>
-<h1>Some Philosophical Premises</h1>
+<h1>Some Philosophical Premises:</h1>
 <hr>
 <p>
 <?php
@@ -54,10 +79,16 @@ addPostulate('ptr','People have a right to a tranquil society.');
 ?>
 </p>
 <hr>
-<h2>On the basis of these assumptions, I conclude that:</h2>
+<h1>On the basis of these assumptions, I conclude that:</h1>
+<hr>
 <p>
 <?php
-addConclusion('cec','It is sometimes difficult for a person, government, society, or other entity to choose an ethical course of action.')
+nc();
+p('pcr');
+addConclusion('cec','It is sometimes difficult for a person, government, society, or other entity to choose an ethical course of action.');
+ec();
+
+
 ?>
 </p>
 </body>
