@@ -2,6 +2,8 @@ package src;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 /**
  * Created by PermissionGiver on 8/16/14.
@@ -34,5 +36,14 @@ public class HashGenerator {
         byte[] s29bytes = md.digest(data);
         String s29 = dataProcessor.bin2hex(s29bytes);
         return s29;
+    }
+
+    public String crc(byte[] data) throws NoSuchAlgorithmException {
+        /* help from http://www.java-examples.com/generate-crc32-checksum-byte-array-example */
+        Checksum checksum = new CRC32();
+        checksum.update(data, 0, data.length);
+        long lngChecksum = checksum.getValue();
+        String crc = dataProcessor.dec2hex(lngChecksum);
+        return crc;
     }
 }
