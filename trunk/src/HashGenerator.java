@@ -2,7 +2,6 @@ package src;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  * Created by PermissionGiver on 8/16/14.
@@ -10,23 +9,30 @@ import org.apache.commons.codec.binary.Hex;
 public class HashGenerator {
 
 
+    private final DataProcessor dataProcessor = new DataProcessor();
+
     public String
-    md5(byte[] bytes) throws NoSuchAlgorithmException {
+    md5(byte[] data) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] md5bytes = md.digest(bytes);
-        return md5toHex(md5bytes);
+        byte[] md5bytes = md.digest(data);
+        return dataProcessor.bin2hex(md5bytes);
     }
 
-    public String md5toHex(byte[] md5bytes) {
-        Hex encoder = new Hex();
-        String s = Hex.encodeHexString(md5bytes);
-        return s;
+    public String bin2hex(byte[] md5bytes) {
+        return dataProcessor.bin2hex(md5bytes);
     }
 
-    public String sha(byte[] bytes) throws NoSuchAlgorithmException {
+    public String sha(byte[] data) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
-        byte[] shabytes = md.digest(bytes);
-        String sha = md5toHex(shabytes);
+        byte[] shabytes = md.digest(data);
+        String sha = dataProcessor.bin2hex(shabytes);
         return sha;
+    }
+
+    public String s29(byte[] data) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        byte[] s29bytes = md.digest(data);
+        String s29 = dataProcessor.bin2hex(s29bytes);
+        return s29;
     }
 }
