@@ -1,0 +1,13 @@
+{
+  "name": "Ember",
+  "description": "Ember (development version)",
+  "launch_path": "/d/r/active.php?wint=1&wintNeeded=ember_dev",
+  "icons": {
+    "128": "/icon-128.png"
+  },
+  "developer": {
+    "name": "Futuramerlin",
+    "url": "http://futuramerlin.com"
+  },
+  "default_locale": "en"
+}
