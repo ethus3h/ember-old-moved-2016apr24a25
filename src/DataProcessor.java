@@ -8,8 +8,7 @@ public class DataProcessor {
 
     public String bin2hex(byte[] md5bytes) {
         Hex encoder = new Hex();
-        String s = Hex.encodeHexString(md5bytes);
-        return s;
+        return Hex.encodeHexString(md5bytes);
     }
 
     public String dec2hex(long n) {
