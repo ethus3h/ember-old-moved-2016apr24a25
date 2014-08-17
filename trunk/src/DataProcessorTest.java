@@ -30,4 +30,11 @@ public class DataProcessorTest {
         long n = 3510043186L;
         Assert.assertNotEquals("D1370232", d.dec2hex(n));
     }
+
+    @Test
+    public void testInt2hex() throws Exception {
+        DataProcessor d = new DataProcessor();
+        int n = 35100431;
+        Assert.assertEquals("217970f", d.dec2hex(n));
+    }
 }

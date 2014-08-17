@@ -27,15 +27,13 @@ public class HashGenerator {
     public String sha(byte[] data) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         byte[] shabytes = md.digest(data);
-        String sha = dataProcessor.bin2hex(shabytes);
-        return sha;
+        return dataProcessor.bin2hex(shabytes);
     }
 
     public String s29(byte[] data) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         byte[] s29bytes = md.digest(data);
-        String s29 = dataProcessor.bin2hex(s29bytes);
-        return s29;
+        return dataProcessor.bin2hex(s29bytes);
     }
 
     public String crc(byte[] data) throws NoSuchAlgorithmException {
@@ -43,7 +41,6 @@ public class HashGenerator {
         Checksum checksum = new CRC32();
         checksum.update(data, 0, data.length);
         long lngChecksum = checksum.getValue();
-        String crc = dataProcessor.dec2hex(lngChecksum);
-        return crc;
+        return dataProcessor.dec2hex(lngChecksum);
     }
 }

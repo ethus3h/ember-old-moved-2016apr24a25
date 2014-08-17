@@ -2,6 +2,7 @@ package src;
 
 import org.junit.Assert;
 import org.junit.Test;
+import src.Throwable.CorruptedSafeDataException;
 
 public class SafeDataTest {
     public SafeDataTest() {
@@ -46,5 +47,78 @@ public class SafeDataTest {
         Assert.assertEquals("ec4ac3d0", d.crc);
 
 
+    }
+    @Test
+        public void testSDCheck() throws Exception, CorruptedSafeDataException {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.check();
+    }
+    @Test
+    public void testSDNukeMD5() throws Exception {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukemd5();
+    }
+    @Test
+    public void testSDNukeSHA() throws Exception {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukesha();
+    }
+    @Test
+    public void testSDNukeS29() throws Exception {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukes29();
+    }
+    @Test
+    public void testSDNukeCRC() throws Exception {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukecrc();
+    }
+    @Test(expected=CorruptedSafeDataException.class)
+    public void testSDCkMD5() throws Exception, CorruptedSafeDataException {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukemd5();
+        d.check();
+    }
+    @Test(expected=CorruptedSafeDataException.class)
+    public void testSDCkMD5i() throws Exception, CorruptedSafeDataException {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukemd5();
+        d.checkmd5();
+    }
+    @Test(expected=CorruptedSafeDataException.class)
+    public void testSDCkSHA() throws Exception, CorruptedSafeDataException {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukesha();
+        d.check();
+    }
+    @Test(expected=CorruptedSafeDataException.class)
+    public void testSDCkSHAi() throws Exception, CorruptedSafeDataException {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukesha();
+        d.checksha();
+    }
+    @Test(expected=CorruptedSafeDataException.class)
+    public void testSDCkS29() throws Exception, CorruptedSafeDataException {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukes29();
+        d.check();
+    }
+    @Test(expected=CorruptedSafeDataException.class)
+    public void testSDCkS29i() throws Exception, CorruptedSafeDataException {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukes29();
+        d.checks29();
+    }
+    @Test(expected=CorruptedSafeDataException.class)
+    public void testSDCkCRC() throws Exception, CorruptedSafeDataException {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukecrc();
+        d.check();
+    }
+    @Test(expected=CorruptedSafeDataException.class)
+    public void testSDCkCRCi() throws Exception, CorruptedSafeDataException {
+        SafeData d = new SafeData("Hello, World!".getBytes("UTF-8"));
+        d.nukecrc();
+        d.checkcrc();
     }
 }
