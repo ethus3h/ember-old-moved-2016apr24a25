@@ -17,4 +17,17 @@ public class DataProcessorTest {
         Assert.assertEquals("65a8e27d8879283831b664bd8b7f0ad4", hex);
     }
 
+    @Test
+    public void testLong2hex() throws Exception {
+        DataProcessor d = new DataProcessor();
+        long n = 3510043186L;
+        Assert.assertEquals("d1370232", d.dec2hex(n));
+    }
+
+    @Test
+    public void testLong2hexC() throws Exception {
+        DataProcessor d = new DataProcessor();
+        long n = 3510043186L;
+        Assert.assertNotEquals("D1370232", d.dec2hex(n));
+    }
 }

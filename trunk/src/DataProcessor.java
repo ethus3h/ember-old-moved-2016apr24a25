@@ -11,4 +11,9 @@ public class DataProcessor {
         String s = Hex.encodeHexString(md5bytes);
         return s;
     }
+
+    public String dec2hex(long n) {
+        return Long.toHexString(n).toLowerCase();
+    }
+
 }

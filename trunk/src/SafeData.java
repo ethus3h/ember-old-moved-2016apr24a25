@@ -11,6 +11,7 @@ public class SafeData {
     public String md5;
     public String sha;
     public String s29;
+    public String crc;
 
     public SafeData(byte[] s) throws NoSuchAlgorithmException {
         byte[] data = s;
@@ -19,6 +20,7 @@ public class SafeData {
         md5 = h.md5(data);
         sha = h.sha(data);
         s29 = h.s29(data);
+        crc = h.crc(data);
 
     }
 }
