@@ -1,6 +1,7 @@
 package com.futuramerlin.ember;
 
-import src.Throwable.CorruptedSafeDataException;
+
+import com.futuramerlin.ember.Throwable.CorruptedSafeDataException;
 
 import java.security.NoSuchAlgorithmException;
 

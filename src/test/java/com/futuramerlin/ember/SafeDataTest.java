@@ -1,8 +1,8 @@
 package com.futuramerlin.ember;
 
+import com.futuramerlin.ember.Throwable.CorruptedSafeDataException;
 import org.junit.Assert;
 import org.junit.Test;
-import src.Throwable.CorruptedSafeDataException;
 
 public class SafeDataTest {
     public SafeDataTest() {
