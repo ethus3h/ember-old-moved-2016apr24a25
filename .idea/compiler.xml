@@ -25,6 +25,9 @@
         <module name="Java" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Java" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 

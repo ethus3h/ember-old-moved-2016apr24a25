@@ -22,4 +22,17 @@ public class ServerTest {
         Server s = new Server();
         s.print("Hello, World!");
     }
+
+    @Test
+    public void testCreateHttpServerInstance() throws Exception {
+        Server s = new Server();
+        s.createHttpServerInstance();
+
+    }
+    @Test
+    public void testCreateHttpLoopbackServerInstance() throws Exception {
+        Server s = new Server();
+        s.createHttpLoopbackServerInstance();
+
+    }
 }
