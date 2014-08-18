@@ -27,12 +27,6 @@ public class ServerTest {
     public void testCreateHttpServerInstance() throws Exception {
         Server s = new Server();
         s.createHttpServerInstance();
-
     }
-    @Test
-    public void testCreateHttpLoopbackServerInstance() throws Exception {
-        Server s = new Server();
-        s.createHttpLoopbackServerInstance();
 
-    }
 }
