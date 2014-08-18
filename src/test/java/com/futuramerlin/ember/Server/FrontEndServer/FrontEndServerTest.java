@@ -1,4 +1,4 @@
-package com.futuramerlin.ember.Server;
+package com.futuramerlin.ember.Server.FrontEndServer;
 
 import org.junit.Test;
 
