@@ -7,4 +7,8 @@ public class Server {
     public String echo(String s) {
         return s;
     }
+
+    public void print(String s) {
+        System.out.println(s);
+    }
 }

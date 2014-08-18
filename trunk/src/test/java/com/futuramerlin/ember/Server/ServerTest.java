@@ -16,4 +16,10 @@ public class ServerTest {
         assertEquals("Hello, World!", s.echo("Hello, World!"));
     }
 
+
+    @Test
+    public void testServerPrint() throws Exception {
+        Server s = new Server();
+        s.print("Hello, World!");
+    }
 }
