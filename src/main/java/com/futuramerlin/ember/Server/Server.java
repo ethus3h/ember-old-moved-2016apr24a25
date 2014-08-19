@@ -12,6 +12,8 @@ public class Server {
         System.out.println(s);
     }
 
-    public void createHttpServerInstance() {
+    public void createHttpServerInstance() throws Exception {
+       JettyServer j = new JettyServer();
+       j.start();
     }
 }
