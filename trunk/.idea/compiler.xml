@@ -22,10 +22,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="Java" />
+        <module name="ember" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="ember" target="1.8" />
       <module name="Java" target="1.8" />
     </bytecodeTargetLevel>
   </component>
