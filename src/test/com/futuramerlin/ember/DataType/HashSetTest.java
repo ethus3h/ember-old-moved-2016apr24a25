@@ -88,7 +88,9 @@ public class HashSetTest {
     @Test
     public void testFindPosFirstItem() throws Exception, hashSetItemNotFoundException, hashSetNullArgumentException {
         HashSet t = new HashSet();
+        t.allocateArray(15);
         HashGenerator a = new HashGenerator();
+        t.add(a);
         Assert.assertEquals(0,t.findPos(a));
 
     }

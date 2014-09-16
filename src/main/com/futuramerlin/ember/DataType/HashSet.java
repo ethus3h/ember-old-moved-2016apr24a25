@@ -61,8 +61,8 @@ public class HashSet<AnyType> extends AbstractCollection<AnyType> implements Set
 
     public int findPos(Object a) throws hashSetItemNotFoundException, hashSetNullArgumentException {
         if(null==a) {throw new hashSetNullArgumentException();}
+        try { System.out.println("Does array[0] "+this.array[0]+" equals "+a); if(this.array[0].equals(a)) { return 0;} } catch(NullPointerException e) { throw new hashSetItemNotFoundException(); }
         throw new hashSetItemNotFoundException();
-
        /* int found = -1;
         for (int i = 0; i < (this.array.length-1); i++) {
             System.out.println("At index " + i);
