@@ -24,12 +24,3 @@
 .//src/test/com/futuramerlin/ember/Server/MetaServer/MetaServerTest.class
 .//src/test/com/futuramerlin/ember/Server/RecordServer/RecordServerTest.class
 .//src/test/com/futuramerlin/ember/Server/ServerTest.class
-.//target/test-classes/com/futuramerlin/ember/DataProcessorTest.class
-.//target/test-classes/com/futuramerlin/ember/HashGeneratorTest.class
-.//target/test-classes/com/futuramerlin/ember/SafeDataTest.class
-.//target/test-classes/com/futuramerlin/ember/Server/FrontEndServer/FrontEndServerTest.class
-.//target/test-classes/com/futuramerlin/ember/Server/FrontEndServerTest.class
-.//target/test-classes/com/futuramerlin/ember/Server/MetaServer/MetaServerTest.class
-.//target/test-classes/com/futuramerlin/ember/Server/MetaServerTest.class
-.//target/test-classes/com/futuramerlin/ember/Server/RecordServer/RecordServerTest.class
-.//target/test-classes/com/futuramerlin/ember/Server/RecordServerTest.class
