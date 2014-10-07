@@ -44,7 +44,10 @@ public class MyTree<E> implements Tree<E> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        if(this.rootNode.size() > 1) {
+            return false;
+        }
+        return true;
     }
 
 

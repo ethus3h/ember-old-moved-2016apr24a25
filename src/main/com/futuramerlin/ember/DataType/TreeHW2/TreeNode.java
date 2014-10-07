@@ -87,4 +87,7 @@ public interface TreeNode<E> {
     int count();
 
     void addChild(TreeNode<E> n);
+
+    int inclusiveHeight();
+
 }
