@@ -2,6 +2,8 @@ package com.futuramerlin.ember.DataType.TreeHW2;
 
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,13 @@ import static org.junit.Assert.assertEquals;
  * Created by elliot on 7 October 14.
  */
 public class TreeNodeTest {
+    public void callAll() throws
+            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        Method[] methods = this.getClass().getDeclaredMethods();
+        for (Method m : methods) {
+            m.invoke(null,null);
+        }
+    }
     @Test
     public void testNewTreeNode() throws Exception {
         TreeNode<String> n = new MyTreeNode("A");

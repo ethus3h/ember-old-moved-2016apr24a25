@@ -5,6 +5,8 @@ classes = $(sources:.java=.class)
 
 $(shell find ./ -name "*.java" > sources.txt)
 $(shell javac -cp .:`find ./ -name "*.jar" | tr "\n" ":"` @sources.txt)
+$(shell find ./ -name "*Test.class" > classes.txt)
+$(shell cd src/test/; java -cp . com.futuramerlin.ember.Bootstrap)
 
 all:
 	$(classes)

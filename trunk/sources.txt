@@ -19,6 +19,7 @@
 .//src/main/com/futuramerlin/ember/Throwable/CorruptedSafeDataException.java
 .//src/main/com/futuramerlin/ember/Throwable/hashSetItemNotFoundException.java
 .//src/main/com/futuramerlin/ember/Throwable/hashSetNullArgumentException.java
+.//src/test/com/futuramerlin/ember/Bootstrap.java
 .//src/test/com/futuramerlin/ember/DataProcessor/ASCIIHashGeneratorTest.java
 .//src/test/com/futuramerlin/ember/DataProcessor/DataProcessorTest.java
 .//src/test/com/futuramerlin/ember/DataProcessor/HashGeneratorTest.java
