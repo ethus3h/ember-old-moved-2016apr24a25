@@ -113,7 +113,7 @@ public class MyF1To8 implements F1To8 {
 
     @Override
     public Tree g_1(Tree t, Function f) {
-        if(t.getRoot().getFirstChild() != null) {
+        /*if(t.getRoot().getFirstChild() != null) {
             //Has left subtree
             if(t.getRoot().getFirstChild().getNextSibling() != null) {
                 //Has right subtree
@@ -130,7 +130,7 @@ public class MyF1To8 implements F1To8 {
                     n.getRoot().addChild(f(g_1(tr,f)).getRoot());
                 }
             }
-        }
+        }*/
         return null;
     }
 }
