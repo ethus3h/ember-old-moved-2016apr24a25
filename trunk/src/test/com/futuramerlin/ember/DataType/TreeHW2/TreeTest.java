@@ -11,11 +11,7 @@ import static org.junit.Assert.assertEquals;
  * Created by elliot on 6 October 14.
  */
 public class TreeTest {
-    @Test
-    public void testNewTreeNode() throws Exception {
-        TreeNode<String> n = new MyTreeNode("A");
-    }
-    @Test
+   @Test
     public void testNewTree() throws Exception {
         TreeNode<String> n = new MyTreeNode("A");
         Tree t = new MyTree(n);
@@ -23,27 +19,20 @@ public class TreeTest {
     }
 
     @Test
-    public void testCountRoot() throws Exception {
+    public void testIsEmpty() throws Exception {
         TreeNode<String> n = new MyTreeNode("A");
         Tree t = new MyTree(n);
-        assertEquals(t.size(), 1);
+        assertEquals(true,t.isEmpty());
 
     }
 
     @Test
-    public void testAddChild() throws Exception {
-        TreeNode<String> n = new MyTreeNode("B");
-        TreeNode<Integer> n2 = new MyTreeNode(50);
-        n.addChild(n);
-
-    }
-    @Test
-    public void testGetChildren() throws Exception {
-        TreeNode<String> n = new MyTreeNode("B");
-        TreeNode<Integer> n2 = new MyTreeNode(50);
-        List<TreeNode> testComparison = new ArrayList<TreeNode>();
-        testComparison.add(0,n2);
-        assertEquals(n.getChildren(), testComparison);
+    public void testIsEmptyFalse() throws Exception {
+        TreeNode<String> n = new MyTreeNode("A");
+        TreeNode<String> n2 = new MyTreeNode("B");
+        Tree t = new MyTree(n);
+        n.addChild(n2);
+        assertEquals(false,t.isEmpty());
 
     }
 }
