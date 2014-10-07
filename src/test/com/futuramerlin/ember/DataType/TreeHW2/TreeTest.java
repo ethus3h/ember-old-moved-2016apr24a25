@@ -44,4 +44,53 @@ public class TreeTest {
         assertEquals(false,t.isEmpty());
 
     }
+
+    @Test
+    public void testGetRoot() throws Exception {
+        TreeNode<String> n = new MyTreeNode("A");
+        Tree t = new MyTree(n);
+        assertEquals(n, t.getRoot());
+
+    }
+
+    @Test
+    public void testSize() throws Exception {
+
+        TreeNode<String> n = new MyTreeNode("A");
+        Tree t = new MyTree(n);
+        assertEquals(1,t.size());
+
+    }
+
+    @Test
+    public void testSizeMoreNodes() throws Exception {
+        TreeNode<String> n = new MyTreeNode("B");
+        TreeNode<String> n2 = new MyTreeNode(50);
+        TreeNode<String> n3 = new MyTreeNode("DOOOM!");
+        TreeNode<String> n4 = new MyTreeNode("DOO00OOM!");
+        TreeNode<String> n5 = new MyTreeNode("DOO01OOM!");
+        TreeNode<String> n6 = new MyTreeNode("DOO02OOM!");
+        TreeNode<String> n7 = new MyTreeNode("DOO03OOM!");
+        n.addChild(n2);
+        n.addChild(n3);
+        n3.addChild(n4);
+        n4.addChild(n5);
+        n4.addChild(n6);
+        n4.addChild(n7);
+        Tree t = new MyTree(n);
+        assertEquals(7, t.size());
+
+    }
+
+    @Test
+    public void testGetPreOrder() throws Exception {
+
+
+    }
+
+    @Test
+    public void testGetPostOrder() throws Exception {
+
+
+    }
 }

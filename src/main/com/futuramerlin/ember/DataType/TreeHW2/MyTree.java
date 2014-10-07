@@ -19,7 +19,11 @@ public class MyTree<E> implements Tree<E> {
 
     @Override
     public int size() {
-        return this.rootNode.count();
+        int i = this.rootNode.count();
+        if(i>1) {
+            return i+1;
+        }
+        return i;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class MyTree<E> implements Tree<E> {
 
     @Override
     public List<TreeNode<E>> getPreOrder() {
-        return null;
+        return this.rootNode.getPreOrder();
     }
 
     @Override
@@ -44,7 +48,7 @@ public class MyTree<E> implements Tree<E> {
 
     @Override
     public boolean isEmpty() {
-        if(this.rootNode.size() > 1) {
+        if(this.rootNode.size() >= 1) {
             return false;
         }
         return true;

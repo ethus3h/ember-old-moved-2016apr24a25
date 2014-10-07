@@ -74,8 +74,8 @@ public class MyTreeNode<E> implements TreeNode<E> {
         int i = 0;
         if (!(this.leftmostChild == null)) {
             i = 1;
-            if(this.leftmostChild.inclusiveHeight() > i) {
-                i = this.leftmostChild.inclusiveHeight();
+            if(this.leftmostChild.inclusiveHeight() >= i) {
+                i = i+this.leftmostChild.inclusiveHeight();
             }
         }
         return i;
@@ -83,12 +83,49 @@ public class MyTreeNode<E> implements TreeNode<E> {
 
     @Override
     public List<TreeNode<E>> getPreOrder() {
-        return null;
+        List<TreeNode<E>> l = new ArrayList<TreeNode<E>>();
+        ArrayList e = new ArrayList<E>();
+        e.add(this.getElement());
+        if (!(this.leftmostChild == null)) {
+            l.add(this.leftmostChild);
+            if(!(this.leftmostChild.getChildren() == null)) {
+                l.addAll(this.leftmostChild.getChildren());
+            }
+        }
+        if (!(this.getNextSibling() == null)) {
+            l.add(this.getNextSibling());
+            if(!(this.getNextSibling().getChildren() == null)) {
+                l.addAll(this.getNextSibling().getChildren());
+            }
+        };
+        for (TreeNode<E> element: l) {
+            e.add(element.getElement());
+        }
+        return e;
     }
 
     @Override
     public List<TreeNode<E>> getPostOrder() {
-        return null;
+        List<TreeNode<E>> l = new ArrayList<TreeNode<E>>();
+        ArrayList e = new ArrayList<E>();
+        e.add(this.getElement());
+        if (!(this.getNextSibling() == null)) {
+            l.add(this.getNextSibling());
+            if(!(this.getNextSibling().getChildren() == null)) {
+                l.addAll(this.getNextSibling().getChildren());
+            }
+        };
+        if (!(this.leftmostChild == null)) {
+            l.add(this.leftmostChild);
+            if(!(this.leftmostChild.getChildren() == null)) {
+                l.addAll(this.leftmostChild.getChildren());
+            }
+        }
+        for (TreeNode<E> element: l) {
+            e.add(element.getElement());
+        }
+        return e;
+
     }
 
     @Override
