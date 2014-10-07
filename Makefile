@@ -12,7 +12,7 @@ all:
 	$(classes)
 
 clean:
-	rm -f *.class
+	$(shell find . -type f -name "*.class" -delete)
 
 %.class: %.java
 	$(JAVAC) $<
