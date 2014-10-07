@@ -1,0 +1,10 @@
+F1 through F8: 
+
+F1 reverses left and right subtrees.
+F2 reverses left and right subtrees, recursively.
+F3 reverses left and right subtrees, recursing down the new left subtree.
+F4 reverses left and right subtrees, recursing down the new right subtree.
+F5 does a shuffle.
+F6 does a reverse shuffle.
+F7 does a slant.
+F8 does a skew left.
