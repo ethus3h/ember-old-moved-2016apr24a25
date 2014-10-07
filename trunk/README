@@ -9,11 +9,6 @@ F6 does a reverse shuffle.
 F7 does a slant.
 F8 does a skew left.
 
-
-Dependencies for complete build: (put in “lib” directory)
-apache-maven-3.2.3
-commons-codec-1.9.jar
-hamcrest-core-1.3.jar
-jetty-all-9.2.3.v20140905.jar
-junit-4.11.jar
-servlet-api-2.5.jar
+Changes in this version: 
+Misc. fixes
+Preorder and postorder implemented

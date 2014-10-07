@@ -12,7 +12,7 @@ all:
 	$(classes)
 
 clean:
-	$(shell find . -type f -name "*.class" -delete)
+	$(shell cd src; find . -type f -name "*.class" -delete)
 
 %.class: %.java
 	$(JAVAC) $<
