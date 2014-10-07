@@ -1,23 +1,16 @@
-#help from https://gist.github.com/badsector/1395205 http://www.cs.swarthmore.edu/~newhall/unixhelp/javamakefiles.html http://stackoverflow.com/questions/4063863/how-to-write-set-classpath-in-makefile-for-java-in-linux http://stackoverflow.com/questions/5487838/makefile-with-jar-and-package-dependencies http://stackoverflow.com/questions/8561640/make-nothing-to-be-done-for-all
-#
-# Generic Java makefile
-#
- 
-CLASSES = $(wildcard *.java)
-JFLAGS = -g
-JC = javac
- 
-.SUFFIXES:
-	.java .class
- 
-.java.class:
-	$(JC) $(JFLAGS) $*.java
- 
-classes:
-	$(CLASSES:.java=.class)
+#help from http://stackoverflow.com/questions/1064481/how-to-wildcard-include-jar-files-when-compiling http://stackoverflow.com/questions/2356443/building-java-package-javac-to-all-files  https://www.gnu.org/software/make/manual/html_node/Shell-Function.html http://stackoverflow.com/questions/194725/how-can-i-make-the-find-command-on-os-x-default-to-the-current-directory http://stackoverflow.com/questions/17548854/difference-between-mac-find-and-linux-find http://www.devin.com/cruft/javamakefile.html http://jwrr.com/content/Gnu-Makefile-Examples/ http://stackoverflow.com/questions/17548854/difference-between-mac-find-and-linux-find 
+JAVAC=javac
+sources = $(wildcard *.java)
+classes = $(sources:.java=.class)
+
+$(shell find ./ -name "*.java" > sources.txt)
+$(shell javac -cp .:`find ./ -name "*.jar" | tr "\n" ":"` @sources.txt)
 
 all:
-	classes
- 
+	$(classes)
+
 clean:
-	$(RM) *.class
+	rm -f *.class
+
+%.class: %.java
+	$(JAVAC) $<
