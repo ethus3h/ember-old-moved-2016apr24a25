@@ -1,4 +1,4 @@
-package com.futuramerlin.ember.DataType.TreeHW2;
+package com.futuramerlin.ember.DataType.HW2Tree;
 
 /**
  * Created by elliot on 6 October 14.
@@ -7,8 +7,6 @@ package com.futuramerlin.ember.DataType.TreeHW2;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
 
 /**
  * A simple example of using the Tree interface described earlier. We create the
@@ -21,6 +19,7 @@ public class TestMyTree {
 
     private static TreeNode<String> a, b, c, d, e, f, g, h, i, j, k;
 
+/*
     @Test
     public void testMyTree() {
         Tree<String> tree = createFigure18_3Tree();
@@ -54,6 +53,7 @@ public class TestMyTree {
         tree.makeEmpty();
         assertTrue(tree.isEmpty());
     }
+*/
 
     /**
      * Create the tree from Figure 18.3.

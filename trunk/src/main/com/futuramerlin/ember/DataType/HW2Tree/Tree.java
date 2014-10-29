@@ -1,4 +1,4 @@
-package com.futuramerlin.ember.DataType.TreeHW2;
+package com.futuramerlin.ember.DataType.HW2Tree;
 
 /**
  * Created by elliot on 6 October 14.

@@ -1,4 +1,4 @@
-package com.futuramerlin.ember.DataType.TreeHW2;
+package com.futuramerlin.ember.DataType.HW2Tree;
 
 import java.util.function.Function;
 

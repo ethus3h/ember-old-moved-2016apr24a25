@@ -1,4 +1,4 @@
-package com.futuramerlin.ember.DataType.TreeHW2;
+package com.futuramerlin.ember.DataType.HW2Tree;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class MyTree<E> implements Tree<E> {
 
     @Override
     public List<TreeNode<E>> getPostOrder() {
-        return null;
+        return this.rootNode.getPostOrder();
     }
 
     @Override
