@@ -8,7 +8,13 @@ import org.junit.Test;
 public class StdioClientTest {
     @Test
     public void testCreateStdioClient() throws Exception {
-        StdioClient a = new StdioClient();
+        StdioClient c = new StdioClient();
 
+    }
+
+    @Test
+    public void testStdioClientSayHello() throws Exception {
+        StdioClient c = new StdioClient();
+        c.sayHello();
     }
 }
