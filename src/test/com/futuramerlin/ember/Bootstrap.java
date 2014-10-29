@@ -1,8 +1,8 @@
 package com.futuramerlin.ember;
 
-import com.futuramerlin.ember.DataType.TreeHW2.TestMyTree;
-import com.futuramerlin.ember.DataType.TreeHW2.TreeNodeTest;
-import com.futuramerlin.ember.DataType.TreeHW2.TreeTest;
+import com.futuramerlin.ember.DataType.HW2Tree.TestMyTree;
+import com.futuramerlin.ember.DataType.HW2Tree.TreeNodeTest;
+import com.futuramerlin.ember.DataType.HW2Tree.TreeTest;
 
 import java.lang.reflect.InvocationTargetException;
 

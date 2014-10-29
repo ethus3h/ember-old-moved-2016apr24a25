@@ -1,11 +1,9 @@
-package com.futuramerlin.ember.DataType.TreeHW2;
+package com.futuramerlin.ember.DataType.HW2Tree;
 
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
