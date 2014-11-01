@@ -1,8 +1,8 @@
 package com.futuramerlin.ember.Client;
 
-import com.futuramerlin.ember.ApiClient.ApiClient;
-import com.futuramerlin.ember.Throwable.TerminalNotFound;
-import com.futuramerlin.ember.Throwable.ZeroLengthInputException;
+import com.futuramerlin.ember.Client.ApiClient.ApiClient;
+import com.futuramerlin.ember.Common.Exception.TerminalNotFound;
+import com.futuramerlin.ember.Common.Exception.ZeroLengthInputException;
 import org.junit.Test;
 
 /**
