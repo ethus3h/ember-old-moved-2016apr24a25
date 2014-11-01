@@ -2,8 +2,8 @@ package com.futuramerlin.ember.Client;
 
 import com.futuramerlin.ember.ApiClient.ApiClient;
 import com.futuramerlin.ember.Client.Client;
-//import org.junit.Test;
-//import org.junit.Assert;
+import org.junit.Test;
+import org.junit.Assert;
 
 /**
  * Created by elliot on 14.10.29.
@@ -13,7 +13,7 @@ public class ClientTest {
         ClientTest c = new ClientTest();
         c.testClientGetNewApiClientAssigns();
     }
- /*   @Test
+    @Test
     public void testCreateStdioClient() throws Exception {
         Client c = new Client();
 
@@ -25,27 +25,52 @@ public class ClientTest {
         c.sayHello();
     }
 
-/*    @Test
+    @Test
     public void testClientGetNewApiClient() throws Exception {
         Client c = new Client();
-        assert(c.getNewApiClient() instanceof ApiClient);
+        org.junit.Assert.assertTrue(c.getNewApiClient() instanceof ApiClient);
     }
 
     @Test
     public void testClientGetApiClient() throws Exception {
         Client c = new Client();
-        assert(c.getApiClient() instanceof ApiClient);
+        org.junit.Assert.assertTrue(c.getApiClient() instanceof ApiClient);
 
     }
-    @Test */
+    @Test
     public void testClientGetNewApiClientAssigns() throws Exception {
         Client c = new Client();
-        assert(c.apiClient.exists);
-/*         org.junit.Assert.assertNotNull(c.apiClient);
+        org.junit.Assert.assertNotNull(c.apiClient);
+    }
+    @Test
+    public void testClientGetNewApiClientAssignsIsApiClient() throws Exception {
+        Client c = new Client();
         org.junit.Assert.assertTrue(c.apiClient instanceof ApiClient);
+    }
+    @Test
+    public void testClientGetNewApiClientAssignsExists() throws Exception {
+        Client c = new Client();
         org.junit.Assert.assertNull(c.apiClient.exists);
-        org.junit.Assert.assertNotNull(c.apiClient.exists);
-        org.junit.Assert.assertTrue(c.apiClient.exists);
-        org.junit.Assert.assertFalse(c.apiClient.exists); */
+    }
+
+    @Test
+    public void testGetClientContext() throws Exception {
+        Client c = new Client();
+        org.junit.Assert.assertEquals(c.getContext(),null);
+
+    }
+
+    @Test
+    public void testClientHasTerm() throws Exception {
+        Client c = new Client();
+        //Won't have a console while running the tests.
+        org.junit.Assert.assertNull(c.term);
+    }
+
+    @Test
+    public void testClientWaitForInput() throws Exception {
+        Client c = new Client();
+        c.waitForInput();
+
     }
 }
