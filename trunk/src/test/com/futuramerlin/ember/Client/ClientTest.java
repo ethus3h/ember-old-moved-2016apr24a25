@@ -1,11 +1,9 @@
 package com.futuramerlin.ember.Client;
 
 import com.futuramerlin.ember.ApiClient.ApiClient;
-import com.futuramerlin.ember.Client.Client;
 import com.futuramerlin.ember.Throwable.TerminalNotFound;
 import com.futuramerlin.ember.Throwable.ZeroLengthInputException;
 import org.junit.Test;
-import org.junit.Assert;
 
 /**
  * Created by elliot on 14.10.29.
@@ -19,12 +17,6 @@ public class ClientTest {
     public void testCreateStdioClient() throws Exception {
         Client c = new Client();
 
-    }
-
-    @Test
-    public void testStdioClientSayHello() throws Exception {
-        Client c = new Client();
-        c.sayHello();
     }
 
     @Test
@@ -124,6 +116,12 @@ public class ClientTest {
     public void testProcessInput() throws Exception, ZeroLengthInputException, TerminalNotFound {
         Client c = new Client();
         c.processInput();
+
+    }
+    @Test
+    public void testMessage() throws Exception {
+        Client c = new Client();
+        c.message("");
 
     }
 }
