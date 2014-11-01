@@ -5,8 +5,8 @@ package com.futuramerlin.ember.ApiClient;
  */
 public class ApiClient {
     public Boolean exists;
-    void ApiClient() {
+    public ApiClient() {
         Boolean exists = true;
-        System.out.println("Doom");
+        //System.out.println("Doom");
     }
 }
