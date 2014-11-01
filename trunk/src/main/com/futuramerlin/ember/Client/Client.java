@@ -1,9 +1,9 @@
-package com.futuramerlin.ember.Client.StdioClient;
+package com.futuramerlin.ember.Client;
 
 /**
  * Created by elliot on 14.10.29.
  */
-public class StdioClient {
+public class Client {
     public static void main(String[] args) {
         System.out.println("Hello!");
     }
