@@ -5,7 +5,7 @@ package com.futuramerlin.ember.Client.StdioClient;
  */
 public class StdioClient {
     public static void main(String[] args) {
-
+        System.out.println("Hello!");
     }
     public void sayHello() {
         System.out.println("Hello!");
