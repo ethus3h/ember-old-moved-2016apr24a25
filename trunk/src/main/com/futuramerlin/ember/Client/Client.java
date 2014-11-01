@@ -5,7 +5,8 @@ package com.futuramerlin.ember.Client;
  */
 public class Client {
     public static void main(String[] args) {
-        System.out.println("Hello!");
+        Client c = new Client();
+        c.sayHello();
     }
     public void sayHello() {
         System.out.println("Hello!");

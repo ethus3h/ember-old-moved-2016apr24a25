@@ -1,4 +1,4 @@
-package com.futuramerlin.ember.Client.StdioClient;
+package com.futuramerlin.ember.Client;
 
 import com.futuramerlin.ember.Client.Client;
 import org.junit.Test;
