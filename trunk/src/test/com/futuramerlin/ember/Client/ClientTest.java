@@ -2,6 +2,8 @@ package com.futuramerlin.ember.Client;
 
 import com.futuramerlin.ember.ApiClient.ApiClient;
 import com.futuramerlin.ember.Client.Client;
+import com.futuramerlin.ember.Throwable.TerminalNotFound;
+import com.futuramerlin.ember.Throwable.ZeroLengthInputException;
 import org.junit.Test;
 import org.junit.Assert;
 
@@ -56,7 +58,7 @@ public class ClientTest {
     @Test
     public void testGetClientContext() throws Exception {
         Client c = new Client();
-        org.junit.Assert.assertEquals(c.getContext(),null);
+        org.junit.Assert.assertEquals(c.getContext(), null);
 
     }
 
@@ -67,10 +69,61 @@ public class ClientTest {
         org.junit.Assert.assertNull(c.term);
     }
 
-    @Test
-    public void testClientWaitForInput() throws Exception {
+    @Test(expected=TerminalNotFound.class)
+    public void testClientWaitForInput() throws Exception, ZeroLengthInputException, TerminalNotFound {
+        //Won't have a console while running the tests.
         Client c = new Client();
         c.waitForInput();
+    }
+
+    @Test
+    public void testClientRun() throws Exception, ZeroLengthInputException, TerminalNotFound {
+        Client c = new Client();
+        c.run();
+
+    }
+
+    @Test
+    public void testClientNullContextMessage() throws Exception {
+        Client c = new Client();
+        c.printNullContextMessage();
+
+
+    }
+
+    @Test
+    public void testInteractOnTerminal() throws Exception, ZeroLengthInputException, TerminalNotFound {
+        Client c = new Client();
+        c.interactOnTerminal();
+
+
+    }
+
+    @Test
+    public void testStart() throws Exception {
+        Client c = new Client();
+        c.start();
+
+
+    }
+    @Test
+    public void testStop() throws Exception {
+        Client c = new Client();
+        c.stop();
+
+
+    }
+
+    @Test
+    public void testCommand() throws Exception {
+        Client c = new Client();
+        c.command("");
+
+    }
+    @Test(expected=TerminalNotFound.class)
+    public void testProcessInput() throws Exception, ZeroLengthInputException, TerminalNotFound {
+        Client c = new Client();
+        c.processInput();
 
     }
 }

@@ -1,8 +1,10 @@
 package com.futuramerlin.ember.Client;
 
 import com.futuramerlin.ember.ApiClient.ApiClient;
+import com.futuramerlin.ember.DataProcessor.StringProcessor;
+import com.futuramerlin.ember.Throwable.TerminalNotFound;
+import com.futuramerlin.ember.Throwable.ZeroLengthInputException;
 
-import java.io.BufferedReader;
 import java.io.Console;
 
 /**
@@ -12,11 +14,13 @@ public class Client {
     public ApiClient apiClient;
     public Console term;
     private String context;
+    private boolean running;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ZeroLengthInputException, TerminalNotFound {
         Client c = new Client();
-        c.sayHello();
-        c.waitForInput();
+        c.start();
+        c.run();
+        c.stop();
     }
 
     public Client() {
@@ -40,11 +44,12 @@ public class Client {
         return this.apiClient;
     }
 
-    public String waitForInput() {
+    public String waitForInput() throws ZeroLengthInputException, TerminalNotFound {
         if(this.term != null) {
-            return this.term.readLine("$ ");
+            StringProcessor p = new StringProcessor();
+                return this.term.readLine("$ ");
         }
-        return null;
+        throw new TerminalNotFound();
     }
 
     public String getContext() {
@@ -52,8 +57,53 @@ public class Client {
             this.context = "terminal";
         }
         else {
-            this.context = "null";
+            this.context = null;
         }
         return context;
+    }
+
+    public void run() throws ZeroLengthInputException, TerminalNotFound {
+        if(this.context == null) {
+            this.printNullContextMessage();
+        }
+        if(this.context == "terminal") {
+            this.interactOnTerminal();
+        }
+    }
+
+    public void interactOnTerminal() throws ZeroLengthInputException, TerminalNotFound {
+        while (this.running) {
+            this.processInput();
+        }
+    }
+
+    public void printNullContextMessage() {
+        System.out.println("It doesn't look like you're communicating with Ember in a context that it understands. Presumably in a later version, a scriptable interface will be available.");
+    }
+
+    public void start() {
+        this.sayHello();
+        this.getApiClient();
+        this.getContext();
+        this.running = true;
+    }
+
+    public void stop() {
+        System.out.println("Ember is stopping now.");
+    }
+
+    public void command(String c) {
+        //System.out.println(c);
+        //System.out.println(this.running);
+        //System.out.println(c.equals("quit"));
+        if (c.equals("quit")) {
+            //System.out.println("QUITTING");
+            this.running = false;
+        }
+    }
+
+    public void processInput() throws ZeroLengthInputException, TerminalNotFound {
+        String c = this.waitForInput();
+        this.command(c);
     }
 }
