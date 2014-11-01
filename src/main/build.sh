@@ -8,10 +8,10 @@ emcompile() {
 	echo "Trying to build module: $1..."
 	javac -cp . ./com/futuramerlin/ember/${1/./\/}/${1#*.}.java
 	jar cfe $1.jar com.futuramerlin.ember.$1.${1#*.} .
-	echo "Your $1 is now ready in $1.jar."
+	echo "Your $1 is now ready in ./$1.jar."
 }
 
-emcompile "Client.StdioClient";
+emcompile "Client";
 
 
 echo "Done!"
