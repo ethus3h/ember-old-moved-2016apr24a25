@@ -29,10 +29,6 @@ public class Client {
         this.apiClient = this.getApiClient();
     }
 
-    public void sayHello() {
-        System.out.println("Hello! Ember is now starting. It may take a little while for it to do so.");
-    }
-
     public ApiClient getNewApiClient() {
         return new ApiClient();
     }
@@ -82,14 +78,16 @@ public class Client {
     }
 
     public void start() {
-        this.sayHello();
+        System.out.println("Hello! Please wait; it may take a little while...");
         this.getApiClient();
         this.getContext();
         this.running = true;
+        this.message("Ember has started, and is ready to use.");
     }
 
     public void stop() {
-        System.out.println("Ember is stopping now.");
+        this.message("Ember is stopping now. Please wait; it may take a little while...");
+        this.message("Ember has stopped.");
     }
 
     public void command(String c) {
@@ -105,5 +103,11 @@ public class Client {
     public void processInput() throws ZeroLengthInputException, TerminalNotFound {
         String c = this.waitForInput();
         this.command(c);
+    }
+
+    public void message(String s) {
+        if((this.context == null) || (this.context == "terminal")) {
+            System.out.println(s);
+        }
     }
 }
