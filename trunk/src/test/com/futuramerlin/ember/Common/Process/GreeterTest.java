@@ -1,5 +1,6 @@
-package com.futuramerlin.ember.Common;
+package com.futuramerlin.ember.Common.Process;
 
+import com.futuramerlin.ember.Common.Process.Greeter;
 import org.junit.Test;
 
 /**

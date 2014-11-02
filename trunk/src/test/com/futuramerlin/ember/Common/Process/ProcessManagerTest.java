@@ -1,6 +1,5 @@
 package com.futuramerlin.ember.Common.Process;
 
-import com.futuramerlin.ember.Common.ProcessManager;
 import org.junit.Test;
 
 /**
@@ -16,12 +15,12 @@ public class ProcessManagerTest {
     @Test
     public void testAddProcess() throws Exception {
         ProcessManager p = new ProcessManager();
-        p.start("Greeter");
+        p.start("Common.Process.Greeter");
     }
     @Test
     public void testAddProcessWithArg() throws Exception {
         ProcessManager p = new ProcessManager();
-        p.start("Greeter","Doom");
+        p.start("Common.Process.Greeter","Doom");
     }
     @Test
     public void testGetNewestPid() throws Exception {
