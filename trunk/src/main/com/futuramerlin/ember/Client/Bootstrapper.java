@@ -59,6 +59,11 @@ public class Bootstrapper implements EmberProcess {
     public void kill() {
 
     }
+
+    public Bootstrapper() throws ApiClientAlreadyExistsException {
+        this.term = System.console();
+        this.apiClient = this.getApiClient();
+    }
     public void start() throws ApiClientAlreadyExistsException {
         this.apiClient = this.getApiClient();
         this.getContext();

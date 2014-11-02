@@ -2,6 +2,7 @@ package com.futuramerlin.ember.Client;
 
 import com.futuramerlin.ember.Client.ApiClient.ApiClient;
 import com.futuramerlin.ember.Client.Bootstrapper;
+import com.futuramerlin.ember.Common.Exception.ApiClientAlreadyExistsException;
 import com.futuramerlin.ember.Common.Exception.TerminalNotFound;
 import com.futuramerlin.ember.Common.Exception.ZeroLengthInputException;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class BootstrapperTest {
 
     }
 
-    @Test
+    @Test(expected=ApiClientAlreadyExistsException.class)
     public void testBootstrapperGetNewApiClient() throws Exception {
         Bootstrapper c = new Bootstrapper();
         org.junit.Assert.assertTrue(c.getNewApiClient() instanceof ApiClient);
