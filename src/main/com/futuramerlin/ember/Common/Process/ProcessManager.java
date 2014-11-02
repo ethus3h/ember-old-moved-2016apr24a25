@@ -12,7 +12,7 @@ public class ProcessManager {
     private ArrayList<EmberProcessInstance> processes = new ArrayList<EmberProcessInstance>();
 
     public EmberProcessInstance start(String c) throws Exception {
-        return start(c,null);
+        return start(c,(String[])null);
     }
     public EmberProcessInstance start(String c, String... args) throws Exception {
         this.checkRunnable(Class.forName("com.futuramerlin.ember."+c));
