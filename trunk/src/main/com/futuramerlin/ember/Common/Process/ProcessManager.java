@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class ProcessManager {
     public Integer newestPid = -1;
     private ArrayList<EmberProcessInstance> processes = new ArrayList<EmberProcessInstance>();
-
     public EmberProcessInstance start(String c) throws Exception {
         return start(c,(String[])null);
     }
@@ -28,7 +27,6 @@ public class ProcessManager {
     }
 
     public void checkRunnable(Class c) throws classNotRunnableException {
-        System.out.println(c.toString());
         if(!EmberProcess.class.isAssignableFrom(c)) {
             throw new classNotRunnableException();
         }
