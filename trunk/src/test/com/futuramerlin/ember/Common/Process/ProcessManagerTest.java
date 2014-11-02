@@ -1,5 +1,6 @@
 package com.futuramerlin.ember.Common.Process;
 
+import com.futuramerlin.ember.Common.Exception.classNotRunnableException;
 import org.junit.Test;
 
 /**
@@ -34,5 +35,16 @@ public class ProcessManagerTest {
         p.start("Common.Process.Greeter","Doom");
         org.junit.Assert.assertTrue(p.getNewestPid() instanceof Integer);
         org.junit.Assert.assertTrue(p.getNewestPid() == 0);
+    }
+
+    @Test
+    public void testIsRunnable() throws Exception {
+        ProcessManager p = new ProcessManager();
+        p.checkRunnable(Greeter.class);
+    }
+    @Test(expected=classNotRunnableException.class)
+    public void testAddProcessNotRunnable() throws Exception {
+        ProcessManager p = new ProcessManager();
+        p.start("Common.Process.ProcessManager");
     }
 }

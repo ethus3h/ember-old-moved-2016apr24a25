@@ -1,5 +1,7 @@
 package com.futuramerlin.ember.Common.Process;
 
+import com.futuramerlin.ember.Common.Exception.classNotRunnableException;
+
 import java.util.ArrayList;
 
 /**
@@ -13,6 +15,7 @@ public class ProcessManager {
         return start(c,null);
     }
     public EmberProcessInstance start(String c, String... args) throws Exception {
+        this.checkRunnable(Class.forName("com.futuramerlin.ember."+c));
         EmberProcessInstance p = new EmberProcessInstance(this, c,args);
         this.processes.add(p);
         p.pid = this.processes.indexOf(p);
@@ -22,5 +25,12 @@ public class ProcessManager {
 
     public Integer getNewestPid() {
         return this.newestPid;
+    }
+
+    public void checkRunnable(Class c) throws classNotRunnableException {
+        System.out.println(c.toString());
+        if(!EmberProcess.class.isAssignableFrom(c)) {
+            throw new classNotRunnableException();
+        }
     }
 }

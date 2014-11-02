@@ -3,8 +3,6 @@ package com.futuramerlin.ember.Common.Process;
 import com.futuramerlin.ember.Common.Exception.*;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.lang.Thread;
 
 
@@ -29,7 +27,7 @@ public class EmberProcessInstance implements Runnable {
         new EmberProcessInstance(e, c, null);
     }
 
-    public void start() throws Exception, classNotRunnableException {
+    public void start() throws Exception, classRunMethodMissingException {
         (new Thread(this)).start();
         if(this.e != null) {
             throw this.e;
@@ -44,10 +42,8 @@ public class EmberProcessInstance implements Runnable {
         }
     }
 
-    private void execute(Class<?> c, Object... args) throws classNotRunnableException, classNotExistsException, classIllegalAccessException, classInvocationTargetException, classLacksSignalInterfaceException, IllegalAccessException, InstantiationException {
-        //based on http://docs.oracle.com/javase/tutorial/reflect/member/methodInvocation.html
+    private void execute(Class<?> c, Object... args) throws IllegalAccessException, InstantiationException, classNotRunnableException, classRunMethodMissingException, classIllegalAccessException, classInvocationTargetException {
         this.c = c;
-        this.o = this.c.newInstance();
         Class[] argTypes = new Class[args.length];
         Integer i = 0;
         for (Object o : args) {
@@ -55,24 +51,9 @@ public class EmberProcessInstance implements Runnable {
             i++;
         }
         try {
-            //help from http://stackoverflow.com/questions/15268767/getmethods-returns-method-i-havent-defined-when-implementing-a-generic-interf
-            for (Method method : c.getDeclaredMethods()) {
-                System.out.println(method.getName() + "\t");
-            }
-            //from http://www.tutorialspoint.com/java/lang/class_getdeclaredmethod.htm
-            Class[] cArg = new Class[1];
-            cArg[0] = Integer.class;
-            Method handler = c.getDeclaredMethod("processSignalHandler", cArg);
+            c.getDeclaredMethod("run", argTypes).invoke(this.c.newInstance(), args);
         } catch (NoSuchMethodException x) {
-            throw new classLacksSignalInterfaceException();
-        }
-        try {
-            Method main = c.getDeclaredMethod("run", argTypes);
-            //String[] mainArgs = Arrays.copyOfRange(args, 1, args.length);
-            System.out.format("invoking %s.main()%n", c.getName());
-            main.invoke(this.o, args);
-        } catch (NoSuchMethodException x) {
-            throw new classNotRunnableException();
+            throw new classRunMethodMissingException();
         } catch (IllegalAccessException x) {
             throw new classIllegalAccessException();
         } catch (InvocationTargetException x) {
