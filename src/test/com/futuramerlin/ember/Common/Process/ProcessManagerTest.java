@@ -25,6 +25,14 @@ public class ProcessManagerTest {
     @Test
     public void testGetNewestPid() throws Exception {
         ProcessManager p = new ProcessManager();
-        org.junit.Assert.assertTrue(p.getNewestPid instanceof Integer);
+        org.junit.Assert.assertTrue(p.getNewestPid() instanceof Integer);
+        org.junit.Assert.assertTrue(p.getNewestPid() == -1);
+    }
+    @Test
+    public void testGetNewestPidAfter() throws Exception {
+        ProcessManager p = new ProcessManager();
+        p.start("Common.Process.Greeter","Doom");
+        org.junit.Assert.assertTrue(p.getNewestPid() instanceof Integer);
+        org.junit.Assert.assertTrue(p.getNewestPid() == 0);
     }
 }
