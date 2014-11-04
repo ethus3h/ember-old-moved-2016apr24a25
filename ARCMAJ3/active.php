@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.87.1, 9 January 2014.
+#Futuramerlin Active Scripting Library, ARCMAJ3 version. Version 0.87.2, 2014.nov.04a.mn..
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -12,8 +12,8 @@
 #SHOW FULL PROCESSLIST
 include('authData.php');
 //CONFIG
-#error_reporting(E_ALL);
-ini_set("display_errors", 0);
+error_reporting(E_ALL);
+#ini_set("display_errors", 0);
 $displayDebugMessages = False;
 //IMPORTANT VARIABLES
 if ($_SERVER["HTTP_HOST"] == '127.0.0.1') {
