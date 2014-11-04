@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.18.5, 4 November 2014.
+# Version 2.18.5.1, 4 November 2014.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013, 2014 Futuramerlin
@@ -27,6 +27,7 @@
 # TODO: Add by-project exclusion patterns (and pattern sets?)
 # TODO: user statistics tracker
 # TODO: Allow barrels to come in after they've been expired?
+# TODO: Fix insufficient URLs in project infinite loop bug (see info. in configuration section below)
 # TODO: Use ww2.futuramerlin.com?
 # TODO: ACTUALLY use PDO prepared statements to reduce the risk of (intentional or accidental) SQL injection.
 # TODO: (?) calculate SHA-512 hashes client-side to reduce DB server load (this would calculate hashes even if the URL was already in the database, though…)
@@ -65,6 +66,7 @@
 # Configuration goes here
 # The optional fourth line of the config file is a comma-separated list of project IDs to crawl.
 # You need a file named config.txt with username, access key, and secret key, each in its own line.
+# If you specify the project IDs to crawl, make sure there are enough of them to fill your barrel. Failure to do this will cause the server to loop infinitely until the PHP script is killed.
 userName=open('config.txt', 'r').readlines()[0].strip()
 accesskey = open('config.txt', 'r').readlines()[1].strip()
 secretkey = open('config.txt', 'r').readlines()[2].strip()
