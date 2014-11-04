@@ -432,6 +432,8 @@ def concatW():
                 for f in filenames:
                     if ((f.startswith('upload-') and not 'upload-'+timeRunning+'.log' in f) or f.startswith('barrelsCompleted-') or f.startswith('bucketsCompleted-') or f.startswith('log-') or f.startswith('AMJ_BarrelData_') or f.startswith('AMJ_BucketData_') or (f.startswith('WEB-') and f.endswith('.warc.gz'))) and not 'megawarc' in f:
                         dumps.append(f)
+                    if (f.startswith('ytdlamjoutput_')):
+                    	dumps.append(f)
                 break
         for dump in dumps:
             ulog_add("\n\n")
@@ -475,7 +477,7 @@ def main():
         downloadFetchResult=run('bash -c \'wget --no-check-certificate -E -K --no-parent --warc-tempdir=. --delete-after --user-agent="'+altUserAgentChoice+'" -e robots=off --warc-max-size=500M --warc-file=AMJ_BarrelData_'+barrelID+'_' + uuidG + '_' + uuid_item + ' \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
         downloadFetchResult=downloadFetchResult[0]
         logFileName = 'log-'+timeRunning+'.log
-        ytdlResult = run('bash -c \'youtube-dl --restrict-filenames -A --title --continue --retries 4 --write-info-json --write-description --write-thumbnail --write-annotations --all-subs --ignore-errors -f 38/138+141/138+22/138+140/138+139/264+141/264+22/264+140/264+139/137+141/137+22/137+140/137+139/37/22/135+141/135+22/135+140/135+139/best \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
+        ytdlResult = run('bash -c \'youtube-dl --restrict-filenames -o ytdlamjoutput_%(autonumber)s_%(playlist)s_%(playlist_index)s_%(id)s.%(ext)s --continue --retries 4 --write-info-json --write-description --write-thumbnail --write-annotations --all-subs --ignore-errors -f 38/138+141/138+22/138+140/138+139/264+141/264+22/264+140/264+139/137+141/137+22/137+140/137+139/37/22/135+141/135+22/135+140/135+139/best \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
         log_add('\n\nDownload fetch output: \n'+downloadFetchResult+"\n\n")
         log_add('\n\nyoutube-dl output: \n'+ytdlResult+"\n\n")
         iId+=1
