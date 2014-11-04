@@ -421,7 +421,7 @@ def concatW():
     ulog_add("# CONCATENATING RECORDS")
     ulog_add("#"*73)
     errored = False
-    cctRes=run('bash -c \'./megawarc pack AMJ_BarrelData_'+barrelID+'_' + uuidG+' *.warc.gz *.7z *.xz upload-* bucketsCompleted-* barrelsCompleted-* log-* arcmaj3-client.py URLs.lst failed.lst *.megawarc.tar *.megawarc.json.gz;\';')
+    cctRes=run('bash -c \'./megawarc pack AMJ_BarrelData_'+barrelID+'_' + uuidG+' *.warc.gz *.7z *.xz upload-* bucketsCompleted-* barrelsCompleted-* log-* arcmaj3-client.py URLs.lst failed.lst ytdlamjoutput_* *.megawarc.tar *.megawarc.json.gz;\';')
     ulog_add("\n\n"+cctRes[0]+"\n\n")
     ulog_add("\n--\n"+"#"*73)
     ulog_add("# DONE CONCATENATING RECORDS")
