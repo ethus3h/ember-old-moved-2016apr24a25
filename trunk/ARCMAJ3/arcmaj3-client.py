@@ -60,6 +60,8 @@
 # [Done]: create an easy way to add projects (e. g. visit http://localhost:8888/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addProject&projectSeed=http://blabla.com/&projectPattern=blabla.com and have it added)
 # [Done]: create an easy way to add URLs (e. g. visit http://localhost:8888/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addUrl&urlToAdd=http://blabla.com/ and have it added)
 
+#help from http://superuser.com/questions/142459/persistent-retrying-resuming-downloads-with-curl
+
 # Configuration goes here
 # The optional fourth line of the config file is a comma-separated list of project IDs to crawl.
 # You need a file named config.txt with username, access key, and secret key, each in its own line.
@@ -343,6 +345,8 @@ def upload(wikis):
         #creates curl command
         global sslTypeS
         curl = ['curl', '--location', 
+        	'--retry', '999',
+        	'--retry-max-time', '0',
             '--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
             '--header', "'x-archive-queue-derive:0'",
             '--header', "'x-archive-size-hint:%d'" % (os.path.getsize(dump)), 
