@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.18.4, 3 November 2014 and 4 November 2014 a.mn..
+# Version 2.18.5, 4 November 2014.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013, 2014 Futuramerlin
@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+# Nuke everything (THINK BEFORE DOING THIS): UPDATE `am_urls` SET failedAttempts=0; UPDATE `am_urls` SET barrel=0;
 # Keys: http://archive.org/account/s3.php
 # Documentation: http://archive.org/help/abouts3.txt
 # https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
@@ -474,8 +474,10 @@ def main():
         #in python: downloadFetchResult=run('bash -c \'wget -E -K -p -r -l1 --no-parent --warc-tempdir=. --delete-after --user-agent="Mozilla/5.0 (compatible; MSIE 7.0; 68K; WOW64; Trident/2.0)" -e robots=off --warc-max-size=500M --warc-file=AMJ_BarrelData_4148_9f8d370f-aed1-4744-99f5-af860b83eaeb_e8389b55-cb39-40bf-aeb6-f095a3991a78 \'\\\'\'http://fisheye.toolserver.org/browse/erfgoed/erfgoedbot/sql/create_view_monuments_all.sql?u=3&r=7.html\'\\\'\';\'')
         downloadFetchResult=run('bash -c \'wget --no-check-certificate -E -K --no-parent --warc-tempdir=. --delete-after --user-agent="'+altUserAgentChoice+'" -e robots=off --warc-max-size=500M --warc-file=AMJ_BarrelData_'+barrelID+'_' + uuidG + '_' + uuid_item + ' \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
         downloadFetchResult=downloadFetchResult[0]
-        logFileName = 'log-'+timeRunning+'.log'
+        logFileName = 'log-'+timeRunning+'.log
+        ytdlResult = run('bash -c \'youtube-dl --restrict-filenames -A --title --continue --retries 4 --write-info-json --write-description --write-thumbnail --write-annotations --all-subs --ignore-errors -f 38/138+141/138+22/138+140/138+139/264+141/264+22/264+140/264+139/137+141/137+22/137+140/137+139/37/22/135+141/135+22/135+140/135+139/best \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
         log_add('\n\nDownload fetch output: \n'+downloadFetchResult+"\n\n")
+        log_add('\n\nyoutube-dl output: \n'+ytdlResult+"\n\n")
         iId+=1
     job_data="""<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
