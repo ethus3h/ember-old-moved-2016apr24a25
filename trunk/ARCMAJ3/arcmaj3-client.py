@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Dependencies (partial list): fake-factory; openssl with ssl3(?); xz; p7zip; wget 1.14+; youtube-dl; curl; bash; Java; Python; Perl
 # Nuke everything (THINK BEFORE DOING THIS): UPDATE `am_urls` SET failedAttempts=0; UPDATE `am_urls` SET barrel=0;
 # Keys: http://archive.org/account/s3.php
 # Documentation: http://archive.org/help/abouts3.txt
@@ -425,7 +426,7 @@ def concatW():
     ulog_add("# CONCATENATING RECORDS")
     ulog_add("#"*73)
     errored = False
-    cctRes=run('bash -c \'./megawarc pack AMJ_BarrelData_'+barrelID+'_' + uuidG+' *.warc.gz *.7z *.xz upload-* bucketsCompleted-* barrelsCompleted-* log-* arcmaj3-client.py URLs.lst failed.lst ytdlamjoutput_* *.megawarc.tar *.megawarc.json.gz;\';')
+    cctRes=run('bash -c \'./megawarc pack AMJ_BarrelData_'+barrelID+'_' + uuidG+' *.warc.gz *.7z *.xz upload-* bucketsCompleted-* barrelsCompleted-* log-* arcmaj3-client.py config.txt URLs.lst failed.lst ytdlamjoutput_* *.megawarc.tar *.megawarc.json.gz;\';')
     ulog_add("\n\n"+cctRes[0]+"\n\n")
     ulog_add("\n--\n"+"#"*73)
     ulog_add("# DONE CONCATENATING RECORDS")
@@ -484,11 +485,11 @@ def main():
         downloadFetchResult=downloadFetchResult[0]
         logFileName = 'log-'+timeRunning+'.log'
         global ytdlcfg
-        if(ytdlcfg == 1):
+        if(ytdlcfg == '1'):
         	ytdlResult = run('bash -c \'youtube-dl --restrict-filenames -o ytdlamjoutput_%\\(autonumber\\)s_%\\(playlist\\)s_%\\(playlist_index\\)s_%\\(id\\)s.%\\(ext\\)s --continue --retries 4 --write-info-json --write-description --write-thumbnail --write-annotations --all-subs --ignore-errors -f 38/138+141/138+22/138+140/138+139/264+141/264+22/264+140/264+139/137+141/137+22/137+140/137+139/37/22/135+141/135+22/135+140/135+139/best \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
         	ytdlResult = ytdlResult[0]
         log_add('\n\nDownload fetch output: \n'+downloadFetchResult+"\n\n")
-        if(ytdlcfg == 1):
+        if(ytdlcfg == '1'):
         	log_add('\n\nyoutube-dl output: \n'+ytdlResult+"\n\n")
         iId+=1
     job_data="""<?xml version="1.0" encoding="UTF-8"?>
