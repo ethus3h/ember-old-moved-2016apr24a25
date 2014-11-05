@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library, ARCMAJ3 version. Version 0.87.3, 2014.nov.04.
+#Futuramerlin Active Scripting Library, ARCMAJ3 version. Version 0.87.4, 2014.nov.04.
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -1688,7 +1688,7 @@ function arcmaj3_wint()
     $main_console->append('Remaining URLs: ' . $remaining . ' (' . $pcRm . '%)<br>');
     $main_console->append('Crawled URLs: ' . $crawled . ' <b>(' . $pcCr . '%)</b><br>');
     foreach ($allProjects as $index => $data) {
-        $main_console->append('<br><br><big><b>Project: ' . $data['urlPattern'] . ' (ID ' . $data['id'] . ')</b></big><br>');
+        $main_console->append('<br><br><big><b>Project: ' . $data['urlPattern'] . ' (ID ' . $data['id'] . ') ('.$data['type'].')</b></big><br>');
         $total     = $db->countTable('am_urls', 'project', $data['id']);
         $total     = $total[0];
         $total     = $total['COUNT(*)'];
