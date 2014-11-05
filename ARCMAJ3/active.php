@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library, ARCMAJ3 version. Version 0.87.2, 2014.nov.04a.mn..
+#Futuramerlin Active Scripting Library, ARCMAJ3 version. Version 0.87.3, 2014.nov.04.
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -10,6 +10,7 @@
 #See whatever's running on the database:
 #
 #SHOW FULL PROCESSLIST
+set_time_limit(1000000);
 include('authData.php');
 //CONFIG
 error_reporting(E_ALL);
