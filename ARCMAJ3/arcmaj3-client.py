@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.18.5.1, 4 November 2014.
+# Version 2.18.5.2, 4 November 2014.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013, 2014 Futuramerlin
@@ -93,6 +93,10 @@ try:
         sslTypeS = ' --sslv3'
 except Exception, e:
     sslTypeS = ''
+try:
+    ytdlcfg = open('config.txt', 'r').readlines()[7].strip()
+except Exception, e:
+    ytdlcfg = '1'
 collection = 'amjbarreldata' # Replace with "opensource" if you are not an admin of the collection
 # end configuration
 
@@ -479,10 +483,13 @@ def main():
         downloadFetchResult=run('bash -c \'wget --no-check-certificate -E -K --no-parent --warc-tempdir=. --delete-after --user-agent="'+altUserAgentChoice+'" -e robots=off --warc-max-size=500M --warc-file=AMJ_BarrelData_'+barrelID+'_' + uuidG + '_' + uuid_item + ' \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
         downloadFetchResult=downloadFetchResult[0]
         logFileName = 'log-'+timeRunning+'.log'
-        ytdlResult = run('bash -c \'youtube-dl --restrict-filenames -o ytdlamjoutput_%\\(autonumber\\)s_%\\(playlist\\)s_%\\(playlist_index\\)s_%\\(id\\)s.%\\(ext\\)s --continue --retries 4 --write-info-json --write-description --write-thumbnail --write-annotations --all-subs --ignore-errors -f 38/138+141/138+22/138+140/138+139/264+141/264+22/264+140/264+139/137+141/137+22/137+140/137+139/37/22/135+141/135+22/135+140/135+139/best \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
-        ytdlResult = ytdlResult[0]
+        global ytdlcfg
+        if(ytdlcfg == 1):
+        	ytdlResult = run('bash -c \'youtube-dl --restrict-filenames -o ytdlamjoutput_%\\(autonumber\\)s_%\\(playlist\\)s_%\\(playlist_index\\)s_%\\(id\\)s.%\\(ext\\)s --continue --retries 4 --write-info-json --write-description --write-thumbnail --write-annotations --all-subs --ignore-errors -f 38/138+141/138+22/138+140/138+139/264+141/264+22/264+140/264+139/137+141/137+22/137+140/137+139/37/22/135+141/135+22/135+140/135+139/best \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
+        	ytdlResult = ytdlResult[0]
         log_add('\n\nDownload fetch output: \n'+downloadFetchResult+"\n\n")
-        log_add('\n\nyoutube-dl output: \n'+ytdlResult+"\n\n")
+        if(ytdlcfg == 1):
+        	log_add('\n\nyoutube-dl output: \n'+ytdlResult+"\n\n")
         iId+=1
     job_data="""<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
