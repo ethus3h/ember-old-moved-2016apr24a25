@@ -1606,7 +1606,7 @@ function arcmaj3_handler()
                                 $db               = new FractureDB('futuqiur_arcmaj3');
                                 $newUrl           = Rq('amSeedUrl');
                                 $newProject       = Rq('amFilterPattern');
-                                $newProjectId     = $db->addRow('am_projects', 'urlPattern, patternHashUnique', "'" . $db->UrlEscS($newProject) . "', '" . hash('sha512', $db->UrlEscS($newProject)) . "', '" . $db->UrlEscS(Rq('amProjectType')) . "'");
+                                $newProjectId     = $db->addRow('am_projects', 'urlPattern, patternHashUnique, type', "'" . $db->UrlEscS($newProject) . "', '" . hash('sha512', $db->UrlEscS($newProject)) . "', '" . $db->UrlEscS(Rq('amProjectType')) . "'");
                                 $pps              = $db->getColumn('am_projects', 'urlPattern');
                                 $testProjects     = False;
                                 $potentialProject = '';
