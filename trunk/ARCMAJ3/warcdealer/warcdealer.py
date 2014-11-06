@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # WARCdealer
-# Version 1, 2014.nov.06a.mn..
+# Version 1.1, 2014.nov.06.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013, 2014 Futuramerlin
@@ -229,6 +229,6 @@ def main():
     #concatW()
     log_add('\n\nUploading barrel data back to base.\n\n');
     upload(wikis)
-    log_add('Sleeping 6000 seconds')
+    log_add('Sleeping 24000 seconds')
     time.sleep(6000)
 main()
