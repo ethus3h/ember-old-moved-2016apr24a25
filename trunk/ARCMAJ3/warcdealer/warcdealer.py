@@ -226,7 +226,7 @@ def main():
     global userName
     global timeRunning
     iId=1
-    concatW()
+    #concatW()
     log_add('\n\nUploading barrel data back to base.\n\n');
     upload(wikis)
     if statDuro:
