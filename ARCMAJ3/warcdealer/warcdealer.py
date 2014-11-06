@@ -229,6 +229,6 @@ def main():
     #concatW()
     log_add('\n\nUploading barrel data back to base.\n\n');
     upload(wikis)
-    log_add('Sleeping 500 seconds')
-    time.sleep(500)
+    log_add('Sleeping 6000 seconds')
+    time.sleep(6000)
 main()
