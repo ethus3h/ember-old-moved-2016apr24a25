@@ -102,9 +102,7 @@ def log(wiki, dump, msg):
     f = open('uploader-'+timeRunning+'.log', 'a')
     f.write('\n%s;%s;%s' % (wiki, dump, msg))
     f.close()
-with open ("barrelData.txt", "r") as barrelDataFile:
-    barrelDataContent=barrelDataFile.read()
-timeFetchResult=run('bash -c \'wget --no-check-certificate --warc-file='+timeRunning+'Now -O now.txt "http://www.timeapi.org/utc/now?\\Y-\\m-\\d-\\H-\\M-\\S-\\6N-\\z"\'')[0]
+timeFetchResult=run('bash -c \'wget --no-check-certificate --warc-file='+timeRunning+'.Now.warc.gz -O now.txt "http://www.timeapi.org/utc/now?\\Y-\\m-\\d-\\H-\\M-\\S-\\6N-\\z"\'')[0]
 
 with open ("now.txt", "r") as timeFile:
     timeRemote=timeFile.read()
@@ -117,10 +115,10 @@ def upload(wikis):
     global timeRunning
     global title
     global statDuro
-    ulog_add(wikis)
-    ulog_add("#"*73)
-    ulog_add("# Uploading record")
-    ulog_add("#"*73)
+    log_add(wikis)
+    log_add("#"*73)
+    log_add("# Uploading record")
+    log_add("#"*73)
     dumps = []
     for dirname, dirnames, filenames in os.walk('.'):
         if dirname == '.':
@@ -130,21 +128,19 @@ def upload(wikis):
                     dumps.append(f)
                     #dumps.append(f)
             break
-    ulog_add(dumps)
+    log_add(dumps)
     c = 0
     for dump in dumps:
         dumpid='WARCdealer_BarrelData_'+title+'_' + uuidG +'.' +timeRunning
-        ulog_add("#"*73)
-        ulog_add('ATTEMPTING TO UPLOAD DUMP DATA: ' + dump)
-        ulog_add('DUMP ID: ' + dumpid)
-        ulog_add("#"*73)
+        log_add("#"*73)
+        log_add('ATTEMPTING TO UPLOAD DUMP DATA: ' + dump)
+        log_add('DUMP ID: ' + dumpid)
+        log_add("#"*73)
         time.sleep(0.1)
         wikititle = "WARCdealer pack. WARC in set labeled: "+ title + ', ID: ' + uuidG
         wikidesc = "WARCdealer pack. WARC in set labeled: "+ title + ', ID ' + uuidG+'. '+title+'_' + uuidG +'.' +timeRunning
         wikikeys = ['Arcmaj3','WARC','snapshot','archive','WARCdealer','WARCdealer pack', title, title+'_' + uuidG +'.' +timeRunning]                        
-        global barrelSize
-        if os.path.getsize(dump) > barrelSize:
-            barrelSize = int(os.path.getsize(dump))
+    	barrelSize = int(os.path.getsize(dump))
         global sslTypeS
         curl = ['curl', '--location', 
         	'--retry', '999',
@@ -168,35 +164,37 @@ def upload(wikis):
                 "http://s3.us.archive.org/" + dumpid + '/' + dump # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
         ]
         curlline = ' '.join(curl)
-        ulog_add('Executing curl request: ')
-        ulog_add(curlline+'\n')
+        log_add('Executing curl request: ')
+        log_add(curlline+'\n')
         errored = False
         uploadFetchResultB = run(curlline)[0]
-        ulog_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
+        log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
         c += 1
         if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
             os.system('rm '+dump)
-            ulog_add('Removing file: '+dump+'\n')
+            log_add('Removing file: '+dump+'\n')
             statDuro = True
         else:
-            ulog_add('ERROR UPLOADING BARREL. THIS IS NOT GOOD.')
+            log_add('ERROR UPLOADING BARREL. THIS IS NOT GOOD.')
         errored = False
-        ulog_add('Logging added item: ' + 'https://archive.org/details/' + dumpid + '\n\n\n\n\n')
-        addFinished(dumpid + '.' + timeRunning)
+        log_add('Logging added item: ' + 'https://archive.org/details/' + dumpid + '\n\n\n\n\n')
 
 def concatW():
     global errored
-    ulog_add("\n--\n"+"#"*73)
-    ulog_add("# CONCATENATING RECORDS")
-    ulog_add("#"*73)
+    log_add("\n--\n"+"#"*73)
+    log_add("# CONCATENATING RECORDS")
+    log_add("#"*73)
     errored = False
+    #based on "# find / -iname "*.mp3" -type f -exec /bin/mv {} /mnt/mp3 \;" from http://www.cyberciti.biz/tips/howto-linux-unix-find-move-all-mp3-file.html
+    #find . -iname "*.warc.gz" -type f -exec /bin/mv {} . \;
+    run('bash -c \'find . -iname "*.warc.gz" -type f -exec /bin/mv {} . \;\';')
     cctRes=run('bash -c \'./megawarc pack WARCdealer_'+title+'_' + uuidG +'.' +timeRunning+'_' + uuidG+' *.warc.gz *.megawarc.tar *.megawarc.json.gz;\';')
-    ulog_add("\n\n"+cctRes[0]+"\n\n")
-    ulog_add("\n--\n"+"#"*73)
-    ulog_add("# DONE CONCATENATING RECORDS")
-    ulog_add("#"*73)
+    log_add("\n\n"+cctRes[0]+"\n\n")
+    log_add("\n--\n"+"#"*73)
+    log_add("# DONE CONCATENATING RECORDS")
+    log_add("#"*73)
     if not errored:
-        ulog_add("Removing records…")
+        log_add("Removing records…")
         dumps = []
         for dirname, dirnames, filenames in os.walk('.'):
             if dirname == '.':
@@ -205,22 +203,20 @@ def concatW():
                         dumps.append(f)
                 break
         for dump in dumps:
-            ulog_add("\n\n")
-            ulog_add('Removing file: '+dump+'\n')
+            log_add("\n\n")
+            log_add('Removing file: '+dump+'\n')
             os.system('rm '+dump)
-            ulog_add("\n\nAppend finished\n\n")
+            log_add("\n\nAppend finished\n\n")
     else:
         log_add('ERROR CONCATENATING RECORDS. THIS IS NOT GOOD.')
-    ulog_add('\n\nCompressing records…\n\n')
-    ulog_add(run('xz WARCdealer_'+title+'_' + uuidG +'.' +timeRunning+'_' + uuidG+'.megawarc.tar')[0])
-    ulog_add('\n\nFinished compressing records…\n\n')
+    log_add('\n\nCompressing records…\n\n')
+    log_add(run('xz WARCdealer_'+title+'_' + uuidG +'.' +timeRunning+'_' + uuidG+'.megawarc.tar')[0])
+    log_add('\n\nFinished compressing records…\n\n')
     errored = False
     return cctRes[0]
 log_add('\nPreparing main function\n')
 
 def main():
-    global barrelID
-    log_add("\nBarrel ID: "+barrelID + "\n")
     log_add('\nEntering main function\n')
     wikis = ''
     global errored
@@ -229,12 +225,13 @@ def main():
     global UserAgentChoice
     global userName
     global timeRunning
-    global barrelCount
-    global barrelSize
     iId=1
-    ulog_add('\n\nUploading barrel data back to base.\n\n');
+    concatW()
+    log_add('\n\nUploading barrel data back to base.\n\n');
     upload(wikis)
     if statDuro:
-        ulog_add('Removing remaining files\n')
+        log_add('Removing remaining files\n')
         os.system('rm *.warc.gz *.megawarc.tar *.megawarc.json.gz')
+    log_add('Sleeping 500 seconds')
+    time.sleep(500)
 main()
