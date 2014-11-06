@@ -229,9 +229,6 @@ def main():
     #concatW()
     log_add('\n\nUploading barrel data back to base.\n\n');
     upload(wikis)
-    if statDuro:
-        log_add('Removing remaining files\n')
-        os.system('rm *.warc.gz *.megawarc.tar *.megawarc.json.gz')
     log_add('Sleeping 500 seconds')
     time.sleep(500)
 main()
