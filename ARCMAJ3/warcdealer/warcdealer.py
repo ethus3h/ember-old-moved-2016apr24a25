@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # WARCdealer
-# Version 1.1, 2014.nov.06.
+# Version 1.2, 2014.nov.06a07.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013, 2014 Futuramerlin
@@ -181,39 +181,39 @@ def upload(wikis):
 
 def concatW():
     global errored
-    log_add("\n--\n"+"#"*73)
-    log_add("# CONCATENATING RECORDS")
-    log_add("#"*73)
+#     log_add("\n--\n"+"#"*73)
+#     log_add("# CONCATENATING RECORDS")
+#     log_add("#"*73)
     errored = False
     #based on "# find / -iname "*.mp3" -type f -exec /bin/mv {} /mnt/mp3 \;" from http://www.cyberciti.biz/tips/howto-linux-unix-find-move-all-mp3-file.html
     #find . -iname "*.warc.gz" -type f -exec /bin/mv {} . \;
     run('bash -c \'find . -iname "*.warc.gz" -type f -exec /bin/mv {} . \;\';')
-    cctRes=run('bash -c \'./megawarc pack WARCdealer_'+title+'_' + uuidG +'.' +timeRunning+'_' + uuidG+' *.warc.gz *.megawarc.tar *.megawarc.json.gz;\';')
-    log_add("\n\n"+cctRes[0]+"\n\n")
-    log_add("\n--\n"+"#"*73)
-    log_add("# DONE CONCATENATING RECORDS")
-    log_add("#"*73)
-    if not errored:
-        log_add("Removing records…")
-        dumps = []
-        for dirname, dirnames, filenames in os.walk('.'):
-            if dirname == '.':
-                for f in filenames:
-                    if (f.endswith('.warc.gz') and not 'megawarc' in f):
-                        dumps.append(f)
-                break
-        for dump in dumps:
-            log_add("\n\n")
-            log_add('Removing file: '+dump+'\n')
-            os.system('rm '+dump)
-            log_add("\n\nAppend finished\n\n")
-    else:
-        log_add('ERROR CONCATENATING RECORDS. THIS IS NOT GOOD.')
-    log_add('\n\nCompressing records…\n\n')
-    log_add(run('xz WARCdealer_'+title+'_' + uuidG +'.' +timeRunning+'_' + uuidG+'.megawarc.tar')[0])
-    log_add('\n\nFinished compressing records…\n\n')
-    errored = False
-    return cctRes[0]
+#     cctRes=run('bash -c \'./megawarc pack WARCdealer_'+title+'_' + uuidG +'.' +timeRunning+'_' + uuidG+' *.warc.gz *.megawarc.tar *.megawarc.json.gz;\';')
+#     log_add("\n\n"+cctRes[0]+"\n\n")
+#     log_add("\n--\n"+"#"*73)
+#     log_add("# DONE CONCATENATING RECORDS")
+#     log_add("#"*73)
+#     if not errored:
+#         log_add("Removing records…")
+#         dumps = []
+#         for dirname, dirnames, filenames in os.walk('.'):
+#             if dirname == '.':
+#                 for f in filenames:
+#                     if (f.endswith('.warc.gz') and not 'megawarc' in f):
+#                         dumps.append(f)
+#                 break
+#         for dump in dumps:
+#             log_add("\n\n")
+#             log_add('Removing file: '+dump+'\n')
+#             os.system('rm '+dump)
+#             log_add("\n\nAppend finished\n\n")
+#     else:
+#         log_add('ERROR CONCATENATING RECORDS. THIS IS NOT GOOD.')
+#     log_add('\n\nCompressing records…\n\n')
+#     log_add(run('xz WARCdealer_'+title+'_' + uuidG +'.' +timeRunning+'_' + uuidG+'.megawarc.tar')[0])
+#     log_add('\n\nFinished compressing records…\n\n')
+#     errored = False
+#     return cctRes[0]
 log_add('\nPreparing main function\n')
 
 def main():
@@ -226,7 +226,7 @@ def main():
     global userName
     global timeRunning
     iId=1
-    #concatW()
+    concatW()
     log_add('\n\nUploading barrel data back to base.\n\n');
     upload(wikis)
     log_add('Sleeping 24000 seconds')
