@@ -3,7 +3,7 @@ package com.futuramerlin.ember.Client;
 import com.futuramerlin.ember.Client.ApiClient.ApiClient;
 import com.futuramerlin.ember.Common.DataProcessor.StringProcessor;
 import com.futuramerlin.ember.Common.Exception.ApiClientAlreadyExistsException;
-import com.futuramerlin.ember.Common.Exception.TerminalNotFound;
+import com.futuramerlin.ember.Common.Exception.NoTerminalFoundException;
 import com.futuramerlin.ember.Common.Exception.ZeroLengthInputException;
 import com.futuramerlin.ember.Common.Process.EmberProcess;
 
@@ -93,12 +93,12 @@ public class Bootstrapper implements EmberProcess {
         return this.apiClient;
     }
 
-    public String waitForInput() throws ZeroLengthInputException, TerminalNotFound {
+    public String waitForInput() throws ZeroLengthInputException, NoTerminalFoundException {
         if(this.term != null) {
             StringProcessor p = new StringProcessor();
             return this.term.readLine("$ ");
         }
-        throw new TerminalNotFound();
+        throw new NoTerminalFoundException();
     }
 
     public String getContext() {
@@ -111,7 +111,7 @@ public class Bootstrapper implements EmberProcess {
         return context;
     }
 
-    public void operate() throws ZeroLengthInputException, TerminalNotFound {
+    public void operate() throws ZeroLengthInputException, NoTerminalFoundException {
         if(this.context == null) {
             this.printNullContextMessage();
         }
@@ -120,7 +120,7 @@ public class Bootstrapper implements EmberProcess {
         }
     }
 
-    public void interactOnTerminal() throws ZeroLengthInputException, TerminalNotFound {
+    public void interactOnTerminal() throws ZeroLengthInputException, NoTerminalFoundException {
         while (this.running) {
             this.processInput();
         }
@@ -141,7 +141,7 @@ public class Bootstrapper implements EmberProcess {
         }
     }
 
-    public void processInput() throws ZeroLengthInputException, TerminalNotFound {
+    public void processInput() throws ZeroLengthInputException, NoTerminalFoundException {
         String c = this.waitForInput();
         this.command(c);
     }

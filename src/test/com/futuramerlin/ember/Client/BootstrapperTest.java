@@ -3,7 +3,7 @@ package com.futuramerlin.ember.Client;
 import com.futuramerlin.ember.Client.ApiClient.ApiClient;
 import com.futuramerlin.ember.Client.Bootstrapper;
 import com.futuramerlin.ember.Common.Exception.ApiClientAlreadyExistsException;
-import com.futuramerlin.ember.Common.Exception.TerminalNotFound;
+import com.futuramerlin.ember.Common.Exception.NoTerminalFoundException;
 import com.futuramerlin.ember.Common.Exception.ZeroLengthInputException;
 import org.junit.Test;
 
@@ -63,15 +63,15 @@ public class BootstrapperTest {
         org.junit.Assert.assertNull(c.term);
     }
 
-    @Test(expected=TerminalNotFound.class)
-    public void testBootstrapperWaitForInput() throws Exception, ZeroLengthInputException, TerminalNotFound {
+    @Test(expected=NoTerminalFoundException.class)
+    public void testBootstrapperWaitForInput() throws Exception, ZeroLengthInputException, NoTerminalFoundException {
         //Won't have a console while running the tests.
         Bootstrapper c = new Bootstrapper();
         c.waitForInput();
     }
 
     @Test
-    public void testBootstrapperOperate() throws Exception, ZeroLengthInputException, TerminalNotFound {
+    public void testBootstrapperOperate() throws Exception, ZeroLengthInputException, NoTerminalFoundException {
         Bootstrapper c = new Bootstrapper();
         c.operate();
 
@@ -86,7 +86,7 @@ public class BootstrapperTest {
     }
 
     @Test
-    public void testInteractOnTerminal() throws Exception, ZeroLengthInputException, TerminalNotFound {
+    public void testInteractOnTerminal() throws Exception, ZeroLengthInputException, NoTerminalFoundException {
         Bootstrapper c = new Bootstrapper();
         c.interactOnTerminal();
 
@@ -114,8 +114,8 @@ public class BootstrapperTest {
         c.command("");
 
     }
-    @Test(expected=TerminalNotFound.class)
-    public void testProcessInput() throws Exception, ZeroLengthInputException, TerminalNotFound {
+    @Test(expected=NoTerminalFoundException.class)
+    public void testProcessInput() throws Exception, ZeroLengthInputException, NoTerminalFoundException {
         Bootstrapper c = new Bootstrapper();
         c.processInput();
 
