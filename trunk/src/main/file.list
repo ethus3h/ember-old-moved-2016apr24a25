@@ -16,8 +16,9 @@
 ./com/futuramerlin/ember/Common/Exception/CorruptedSafeDataException.java
 ./com/futuramerlin/ember/Common/Exception/hashSetItemNotFoundException.java
 ./com/futuramerlin/ember/Common/Exception/hashSetNullArgumentException.java
-./com/futuramerlin/ember/Common/Exception/TerminalNotFound.java
+./com/futuramerlin/ember/Common/Exception/NoTerminalFoundException.java
 ./com/futuramerlin/ember/Common/Exception/ZeroLengthInputException.java
+./com/futuramerlin/ember/Common/IO/ConsoleInteractionBuilder.java
 ./com/futuramerlin/ember/Common/Process/EmberProcess.java
 ./com/futuramerlin/ember/Common/Process/EmberProcessInstance.java
 ./com/futuramerlin/ember/Common/Process/Greeter.java
