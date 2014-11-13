@@ -4,7 +4,7 @@ import thread
 import time
 import os
 
-print 'Press enter to quit. It may take a little while after pressing enter to quit, because it will cleanly shut down by finishing the current bucket.\n'
+print 'RUN THIS AS ROOT! Press enter to quit. It may take a little while after pressing enter to quit, because it will cleanly shut down by finishing the current bucket.\n'
 
 def input_thread(L):
     raw_input()
