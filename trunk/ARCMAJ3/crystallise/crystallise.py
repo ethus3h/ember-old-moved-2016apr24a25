@@ -64,6 +64,10 @@ action = 'save';
 #help from http://stackoverflow.com/questions/2632205/count-the-number-of-files-in-a-directory-using-python
 print len(glob.glob('*'))
 if len(glob.glob('*')) > 4:
+	os.system('chown root .')
+	time.sleep(3)
+	os.system('chmod 000 .')
+	time.sleep(10)
 	ccgo = os.path.expanduser("~/.pbzc")
 	ad = ''
 	try:
@@ -362,6 +366,8 @@ if len(glob.glob('*')) > 4:
 		os.system('find `pwd` -type d -exec rmdir {} + 2>/dev/null')
 		log_add('Done; sleeping 300 seconds')
 		os.system('mv ./log-'+timeRunning+'.log ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
+		time.sleep(10)
+		os.system('chmod 777 .')
 		time.sleep(300)
 	main()
 time.sleep(10)
