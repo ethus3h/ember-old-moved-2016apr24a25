@@ -357,7 +357,7 @@ if len(glob.glob('*')) > 4:
 						os.system('rm -rv \''+os.path.join(root,file).replace('\'','\'\\\'\'')+'\'')
 		#help from http://unix.stackexchange.com/questions/46322/how-can-i-recursively-delete-empty-directories-in-my-home-directory
 		#help from http://askubuntu.com/questions/153770/how-to-have-find-not-return-the-current-directory
-		os.system('find `pwd` -type d -mindepth 1 -exec rm -rv {} + 2>/dev/null')
+		os.system('find `pwd` -type d -mindepth 1 -not -name \'.pbz-meta-*\' -exec rm -rv {} + 2>/dev/null')
 		log_add('Done; sleeping 10 seconds')
 		os.system('mv ./log-'+timeRunning+'.log ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
 		time.sleep(10)
