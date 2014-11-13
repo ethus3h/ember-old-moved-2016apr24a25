@@ -64,7 +64,6 @@ action = 'save';
 #help from http://stackoverflow.com/questions/2632205/count-the-number-of-files-in-a-directory-using-python
 print len(glob.glob('*'))
 if len(glob.glob('*')) > 4:
-	time.sleep(10)
 	ccgo = os.path.expanduser("~/.pbzc")
 	ad = ''
 	try:
