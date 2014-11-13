@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 # Crystallise
 # Version:
-version = '1.01'
-#, 2014.nov.12a13, based on WARCdealer 1.2 and pbz 9.
+version = '1.01.1'
+#, 2014.nov.13, based on WARCdealer 1.2 and pbz 9.
+#IMPORTANT USAGE NOTES: 1) RUN AS ROOT 
+# 2) MAKE SURE YOU HAVE ENOUGH DISK SPACE (4X INPUT), OR IT WILL DESTROY YOUR DATA
+# 3) DON'T INTERRUPT IT, OR IT WILL DESTROY YOUR DATA
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Futuramerlin additions copyright 2013, 2014 Futuramerlin
