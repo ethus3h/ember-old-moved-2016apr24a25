@@ -354,7 +354,7 @@ if len(glob.glob('*')) > 4:
 				for file in files:
 					if not ((file.startswith('log-') and file.endswith('-_E.log')) or (file == 'crystallise.py') or (file=='config.txt') or (file=='now.txt')):
 						log_add('\n\nRemoving file: '+file+'\n\n')
-						os.system('rm -rv \''+os.path.join(root,file).replace('\'','\\\'')+'\'')
+						os.system('rm -rv \''+os.path.join(root,file).replace('\'','\'\\\'\'')+'\'')
 		#help from http://unix.stackexchange.com/questions/46322/how-can-i-recursively-delete-empty-directories-in-my-home-directory
 		os.system('find `pwd` -type d -exec rmdir {} + 2>/dev/null')
 		log_add('Done; sleeping 10 seconds')
