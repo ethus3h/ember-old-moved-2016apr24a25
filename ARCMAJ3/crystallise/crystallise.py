@@ -68,8 +68,8 @@ action = 'save';
 #Is there anything to do? If so do it.
 #help from http://stackoverflow.com/questions/2632205/count-the-number-of-files-in-a-directory-using-python
 os.system('du -hs')
-td = raw_input("Still do it? [y]es/[n]o")
-if (td == 'yes') or (td == 'y'):
+td = raw_input("Still do it? [y]es/[n]o ")
+if td == 'y':
 	print len(glob.glob('*'))
 	if len(glob.glob('*')) > 3:
 		ccgo = os.path.expanduser("~/.pbzc")
