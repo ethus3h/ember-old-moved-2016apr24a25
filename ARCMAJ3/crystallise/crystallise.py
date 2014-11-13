@@ -68,7 +68,7 @@ action = 'save';
 #Is there anything to do? If so do it.
 #help from http://stackoverflow.com/questions/2632205/count-the-number-of-files-in-a-directory-using-python
 print len(glob.glob('*'))
-if len(glob.glob('*')) > 4:
+if len(glob.glob('*')) > 3:
 	ccgo = os.path.expanduser("~/.pbzc")
 	ad = ''
 	try:
