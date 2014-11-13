@@ -352,11 +352,12 @@ if len(glob.glob('*')) > 4:
 			log_add('\n\nDone uploading; removing inputs.\n\n')
 			for root, dirs, files in os.walk('.'):
 				for file in files:
-					if not ((file.startswith('log-') and file.endswith('-_E.log')) or (file == 'crystallise.py') or (file=='config.txt') or (file=='now.txt')):
+					if not ((os.path.join(root,file).startswith('./log-') and os.path.join(root,file).endswith('-_E.log')) or (os.path.join(root,file) == './crystallise.py') or (os.path.join(root,file)=='./config.txt') or (os.path.join(root,file)=='./now.txt')):
 						log_add('\n\nRemoving file: '+file+'\n\n')
 						os.system('rm -rv \''+os.path.join(root,file).replace('\'','\'\\\'\'')+'\'')
 		#help from http://unix.stackexchange.com/questions/46322/how-can-i-recursively-delete-empty-directories-in-my-home-directory
-		os.system('find `pwd` -type d -exec rmdir {} + 2>/dev/null')
+		#help from http://askubuntu.com/questions/153770/how-to-have-find-not-return-the-current-directory
+		os.system('find `pwd` -type d -mindepth 1 -exec rm -rv {} + 2>/dev/null')
 		log_add('Done; sleeping 10 seconds')
 		os.system('mv ./log-'+timeRunning+'.log ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
 		time.sleep(10)
