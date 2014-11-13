@@ -188,11 +188,6 @@ if len(glob.glob('*')) > 4:
 		os.system('mv -v '+ad+'/.tmp.Packed-'+now+'.pmbze '+ad+'/Packed-'+now+'.pmbze')
 		print 'You shouldn\'t see any more warnings from mv now.'
 		print 'Done!'
-	of = filo()
-	enci()
-	pack(of)
-	encrypt(of)
-	finish()
 	#od = raw_input('new output directory? (have 30gb free space for it there) ')
 	od = ''
 	#od = os.path.expanduser(od)
