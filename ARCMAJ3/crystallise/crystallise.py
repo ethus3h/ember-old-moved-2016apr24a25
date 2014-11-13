@@ -154,10 +154,7 @@ if len(glob.glob('*')) > 5:
 		os.system('mv -v '+of+'.pdx.bz2.gpg '+of+'.pdxe')
 		os.system('rm -v '+of+'.pdx.bz2')
 	def finish():
-		cfgo = os.path.expanduser("~/.pbzl")
-		ak = open(cfgo,'rb')
-		ad = ak.read()
-		ak.close()
+		ad = '.'
 		print 'Copying indices...'
 		global timeRunning;
 		global title;
@@ -270,7 +267,7 @@ def upload(wikis):
                 print 'Filename being checked: '+f
                 if (f.startswith('Packed')):
                     print 'Filename matched; is appended: '+f
-                dumps.append(f)
+                    dumps.append(f)
             break
     log_add(dumps)
     c = 0
@@ -281,8 +278,8 @@ def upload(wikis):
         log_add('PACK ID: ' + dumpid)
         log_add("#"*73)
         time.sleep(0.1)
-        wikititle = "WARCdealer pack. WARC in set labeled: "+ title + ', ID: ' + uuidG
-        wikidesc = "WARCdealer pack. WARC in set labeled: "+ title + ', ID ' + uuidG+'. '+title+'_' + uuidG +'.' +timeRunning
+        wikititle = "Colistarr Initiative pack. Documents in set labeled: "+ title + ', ID: ' + uuidG
+        wikidesc = "Colistarr Initiative pack. Documents in set labeled: "+ title + ', ID ' + uuidG+'. '+title+'_' + uuidG +'.' +timeRunning
         wikikeys = ['Colistarr','Colistarr Initiative','Crystallise', title, title+'_' + uuidG +'.' +timeRunning]                        
     	barrelSize = int(os.path.getsize(dump))
         global sslTypeS
@@ -342,7 +339,7 @@ def main():
             for file in files:
                 if not ((file.startswith('log-') and file.endswith('-_E.log')) or (file == 'crystallise.py') or (file=='start.py') or (file=='config.txt') or (file=='now.txt')):
                     log_add('\n\nRemoving file: '+file+'\n\n')
-                    os.system('rm -rv '+os.path.join(root,file))
+                    os.system('rm -rv \''+os.path.join(root,file)+'\'')
     log_add('Sleeping 300 seconds')
     time.sleep(300)
 main()
