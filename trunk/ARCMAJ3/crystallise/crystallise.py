@@ -64,9 +64,6 @@ action = 'save';
 #help from http://stackoverflow.com/questions/2632205/count-the-number-of-files-in-a-directory-using-python
 print len(glob.glob('*'))
 if len(glob.glob('*')) > 4:
-	os.system('chown root .')
-	time.sleep(3)
-	os.system('chmod 000 .')
 	time.sleep(10)
 	ccgo = os.path.expanduser("~/.pbzc")
 	ad = ''
@@ -354,7 +351,7 @@ if len(glob.glob('*')) > 4:
 			log_add('\n\nDone uploading; removing inputs.\n\n')
 			for root, dirs, files in os.walk('.'):
 				for file in files:
-					if not ((file.startswith('log-') and file.endswith('-_E.log')) or (file == 'crystallise.py') or (file=='start.py') or (file=='config.txt') or (file=='now.txt')):
+					if not ((file.startswith('log-') and file.endswith('-_E.log')) or (file == 'crystallise.py') or (file=='config.txt') or (file=='now.txt')):
 						log_add('\n\nRemoving file: '+file+'\n\n')
 						os.system('rm -rv \''+os.path.join(root,file)+'\'')
 		#help from http://unix.stackexchange.com/questions/46322/how-can-i-recursively-delete-empty-directories-in-my-home-directory
@@ -362,7 +359,4 @@ if len(glob.glob('*')) > 4:
 		log_add('Done; sleeping 300 seconds')
 		os.system('mv ./log-'+timeRunning+'.log ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
 		time.sleep(10)
-		os.system('chmod 777 .')
-		time.sleep(300)
 	main()
-time.sleep(10)
