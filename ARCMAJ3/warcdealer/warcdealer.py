@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # WARCdealer
-# Version 1.2, 2014.nov.06a07.
+# Version 1.2.1, 2014.nov.17.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013, 2014 Futuramerlin
@@ -124,7 +124,7 @@ def upload(wikis):
         if dirname == '.':
             for f in filenames:
                 #log_add('Filenames: ' + str(f))
-                if (f.endswith('.warc.gz') or ('megawarc' in f and (f.endswith('.tar') or f.endswith('.json.gz') or f.endswith('.warc.gz')))):
+                if (f.endswith('.json') or f.endswith('.warc.gz') or ('megawarc' in f and (f.endswith('.tar') or f.endswith('.json.gz') or f.endswith('.warc.gz')))):
                     dumps.append(f)
                     #dumps.append(f)
             break
