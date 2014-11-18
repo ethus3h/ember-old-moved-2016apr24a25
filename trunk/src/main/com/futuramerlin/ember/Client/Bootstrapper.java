@@ -7,6 +7,10 @@ import com.futuramerlin.ember.Common.Exception.NoTerminalFoundException;
 import com.futuramerlin.ember.Common.Exception.ZeroLengthInputException;
 import com.futuramerlin.ember.Common.Process.EmberProcess;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.Console;
 
 /**
@@ -17,6 +21,12 @@ public class Bootstrapper implements EmberProcess {
     public Console term;
     private String context;
     private boolean running;
+    private RecordManager rm;
+    private JFrame frame;
+    private Button button;
+    private Label commandsLabel;
+    private TextField input;
+
     @Override
     public void processSignalHandler(Integer signal) {
 
@@ -122,6 +132,16 @@ public class Bootstrapper implements EmberProcess {
 
     public void interactOnTerminal() throws ZeroLengthInputException, NoTerminalFoundException {
         while (this.running) {
+            //help from https://docs.oracle.com/javase/tutorial/uiswing/components/frame.html and http://stackoverflow.com/questions/11927963/get-input-from-jframe
+            this.frame = new JFrame("RecordManager");
+            this.button = new Button();
+            this.commandsLabel = new Label("RecordManager");
+            this.input = new TextField("");
+            this.frame.getContentPane().add(commandsLabel, BorderLayout.CENTER);
+            this.frame.getContentPane().add(input, BorderLayout.CENTER);
+            this.frame.getContentPane().add(button, BorderLayout.CENTER);
+            this.frame.pack();
+            this.frame.setVisible(true);
             this.processInput();
         }
     }
@@ -132,6 +152,7 @@ public class Bootstrapper implements EmberProcess {
 
 
     public void command(String c) {
+
         //System.out.println(c);
         //System.out.println(this.running);
         //System.out.println(c.equals("quit"));
@@ -139,10 +160,84 @@ public class Bootstrapper implements EmberProcess {
             //System.out.println("QUITTING");
             this.running = false;
         }
+        if(c.matches("c \\d+")) {
+            this.rm = new RecordManager();
+        }
+        if(c.matches("s \\d+ \\d+")) {
+            this.rm.add(Integer.parseInt(c.split(" ")[0]),Integer.parseInt(c.split(" ")[1]));
+        }
+        if(c.matches("e \\d+")) {
+
+        }
+        if(c.matches("r \\d+")) {
+            System.out.println(this.rm.records.get((Integer.parseInt(c.split(" ")[0]))));
+        }
+        if(c.matches("d \\d+")) {
+
+        }
+        if(c.equals("xs")) {
+
+        }
+        if(c.equals("xh")) {
+
+        }
+        if(c.equals("xa")) {
+
+        }
+        if(c.equals("xb")) {
+
+        }
+        if(c.equals("xp")) {
+
+        }
     }
 
     public void processInput() throws ZeroLengthInputException, NoTerminalFoundException {
         String c = this.waitForInput();
+        this.button.addActionListener(new ActionListener() {
+            public String input;
+            public RecordManager rm;
+
+            public void actionPerformed(ActionEvent arg0) {
+                this.command(this.input);
+            }
+            public void command(String input) {
+
+                //System.out.println(c);
+                //System.out.println(this.running);
+                //System.out.println(c.equals("quit"));
+                if(c.matches("c \\d+")) {
+                    this.rm = new RecordManager();
+                }
+                if(c.matches("s \\d+ \\d+")) {
+                    this.rm.add(Integer.parseInt(c.split(" ")[0]),Integer.parseInt(c.split(" ")[1]));
+                }
+                if(c.matches("e \\d+")) {
+
+                }
+                if(c.matches("r \\d+")) {
+                    System.out.println(this.rm.records.get((Integer.parseInt(c.split(" ")[0]))));
+                }
+                if(c.matches("d \\d+")) {
+
+                }
+                if(c.equals("xs")) {
+
+                }
+                if(c.equals("xh")) {
+
+                }
+                if(c.equals("xa")) {
+
+                }
+                if(c.equals("xb")) {
+
+                }
+                if(c.equals("xp")) {
+
+                }
+            }
+        });
         this.command(c);
     }
 
