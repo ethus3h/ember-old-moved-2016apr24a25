@@ -1,1 +1,1 @@
-{"spawn": "start", "gold": 0, "maps": {"maps/start.tmx": {"events": []}}, "health": 100, "inventory": [], "events": [], "ammo": 25, "map_file": "maps/start.tmx"}
+{"spawn": "volcano", "gold": 0, "maps": {"maps/start.tmx": {"events": []}}, "health": 100, "inventory": [], "events": [], "ammo": 25, "map_file": "maps/volcano.tmx"}
