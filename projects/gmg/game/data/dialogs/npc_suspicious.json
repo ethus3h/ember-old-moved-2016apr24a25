@@ -1,0 +1,28 @@
+{
+	"dialog": [
+        {
+			"picture":"graphics/sheriff_portrait.png",
+			"side":"left",
+			"lines":[
+                "See anything suspicious lately?"
+            ]
+		},
+		{
+            "delay": 150,
+			"picture":"graphics/npc_portrait.png",
+			"side":"right",
+			"lines":[
+                "Suspicious?  No.  It's been pretty boring around here.",
+                "",
+                "",
+                "",
+                "",
+                "Wait, I did some a pale guy in a black cloak and a",
+                "screaming lady riding a train that had spider legs.",
+                "",
+                "I didn't think it seemed very suspicious, though.",
+                ""
+            ]
+		}
+    ]
+}

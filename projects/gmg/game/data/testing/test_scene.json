@@ -1,0 +1,17 @@
+{
+    "left":0,
+    "right":1000,
+    "top":0,
+    "bottom": 1000,
+    
+    "scene":[
+        {
+            "type": "create",
+            "class": "Image",
+            "name": "img_01",
+            "x": 0,
+            "y": 0,
+            "kwargs":{"filename":"test.png"}
+        }
+    ]
+}

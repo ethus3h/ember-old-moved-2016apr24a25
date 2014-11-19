@@ -1,0 +1,17 @@
+{
+	"image":"defaults/anim.png",
+	"columns":4,
+	"rows":1,
+    "sequences":[
+        {
+            "name":"default",
+            "looping":true,
+            "frames":[
+                [0, 67],
+                [1, 67],
+                [2, 67],
+                [3, 67]
+            ]
+        }
+    ]
+}

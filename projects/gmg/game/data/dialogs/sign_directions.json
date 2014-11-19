@@ -1,0 +1,11 @@
+{
+	"dialog": [
+		{
+			"background":"graphics/dialog_sign.png",
+			"lines":[
+                "",
+                "This way, nowhere.                            That way, even less."
+            ]
+		}
+	]
+}

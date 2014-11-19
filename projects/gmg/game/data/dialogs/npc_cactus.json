@@ -1,0 +1,21 @@
+{
+	"dialog": [
+        {
+			"picture":"graphics/npc_portrait.png",
+			"side":"right",
+			"lines":[
+                "That big green meanie!  He was holding his arms out, so",
+                "I went and gave him a hug.  He repaid my kindness by",
+                "stabbing me with needles!"
+            ]
+		},
+        {
+            "delay": 150,
+			"picture":"graphics/sheriff_portrait.png",
+			"side":"left",
+			"lines":[
+                "... That's a cactus."
+            ]
+		}
+    ]
+}

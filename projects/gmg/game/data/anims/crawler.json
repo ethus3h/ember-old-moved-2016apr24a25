@@ -1,0 +1,23 @@
+{
+    "image":"graphics/crawler.png",
+	"columns":2,
+	"rows":2,
+    "sequences":[
+        {
+            "name":"walk_l",
+            "looping":true,
+            "frames":[
+                [0, 100],
+                [1, 100]
+            ]
+        },
+        {
+            "name":"walk_r",
+            "looping":true,
+            "frames":[
+                [2, 100],
+                [3, 100]
+            ]
+        }
+    ]
+}

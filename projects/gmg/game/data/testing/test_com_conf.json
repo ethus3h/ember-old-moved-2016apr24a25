@@ -1,0 +1,21 @@
+[
+    [
+        "Sprite",
+        "spr",
+        {
+            "offset_x":0,
+            "offset_y":0,
+            "anim":"test_anim.json"
+        }
+    ],
+    
+    [
+        "Sprite",
+        "spr2",
+        {
+            "offset_x":15,
+            "offset_y":10,
+            "anim":"test_anim.json"
+        }
+    ]
+]

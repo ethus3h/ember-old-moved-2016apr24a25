@@ -1,0 +1,41 @@
+{
+	"dialog": [
+		{
+			"x": 10,
+			"y": 10,
+			"delay": 0,
+			"background":"graphics/dialog.png",
+			"picture":"graphics/sheriff_portrait.png",
+			"side":"right",
+			"lines":["This is some example text."]
+		},
+		{
+			"x": 150,
+			"y": 150,
+			"delay": 200,
+			"background":"graphics/dialog_sign.png",
+			"picture":"graphics/npc_portrait.png",
+			"side":"left",
+			"lines":[
+				"~black~This is some example text.  This is some example text.",
+				"~red~This is some example text.  This is some example text.",
+				"~green~This is some example text.  This is some example text.",
+				"~yellow~This is some example text.  This is some example text.",
+				"~blue~This is some example text.  This is some example text.",
+				"~white~This is some example text.  This is some example text.",
+				"~black~This is some example text.  This is some example text.",
+				"~red~This is some example text.  This is some example text.",
+				"~green~This is some example text.  This is some example text.",
+				"~yellow~This is some example text.  This is some example text.",
+				"~blue~This is some example text.  This is some example text.",
+				"~white~This is some example text.  This is some example text.",
+				"~black~This is some example text.  This is some example text.",
+				"~red~This is some example text.  This is some example text.",
+				"~green~This is some example text.  This is some example text.",
+				"~yellow~This is some example text.  This is some example text.",
+				"~blue~This is some example text.  This is some example text.",
+				"~white~This is some example text.  This is some example text."
+			]
+		}
+	]
+}

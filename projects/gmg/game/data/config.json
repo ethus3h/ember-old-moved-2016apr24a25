@@ -1,0 +1,36 @@
+{
+    "scale":1,
+    "fullscreen":false,
+    "volume":70,
+    "input":"keyboard",
+    "keyboard":{
+        "left":"left",
+        "right":"right",
+        "up":"up",
+        "down":"down",
+        "jump":"z",
+        "fire":"x",
+        "pause":"return",
+        "interact":"up"
+    },
+    "joystick":{
+        "stick_id":0,
+        "dead_zone":0.25,
+        "horizontal":0,
+        "vertical":1,
+        "jump":1,
+        "fire":0,
+        "pause":9,
+        "interact":2
+    },
+    "xbox":{
+        "stick_id":0,
+        "dead_zone":0.25,
+        "horizontal":0,
+        "vertical":1,
+        "jump":0,
+        "fire":2,
+        "pause":7,
+        "interact":1
+    }
+}

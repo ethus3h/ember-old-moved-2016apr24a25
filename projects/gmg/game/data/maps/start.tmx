@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="50" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="camera_x" value="112"/>
+  <property name="camera_y" value="176"/>
+  <property name="music" value="music/scene_desert.mp3"/>
+ </properties>
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer name="Background" width="100" height="50">
+  <properties>
+   <property name="parallax" value="0.7"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztmktyGzkQBfsePoJFsu9/utHCioCTmQV6PVhU9BdA4f2aIfvXdV2/Tp06derUqVOnTp06derUqVOnTp06derUqVOnTp069b+o39/1tdTvpb7k3O7Z869hjL0zrVFjdmM/uV/F9WqtT/Y97Z/PH9/1+q7nn+NaT9x/LNfPZex6fGCOx1Kci7XOW+vWmo/r755esu7P+RPvP6/3Xp54f52bc9g77GHF+HG990IO1nHEg32vY584L+6Ix/oex7CX9dkd/ZmG2C/5uYVT2z95oGZNx8Yt9TrpuY73MN64ZJnuTCvmPWJZnBuW5pmd52xv057okeKgcLLcWDk3nMs/lS3mfdNXYWE5yHVMz5WHpduay/y8etJ8eYMT0y9z7YVrrm86Mo2Sv8qVerc8avwRa/JiOUCe2UN5cOrfejXPmKam98rn1qfpjHza9Zpzho1poPLC+rMcMhyt38oZapjY0l+VN9Yj+ShPTPuu73Nxs/u27vLL/Gm6nPTBbzR54rVpwb5bdv++3nEyXVpeWSb+C++mnykX1rwtXZgmpkwpz084GCalO8u+G+O5F+O5OJ+O1YdpirlAfVNLzBXmt+VyfV+ILTVt+jJvmk8qR6d3rCfLAzvavnYamzDfaduwNFwmHC1Tza/T3uzcvFOaqHyy/k23pQ87ThlvXrS+iPHkUfMMMfkkc3a8kE+b84UjezT9T+tOujDOd3xblloPlpvFYWVQede4q9/xtqZplFyXb4if8cZ8LP+Ty9Jc9UY9cR7mC/s03VN/hZl5nv6t/LxlfeuhtGY6sMy1XC4ebK51jvt6x5XX5RHer2yyrLRMsny1/ZuHuK/KF8tYG8ex1r9lLvOmstCeWz5YRhQWxgHPzf/F17Q2fw9X3prnK/d+9Fh8Tln6WMZbD7yujLBzW9e0ynVt/uK1eGE+mAbLR5Onyue2j0/8av3u8CNWpkXzmO3ZOC1fVdYZVuWnNTdLL4abcWr7Yy+7/o2Pyq3aI7W9y1vLlU96mHSwyy/j0zLe8o1Yll/tu2IaJV+TzoznyqQJN87HeUyL03nNaZrkbwVqfcfzpNPKVf6dmz43Xxm3lVWWZ8ZDfXdsnWkN6mXSGvva9Wx+nda37wjzaVrH7lW+EcufMbeM+yTzubblBvdW94iH+aI0wvctCwpTasG8RW1UjtgcU+6Rm0kDxid7NL6M809wrxwjpvac3uN96mXCpDKjtLT+Jra5Vs1XP5YdUx4Yt4V35ZZhNGnR5rOcMr0Ur+x58s6U65ZDtVfTLfODeNR3gPufPGU5yHf5fy7M66aNel7rmAY/5Zt88Zz6tHymV2rPlZvsrXRDDqt/43fCzDQzZUTlIn1rmrWxP3XHWK5tec65zZ/Gp1V533itnN1xYbosvRRulqfMHea2aasw4rjq4451bY/VK3En/5zXejLOKmfNp5yjtFaZQwwn3l7X+79lms+mb4Lp2fjkvJVRa6/kdMLddEjN21q1vnFvmp5ysPTCuZh71bdxVJ62/tgPMePvKXufHBbPhXd5xHLL/LDDj3u3fJtytzy183np2vAy7RH3mtc0Uv6wrGUPlcmmNeqDOVOYWYYa57tMNE3RH7Y/22etbXlj6/Pev2jX+jOsat9VfF5aNg7LM5Z/1TPfnTAuD1GHpslaa+cHasQyn72a5ktv1Exl6MTf+t5/d9r8PA==
+  </data>
+ </layer>
+ <layer name="Foreground" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt0+FtAjEMhuFAgf5vUeE3I8AE7QbtsDcTdIoaiUiWySlOuFMt9Fp6hFru4jhfGFJKQ6Ki1JDII1KRR6wij1hFHrGKPGIVecQq8ohV5BGryCNWkUesIo9Y9cx5HBb/vYP2miKPnrlb3+npcZR3TjNmMkfeU+TRM3frO63Pf8qzX47nHznTlj15+9g8zuIifp178s79yDu1579v39m9/zh69P6GWmfw9lmJdeEz24jXyhp57qV4UetYei3PWdkeeX29R73v1cjfYzP03KVr5fztDGN3eayPPq9sW/Ehduk+H3022Zt4d6xVOqvSLHa/tfW9ffeqR+le2Nx1zuvC/2p3z/bJ6/fOU5ptirVs3nbmqXpYu1Q+a++96rkDera55gIAAAAAAAAAAAAAAAAAAAAAAM/pD/K6KcU=
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="100" height="50">
+  <object name="right" type="SideTravel" x="3168" y="128" width="32" height="384">
+   <properties>
+    <property name="mapfile" value="maps/original.tmx"/>
+    <property name="side" value="right"/>
+    <property name="spawnpoint" value="left"/>
+   </properties>
+  </object>
+  <object type="NPC" x="736" y="416" width="64" height="96">
+   <properties>
+    <property name="filename" value="dialogs/npc_cactus.json"/>
+   </properties>
+  </object>
+  <object type="Sign" x="2336" y="480" width="64" height="64">
+   <properties>
+    <property name="filename" value="dialogs/sign_directions.json"/>
+   </properties>
+  </object>
+  <object type="ChickBot" x="2624" y="448" width="128" height="96"/>
+  <object type="ChickBot" x="1088" y="480" width="128" height="96"/>
+  <object name="start" type="StartSpawn" x="128" y="448" width="64" height="64"/>
+ </objectgroup>
+</map>

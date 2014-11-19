@@ -1,0 +1,38 @@
+{
+	"dialog": [
+        {
+			"picture":"graphics/sheriff_portrait.png",
+			"side":"left",
+			"lines":[
+                "What's troubl'n you pardner?"
+            ]
+		},
+		{
+            "delay": 150,
+			"picture":"graphics/npc_portrait.png",
+			"side":"right",
+			"lines":[
+                "It's these new fangled contraptions!  They're ruining",
+                "everything!"
+            ]
+		},
+        {
+            "delay": 150,
+			"picture":"graphics/sheriff_portrait.png",
+			"side":"left",
+			"lines":[
+                "I'm currently tracking down who's responsible for these",
+                "steam powered monsters and I'll put a stop to them!"
+            ]
+		},
+		{
+            "delay": 150,
+			"picture":"graphics/npc_portrait.png",
+			"side":"right",
+			"lines":[
+                "What?  Oh.  No, I was talking about how telegraph put",
+                "my telegram delivery service out of business!"
+            ]
+		}
+    ]
+}

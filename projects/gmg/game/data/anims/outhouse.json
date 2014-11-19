@@ -1,0 +1,49 @@
+{
+    "image":"graphics/outhouse.png",
+	"columns":4,
+	"rows":2,
+    "sequences":[
+        {
+            "name":"closed",
+            "looping":true,
+            "frames":[
+                [0, 1000]
+            ]
+        },
+        {
+            "name":"opening",
+            "looping":false,
+            "frames":[
+                [0, 40],
+                [1, 40],
+                [2, 40],
+                [3, 40],
+                [4, 40],
+                [5, 40],
+                [6, 40],
+                [7, 40]
+            ]
+        },
+        {
+            "name":"open",
+            "looping":true,
+            "frames":[
+                [7, 1000]
+            ]
+        },
+        {
+            "name":"closing",
+            "looping":false,
+            "frames":[
+                [7, 40],
+                [6, 40],
+                [5, 40],
+                [4, 40],
+                [3, 40],
+                [2, 40],
+                [1, 40],
+                [0, 40]
+            ]
+        }
+    ]
+}
