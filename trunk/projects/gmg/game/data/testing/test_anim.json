@@ -1,0 +1,12 @@
+{
+	"image":"testing/test_anim.png",
+	"columns":4,
+	"rows":1,
+	"looping":true,
+	"frames":[
+		[0, 200],
+		[1, 200],
+		[2, 200],
+		[3, 200]
+	]
+}

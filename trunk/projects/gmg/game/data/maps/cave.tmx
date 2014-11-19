@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="200" height="100" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="camera_x" value="112"/>
+  <property name="camera_y" value="176"/>
+  <property name="music" value="music/scene_cave.mp3"/>
+ </properties>
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer name="Background" width="200" height="100">
+  <properties>
+   <property name="parallax" value="0.7"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztw7ENAAAMAiDTn/3fvTdAQi+pqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq+A4kuUv0=
+  </data>
+ </layer>
+ <layer name="Foreground" width="200" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztnctyHDUUQFUQkg1ZQPxgAxTEAdZAviBV/AfPPWDY8/In+fuQyqOyRtGVrtRSP8+pOjV2YnlmenTcrZmx+9IYc3nyHhHPvDT0gShJH4iy9IEoSx+IsvSBKEsfiLL0gShLH4iy9IEoSx/Y4iiWvl+xYR97ul/4qJYe36MnS283Z68+1nwfj+De2WsfJZaeV1v2qBypD4BW6AOgDH0AlKEPgDz0AVCGPgDK0AdAGfoAKEMfAGXuDH0ASNwFavt4an22xI0FmJk7o2vkMvLa+l7gk8TH4b/RFGwRbR8XE70y5009MW93FF7S0/55flLzdUsR9yE1MrWPKT3F+6bQj/pvEphA79ela+2Nto/4WCv18dwNXZjy8wUfWz+xftqwbaCevXThSfUhNSL9bm3876nPpaak5iTjPr7qv0mG8471XXN+jBnvG+PjzZSptZ9zDfvUPbThqOkj18gIS418PmB7jNrfhE18aH1hxu1TrxW3p+V+Tt02W2kipLaP0nwe0Yk/jnK6Jl5Zb0ZsjEF8YMY3scV96hp7iOnZx8j76nr4onHsSDQ/Uz8z87ThfnascRstydR93tx9HBnX+EvzMIedX5q+bUB/RvYBZV6ax2ZuTmq68ceZvjUYQ+8+oA9uzrv579q5CT5+dRLmoVcfAHtkah8AW0S7bm/tA+AI1PYBcCToA0CGPgDexq9P6ANAhj4AZOgDQIY+AGToA+ABvybPrcvpA4A+AHLQB4BMqQ+pEYAjQB9wRKa+b5c+AOgDIAd9AMjw/BWADH0AnMPr5wA6WtqgDzgKLW3QBxyFljboA3ryfuLz+N8040bQ0gZ9gIavrd9YX1u/PV2+Dj6Plc5volE7b52a1zRa9xv0ASniFpxvKnxRoZt/pXMrjWiEPqAW30VNCy1NhG1M6aKllZbvCcdG24VmLtV0UTo/31qE9RKeB1m71tWi6aJmHoVzPLeP8F9LH5AjPH+hdM741Pk8pa8NL0vn83Tnh+uxv9D2oj0P7BqF8fif+6lzevZU87iG50509u5ib8IY4nM+924i9zM4h7sNF8L36u0W9g/0MQ++B3/O8h4t+PlVc6xewp/PbXQbe/HohOve59H/pfYB8dqgZw9+/sfr116PpTu2CvtYeu5twT0Sz+twHqfWvPH6tsec93N89OtkNfhjqwvF98X19dH7vvVe/2rme2p+l56/aT1OryU8X+7S8+4I5t5H89T6LP9wJVn6PpXWwqW1QGmu91iztkIf8yudz/vKem2228lU59onaAnXHvQx7+OeO+/9lXnopPSaVY6l7/MI5yZce9DHPMat5DqZ2sgcaOf02ltIkXpMlp4/R9K3UmpkC53sjfjYijaWd9S6BOrw7yehjeWMj7M0+xLfCfuScUht0Ml6esk14o+52Jf0J24jfozoY32yL5kHqQ2aWI/SMVeuExppJ/y9cd8GXaxL7Wtil4bjrV7EvwcYb2va2I7a10uuzEMnU96nsmd8E/5vi7ht+Z153K7hx7hupfcradfwvpUjdxL2EP69naUfW5y3H00n4Vjp77h8b/3B+qP1p+DyZ+svmXGpsTXjW6+3NE76/Vf2E8cz9R7Z0romNd9+j7w9XWr6iMdox7der2acv680cQw1a/navwOTm2/ecJ6G4+4VY+P5epcZe5sZl7vO0jg8rrn5r31uLJxv8VzTzLfcWD++dL2lrjTjbgvXh9hi6zzNjb015T7uC2M141p6RqzRzaVfrb+Z8znnLv+w/mnyfYRjY3PjW/dbuess3V7EFv+y/m39x/pv4H+mPNeksaXxU+b5lNuL2Gq8ftbOtdTf/NaMnzLPpecMEPdkqknmOiIiIiIiIiJivf8D1dtp2g==
+  </data>
+ </layer>
+ <objectgroup name="Objects" width="200" height="100">
+  <object name="cave_exit" type="Cave" x="256" y="672" width="128" height="128">
+   <properties>
+    <property name="cavetype" value="exit"/>
+    <property name="mapfile" value="maps/end.tmx"/>
+    <property name="spawnpoint" value="cave"/>
+   </properties>
+  </object>
+  <object name="outhouse" type="Outhouse" x="3008" y="768" width="128" height="160"/>
+  <object type="ChickBot" x="2080" y="2656" width="128" height="96"/>
+  <object type="ChickBot" x="2560" y="2656" width="128" height="96"/>
+  <object type="ChickBot" x="3008" y="2656" width="128" height="96"/>
+  <object type="ChickBot" x="3616" y="2016" width="128" height="96"/>
+  <object type="ChickBot" x="3168" y="2016" width="128" height="96"/>
+  <object type="ChickBot" x="2432" y="2144" width="128" height="96"/>
+  <object type="ChickBot" x="1472" y="2208" width="128" height="96"/>
+  <object type="ChickBot" x="4544" y="1856" width="128" height="96"/>
+  <object type="ChickBot" x="5504" y="1856" width="128" height="96"/>
+  <object type="ChickBot" x="5952" y="1376" width="128" height="96"/>
+  <object type="ChickBot" x="5280" y="768" width="128" height="96"/>
+  <object type="ChickBot" x="4480" y="768" width="128" height="96"/>
+  <object type="ChickBot" x="4896" y="768" width="128" height="96"/>
+  <object type="ChickBot" x="1024" y="768" width="128" height="96"/>
+  <object type="ChickBot" x="576" y="736" width="128" height="96"/>
+  <object type="HeliBot" x="800" y="1920" width="128" height="128"/>
+  <object type="HeliBot" x="1952" y="1984" width="128" height="128"/>
+  <object type="HeliBot" x="5088" y="1632" width="128" height="128"/>
+  <object type="HeliBot" x="5504" y="1472" width="128" height="128"/>
+  <object type="HeliBot" x="5536" y="1152" width="128" height="128"/>
+  <object type="HeliBot" x="5792" y="864" width="128" height="128"/>
+  <object type="HeliBot" x="4032" y="736" width="128" height="128"/>
+  <object type="HeliBot" x="3584" y="736" width="128" height="128"/>
+  <object type="HeliBot" x="2240" y="768" width="128" height="128"/>
+  <object type="HeliBot" x="1664" y="704" width="128" height="128"/>
+  <object type="HeliBot" x="800" y="576" width="128" height="128"/>
+  <object type="NPC" x="2592" y="2144" width="64" height="96">
+   <properties>
+    <property name="filename" value="dialogs/npc_contraptions.json"/>
+   </properties>
+  </object>
+  <object type="Sign" x="4608" y="800" width="64" height="64">
+   <properties>
+    <property name="filename" value="dialogs/sign_threat.json"/>
+   </properties>
+  </object>
+  <object name="cave" type="Cave" x="96" y="2208" width="128" height="128">
+   <properties>
+    <property name="mapfile" value="maps/volcano.tmx"/>
+    <property name="spawnpoint" value="cave"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

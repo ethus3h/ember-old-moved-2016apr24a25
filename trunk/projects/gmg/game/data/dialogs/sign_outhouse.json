@@ -1,0 +1,13 @@
+{
+	"dialog": [
+		{
+			"background":"graphics/dialog_sign.png",
+			"lines":[
+                "OUT OF ORDER",
+                "",
+                "Who am I kidding, it's just a hole in the ground with a wooden",
+                "box over it!"
+            ]
+		}
+	]
+}

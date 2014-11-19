@@ -1,0 +1,43 @@
+{
+	"dialog": [
+		{
+			"lines": [
+				"                           GUNMETAL GRAY",
+                "",
+                "The wild west just got a little wilder now that mysterious steam",
+                "powered robots started causing chaos.  Only one man can restore",
+                "peace and that man is Sheriff Gray.",
+                "One day Sheriff Gray was out investigating the strange string of",
+                "crimes involving these mechanical menaces when he heard a distant",
+                "cry for help coming from town.  He raced towards the commotion,",
+                "and when he arrived, discovered his dear wife had just been",
+                "kidnapped!",
+                "The criminal mastermind behind the iron outlaws must have known",
+                "he was hot on the trail for solving the case.  This may all be",
+                "part of a scheme to lure Sheriff Gray into a trap, but he has no",
+                "choice but to rescue her.",
+                "",
+                "Depending on the settings in the configuration file, you can",
+                "control ~blue~SHERIFF GRAY~black~ with either the keyboard, a joystick, or an",
+                "XBox controller.  The default keyboard setup uses ~blue~LEFT~black~ and ~blue~RIGHT~black~",
+                "arrow keys to run, ~blue~UP~black~ to interact with objects, ~blue~Z~black~ to jump, ~blue~X~black~ to",
+                "shoot, and ~blue~ENTER~black~ to pause the game.",
+                "The default XBox controller setup uses ~blue~LEFT~black~ and ~blue~RIGHT~black~ on the",
+                "stick to move, ~blue~A~black~ to jump, ~blue~X~black~ to shoot, ~blue~B~black~ to interact with objects,",
+                "and ~blue~START~black~ to pause.",
+                "",
+                "",
+                "Watch out for ~blue~ENEMIES~black~, like in infamous ~blue~CHICKEN BOTS~black~.  If you",
+                "take damage, drink a jug of ~blue~WHISKEY~black~ to restore health (yeah, a",
+                "whole jug of it!).  Enter ~blue~OUTHOUSES~black~ to save your progress.",
+                "~blue~DOORS~black~, ~blue~CAVES~black~, and the ~blue~SIDES OF SCREENS~black~ can be used to travel",
+                "between different areas.  There's more to explore and discover,",
+                "but this is enough to help get you started on your adventure.",
+                "",
+                "",
+                "Have fun!",
+                ""
+			]
+		}
+	]
+}

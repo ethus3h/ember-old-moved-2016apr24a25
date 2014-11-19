@@ -1,0 +1,40 @@
+Testing Document
+
+Section 5 – Top Level Testing:
+
+We will be using a logging module to document whenever an issue arises so that we may address the problem more thoroughly.  Logs will also be made from 'close calls' whenever possible, so we may look at potential problem areas that could go wrong with slightly different input.  
+
+We will look into using PyCharm's debugger when we run into unexpected behavior, using breakpoints around the suspected problem area with the intent to step through the program.  Gameplay testing will be done by each member of our team, as well as a few outside individuals to be determined at a later date.  Everyone's input will be taken, and we will adjust the game accordingly and within the scope of our time constraints.
+
+Section 7 – Bibliography:
+
+Curtis Meadow (2013) “COS 125 Testing Document”
+
+David Sale (2013,) “Beginning Test-Driven Development in Python”
+http://net.tutsplus.com/tutorials/python-tutorials/test-driven-development-in-python/
+
+Nathan Moore (2013) “Testing Document: Planetary Pitstops”
+
+Python Documentation “25.3 unittest – Unit testing framework” 
+http://docs.python.org/2/library.unittest.html
+
+“TMX Map Format”
+https://github.com/bjom/tiled/wiki/TMX-Map-Format
+
+
+Review Document:
+
+Section 1: Introduction
+
+You are on a pilgrimage across the old western frontier, when you stumble upon this old town which, quite frankly, has no desire for you to be around.  Curious as to what the fuss is all about, you decide to hang around the town and see whats up.  It's not long after you show your intent to stay that the locals, as weird as they may seem, become very hostile.
+
+Rather than leave the town, you decide to get to the bottom of their discontent, because it is quite obvious to you that they are hiding something.  As you progress through the different buildings and levels of the game, collecting different artifacts, you work your way to the answer to this question:  What, or who, is being hidden from the outside world by these people, and why are they keeping this secret?
+
+Section 9: Bibliography
+
+Curtis Meadow (2013) “COS 125 Design Document”
+Nathan Moore (2013) “Design Document: Planetary Pitstops”
+
+Section 10: Work Assistance Statement
+
+All of the coding will be either direct creation from a member of this team, or pieces taken from other similar codes, in which we will give proper documentation of used code in an appropriate manner and timely fashion.  The graphics will either be direct creations, or alterations, done solely by the members of this team, with any outside influence duly noted by proper documentation and in a timely manner.  All audio will be either edited or created solely by members of this team, with appropriate documentation and credit given in a timely way.  Any other instances where outside influence may be potentially involved, we will properly document and give credit in a timely manner.  Any outside influence will only be used if we deem said influence to be a legal, non-infringing, and solely supplementary addition to our project.  If there are any concerns about any of our outside influences, we encourage an immediate critique, in which we will respond proactively in a timely fashion.

@@ -1,0 +1,36 @@
+{
+	"dialog": [
+		{
+			"picture":"graphics/npc_portrait.png",
+			"side":"right",
+			"lines":[
+                "Howdy!  I'm a wine maker!"
+            ]
+		},
+        {
+            "delay": 150,
+			"picture":"graphics/sheriff_portrait.png",
+			"side":"left",
+			"lines":[
+                "Really?  What kind of wine do you specialize in?"
+            ]
+		},
+        {
+            "delay": 150,
+			"picture":"graphics/npc_portrait.png",
+			"side":"right",
+			"lines":[
+                "It's a unique drink of my own invention called",
+                "Jalapeno Grigio."
+            ]
+		},
+        {
+            "delay": 150,
+			"picture":"graphics/sheriff_portrait.png",
+			"side":"left",
+			"lines":[
+                "Sounds spicy!"
+            ]
+		}
+	]
+}

@@ -1,0 +1,15 @@
+{
+    "image":"graphics/jet.png",
+	"columns":2,
+	"rows":1,
+    "sequences":[
+        {
+            "name":"jet",
+            "looping":true,
+            "frames":[
+                [0, 100],
+                [1, 100]
+            ]
+        }
+    ]
+}

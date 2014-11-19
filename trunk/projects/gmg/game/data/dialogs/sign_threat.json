@@ -1,0 +1,14 @@
+{
+	"dialog": [
+		{
+			"background":"graphics/dialog_sign.png",
+			"lines":[
+                "Hay sToopiD sHaRiff!  Mis uR gIrliE gIrliE?  GO AwAy!",
+                "i wiLL kiLL Her if U dOnT sTop!",
+                "",
+                "sIgnEd,",
+                "EviL j--- i'M not TeLL'N U hU i aM!"
+            ]
+		}
+	]
+}

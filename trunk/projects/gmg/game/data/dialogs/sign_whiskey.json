@@ -1,0 +1,15 @@
+{
+	"dialog": [
+		{
+			"background":"graphics/dialog_sign.png",
+			"picture":"graphics/jug_drawing.png",
+			"side":"left",
+			"lines":[
+                "Wyoming Willie's Whiskey will whet your whistle and",
+                "waste your wits!",
+                "",
+                "Buy a bottle today!"
+            ]
+		}
+	]
+}

@@ -1,0 +1,17 @@
+{
+    "image":"graphics/coin.png",
+	"columns":2,
+	"rows":2,
+    "sequences":[
+        {
+            "name":"spin",
+            "looping":true,
+            "frames":[
+                [0, 100],
+                [1, 100],
+                [2, 100],
+                [3, 100]
+            ]
+        }
+    ]
+}

@@ -1,0 +1,166 @@
+{
+    "image":"graphics/player.png",
+	"columns":10,
+	"rows":10,
+    "sequences":[
+        {
+            "name":"stand_l",
+            "looping":true,
+            "frames":[
+                [0, 400],
+                [1, 400]
+            ]
+        },
+        {
+            "name":"run_l",
+            "looping":true,
+            "frames":[
+                [2, 80],
+                [3, 80],
+                [4, 80],
+                [5, 80],
+                [6, 80],
+                [7, 80],
+                [8, 80],
+                [9, 80]
+            ]
+        },
+        {
+            "name":"jump_l",
+            "looping":true,
+            "frames":[
+                [6, 1000]
+            ]
+        },
+        {
+            "name":"die_l",
+            "looping":false,
+            "frames":[
+                [10, 80],
+                [11, 80],
+                [12, 80],
+                [13, 80],
+                [14, 80],
+                [15, 80],
+                [16, 80],
+                [17, 80],
+                [18, 80],
+                [19, 80]
+            ]
+        },
+        {
+            "name":"shoot_l",
+            "looping":false,
+            "frames":[
+                [20, 80],
+                [21, 80]
+            ]
+        },
+        {
+            "name":"hurt_l",
+            "looping":false,
+            "frames":[
+                [30, 100]
+            ]
+        },
+        {
+            "name":"stand_r",
+            "looping":true,
+            "frames":[
+                [50, 400],
+                [51, 400]
+            ]
+        },
+        {
+            "name":"run_r",
+            "looping":true,
+            "frames":[
+                [52, 80],
+                [53, 80],
+                [54, 80],
+                [55, 80],
+                [56, 80],
+                [57, 80],
+                [58, 80],
+                [59, 80]
+            ]
+        },
+        {
+            "name":"jump_r",
+            "looping":true,
+            "frames":[
+                [56, 1000]
+            ]
+        },
+        {
+            "name":"die_r",
+            "looping":false,
+            "frames":[
+                [60, 80],
+                [61, 80],
+                [62, 80],
+                [63, 80],
+                [64, 80],
+                [65, 80],
+                [66, 80],
+                [67, 80],
+                [68, 80],
+                [69, 80]
+            ]
+        },
+        {
+            "name":"shoot_r",
+            "looping":false,
+            "frames":[
+                [70, 80],
+                [71, 80]
+            ]
+        },
+        {
+            "name":"hurt_r",
+            "looping":false,
+            "frames":[
+                [80, 100]
+            ]
+        },
+        {
+            "name":"spawn",
+            "looping":false,
+            "frames":[
+                [31, 500],
+                [12, 80],
+                [11, 80],
+                [10, 80],
+                [9, 80]
+            ]
+        },
+        {
+            "name":"door_enter",
+            "looping":false,
+            "frames":[
+                [90, 80],
+                [91, 80],
+                [92, 80],
+                [93, 80],
+                [94, 80],
+                [95, 80],
+                [96, 80],
+                [97, 80]
+            ]
+        },
+        {
+            "name":"door_exit",
+            "looping":false,
+            "frames":[
+                [40, 80],
+                [41, 80],
+                [42, 80],
+                [43, 80],
+                [44, 80],
+                [45, 80],
+                [46, 80],
+                [47, 80]
+            ]
+        }
+	]
+}
