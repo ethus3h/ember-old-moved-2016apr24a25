@@ -1,17 +1,17 @@
 {
     "scale":1,
-    "fullscreen":false,
+    "fullscreen":true,
     "volume":70,
     "input":"keyboard",
     "keyboard":{
         "left":"left",
         "right":"right",
-        "up":"up",
+        "up":"z",
         "down":"down",
-        "jump":"z",
-        "fire":"x",
-        "pause":"return",
-        "interact":"up"
+        "jump":"up",
+        "fire":"a",
+        "pause":"space",
+        "interact":"return"
     },
     "joystick":{
         "stick_id":0,
