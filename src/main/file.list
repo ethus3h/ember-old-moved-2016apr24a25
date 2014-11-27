@@ -2,7 +2,6 @@
 ./com/futuramerlin/ember/Client/Bootstrapper.java
 ./com/futuramerlin/ember/Client/Client.java
 ./com/futuramerlin/ember/Client/ClientCommon.java
-./com/futuramerlin/ember/Client/RecordManager.java
 ./com/futuramerlin/ember/Client/WebClient/WebClient.java
 ./com/futuramerlin/ember/Common/DataProcessor/DataProcessor.java
 ./com/futuramerlin/ember/Common/DataProcessor/HashGenerator.java
