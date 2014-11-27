@@ -1,5 +1,6 @@
 ./com/futuramerlin/ember/Client/ApiClient/ApiClient.java
 ./com/futuramerlin/ember/Client/Bootstrapper.java
+./com/futuramerlin/ember/Client/BootstrapperWork.java
 ./com/futuramerlin/ember/Client/Client.java
 ./com/futuramerlin/ember/Client/ClientCommon.java
 ./com/futuramerlin/ember/Client/WebClient/WebClient.java
