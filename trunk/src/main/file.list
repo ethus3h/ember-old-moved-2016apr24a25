@@ -3,6 +3,10 @@
 ./com/futuramerlin/ember/Client/BootstrapperWork.java
 ./com/futuramerlin/ember/Client/Client.java
 ./com/futuramerlin/ember/Client/ClientCommon.java
+./com/futuramerlin/ember/Client/CommandProcessor.java
+./com/futuramerlin/ember/Client/Session.java
+./com/futuramerlin/ember/Client/SessionCreator.java
+./com/futuramerlin/ember/Client/TerminalInterfaceOperator.java
 ./com/futuramerlin/ember/Client/WebClient/WebClient.java
 ./com/futuramerlin/ember/Common/DataProcessor/DataProcessor.java
 ./com/futuramerlin/ember/Common/DataProcessor/HashGenerator.java
@@ -17,9 +21,10 @@
 ./com/futuramerlin/ember/Common/Exception/CorruptedSafeDataException.java
 ./com/futuramerlin/ember/Common/Exception/hashSetItemNotFoundException.java
 ./com/futuramerlin/ember/Common/Exception/hashSetNullArgumentException.java
+./com/futuramerlin/ember/Common/Exception/NoContextsFoundException.java
 ./com/futuramerlin/ember/Common/Exception/NoTerminalFoundException.java
 ./com/futuramerlin/ember/Common/Exception/ZeroLengthInputException.java
-./com/futuramerlin/ember/Common/IO/ConsoleInteractionBuilder.java
+./com/futuramerlin/ember/Common/IO/TerminalInteractionBuilder.java
 ./com/futuramerlin/ember/Common/Process/EmberProcess.java
 ./com/futuramerlin/ember/Common/Process/EmberProcessInstance.java
 ./com/futuramerlin/ember/Common/Process/Greeter.java

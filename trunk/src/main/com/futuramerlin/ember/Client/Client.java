@@ -1,6 +1,7 @@
 package com.futuramerlin.ember.Client;
 
 
+import com.futuramerlin.ember.Common.Exception.NoContextsFoundException;
 import com.futuramerlin.ember.Common.Process.ProcessManager;
 
 /**
@@ -14,16 +15,21 @@ import com.futuramerlin.ember.Common.Process.ProcessManager;
  */
 public class Client {
 
+    public ProcessManager p;
+
     public static void main(String[] args) throws Exception {
         Client c = new Client();
         c.begin();
-
     }
 
-    private void begin() throws Exception {
+    void begin() throws Exception {
         System.out.println("Hello! Ember is starting now. Please wait; it may take a little while...");
-        ProcessManager p = new ProcessManager();
-        p.start("Client.Bootstrapper");
+        this.p = new ProcessManager();
+        try {
+            p.start("Client.SessionCreator");
+        }
+        catch(NoContextsFoundException e) {
+            System.out.println("It doesn't look like you're using Ember in a context in which you can give it commands. Presumably in a later version, a scriptable interface will be available.");
+        }
     }
-
 }

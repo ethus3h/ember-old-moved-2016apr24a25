@@ -6,7 +6,10 @@ import com.futuramerlin.ember.Common.Exception.NoTerminalFoundException;
 import com.futuramerlin.ember.Common.Exception.ZeroLengthInputException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.StandardErrorStreamLog;
+import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -61,26 +64,13 @@ public class BootstrapperTest {
 
     }
 
-    @Test
-    public void testBootstrapperHasTerm() throws Exception {
-        Bootstrapper c = new Bootstrapper();
-        //Won't have a console while running the tests.
-        org.junit.Assert.assertNull(c.term);
-    }
-
-    @Test(expected=NoTerminalFoundException.class)
-    public void testBootstrapperWaitForInput() throws Exception, ZeroLengthInputException, NoTerminalFoundException {
-        //Won't have a console while running the tests.
-        Bootstrapper c = new Bootstrapper();
-        c.waitForInput();
-    }
-
+/*
     @Test
     public void testBootstrapperOperate() throws Exception, ZeroLengthInputException, NoTerminalFoundException {
         Bootstrapper c = new Bootstrapper();
         c.operate();
 
-    }
+    }*/
 
     @Test
     public void testBootstrapperNullContextMessage() throws Exception {
@@ -90,13 +80,6 @@ public class BootstrapperTest {
 
     }
 
-    @Test
-    public void testInteractOnTerminal() throws Exception, ZeroLengthInputException, NoTerminalFoundException {
-        Bootstrapper c = new Bootstrapper();
-        c.interactOnTerminal();
-
-
-    }
 
     @Test
     public void testStart() throws Exception {
@@ -113,18 +96,6 @@ public class BootstrapperTest {
 
     }
 
-    @Test
-    public void testCommand() throws Exception {
-        Bootstrapper c = new Bootstrapper();
-        c.command("");
-
-    }
-    @Test(expected=NoTerminalFoundException.class)
-    public void testProcessInput() throws Exception, ZeroLengthInputException, NoTerminalFoundException {
-        Bootstrapper c = new Bootstrapper();
-        c.processInput();
-
-    }
     @Test
     public void testMessage() throws Exception {
         Bootstrapper c = new Bootstrapper();
@@ -143,7 +114,6 @@ public class BootstrapperTest {
     public void testRun() throws Exception {
         Bootstrapper c = new Bootstrapper();
         c.run();
-        org.junit.Assert.assertEquals(c.term,System.console());
 
     }
     //help from http://stackoverflow.com/questions/1119385/junit-test-for-system-out-println
@@ -161,16 +131,69 @@ public class BootstrapperTest {
         System.setOut(null);
         System.setErr(null);
     } */
-    @Test
+    @Rule
+    public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+    @Test(expected=ApiClientAlreadyExistsException.class)
     public void testCatchApiClientAlreadyExists() throws Exception {
         Bootstrapper c = new Bootstrapper();
-        c.apiClient = c.getApiClient();
-        final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
+        c.getNewApiClient();
         c.run();
-        org.junit.Assert.assertEquals("Failed to create: ApiClient already exists.",outContent.toString());
+        org.junit.Assert.assertEquals("Failed to create: ApiClient already exists.",log.getLog());
+    }
+  //  @Test
+    /**
+     * Tests Bootstrapper's operate() method. operate() will print a message indicating that it has
+     * no way to receive command input.
+     */
+/*
+    public void testOperateNoTerminal() throws Exception {
+        Bootstrapper c = new Bootstrapper();
+        c.operate();
+        org.junit.Assert.assertEquals("It doesn't look like you're using Ember in a context in which you can give it commands. Presumably in a later version, a scriptable interface will be available.\n",log.getLog());
+    }
+*/
 
+    @Test
+    public void testPause() throws Exception {
+        Bootstrapper c = new Bootstrapper();
+        c.pause();
+
+    }
+    @Test
+    public void testResume() throws Exception {
+        Bootstrapper c = new Bootstrapper();
+        c.resume();
+
+    }
+    @Test
+    public void testTerminate() throws Exception {
+        Bootstrapper c = new Bootstrapper();
+        c.terminate();
+
+    }
+    @Test
+    public void testKill() throws Exception {
+        Bootstrapper c = new Bootstrapper();
+        c.kill();
+
+    }
+/*
+
+    @Test
+    public void testOperateTerminal() throws Exception {
+        Bootstrapper c = new Bootstrapper();
+        c.running = true;
+        c.context = "terminal";
+        c.operate();
+        org.junit.Assert.assertEquals("No terminal was found. Please only use TerminalInterfaceOperator when a terminal is available.\n",log.getLog());
+        org.junit.Assert.assertFalse(c.running);
+    }
+*/
+
+    @Test
+    public void testListInteractionContexts() throws Exception {
+        Bootstrapper c = new Bootstrapper();
+        org.junit.Assert.assertArrayEquals(c.listInteractionContexts(),new String[]{});
 
     }
 }
