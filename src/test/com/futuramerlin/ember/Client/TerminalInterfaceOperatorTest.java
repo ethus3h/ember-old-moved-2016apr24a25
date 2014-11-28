@@ -1,5 +1,6 @@
 package com.futuramerlin.ember.Client;
 
+import com.futuramerlin.ember.Client.Session.Session;
 import com.futuramerlin.ember.Common.Exception.NoTerminalFoundException;
 import com.futuramerlin.ember.Common.Exception.ZeroLengthInputException;
 import org.junit.Rule;
