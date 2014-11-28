@@ -1,5 +1,6 @@
 package com.futuramerlin.ember.Client;
 
+import com.futuramerlin.ember.Client.Session.TerminalSession;
 import org.junit.Test;
 
 /**

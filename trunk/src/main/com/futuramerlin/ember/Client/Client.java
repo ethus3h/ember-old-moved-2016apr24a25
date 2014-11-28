@@ -26,7 +26,7 @@ public class Client {
         System.out.println("Hello! Ember is starting now. Please wait; it may take a little while...");
         this.p = new ProcessManager();
         try {
-            p.start("Client.SessionCreator");
+            p.start("Client.Session.SessionCreator");
         }
         catch(NoContextsFoundException e) {
             System.out.println("It doesn't look like you're using Ember in a context in which you can give it commands. Presumably in a later version, a scriptable interface will be available.");
