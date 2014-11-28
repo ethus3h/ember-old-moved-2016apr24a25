@@ -4,6 +4,7 @@ package com.futuramerlin.ember.Common.Process;
  * Created by elliot on 14.11.01.
  */
 public interface EmberProcess {
+    public String state = "running";
     /**
      * Send a signal to the process.
      */
@@ -15,12 +16,12 @@ public interface EmberProcess {
     public void run();
 
     /**
-     * Temporarily suspend execution
+     * Prepare for temporary suspension of execution.
      */
     void pause();
 
     /**
-     * Resume execution if suspended
+     * Recover after suspension of execution.
      */
     void resume();
 
