@@ -1,5 +1,7 @@
 package com.futuramerlin.ember.Common.Process;
 
+import com.futuramerlin.ember.Client.Session.Session;
+
 /**
  * Created by elliot on 14.11.01.
  */
@@ -11,10 +13,14 @@ public interface EmberProcess {
     public void processSignalHandler(Integer signal);
 
     /**
-     * Tell the process to start whatever it's supposed to do.
+     * Creating the object, for compatibility with Runnable
      */
     public void run();
 
+    /**
+     * Tell the process to start whatever it's supposed to do.
+     */
+    public void start(String cmd, Session s, String... args) throws Exception;
     /**
      * Prepare for temporary suspension of execution.
      */

@@ -1,11 +1,12 @@
 ./com/futuramerlin/ember/Client/ApiClient/ApiClient.java
-./com/futuramerlin/ember/Client/Bootstrapper.java
-./com/futuramerlin/ember/Client/BootstrapperWork.java
 ./com/futuramerlin/ember/Client/Client.java
 ./com/futuramerlin/ember/Client/ClientCommon.java
 ./com/futuramerlin/ember/Client/CommandProcessor.java
-./com/futuramerlin/ember/Client/Session.java
-./com/futuramerlin/ember/Client/SessionCreator.java
+./com/futuramerlin/ember/Client/Context.java
+./com/futuramerlin/ember/Client/Session/NullSession.java
+./com/futuramerlin/ember/Client/Session/Session.java
+./com/futuramerlin/ember/Client/Session/SessionCreator.java
+./com/futuramerlin/ember/Client/Session/TerminalSession.java
 ./com/futuramerlin/ember/Client/TerminalInterfaceOperator.java
 ./com/futuramerlin/ember/Client/WebClient/WebClient.java
 ./com/futuramerlin/ember/Common/DataProcessor/DataProcessor.java
@@ -23,6 +24,9 @@
 ./com/futuramerlin/ember/Common/Exception/hashSetNullArgumentException.java
 ./com/futuramerlin/ember/Common/Exception/NoContextsFoundException.java
 ./com/futuramerlin/ember/Common/Exception/NoTerminalFoundException.java
+./com/futuramerlin/ember/Common/Exception/NullContextOnlyException.java
+./com/futuramerlin/ember/Common/Exception/NullSessionArrayListException.java
+./com/futuramerlin/ember/Common/Exception/UnknownSessionTypeException.java
 ./com/futuramerlin/ember/Common/Exception/ZeroLengthInputException.java
 ./com/futuramerlin/ember/Common/IO/TerminalInteractionBuilder.java
 ./com/futuramerlin/ember/Common/Process/EmberProcess.java

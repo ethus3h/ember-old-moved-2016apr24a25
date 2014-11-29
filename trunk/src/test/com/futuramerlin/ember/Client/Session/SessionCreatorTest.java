@@ -1,4 +1,4 @@
-package com.futuramerlin.ember.Client;
+package com.futuramerlin.ember.Client.Session;
 
 import com.futuramerlin.ember.Client.Session.SessionCreator;
 import com.futuramerlin.ember.Common.Exception.NoContextsFoundException;

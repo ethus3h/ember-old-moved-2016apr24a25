@@ -2,6 +2,7 @@ package com.futuramerlin.ember.Client;
 
 import com.futuramerlin.ember.Client.Session.Session;
 import com.futuramerlin.ember.Common.DataProcessor.StringProcessor;
+import com.futuramerlin.ember.Common.Exception.CommandExecutionError;
 import com.futuramerlin.ember.Common.Exception.NoTerminalFoundException;
 import com.futuramerlin.ember.Common.Exception.ZeroLengthInputException;
 
@@ -20,7 +21,8 @@ public class TerminalInterfaceOperator {
 
 
     public void interactOnTerminal() {
-        while (this.session.bootstrapper.running) {
+        this.getTerminal();
+        while (this.session.running) {
             this.processInput();
         }
     }
@@ -35,8 +37,11 @@ public class TerminalInterfaceOperator {
         }
         catch (NoTerminalFoundException e) {
             System.out.println("No terminal was found. Please only use TerminalInterfaceOperator when a terminal is available.");
-            this.session.bootstrapper.running = false;
+            this.session.running = false;
             //Not sure how to test exiting this catch block
+        } catch (CommandExecutionError commandExecutionError) {
+            System.out.println("Error executing command:");
+            commandExecutionError.exception.printStackTrace();
         }
     }
     public String waitForInput() throws ZeroLengthInputException, NoTerminalFoundException {
@@ -49,7 +54,11 @@ public class TerminalInterfaceOperator {
     }
 
 
-    public void command(String c) {
+    public void command(String c) throws CommandExecutionError {
         this.session.commandProcessor.command(c);
+    }
+
+    public void getTerminal() {
+        this.term = System.console();
     }
 }
