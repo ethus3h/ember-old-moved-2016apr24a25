@@ -13,7 +13,8 @@ import org.junit.contrib.java.lang.system.StandardOutputStreamLog;
 public class TerminalInterfaceOperatorTest {
 
     @Rule
-    public final StandardOutputStreamLog log = new StandardOutputStreamLog();    @Test
+    public final StandardOutputStreamLog log = new StandardOutputStreamLog();
+    @Test
     public void testCommand() throws Exception {
         Session b = new Session().make(new Context("terminal"));
         TerminalInterfaceOperator c = new TerminalInterfaceOperator(b);
@@ -25,7 +26,7 @@ public class TerminalInterfaceOperatorTest {
         Session b = new Session().make(new Context("terminal"));
         TerminalInterfaceOperator c = new TerminalInterfaceOperator(b);
         c.processInput();
-        org.junit.Assert.assertEquals("No terminal was found. Please only use TerminalInterfaceOperator when a terminal is available.\n",log.getLog());
+        org.junit.Assert.assertTrue(log.getLog().startsWith("No terminal was found. Please only use TerminalInterfaceOperator when a terminal is available.\n"));
 
     }
 

@@ -1,5 +1,6 @@
 package com.futuramerlin.ember.Common.Process;
 
+import com.futuramerlin.ember.Client.Session.Session;
 import com.futuramerlin.ember.Common.Process.EmberProcess;
 
 /**
@@ -9,6 +10,12 @@ public class Greeter implements EmberProcess {
     @Override
     public void run() {
         System.out.println("Hello, World!");
+    }
+
+    @Override
+    public void start(String cmd, Session s, String... args) {
+        System.out.println("Hello, World!");
+
     }
 
     @Override

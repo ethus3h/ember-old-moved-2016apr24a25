@@ -56,6 +56,16 @@ public class SessionCreator implements EmberProcess {
     }
 
     @Override
+    public void start(String cmd, Session s, String... args) throws NoContextsFoundException, UnknownSessionTypeException, NullSessionArrayListException {
+        try {
+            this.getContexts();
+        } catch (NullContextOnlyException e) {
+            System.out.println("It doesn't look like you're using Ember in a context in which you can give it commands. Presumably in a later version, a scriptable interface will be available.");
+        }
+
+    }
+
+    @Override
     public void pause() {
 
     }
