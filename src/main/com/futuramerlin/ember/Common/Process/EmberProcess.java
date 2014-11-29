@@ -20,7 +20,7 @@ public interface EmberProcess {
     /**
      * Tell the process to start whatever it's supposed to do.
      */
-    public void start(String cmd, Session s, String... args) throws Exception;
+    public void start(String cmd, Session s, Object... args) throws Exception;
     /**
      * Prepare for temporary suspension of execution.
      */
