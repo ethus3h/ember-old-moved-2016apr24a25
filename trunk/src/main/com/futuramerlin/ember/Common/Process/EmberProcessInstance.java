@@ -60,18 +60,25 @@ public class EmberProcessInstance implements Runnable {
 
     }
 
-    private void execute(Class<?> c, Object... args) throws IllegalAccessException, InstantiationException, classNotRunnableException, classRunMethodMissingException, classIllegalAccessException, classInvocationTargetException {
+    private void execute(Class<?> c, String target, Session s, Object... args) throws IllegalAccessException, InstantiationException, classNotRunnableException, classRunMethodMissingException, classIllegalAccessException, classInvocationTargetException {
         this.c = c;
         Class[] argTypes = new Class[args.length];
         Integer i = 0;
         if(args != null) {
+            //Need to make sure that argTypes matches the arguments to pass to start
+            argTypes[0] = Session.class;
             for (Object o : args) {
-                argTypes[i] = o.getClass();
+                if(o != null) {
+                    argTypes[i] = o.getClass();
+                }
+                else {
+                    argTypes[i] = null;
+                }
                 i++;
             }
         }
         try {
-            c.getDeclaredMethod("start", argTypes).invoke(this.c.newInstance(), args);
+            c.getDeclaredMethod("start", argTypes).invoke(this.c.newInstance(), this.session, args);
         } catch (NoSuchMethodException x) {
             throw new classRunMethodMissingException();
         } catch (IllegalAccessException x) {
