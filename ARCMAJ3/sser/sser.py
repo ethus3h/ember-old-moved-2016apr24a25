@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # sser
 # (the SnapShottER)
-# Version 0.11, 2014.nov.29a30.
+# Version 0.12, 2014.nov.30.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Additions copyright 2013, 2014 Futuramerlin
@@ -25,29 +25,95 @@
 # TODO: bug - upload may (partly) fail if two (small) files are sent to s3 without pause http://p.defau.lt/?puN_G_zKXbv1lz9TfSliPg http://archive.org/details/wiki-editionorg_w or something http://p.defau.lt/?udwrG7YQn4RK_1whl1XWRw http://archive.org/details/wiki-jutedreamhosterscom_lineageii_bestiary
 # TODO: minor bug - don't overwrite existing files with same filename in the same identifier
 
-# 1. ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/time <- {time} <- now
+# 1. ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/time <- {time} <- now
 # 2. {records} <- list of everything and its shasum --algorithm 512 hash.
 # 3. foreach {records} as {item}:
-#   I. If ../Media.sserdb/hashesdb/{hash}.exists:
+#   I. If ../Archive.sserdb/hashesdb/{hash}.exists:
 #     A. break; # file already in repo
 #   II. Else: #new file since last snapshot
-#     A. ../Media.sserdb/encdb/enctmp <- {item}.aes256()
-# 	  B. ../Media.sserdb/hashesdb/{hash} <- {enctmp.sha512()}
-#     C. Hardlink ../Media.sserdb/encdb/{enctmp.sha512()} to ../Media.sserdb/encdb/enctmp
-#     D. Upload ../Media.sserdb/encdb/{enctmp.sha512()} to ia:Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}
-#     E. Delete ../Media.sserdb/encdb/enctmp
-#     F. ../Media.sserdb/ehdb/{enctmp.sha512()} <- {hash}
-# 4. Delete ../Media.sserdb/encdb/
-# 5. Clone directory tree to ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/d/
+#     A. ../Archive.sserdb/encdb/enctmp <- {item}.aes256()
+# 	  B. ../Archive.sserdb/hashesdb/{hash} <- {enctmp.sha512()}
+#     C. Hardlink ../Archive.sserdb/encdb/{enctmp.sha512()} to ../Archive.sserdb/encdb/enctmp
+#     D. Upload ../Archive.sserdb/encdb/{enctmp.sha512()} to ia:Collistar_sser_db_{../Archive.sserdb/UUID}
+#     E. Delete ../Archive.sserdb/encdb/enctmp
+#     F. ../Archive.sserdb/ehdb/{enctmp.sha512()} <- {hash}
+# 4. Delete ../Archive.sserdb/encdb/
+# 5. Clone directory tree to ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/d/
 # 6. foreach {records} as {item}:
-#   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}/{enctmp.sha512()}"
-# 7. Hardlink ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/idx/ehdb/ to ../Media.sserdb/ehdb/
-# 8. Hardlink ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/idx/hashesdb/ to ../Media.sserdb/hashesdb/
-# 9. ../.tmp.{../Media.sserdb/UUID}.{time} <- ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/.pax().bzip2().aes256()
-# 10. Upload ../.tmp.{../Media.sserdb/UUID}.{time} to ia:Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}
-# 11. ../.tmp.{../Media.sserdb/UUID}.{time}
-# 12. Move ../.tmp.{../Media.sserdb/UUID}.{time} to ./Meta/Revisions/{{../Media.sserdb/latest}++}.sserrev
-# 13. ../Media.sserdb/latest++;
+#   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Archive.sserdb/UUID}_{{../Archive.sserdb/latest}++}/{enctmp.sha512()}"
+# 7. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/ehdb/ to ../Archive.sserdb/ehdb/
+# 8. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/hashesdb/ to ../Archive.sserdb/hashesdb/
+# 9. ../.tmp.{../Archive.sserdb/UUID}.{time} <- ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/.pax().bzip2().aes256()
+# 10. Upload ../.tmp.{../Archive.sserdb/UUID}.{time} to ia:Collistar_sser_pack_{../Archive.sserdb/UUID}_{{../Archive.sserdb/latest}++}
+# 11. ../.tmp.{../Archive.sserdb/UUID}.{time}
+# 12. Move ../.tmp.{../Archive.sserdb/UUID}.{time} to ./Meta/Revisions/{{../Archive.sserdb/latest}++}.sserrev
+# 13. ../Archive.sserdb/latest++;
+previousRevision=open('../Archive.sserdb/latest', 'r').readlines()[0];
+thisRevision = previousRevision + 1;
+#http://stackoverflow.com/questions/16015955/python-reading-all-files-in-all-directories
+# http://stackoverflow.com/questions/3503879/assign-output-of-os-system-to-a-variable-and-prevent-it-from-being-displayed-on
+# https://docs.python.org/2/library/os.html#os.listdir
+# http://preshing.com/20110920/the-python-with-statement-by-example/
+# http://effbot.org/zone/python-with-statement.htm
+records = []
+for dirpath, dirs, files in os.walk('Test'):
+	with open(os.path.join(dirpath, filename)) as f:
+		files.append([f,os.popen('shasum --algorithm 512 '+f)])
+for records as item:
+	#os.system('shasum --algorithm 512 '+f+' > 
+	# http://stackoverflow.com/questions/82831/check-if-a-file-exists-using-python
+	if os.path.isfile('../Archive.sserdb/hashesdb/'+item[1]):
+		break; # file already in repo
+	else: # new file since last snapshot
+		os.system('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/key ../Archive.sserdb/encdb/enctmp')
+		encHash = os.popen('shasum --algorithm 512 ../Archive.sserdb/encdb/enctmp')
+		os.system('echo "'+encHash+'" > ../Archive.sserdb/hashesdb/'+item[1])
+		os.system('ln ../Archive.sserdb/encdb/'+encHash+' ../Archive.sserdb/encdb/enctmp')
+		identifier='Collistar_sser_db_'+uuid{../Archive.sserdb/UUID}
+        log_add("#"*73)
+        log_add('ATTEMPTING TO UPLOAD FILE: ' + item[0])
+        log_add("#"*73)
+        time.sleep(0.1)
+        wikititle = "WARCdealer pack. WARC in set labeled: "+ title + ', ID: ' + uuidG
+        wikidesc = "WARCdealer pack. WARC in set labeled: "+ title + ', ID ' + uuidG+'. '+title+'_' + uuidG +'.' +timeRunning
+        wikikeys = ['Arcmaj3','WARC','snapshot','archive','WARCdealer','WARCdealer pack', title, title+'_' + uuidG +'.' +timeRunning]                        
+    	barrelSize = int(os.path.getsize(dump))
+        curl = ['curl', '--location', 
+        	'--retry', '999',
+        	'--retry-max-time', '0',
+            '--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
+            '--header', "'x-archive-queue-derive:0'",
+            '--header', "'x-archive-size-hint:%d'" % (os.path.getsize(dump)), 
+            '--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
+        ]
+        if c == 0:
+            curl += ['--header', "'x-archive-meta-mediatype:web'",
+                '--header', "'x-archive-meta-collection:%s'" % (collection),
+                '--header', "'x-archive-meta-title:%s'" % (wikititle),
+                '--header', "'x-archive-meta-description:%s'" % (wikidesc),
+                '--header', "'x-archive-meta-subject:%s'" % ('; '.join(wikikeys)), # Keywords should be separated by ; but it doesn't matter much; the alternative is to set one per field with subject[0], subject[1], ...
+                '--header', "'x-archive-meta-mediatype:web'",
+
+            ]
+        
+        curl += ['--upload-file', "%s" % (dump),
+                "http://s3.us.archive.org/" + dumpid + '/' + dump # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
+        ]
+        curlline = ' '.join(curl)
+        log_add('Executing curl request: ')
+        log_add(curlline+'\n')
+        errored = False
+        uploadFetchResultB = run(curlline)[0]
+        log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
+        c += 1
+        if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
+            os.system('rm '+dump)
+            log_add('Removing file: '+dump+'\n')
+            statDuro = True
+        else:
+            log_add('ERROR UPLOADING BARREL. THIS IS NOT GOOD.')
+        errored = False
+		
 
 # You need a file named config.txt with username, access key, secret key, and a title for the uploaded items, each in its own line.
 userName=open('config.txt', 'r').readlines()[0].strip()
