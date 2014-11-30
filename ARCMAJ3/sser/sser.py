@@ -74,6 +74,7 @@ if len(ad) < 1:
 	os.system('mkdir ../Archive.sserdb/hashesdb/')
 	os.system('mkdir ./Meta/')
 	os.system('mkdir ./Meta/Revisions/')
+	os.system('mkdir ./Meta/Revisions/Logs/')
 	ad = '0';
 	print 'Initializing new sser repository'
 	ax = open('../Archive.sserdb/meta/latest','wb')
@@ -124,6 +125,25 @@ def log_add(text):
     f = open('log-'+ltime+'.log', 'a')
     f.write(text+"\n")
     f.close()
+# http://amix.dk/blog/post/19408
+def timeout_command(command, timeout):
+    """call shell-command and either return its output or kill it
+    if it doesn't normally exit within timeout seconds and return None"""
+    import subprocess, datetime, os, time, signal
+
+    cmd = command.split(" ")
+    start = datetime.datetime.now()
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    while process.poll() is None:
+        time.sleep(0.1)
+        now = datetime.datetime.now()
+        if (now - start).seconds > timeout:
+            os.kill(process.pid, signal.SIGKILL)
+            os.waitpid(-1, os.WNOHANG)
+            return None
+
+    return process.stdout.read()
 def run(command):
     log_add("Running: "+command)
     global errored
@@ -162,6 +182,7 @@ run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision)
 run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision+'/d/')
 run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision+'/idx/')
 run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision+'/meta/')
+run('mkdir -v ../Archive.sserdb/encdb/')
 
 #Start getting time
 run('pwd')
@@ -214,11 +235,14 @@ for item in records:
 	else: # new file since last snapshot
 		run('cp -v '+item[0]+' ../Archive.sserdb/encdb/enctmp')
 		run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/meta/passphrase ../Archive.sserdb/encdb/enctmp')
-		run('rm -v ../Archive.sserdb/encdb/enctmp')
+		try:
+			run('rm -v ../Archive.sserdb/encdb/enctmp')
+		except:
+			traceback.print_exc()
 		run('mv -v ../Archive.sserdb/encdb/enctmp.gpg ../Archive.sserdb/encdb/enctmp')
-		encHash = os.popen('shasum --algorithm 512 ../Archive.sserdb/encdb/enctmp').read()
+		encHash = os.popen('shasum --algorithm 512 ../Archive.sserdb/encdb/enctmp').read()[:128]
 		run('echo "'+encHash+'" > ../Archive.sserdb/hashesdb/'+item[1])
-		run('ln ../Archive.sserdb/encdb/'+encHash+' ../Archive.sserdb/encdb/enctmp')
+		run('ln ../Archive.sserdb/encdb/enctmp ../Archive.sserdb/encdb/'+encHash)
 
 		#Starting upload to IA
 		identifier='Collistar_sser_db_'+uuid+'_'+thisRevision
@@ -227,13 +251,15 @@ for item in records:
         title = "Colistarr Initiative: sser_db "+uuid+" rev. "+thisRevision
         description = "Colistarr Initiative: sser_db "+uuid+" rev. "+thisRevision
         keywords = ['Colistarr','Colistarr Initiative','sser','sser_db','archive','snapshot', title]                        
-    	barrelSize = int(os.path.getsize(item[0]))
+    	barrelSize = int(os.path.getsize('../Archive.sserdb/encdb/'+encHash))
+    	# http://curl.haxx.se/docs/manpage.html
         curl = ['curl', '--location', 
         	'--retry', '999',
         	'--retry-max-time', '0',
+        	'--max-time', '15', #FOR TESTING ONLY!!!! TODO remove
             '--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
             '--header', "'x-archive-queue-derive:0'",
-            '--header', "'x-archive-size-hint:%d'" % (os.path.getsize(item[0])), 
+            '--header', "'x-archive-size-hint:%d'" % (os.path.getsize('../Archive.sserdb/encdb/'+encHash)), 
             '--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
         ]
         if c == 0:
@@ -244,8 +270,8 @@ for item in records:
                 '--header', "'x-archive-meta-subject:%s'" % ('; '.join(keywordvision
 keywords = ['Colistarr','Colistarr Initiative','sser','sser_snapshot','archive','snapshot', uuid, uuid+" rev. "+thisRevision, title]                   '--header', "'x-archive-meta-mediatype:data'",
             ]
-        curl += ['--upload-file', "%s" % (item[0]),
-                "http://s3.us.archive.org/" + identifier + '/' + item[2] # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
+        curl += ['--upload-file', "%s" % ('../Archive.sserdb/encdb/'+encHash),
+                "http://s3.us.archive.org/" + identifier + '/' + encHash # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
         ]
         curlline = ' '.join(curl)
         log_add('Executing curl request: ')
@@ -255,7 +281,10 @@ keywords = ['Colistarr','Colistarr Initiative','sser','sser_snapshot','archive',
         c += 1
         if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
             log_add('Removing enctmp file\n')
-            run('rm -v ../Archive.sserdb/encdb/enctmp')
+            try:
+            	run('rm -v ../Archive.sserdb/encdb/enctmp')
+            except:
+            	traceback.print_exc()
         else:
             log_add('ERROR UPLOADING FILE. THIS IS NOT GOOD.')
             sys.exit()
@@ -263,14 +292,15 @@ keywords = ['Colistarr','Colistarr Initiative','sser','sser_snapshot','archive',
         c = c+1
         #Done upload to IA
         
-        run('echo "'+hash+'" > ../Archive.sserdb/ehdb/'+encHash)
+        run('echo "'+item[1]+'" > ../Archive.sserdb/ehdb/'+encHash)
 log_add(run('rm -rfv ../Archive.sserdb/encdb/')[0])
 # http://www.linuxquestions.org/questions/linux-general-1/how-to-copy-a-directory-tree-withoutitem in recordsles-in-it-10797/
 run('find . -type d -exec mkdir -p ../Archive.sserdb/snapshots/'+thisRevision+'/d/{} \;')
 # 6. foreach {records} as {item}:
-#   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}/{enctmp.sha512()}"
-# 7. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/ehdb/ to ../Archive.sserdb/ehdb/
-# 8. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/hashesdb/ to ../Archlive.sserdb/hashesdb/
+#   I. {item.name} <- "htt-s ../Archive.sserdb/ehdb/ ../Archive.sserdb/snapshots/'+thisRevision+'/idx/ehdb/')
+run('ln -s ../Archive.sserdb/hashesdb/ ../Archive.sserdb/snapshots/'+thisRevision+'/idx/hashesdb/')
+run('ln -s ../Archive.sserdb/meta/ ../Archive.sserdb/snapshots/'+thisRevision+'/meta/')
+run('tar -cvj --dereference/Archive.sserdb/latest}++}/idx/hashesdb/ to ../Archlive.sserdb/hashesdb/
 # 9. ../.tmp.{../Archive.sserdb/uuid}.{time} <- ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/.pax().bzip2().aes256()
 # 10. Upload ../.tmp.{../Archive.sserdb/uuid}ltime)
 run('rm -v ../Archive.sserdb/.tmp.'+uuid+'.'+ltime)
@@ -281,9 +311,9 @@ for records as item:
 	run('echo "http://archive.org/download/Collistar_sser_db_'+uuid+'_'+thisRevision+'/'+encHash+'" > ../Archive.sserdb/snapshots/'+thisRevision+'/d/'+item[0])
 run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/idx/ehdb/ ../Archive.sserdb/ehdb/')
 run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/idx/hashesdb/ ../Archive.sserdb/ha'./Meta/Revisions/'+thisRevision+'.sserrev'db/')
-run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/meta/ ../Archive.sserdb/meta/')
-run('tar -cvj --format pax -f ../Archive.sserdb/.tmp.'+uuid+'.'+time+' -C .. '+'../Archive.sserdb/snapshots/'+thisRevision+'/')
-run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/meta/passphrase ../Archive.sserdb/.tmp.'+uuid+'.'+time)
+run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/meta/ ../Archive.sserdb/connect-timeout', '15',
+	'--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
+sserdb/meta/passphrase ../Archive.sserdb/.tmp.'+uuid+'.'+time)
 run('rm -v ../Archive.sserdb/.tmp.'+uui'./Meta/Revisions/'+thisRevision+'.sserrev')), 
 	'--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
 ]
