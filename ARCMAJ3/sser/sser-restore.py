@@ -50,44 +50,6 @@
 # 13. ../Archive.sserdb/latest++;
 
 
-print 'Note that this app should have at LEAST 2x the size of the biggest file of free space.'
-ad = ''
-try:
-	ak = open('../Archive.sserdb/meta/latest','rb')
-	ad = ak.read()
-	ak.close()
-except:
-	pass
-if len(ad) < 1:
-	os.system('mkdir ../Archive.sserdb')
-	os.system('mkdir ../Archive.sserdb/meta/')
-	os.system('mkdir ../Archive.sserdb/snapshots/')
-	os.system('mkdir ../Archive.sserdb/ehdb/')
-	os.system('mkdir ../Archive.sserdb/encdb/')
-	os.system('mkdir ../Archive.sserdb/hashesdb/')
-	ad = 0;
-	print 'Initializing new sser repository'
-	os.system('rm -v ~/.pbziid 2> /dev/null')
-	ax = open('../Archive.sserdb/meta/latest','wb')
-	ax.write(ad)
-	ax.close()
-	ad = uuid.uuid4().hex;
-	ax = open('../Archive.sserdb/meta/latest','wb')
-	ax.write(ad)
-	ax.close()
-	print 'You have been assigned the following sser repository ID: '+ad
-	ak = raw_input('access key? ');
-	sk = raw_input('secret key? ');
-	pp = raw_input('passphrase? ');
-	ax = open('../Archive.sserdb/meta/conf','wb')
-	ax.write(ak+"\n"+sk)
-	ax.close()
-	ax = open('../Archive.sserdb/meta/passphrase','wb')
-	ax.write(pp)
-	ax.close()
-		
-
-
 previousRevision=open('../Archive.sserdb/meta/latest', 'r').readlines()[0]
 thisRevision = previousRevision + 1
 uuid = open('../Archive.sserdb/meta/uuid', 'r').readlines()[0]
@@ -150,7 +112,7 @@ for records as item:
 		break; # file already in repo
 	else: # new file since last snapshot
 		run('cp -v '+item[0]+' ../Archive.sserdb/encdb/enctmp')
-		run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/meta/passphrase ../Archive.sserdb/encdb/enctmp')
+		run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/key ../Archive.sserdb/encdb/enctmp')
 		run('rm -v ../Archive.sserdb/encdb/enctmp')
 		run('mv -v ../Archive.sserdb/encdb/enctmp.gpg ../Archive.sserdb/encdb/enctmp')
 		encHash = os.popen('shasum --algorithm 512 ../Archive.sserdb/encdb/enctmp')
@@ -201,17 +163,7 @@ for records as item:
 		
 		run('echo "'+hash+'" > ../Archive.sserdb/ehdb/'+encHash)
 log_add(run('rm -rfv ../Archive.sserdb/encdb/')[0])
-# http://www.linuxquestions.org/questions/linux-general-1/how-to-copy-a-directory-tree-without-copying-the-files-in-it-10797/
 run('find . -type d -exec mkdir -p ../Archive.sserdb/snapshots/'+thisRevision+'/d/{} \;')
-# 6. foreach {records} as {item}:
-#   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}/{enctmp.sha512()}"
-# 7. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/ehdb/ to ../Archive.sserdb/ehdb/
-# 8. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/hashesdb/ to ../Archive.sserdb/hashesdb/
-# 9. ../.tmp.{../Archive.sserdb/uuid}.{time} <- ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/.pax().bzip2().aes256()
-# 10. Upload ../.tmp.{../Archive.sserdb/uuid}.{time} to ia:Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}
-# 11. ../.tmp.{../Archive.sserdb/uuid}.{time}
-# 12. Move ../.tmp.{../Archive.sserdb/uuid}.{time} to ./Meta/Revisions/{{../Archive.sserdb/latest}++}.sserrev
-# 13. ../Archive.sserdb/latest++;
 for records as item:
 	run('echo "http://archive.org/download/Collistar_sser_db_'+uuid+'_'+thisRevision+'/'+encHash+'" > ../Archive.sserdb/snapshots/'+thisRevision+'/d/'+item[0])
 run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/idx/ehdb/ ../Archive.sserdb/ehdb/')
@@ -243,4 +195,23 @@ if c == 0:
 		'--header', "'x-archive-meta-collection:%s'" % (collection),
 		'--header', "'x-archive-meta-title:%s'" % (title),
 		'--header', "'x-archive-meta-description:%s'" % (description),
-		'--header', "'x-archive-meta-subject:%s'" % ('; '.join(wikikeys)), # Keywords should be separated by 
+		'--header', "'x-archive-meta-subject:%s'" % ('; '.join(wikikeys)), # Keywords should be separated by ; but it doesn't matter much; the alternative is to set one per field with subject[0], subject[1], ...
+		'--header', "'x-archive-meta-mediatype:data'",
+	]
+curl += ['--upload-file', "%s" % (item[0]),
+		"http://s3.us.archive.org/" + identifier + '/' + item[2] # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
+]
+curlline = ' '.join(curl)
+log_add('Executing curl request: ')
+errored = False
+uploadFetchResultB = run(curlline)[0]
+log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
+c += 1
+if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
+	log_add('Uploaded successfully.\n')
+	run('echo "'+thisRevision+'" > ../Archive.sserdb/latest')
+else:
+	log_add('ERROR UPLOADING FILE. THIS IS NOT GOOD.')
+	sys.exit()
+errored = False
+#Done upload to IA
