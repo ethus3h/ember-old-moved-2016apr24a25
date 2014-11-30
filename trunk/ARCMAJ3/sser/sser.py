@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # sser
-# Version 0.1, 2014.nov.29.
+# (the SnapShottER)
+# Version 0.11, 2014.nov.29a30.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Additions copyright 2013, 2014 Futuramerlin
@@ -36,12 +37,17 @@
 #     D. Upload ../Media.sserdb/encdb/{enctmp.sha512()} to ia:Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}
 #     E. Delete ../Media.sserdb/encdb/enctmp
 #     F. ../Media.sserdb/ehdb/{enctmp.sha512()} <- {hash}
-# 4. Clone directory tree to ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/d/
-# 5. foreach {records} as {item}:
+# 4. Delete ../Media.sserdb/encdb/
+# 5. Clone directory tree to ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/d/
+# 6. foreach {records} as {item}:
 #   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}/{enctmp.sha512()}"
-# 6. ../.tmp.{../Media.sserdb/UUID}.{time} <- ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/.pax().bzip2().aes256()
-# 7. Upload ../.tmp.{../Media.sserdb/UUID}.{time} to ia:Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}
-# 8. Delete ../.tmp.{../Media.sserdb/UUID}.{time}
+# 7. Hardlink ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/idx/ehdb/ to ../Media.sserdb/ehdb/
+# 8. Hardlink ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/idx/hashesdb/ to ../Media.sserdb/hashesdb/
+# 9. ../.tmp.{../Media.sserdb/UUID}.{time} <- ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/.pax().bzip2().aes256()
+# 10. Upload ../.tmp.{../Media.sserdb/UUID}.{time} to ia:Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}
+# 11. ../.tmp.{../Media.sserdb/UUID}.{time}
+# 12. Move ../.tmp.{../Media.sserdb/UUID}.{time} to ./Meta/Revisions/{{../Media.sserdb/latest}++}.sserrev
+# 13. ../Media.sserdb/latest++;
 
 # You need a file named config.txt with username, access key, secret key, and a title for the uploaded items, each in its own line.
 userName=open('config.txt', 'r').readlines()[0].strip()
