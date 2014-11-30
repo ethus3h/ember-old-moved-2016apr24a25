@@ -25,7 +25,7 @@
 # TODO: bug - upload may (partly) fail if two (small) files are sent to s3 without pause http://p.defau.lt/?puN_G_zKXbv1lz9TfSliPg http://archive.org/details/wiki-editionorg_w or something http://p.defau.lt/?udwrG7YQn4RK_1whl1XWRw http://archive.org/details/wiki-jutedreamhosterscom_lineageii_bestiary
 # TODO: minor bug - don't overwrite existing files with same filename in the same identifier
 
-# 1. ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/time <- {time} <- now
+# 1. ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/localTime <- {time} <- now
 # 2. {records} <- list of everything and its shasum --algorithm 512 hash.
 # 3. foreach {records} as {item}:
 #   I. If ../Archive.sserdb/hashesdb/{hash}.exists:
@@ -40,25 +40,72 @@
 # 4. Delete ../Archive.sserdb/encdb/
 # 5. Clone directory tree to ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/d/
 # 6. foreach {records} as {item}:
-#   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Archive.sserdb/UUID}_{{../Archive.sserdb/latest}++}/{enctmp.sha512()}"
+#   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}/{enctmp.sha512()}"
 # 7. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/ehdb/ to ../Archive.sserdb/ehdb/
 # 8. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/hashesdb/ to ../Archive.sserdb/hashesdb/
-# 9. ../.tmp.{../Archive.sserdb/UUID}.{time} <- ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/.pax().bzip2().aes256()
-# 10. Upload ../.tmp.{../Archive.sserdb/UUID}.{time} to ia:Collistar_sser_pack_{../Archive.sserdb/UUID}_{{../Archive.sserdb/latest}++}
-# 11. ../.tmp.{../Archive.sserdb/UUID}.{time}
-# 12. Move ../.tmp.{../Archive.sserdb/UUID}.{time} to ./Meta/Revisions/{{../Archive.sserdb/latest}++}.sserrev
+# 9. ../.tmp.{../Archive.sserdb/uuid}.{time} <- ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/.pax().bzip2().aes256()
+# 10. Upload ../.tmp.{../Archive.sserdb/uuid}.{time} to ia:Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}
+# 11. ../.tmp.{../Archive.sserdb/uuid}.{time}
+# 12. Move ../.tmp.{../Archive.sserdb/uuid}.{time} to ./Meta/Revisions/{{../Archive.sserdb/latest}++}.sserrev
 # 13. ../Archive.sserdb/latest++;
-previousRevision=open('../Archive.sserdb/latest', 'r').readlines()[0];
-thisRevision = previousRevision + 1;
-#http://stackoverflow.com/questions/16015955/python-reading-all-files-in-all-directories
-# http://stackoverflow.com/questions/3503879/assign-output-of-os-system-to-a-variable-and-prevent-it-from-being-displayed-on
-# https://docs.python.org/2/library/os.html#os.listdir
-# http://preshing.com/20110920/the-python-with-statement-by-example/
-# http://effbot.org/zone/python-with-statement.htm
+
+
+previousRevision=open('../Archive.sserdb/meta/latest', 'r').readlines()[0]
+thisRevision = previousRevision + 1
+uuid = open('../Archive.sserdb/meta/uuid', 'r').readlines()[0]
+accesskey = open('../Archive.sserdb/meta/conf', 'r').readlines()[0].strip()
+secretkey = open('../Archive.sserdb/meta/conf', 'r').readlines()[1].strip()
+collection = 'coalproject'
+
+#Start getting time
+time = time.strftime("%Y.%m.%d.%H.%M.%S.%f.%z", time.gmtime())
+os.system('echo "'+time+'" > ../Archive.sserdb/snapshots/'+thisRevision+'/localTime')
+timefile = urllib.URLopener()
+timefn = '../Archive.sserdb/snapshots/'+thisRevision+'/remoteTime'
+try:
+	timefile.retrieve("http://www.timeapi.org/utc/now?format=%25Y.%25m.%25d.%25H.%25M.%25S.%25Z", timefn)
+except:
+	try:
+		timefile.retrieve("http://www.timeapi.org/utc/now?format=%25Y.%25m.%25d.%25H.%25M.%25S.%25Z", timefn)
+	except:
+		tfl = open(timefn,'wb')
+		tfl.write('Error retrieving time; attempt failed twice.')
+		tfl.close()
+tfres = open(timefn,'rb')
+tfres.read()
+tfres.close()
+#Done getting time
+
+#Command definitions
+errored = False
+def run(command):
+    print command
+    global errored
+    commandResult = ''
+    try:
+        commandRes=check_output(command, shell=True, stderr=subprocess.STDOUT)
+        commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandRes + "\n\n\n\n"
+    except Exception, e:
+        commandRes=''
+        try:
+            commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandResult + str(e.output) + "\n\n\n\nError encountered while running command. This is probably not a big deal.\n\n"
+        except Exception, e:
+            commandResult = "\n\n\n\nError encountered while running command: \n\n" + command + "\n\n\n\nThis is probably not a big deal. Possibly the command line was incorrectly structured?\n\n"
+        errored=True
+    return [commandResult,commandRes]
+def log_add(text):
+    text = str(text)
+    print text
+    global time
+    f = open('log-'+time+'.log', 'a')
+    f.write(text+"\n")
+    f.close()
+#Done command definitions
+
 records = []
 for dirpath, dirs, files in os.walk('Test'):
 	with open(os.path.join(dirpath, filename)) as f:
-		files.append([f,os.popen('shasum --algorithm 512 '+f)])
+		records.append([f,os.popen('shasum --algorithm 512 '+f),filename])
 for records as item:
 	#os.system('shasum --algorithm 512 '+f+' > 
 	# http://stackoverflow.com/questions/82831/check-if-a-file-exists-using-python
@@ -69,14 +116,14 @@ for records as item:
 		encHash = os.popen('shasum --algorithm 512 ../Archive.sserdb/encdb/enctmp')
 		os.system('echo "'+encHash+'" > ../Archive.sserdb/hashesdb/'+item[1])
 		os.system('ln ../Archive.sserdb/encdb/'+encHash+' ../Archive.sserdb/encdb/enctmp')
-		identifier='Collistar_sser_db_'+uuid{../Archive.sserdb/UUID}
-        log_add("#"*73)
-        log_add('ATTEMPTING TO UPLOAD FILE: ' + item[0])
-        log_add("#"*73)
+
+		#Starting upload to IA
+		identifier='Collistar_sser_db_'+uuid
+        log_add('Uploading: ' + item[0])
         time.sleep(0.1)
-        wikititle = "WARCdealer pack. WARC in set labeled: "+ title + ', ID: ' + uuidG
-        wikidesc = "WARCdealer pack. WARC in set labeled: "+ title + ', ID ' + uuidG+'. '+title+'_' + uuidG +'.' +timeRunning
-        wikikeys = ['Arcmaj3','WARC','snapshot','archive','WARCdealer','WARCdealer pack', title, title+'_' + uuidG +'.' +timeRunning]                        
+        title = "Colistarr Initiative: sser_db "+uuid
+        description = "Colistarr Initiative: sser_db "+uuid
+        keywords = ['Colistarr','Colistarr Initiative','sser','sser_db','archive','snapshot', title]                        
     	barrelSize = int(os.path.getsize(dump))
         curl = ['curl', '--location', 
         	'--retry', '999',
@@ -87,32 +134,32 @@ for records as item:
             '--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
         ]
         if c == 0:
-            curl += ['--header', "'x-archive-meta-mediatype:web'",
+            curl += ['--header', "'x-archive-meta-mediatype:data'",
                 '--header', "'x-archive-meta-collection:%s'" % (collection),
-                '--header', "'x-archive-meta-title:%s'" % (wikititle),
-                '--header', "'x-archive-meta-description:%s'" % (wikidesc),
+                '--header', "'x-archive-meta-title:%s'" % (title),
+                '--header', "'x-archive-meta-description:%s'" % (description),
                 '--header', "'x-archive-meta-subject:%s'" % ('; '.join(wikikeys)), # Keywords should be separated by ; but it doesn't matter much; the alternative is to set one per field with subject[0], subject[1], ...
-                '--header', "'x-archive-meta-mediatype:web'",
-
+                '--header', "'x-archive-meta-mediatype:data'",
             ]
-        
-        curl += ['--upload-file', "%s" % (dump),
-                "http://s3.us.archive.org/" + dumpid + '/' + dump # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
+        curl += ['--upload-file', "%s" % (item[0]),
+                "http://s3.us.archive.org/" + identifier + '/' + item[2] # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
         ]
         curlline = ' '.join(curl)
         log_add('Executing curl request: ')
-        log_add(curlline+'\n')
         errored = False
         uploadFetchResultB = run(curlline)[0]
         log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
         c += 1
         if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
-            os.system('rm '+dump)
-            log_add('Removing file: '+dump+'\n')
-            statDuro = True
+            os.system('rm ../Archive.sserdb/encdb/enctmp')
+            log_add('Removing enctmp file\n')
         else:
-            log_add('ERROR UPLOADING BARREL. THIS IS NOT GOOD.')
+            log_add('ERROR UPLOADING FILE. THIS IS NOT GOOD.')
+            sys.exit()
         errored = False
+        #Done upload to IA
+		
+		os.system('echo "'+hash+'" > ../Archive.sserdb/ehdb/'+encHash)
 		
 
 # You need a file named config.txt with username, access key, secret key, and a title for the uploaded items, each in its own line.
