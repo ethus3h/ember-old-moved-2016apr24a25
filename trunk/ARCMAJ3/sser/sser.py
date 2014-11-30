@@ -55,6 +55,7 @@ thisRevision = previousRevision + 1
 uuid = open('../Archive.sserdb/meta/uuid', 'r').readlines()[0]
 accesskey = open('../Archive.sserdb/meta/conf', 'r').readlines()[0].strip()
 secretkey = open('../Archive.sserdb/meta/conf', 'r').readlines()[1].strip()
+passphrase = open('../Archive.sserdb/meta/passphrase', 'r').readlines()[1].strip()
 collection = 'coalproject'
 
 #Start getting time
@@ -107,22 +108,23 @@ for dirpath, dirs, files in os.walk('Test'):
 	with open(os.path.join(dirpath, filename)) as f:
 		records.append([f,os.popen('shasum --algorithm 512 '+f),filename])
 for records as item:
-	#os.system('shasum --algorithm 512 '+f+' > 
-	# http://stackoverflow.com/questions/82831/check-if-a-file-exists-using-python
 	if os.path.isfile('../Archive.sserdb/hashesdb/'+item[1]):
 		break; # file already in repo
 	else: # new file since last snapshot
-		os.system('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/key ../Archive.sserdb/encdb/enctmp')
+		run('cp -v '+item[0]+' ../Archive.sserdb/encdb/enctmp')
+		run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/key ../Archive.sserdb/encdb/enctmp')
+		run('rm -v ../Archive.sserdb/encdb/enctmp')
+		run('mv -v ../Archive.sserdb/encdb/enctmp.gpg ../Archive.sserdb/encdb/enctmp')
 		encHash = os.popen('shasum --algorithm 512 ../Archive.sserdb/encdb/enctmp')
-		os.system('echo "'+encHash+'" > ../Archive.sserdb/hashesdb/'+item[1])
-		os.system('ln ../Archive.sserdb/encdb/'+encHash+' ../Archive.sserdb/encdb/enctmp')
+		run('echo "'+encHash+'" > ../Archive.sserdb/hashesdb/'+item[1])
+		run('ln ../Archive.sserdb/encdb/'+encHash+' ../Archive.sserdb/encdb/enctmp')
 
 		#Starting upload to IA
-		identifier='Collistar_sser_db_'+uuid
+		identifier='Collistar_sser_db_'+uuid+'_'+thisRevision
         log_add('Uploading: ' + item[0])
         time.sleep(0.1)
-        title = "Colistarr Initiative: sser_db "+uuid
-        description = "Colistarr Initiative: sser_db "+uuid
+        title = "Colistarr Initiative: sser_db "+uuid+" rev. "+thisRevision
+        description = "Colistarr Initiative: sser_db "+uuid+" rev. "+thisRevision
         keywords = ['Colistarr','Colistarr Initiative','sser','sser_db','archive','snapshot', title]                        
     	barrelSize = int(os.path.getsize(dump))
         curl = ['curl', '--location', 
@@ -151,16 +153,88 @@ for records as item:
         log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
         c += 1
         if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
-            os.system('rm ../Archive.sserdb/encdb/enctmp')
             log_add('Removing enctmp file\n')
+            run('rm -v ../Archive.sserdb/encdb/enctmp')
         else:
             log_add('ERROR UPLOADING FILE. THIS IS NOT GOOD.')
             sys.exit()
         errored = False
         #Done upload to IA
 		
-		os.system('echo "'+hash+'" > ../Archive.sserdb/ehdb/'+encHash)
-		
+		run('echo "'+hash+'" > ../Archive.sserdb/ehdb/'+encHash)
+log_add(run('rm -rfv ../Archive.sserdb/encdb/')[0])
+# http://www.linuxquestions.org/questions/linux-general-1/how-to-copy-a-directory-tree-without-copying-the-files-in-it-10797/
+run('find . -type d -exec mkdir -p ../Archive.sserdb/snapshots/'+thisRevision+'/d/{} \;')
+# 6. foreach {records} as {item}:
+#   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}/{enctmp.sha512()}"
+# 7. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/ehdb/ to ../Archive.sserdb/ehdb/
+# 8. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/hashesdb/ to ../Archive.sserdb/hashesdb/
+# 9. ../.tmp.{../Archive.sserdb/uuid}.{time} <- ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/.pax().bzip2().aes256()
+# 10. Upload ../.tmp.{../Archive.sserdb/uuid}.{time} to ia:Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}
+# 11. ../.tmp.{../Archive.sserdb/uuid}.{time}
+# 12. Move ../.tmp.{../Archive.sserdb/uuid}.{time} to ./Meta/Revisions/{{../Archive.sserdb/latest}++}.sserrev
+# 13. ../Archive.sserdb/latest++;
+for records as item:
+	run('echo "http://archive.org/download/Collistar_sser_db_'+uuid+'_'+thisRevision+'/'+encHash+'" > ../Archive.sserdb/snapshots/'+thisRevision+'/d/'+item[0])
+run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/idx/ehdb/ ../Archive.sserdb/ehdb/')
+run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/idx/hashesdb/ ../Archive.sserdb/hashesdb/')
+run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/meta/ ../Archive.sserdb/meta/')
+run('tar -cvj --format pax -f ../Archive.sserdb/.tmp.'+uuid+'.'+time+' -C .. '+'../Archive.sserdb/snapshots/'+thisRevision+'/')
+run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/meta/passphrase ../Archive.sserdb/.tmp.'+uuid+'.'+time)
+run('rm -v ../Archive.sserdb/.tmp.'+uuid+'.'+time)
+run('mv -v ../Archive.sserdb/.tmp.'+uuid+'.'+time+'.gpg ./Meta/Revisions/'+thisRevision+'.sserrev')
+
+#Starting upload to IA
+identifier='Collistar_sser_snapshot_'+uuid+'_'+thisRevision
+log_add('Uploading: ' + item[0])
+time.sleep(0.1)
+title = "Colistarr Initiative: sser_snapshot "+uuid+" rev. "+thisRevision
+description = "Colistarr Initiative: sser_snapshot "+uuid+" rev. "+thisRevision
+keywords = ['Colistarr','Colistarr Initiative','sser','sser_snapshot','archive','snapshot', uuid, uuid+" rev. "+thisRevision, title]                        
+barrelSize = int(os.path.getsize(dump))
+curl = ['curl', '--location', 
+	'--retry', '999',
+	'--retry-max-time', '0',
+	'--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
+	'--header', "'x-archive-queue-derive:0'",
+	'--header', "'x-archive-size-hint:%d'" % (os.path.getsize(dump)), 
+	'--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
+]
+if c == 0:
+	curl += ['--header', "'x-archive-meta-mediatype:data'",
+		'--header', "'x-archive-meta-collection:%s'" % (collection),
+		'--header', "'x-archive-meta-title:%s'" % (title),
+		'--header', "'x-archive-meta-description:%s'" % (description),
+		'--header', "'x-archive-meta-subject:%s'" % ('; '.join(wikikeys)), # Keywords should be separated by ; but it doesn't matter much; the alternative is to set one per field with subject[0], subject[1], ...
+		'--header', "'x-archive-meta-mediatype:data'",
+	]
+curl += ['--upload-file', "%s" % (item[0]),
+		"http://s3.us.archive.org/" + identifier + '/' + item[2] # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
+]
+curlline = ' '.join(curl)
+log_add('Executing curl request: ')
+errored = False
+uploadFetchResultB = run(curlline)[0]
+log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
+c += 1
+if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
+	log_add('Uploaded successfully.\n')
+	run('echo "'+thisRevision+'" > ../Archive.sserdb/latest')
+else:
+	log_add('ERROR UPLOADING FILE. THIS IS NOT GOOD.')
+	sys.exit()
+errored = False
+#Done upload to IA
+
+
+
+
+
+
+
+
+
+
 
 # You need a file named config.txt with username, access key, secret key, and a title for the uploaded items, each in its own line.
 userName=open('config.txt', 'r').readlines()[0].strip()
