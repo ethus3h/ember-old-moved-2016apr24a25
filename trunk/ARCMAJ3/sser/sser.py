@@ -160,6 +160,8 @@ except:
 errored = False #doesn't matter if there were errors before here
 run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision)
 run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision+'/d/')
+run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision+'/idx/')
+run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision+'/meta/')
 
 #Start getting time
 run('pwd')
@@ -181,10 +183,31 @@ tfres.close()
 #Done getting time
 
 records = []
-for dirpath, dirs, files in os.walk('Test'):
-	with open(os.path.join(dirpath, filename)) as f:
-		records.append([f,os.popen('shasum --algorithm 512 '+f),filename])
+# http://resources.arcgis.com/en/help/main/10.1/018w/018w00000023000000.htm
+for dirpath, dirs, filenames in os.walk('.'):
+	for filename in filenames:
+		f = os.path.join(dirpath, filename)
+		pin = os.popen('shasum --algorithm 512 \''+f+'\'')
+		rec = pin.read()
+		pin.close()
+		records.append([f,rec,filename])
 c = 0
+# http://stackoverflow.com/questions/18158611/python-function-which-can-transverse-a-nested-list-and-print-out-each-element
+def printNestedList(nestedList):
+    if len(nestedList) == 0:
+    #   nestedList must be an empty list, so don't do anyting.
+        log_add('[]')
+        return
+
+    if not isinstance(nestedList, list):
+    #   nestedList must not be a list, so print it out
+        log_add('['+nestedList+']')
+    else:
+    #   nestedList must be a list, so call nestedList on each element.
+        for element in nestedList:
+            printNestedList(element)
+log_add('List: ')
+printNestedList(records)
 for item in records:
 	if os.path.isfile('../Archive.sserdb/hashesdb/'+item[1]):
 		break; # file already in repo
@@ -193,7 +216,7 @@ for item in records:
 		run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/meta/passphrase ../Archive.sserdb/encdb/enctmp')
 		run('rm -v ../Archive.sserdb/encdb/enctmp')
 		run('mv -v ../Archive.sserdb/encdb/enctmp.gpg ../Archive.sserdb/encdb/enctmp')
-		encHash = os.popen('shasum --algorithm 512 ../Archive.sserdb/encdb/enctmp')
+		encHash = os.popen('shasum --algorithm 512 ../Archive.sserdb/encdb/enctmp').read()
 		run('echo "'+encHash+'" > ../Archive.sserdb/hashesdb/'+item[1])
 		run('ln ../Archive.sserdb/encdb/'+encHash+' ../Archive.sserdb/encdb/enctmp')
 
@@ -281,5 +304,5 @@ if c == 0:
 	curl += ['--header', "'x-archive-meta-mediatype:data'",
 		'--header', "'x-archive-meta-collection:%s'" % (collection),
 		'--header', "'x-archive-meta-title:%s'" % (title),
-		'--header', "'x-archive-meta-description:%s'" % (description),
+		'--hos.system('rm ../Archive.sserdb/latest'--header', "'x-archive-meta-description:%s'" % (description),
 		'--header', "'x-archive-meta-subject:%s'" % ('; '.join(wikikeys)), # Keywords should be separated by 
