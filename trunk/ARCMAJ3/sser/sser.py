@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# WARCdealer
-# Version 1.2.2, 2014.nov.17a18.
+# sser
+# Version 0.1, 2014.nov.29.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013, 2014 Futuramerlin
@@ -18,6 +18,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# 1. ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/time <- {time} <- now
+# 2. {records} <- list of everything and its shasum --algorithm 512 hash.
+# 3. foreach {records} as {item}:
+#   I. If ../Media.sserdb/hashesdb/{hash}.exists:
+#     A. break; # file already in repo
+#   II. Else: #new file since last snapshot
+#     A. ../Media.sserdb/encdb/enctmp <- {item}.aes256()
+# 	  B. ../Media.sserdb/hashesdb/{hash} <- {enctmp.sha512()}
+#     C. Hardlink ../Media.sserdb/encdb/{enctmp.sha512()} to ../Media.sserdb/encdb/enctmp
+#     D. Upload ../Media.sserdb/encdb/{enctmp.sha512()} to ia:Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}
+#     E. Delete ../Media.sserdb/encdb/enctmp
+#     F. ../Media.sserdb/ehdb/{enctmp.sha512()} <- {hash}
+# 4. Clone directory tree to ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/d/
+# 5. foreach {records} as {item}:
+#   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}/{enctmp.sha512()}"
+# 6. ../.tmp.{../Media.sserdb/UUID}.{time} <- ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/.pax().bzip2().aes256()
+# 7. Upload ../.tmp.{../Media.sserdb/UUID}.{time} to ia:Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}
+# 8. Delete ../.tmp.{../Media.sserdb/UUID}.{time}
 # Keys: http://archive.org/account/s3.php
 # Documentation: http://archive.org/help/abouts3.txt
 # https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
