@@ -144,6 +144,7 @@ def timeout_command(command, timeout):
             return None
 
     return process.stdout.read()
+#Hi! I'm having trouble with check_output and curl: it's hanging a lot (will just stay working on the curl command indefinitely). The curl commands seem to work fine when i just run them in a terminal. Any thoughts? Thanks :)
 def run(command):
     log_add("Running: "+command)
     global errored
