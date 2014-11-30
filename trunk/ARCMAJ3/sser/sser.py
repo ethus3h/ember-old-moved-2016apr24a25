@@ -49,6 +49,10 @@
 # 12. Move ../.tmp.{../Archive.sserdb/uuid}.{time} to ./Meta/Revisions/{{../Archive.sserdb/latest}++}.sserrev
 # 13. ../Archive.sserdb/latest++;
 
+import os
+import uuid
+import time
+import urllib
 
 print 'Note that this app should have at LEAST 2x the size of the biggest file of free space.'
 ad = ''
@@ -62,17 +66,17 @@ if len(ad) < 1:
 	os.system('mkdir ../Archive.sserdb')
 	os.system('mkdir ../Archive.sserdb/meta/')
 	os.system('mkdir ../Archive.sserdb/snapshots/')
+	os.system('mkdir ../Archive.sserdb/snapshots/disabled/')
 	os.system('mkdir ../Archive.sserdb/ehdb/')
 	os.system('mkdir ../Archive.sserdb/encdb/')
 	os.system('mkdir ../Archive.sserdb/hashesdb/')
-	ad = 0;
+	ad = '0';
 	print 'Initializing new sser repository'
-	os.system('rm -v ~/.pbziid 2> /dev/null')
 	ax = open('../Archive.sserdb/meta/latest','wb')
 	ax.write(ad)
 	ax.close()
 	ad = uuid.uuid4().hex;
-	ax = open('../Archive.sserdb/meta/latest','wb')
+	ax = open('../Archive.sserdb/meta/uuid','wb')
 	ax.write(ad)
 	ax.close()
 	print 'You have been assigned the following sser repository ID: '+ad
@@ -86,34 +90,6 @@ if len(ad) < 1:
 	ax.write(pp)
 	ax.close()
 		
-
-
-previousRevision=open('../Archive.sserdb/meta/latest', 'r').readlines()[0]
-thisRevision = previousRevision + 1
-uuid = open('../Archive.sserdb/meta/uuid', 'r').readlines()[0]
-accesskey = open('../Archive.sserdb/meta/conf', 'r').readlines()[0].strip()
-secretkey = open('../Archive.sserdb/meta/conf', 'r').readlines()[1].strip()
-passphrase = open('../Archive.sserdb/meta/passphrase', 'r').readlines()[1].strip()
-collection = 'coalproject'
-
-#Start getting time
-time = time.strftime("%Y.%m.%d.%H.%M.%S.%f.%z", time.gmtime())
-os.system('echo "'+time+'" > ../Archive.sserdb/snapshots/'+thisRevision+'/localTime')
-timefile = urllib.URLopener()
-timefn = '../Archive.sserdb/snapshots/'+thisRevision+'/remoteTime'
-try:
-	timefile.retrieve("http://www.timeapi.org/utc/now?format=%25Y.%25m.%25d.%25H.%25M.%25S.%25Z", timefn)
-except:
-	try:
-		timefile.retrieve("http://www.timeapi.org/utc/now?format=%25Y.%25m.%25d.%25H.%25M.%25S.%25Z", timefn)
-	except:
-		tfl = open(timefn,'wb')
-		tfl.write('Error retrieving time; attempt failed twice.')
-		tfl.close()
-tfres = open(timefn,'rb')
-tfres.read()
-tfres.close()
-#Done getting time
 
 #Command definitions
 errored = False
@@ -141,11 +117,42 @@ def log_add(text):
     f.close()
 #Done command definitions
 
+previousRevision=int(open('../Archive.sserdb/meta/latest', 'r').readlines()[0])
+thisRevision = str(previousRevision + 1)
+uuid = open('../Archive.sserdb/meta/uuid', 'r').readlines()[0]
+accesskey = open('../Archive.sserdb/meta/conf', 'r').readlines()[0].strip()
+secretkey = open('../Archive.sserdb/meta/conf', 'r').readlines()[1].strip()
+passphrase = open('../Archive.sserdb/meta/passphrase', 'r').readlines()[0].strip()
+collection = 'coalproject'
+time = time.strftime("%Y.%m.%d.%H.%M.%S.%f.%z", time.gmtime())
+
+run('mv -v ../Archive.sserdb/snapshots/'+thisRevision+' ../Archive.sserdb/snapshots/disabled/'+thisRevision+'_'+time)
+run('mkdir ../Archive.sserdb/snapshots/'+thisRevision)
+errored = False #doesn't matter if there were errors before here
+
+#Start getting time
+os.system('echo "'+time+'" > ../Archive.sserdb/snapshots/'+thisRevision+'/localTime')
+timefile = urllib.URLopener()
+timefn = '../Archive.sserdb/snapshots/'+thisRevision+'/remoteTime'
+try:
+	timefile.retrieve("http://www.timeapi.org/utc/now?format=%25Y.%25m.%25d.%25H.%25M.%25S.%25Z", timefn)
+except:
+	try:
+		timefile.retrieve("http://www.timeapi.org/utc/now?format=%25Y.%25m.%25d.%25H.%25M.%25S.%25Z", timefn)
+	except:
+		tfl = open(timefn,'wb')
+		tfl.write('Error retrieving time; attempt failed twice.')
+		tfl.close()
+tfres = open(timefn,'rb')
+tfres.read()
+tfres.close()
+#Done getting time
+
 records = []
 for dirpath, dirs, files in os.walk('Test'):
 	with open(os.path.join(dirpath, filename)) as f:
 		records.append([f,os.popen('shasum --algorithm 512 '+f),filename])
-for records as item:
+for item in records:
 	if os.path.isfile('../Archive.sserdb/hashesdb/'+item[1]):
 		break; # file already in repo
 	else: # new file since last snapshot
@@ -198,10 +205,10 @@ for records as item:
             sys.exit()
         errored = False
         #Done upload to IA
-		
-		run('echo "'+hash+'" > ../Archive.sserdb/ehdb/'+encHash)
+        
+        run('echo "'+hash+'" > ../Archive.sserdb/ehdb/'+encHash)
 log_add(run('rm -rfv ../Archive.sserdb/encdb/')[0])
-# http://www.linuxquestions.org/questions/linux-general-1/how-to-copy-a-directory-tree-without-copying-the-files-in-it-10797/
+# http://www.linuxquestions.org/questions/linux-general-1/how-to-copy-a-directory-tree-withoutitem in recordsles-in-it-10797/
 run('find . -type d -exec mkdir -p ../Archive.sserdb/snapshots/'+thisRevision+'/d/{} \;')
 # 6. foreach {records} as {item}:
 #   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}/{enctmp.sha512()}"
