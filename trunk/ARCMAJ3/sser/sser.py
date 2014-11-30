@@ -4,7 +4,7 @@
 # Version 0.1, 2014.nov.29.
 #
 # Copyright (C) 2011-2012 WikiTeam
-# Arcmaj3 additions copyright 2013, 2014 Futuramerlin
+# Additions copyright 2013, 2014 Futuramerlin
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -17,6 +17,12 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Keys: http://archive.org/account/s3.php
+# Documentation: http://archive.org/help/abouts3.txt
+# https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
+# http://en.ecgpedia.org/api.php?action=query&meta=siteinfo&siprop=general|rightsinfo&format=xml
+# TODO: bug - upload may (partly) fail if two (small) files are sent to s3 without pause http://p.defau.lt/?puN_G_zKXbv1lz9TfSliPg http://archive.org/details/wiki-editionorg_w or something http://p.defau.lt/?udwrG7YQn4RK_1whl1XWRw http://archive.org/details/wiki-jutedreamhosterscom_lineageii_bestiary
+# TODO: minor bug - don't overwrite existing files with same filename in the same identifier
 
 # 1. ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/time <- {time} <- now
 # 2. {records} <- list of everything and its shasum --algorithm 512 hash.
@@ -36,12 +42,6 @@
 # 6. ../.tmp.{../Media.sserdb/UUID}.{time} <- ../Media.sserdb/snapshots/{{../Media.sserdb/latest}++}/.pax().bzip2().aes256()
 # 7. Upload ../.tmp.{../Media.sserdb/UUID}.{time} to ia:Collistar_sser_pack_{../Media.sserdb/UUID}_{{../Media.sserdb/latest}++}
 # 8. Delete ../.tmp.{../Media.sserdb/UUID}.{time}
-# Keys: http://archive.org/account/s3.php
-# Documentation: http://archive.org/help/abouts3.txt
-# https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
-# http://en.ecgpedia.org/api.php?action=query&meta=siteinfo&siprop=general|rightsinfo&format=xml
-# TODO: bug - upload may (partly) fail if two (small) files are sent to s3 without pause http://p.defau.lt/?puN_G_zKXbv1lz9TfSliPg http://archive.org/details/wiki-editionorg_w or something http://p.defau.lt/?udwrG7YQn4RK_1whl1XWRw http://archive.org/details/wiki-jutedreamhosterscom_lineageii_bestiary
-# TODO: minor bug - don't overwrite existing files with same filename in the same identifier
 
 # You need a file named config.txt with username, access key, secret key, and a title for the uploaded items, each in its own line.
 userName=open('config.txt', 'r').readlines()[0].strip()
