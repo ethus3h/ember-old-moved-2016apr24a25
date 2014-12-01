@@ -143,7 +143,7 @@ def upload(wikis):
     	barrelSize = int(os.path.getsize(dump))
         global sslTypeS
         curl = ['curl', '--location', 
-        	'--retry', '999',
+        	'--retry', '7',
         	'--retry-max-time', '0',
             '--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
             '--header', "'x-archive-queue-derive:0'",
