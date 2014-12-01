@@ -290,6 +290,7 @@ keywords = ['Colistarr','Colistarr Initiative','sser','sser_snapshot','archive',
             log_add('ERROR UPLOADING FILE. THIS IS NOT GOOD.')
             sys.exit()
         errored = False
+        time.sleep(10)
         c = c+1
         #Done upload to IA
         
