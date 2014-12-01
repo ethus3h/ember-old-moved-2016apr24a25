@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # sser
 # (the SnapShottER)
-# Version 0.12, 2014.nov.30.
+# Version 0.13, 2014.dec.01.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Additions copyright 2013, 2014 Futuramerlin
@@ -255,9 +255,9 @@ for item in records:
     	barrelSize = int(os.path.getsize('../Archive.sserdb/encdb/'+encHash))
     	# http://curl.haxx.se/docs/manpage.html
         curl = ['curl', '--location', 
-        	'--retry', '999',
+        	'--retry', '10',
         	'--retry-max-time', '0',
-        	'--max-time', '15', #FOR TESTING ONLY!!!! TODO remove
+        	#'--max-time', '15', #FOR TESTING ONLY!!!! TODO remove
             '--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
             '--header', "'x-archive-queue-derive:0'",
             '--header', "'x-archive-size-hint:%d'" % (os.path.getsize('../Archive.sserdb/encdb/'+encHash)), 
@@ -313,7 +313,7 @@ for records as item:
 	run('echo "http://archive.org/download/Collistar_sser_db_'+uuid+'_'+thisRevision+'/'+encHash+'" > ../Archive.sserdb/snapshots/'+thisRevision+'/d/'+item[0])
 run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/idx/ehdb/ ../Archive.sserdb/ehdb/')
 run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/idx/hashesdb/ ../Archive.sserdb/ha'./Meta/Revisions/'+thisRevision+'.sserrev'db/')
-run('ln ../Archive.sserdb/snapshots/'+thisRevision+'/meta/ ../Archive.sserdb/connect-timeout', '15',
+run('ln ../Archive.sserdb/snapshots/'+thi10vision+'/meta/ ../Archive.sserdb/connect-timeout', '15',
 	'--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
 sserdb/meta/passphrase ../Archive.sserdb/.tmp.'+uuid+'.'+time)
 run('rm -v ../Archive.sserdb/.tmp.'+uui'./Meta/Revisions/'+thisRevision+'.sserrev')), 
