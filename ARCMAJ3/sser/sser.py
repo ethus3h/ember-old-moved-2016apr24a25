@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # sser
-# (the SnapShottER)
-# Version 0.13, 2014.dec.01.
+# Version 0.14, 2014.dec.02.
 #
-# Copyright (C) 2011-2012 WikiTeam
-# Additions copyright 2013, 2014 Futuramerlin
+# Copyright 2014 Elliot Wallace
+# Portions copyright (C) 2011-2012 WikiTeam
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -18,36 +17,22 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# Keys: http://archive.org/account/s3.php
-# Documentation: http://archive.org/help/abouts3.txt
-# https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
-# http://en.ecgpedia.org/api.php?action=query&meta=siteinfo&siprop=general|rightsinfo&format=xml
-# TODO: bug - upload may (partly) fail if two (small) files are sent to s3 without pause http://p.defau.lt/?puN_G_zKXbv1lz9TfSliPg http://archive.org/details/wiki-editionorg_w or something http://p.defau.lt/?udwrG7YQn4RK_1whl1XWRw http://archive.org/details/wiki-jutedreamhosterscom_lineageii_bestiary
-# TODO: minor bug - don't overwrite existing files with same filename in the same identifier
 
-# 1. ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/localTime <- {time} <- now
-# 2. {records} <- list of everything and its shasum --algorithm 512 hash.
-# 3. foreach {records} as {item}:
-#   I. If ../Archive.sserdb/hashesdb/{hash}.exists:
-#     A. break; # file already in repo
-#   II. Else: #new file since last snapshot
-#     A. ../Archive.sserdb/encdb/enctmp <- {item}.aes256()
-# 	  B. ../Archive.sserdb/hashesdb/{hash} <- {enctmp.sha512()}
-#     C. Hardlink ../Archive.sserdb/encdb/{enctmp.sha512()} to ../Archive.sserdb/encdb/enctmp
-#     D. Upload ../Archive.sserdb/encdb/{enctmp.sha512()} to ia:Collistar_sser_db_{../Archive.sserdb/UUID}
-#     E. Delete ../Archive.sserdb/encdb/enctmp
-#     F. ../Archive.sserdb/ehdb/{enctmp.sha512()} <- {hash}
-# 4. Delete ../Archive.sserdb/encdb/
-# 5. Clone directory tree to ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/d/
-# 6. foreach {records} as {item}:
-#   I. {item.name} <- "http://archive.org/download/Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}/{enctmp.sha512()}"
-# 7. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/ehdb/ to ../Archive.sserdb/ehdb/
-# 8. Hardlink ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/idx/hashesdb/ to ../Archive.sserdb/hashesdb/
-# 9. ../.tmp.{../Archive.sserdb/uuid}.{time} <- ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/.pax().bzip2().aes256()
-# 10. Upload ../.tmp.{../Archive.sserdb/uuid}.{time} to ia:Collistar_sser_pack_{../Archive.sserdb/uuid}_{{../Archive.sserdb/latest}++}
-# 11. ../.tmp.{../Archive.sserdb/uuid}.{time}
-# 12. Move ../.tmp.{../Archive.sserdb/uuid}.{time} to ./Meta/Revisions/{{../Archive.sserdb/latest}++}.sserrev
-# 13. ../Archive.sserdb/latest++;
+
+# ABOUT THIS PROGRAM: DOCUMENTATION
+# This is a tool for storing revisions of a folder in the cloud. To use it, make a folder to version
+# called "Archive". Then, run:
+# python ./sser.py
+# in the enclosing directory. This will create a database of file hashes in that directory, as a bundle
+# with the name "Archive.sserdb". The app will then ask you for some information to set up the
+# repository. Once you have provided the necessary information, it will upload the folder to the cloud.
+# If it has finished uploading successfully, it will increment the latest revision file.
+# To get your API keys for uploading, visit:
+# http://archive.org/account/s3.php
+
+# The API interface code used in this program was written by WikiTeam.
+# Additionally, standard Web site resources were consulted in its creation. Code that is
+# directly used or based on a Web resource is marked with a comment by its URL.
 
 import os
 import uuid
