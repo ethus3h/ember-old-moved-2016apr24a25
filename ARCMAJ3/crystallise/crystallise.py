@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # Crystallise
 # Version:
-version = '1.01.1'
-#, 2014.nov.13, based on WARCdealer 1.2 and pbz 9.
+version = '1.01.2'
+#, 2014.dec.05, based on WARCdealer 1.2 and pbz 9.
 #IMPORTANT USAGE NOTES: 1) RUN AS ROOT 
 # 2) MAKE SURE YOU HAVE ENOUGH DISK SPACE (4X INPUT), OR IT WILL DESTROY YOUR DATA
 # 3) DON'T INTERRUPT IT, OR IT WILL DESTROY YOUR DATA
@@ -322,10 +322,14 @@ if td == 'y':
 				curlline = ' '.join(curl)
 				log_add('Executing curl request: ')
 				log_add(curlline+'\n')
+				if errored:
+					sys.exit()
 				errored = False
 				uploadFetchResultB = run(curlline)[0]
 				log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
 				c += 1
+				if errored:
+					sys.exit()
 				if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
 					os.system('rm '+dump)
 					log_add('Removing file: '+dump+'\n')
@@ -354,6 +358,8 @@ if td == 'y':
 			iId=1
 			log_add('\n\nUploading barrel data back to base.\n\n');
 			upload(wikis)
+			if errored:
+					sys.exit()
 			if not errored:
 				log_add('\n\nDone uploading; removing inputs.\n\n')
 				for root, dirs, files in os.walk('.'):
