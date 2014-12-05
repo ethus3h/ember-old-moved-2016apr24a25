@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Crystallise
 # Version:
-version = '1.01.2'
+version = '1.01.3'
 #, 2014.dec.05, based on WARCdealer 1.2 and pbz 9.
 #IMPORTANT USAGE NOTES: 1) RUN AS ROOT 
 # 2) MAKE SURE YOU HAVE ENOUGH DISK SPACE (4X INPUT), OR IT WILL DESTROY YOUR DATA
@@ -336,6 +336,7 @@ if td == 'y':
 					statDuro = True
 				else:
 					log_add('ERROR UPLOADING BARREL. THIS IS NOT GOOD.')
+					sys.exit()
 				log_add('Logging added item: ' + 'https://archive.org/details/' + dumpid + '\n\n\n\n\n')
 
 		log_add('\nPreparing main function\n')
