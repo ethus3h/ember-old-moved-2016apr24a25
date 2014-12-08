@@ -1,22 +1,24 @@
 <?php
 //Request handler
-$result = $_REQUEST['data'];
-
-$resultListEntryA= '<li><a href="'; # url
+$rq = $_REQUEST['data'];
+echo 'Search results for: $rq';
+$db = new PDO('mysql:host=localhost;dbname=futuqiur_iaidx;charset=utf8', 'iaidx', 'Artemis!');
+$results = $db->query('SELECT * FROM `data` WHERE `filename` LIKE \'%'.$rq.'%\' LIMIT 10');
+$resultListEntryA= '<ul><li><a href="'; # url
 $resultListEntryB= '"><b>'; #title
 $resultListEntryC = '</b><br>'; # url
 $resultListEntryD = '<i>SHA: '; # SHA
-$resultListEntryE = '</i></li></a>';
+$resultListEntryE = '</i></a></li></ul>';
 foreach($results as $result) {
 	$res = $result.explode();
 	echo $resultListEntryA;
-	echo $res[0];
+	echo $res['url'];
 	echo $resultListEntryB;
-	echo $res[0];
+	echo substr($res['url'],strrchr($res['url'],'/'));
 	echo $resultListEntryC;
-	echo substr($res[0],strrchr($res[0],'/'));
+	echo $res['url'];
 	echo $resultListEntryD;
-	echo $res[1];
+	echo $res['sha'];
 	echo $resultListEntryE;
-	echo 'ENDOFRESULTTHISSHOULDNEVEOCCURINRESULT';		}
+}
 ?>
