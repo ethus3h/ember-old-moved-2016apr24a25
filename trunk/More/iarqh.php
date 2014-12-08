@@ -6,7 +6,7 @@ $rq = $_REQUEST['data'];
 echo 'Search results for: '.$rq;
 $db = new PDO('mysql:host=localhost;dbname=futuqiur_iaidx;charset=utf8', 'futuqiur_iaidx', 'Artemis!');
 $query = 'SELECT * FROM `data` WHERE `filename` LIKE \'%'.$rq.'%\' LIMIT 10';
-echo 'Running query:'.$query;
+#echo 'Running query:'.$query;
 $results = $db->query($query);
 $resultListEntryA= '<ul><li><a href="'; # url
 $resultListEntryB= '"><b>'; #title
@@ -17,11 +17,7 @@ foreach($results as $res) {
 	echo $resultListEntryA;
 	echo $res['url'];
 	echo $resultListEntryB;
-	$fn = strrchr($res['url'],'/');
-	if($fn = '') {
-	$fn = $res['url'];
-	}
-	echo $fn;
+	echo $res['filename'];
 	echo $resultListEntryC;
 	echo $res['url'];
 	echo $resultListEntryD;
