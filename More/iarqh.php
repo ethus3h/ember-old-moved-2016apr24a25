@@ -17,9 +17,9 @@ foreach($results as $res) {
 	echo $resultListEntryA;
 	echo $res['url'];
 	echo $resultListEntryB;
-	echo $res['filename'];
+	echo substr($res['filename'],0,128).'...';
 	echo $resultListEntryC;
-	echo $res['url'];
+	echo substr($res['url'],0,128).'...';
 	echo $resultListEntryD;
 	echo $res['sha'];
 	echo $resultListEntryE;

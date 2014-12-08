@@ -21,7 +21,7 @@ else
 document.getElementById('result').innerHTML=xmlhttp.responseText;
     }
   }
- xmlhttp.open('GET','http://futuramerlin.com/iarqh.php?data=' + document.getElementById('data').value,true);
+ xmlhttp.open('GET','http://141.114.211.12:4352/iarqh.php?data=' + document.getElementById('data').value,true);
 xmlhttp.send();
 
 
