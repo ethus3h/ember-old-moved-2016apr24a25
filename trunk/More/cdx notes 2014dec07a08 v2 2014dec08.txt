@@ -1,0 +1,22 @@
+2014.dec.07a08
+CDX notes
+version 2, 2014dec08
+
+1. Delete 1st line
+2. replace
+[^ \n]+ \d+ (https?://[^ \n]+) [^ \n]+ [-\d]+ (\w+) [-\w]+ [-\w]+ \d+ \d+ [^ \n]+\n
+with
+\1;\2;\1\n
+
+Sort of? 
+
+Try against:
+name,peremen,files)/hathor-sdk/amd64/scratchbox-toolchain-host-gcc_1.0.27_amd64.deb 20141129190753 http://files.peremen.name/hathor-sdk/amd64/scratchbox-toolchain-host-gcc_1.0.27_amd64.deb application/x-debian-package 200 77AKF6FQHLN4EMNPSIFGEVLSABTQFIXE - - 4346472 423946218 archiveteam_archivebot_go_20141129220001/files.peremen.name-inf-20141129-192026-9bnnh-00000.warc.gz
+name,peremen,files)/hathor-sdk/amd64?c=d;o=a 20141129190451 http://files.peremen.name/hathor-sdk/amd64/?C=D;O=A text/html 200 SYSHOPB2LRBWCKR2R56F532UZGRQSLET - - 1349 310815722 archiveteam_archivebot_go_20141129220001/files.peremen.name-inf-20141129-192026-9bnnh-00000.warc.gz
+name,peremen,files)/hathor-sdk/amd64?c=d;o=d 20141129191722 http://files.peremen.name/hathor-sdk/amd64/?C=D;O=D text/html 200 NKJMAV32VJP2Q3BDIZP3XE7BUKBN5N3E - - 1339 428328276 archiveteam_archivebot_go_20141129220001/files.peremen.name-inf-20141129-192026-9bnnh-00000.warc.gz
+name,peremen,files)/hathor-sdk/amd64?c=m;o=a 20141129190242 http://files.peremen.name/hathor-sdk/amd64/?C=M;O=A text/html 200 DUPVVO7GOR2G6AXHS24T4MP7MTO5RMWL - - 1353 232721841 archiveteam_archivebot_go_20141129220001/files.peremen.name-inf-20141129-192026-9bnnh-00000.warc.gz
+name,peremen,files)/hathor-sdk/amd64?c=m;o=d 20141129191721 http://files.peremen.name/hathor-sdk/amd64/?C=M;O=D text/html 200 MX3WTNHAHZHO3FDOU77P73UJIMSAJPVX - - 1348 428326295 archiveteam_archivebot_go_20141129220001/files.peremen.name-inf-20141129-192026-9bnnh-00000.warc.gz
+name,peremen,files)/hathor-sdk/amd64?c=n;o=a 20141129191719 http://files.peremen.name/hathor-sdk/amd64/?C=N;O=A text/html 200 F5ZGJDO6DPBO4OTWKYIVWGIBUCHTDI7L - - 1346 428324314 archiveteam_archivebot_go_20141129220001/files.peremen.name-inf-20141129-192026-9bnnh-00000.warc.gz
+
+It's having problems
+3. replace
