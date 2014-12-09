@@ -3,13 +3,29 @@
 error_reporting(E_ALL);
 ini_set("display_errors", true);
 $rq = $_REQUEST['data'];
-$limit = $_REQUEST['limit'];
+$limite = $_REQUEST['limit'];
+$lar = explode(',',$limite);
+$limit = $lar[0];
+$searchtype = 0;
+@$searchtype = $lar[1];
 $db = new PDO('mysql:host=localhost;dbname=futuqiur_iaidx;charset=utf8', 'futuqiur_iaidx', 'Artemis!');
 #$query = 'SELECT * FROM `data` WHERE `filename` LIKE \'%'.$rq.'%\' LIMIT 10';
-#$query = 'SELECT * FROM `data` WHERE `filename` LIKE \'%'.$rq.'%\' LIMIT '.$limit;
-$query = 'SELECT * FROM `data` WHERE MATCH(`filename`) AGAINST(\''.$rq.'\') LIMIT '.$limit;
+$query = 'SELECT * FROM `data` WHERE `filename` LIKE \'%'.$rq.'%\' LIMIT '.$limit;
+switch($searchtype) {
+case 1:
+	$query = 'SELECT * FROM `data` WHERE MATCH(`urly`) AGAINST(\''.$rq.'\') LIMIT '.$limit;
+	break;
+case 2:
+	$query = 'SELECT * FROM `data` WHERE `urly` LIKE \'%'.$rq.'%\' LIMIT '.$limit;
+	break;
+case 3:
+	$query = 'SELECT * FROM `data` WHERE MATCH(`filename`) AGAINST(\''.$rq.'\') LIMIT '.$limit;
+	break;
+}
+if($searchtype == 1) {
+}
 echo 'Query:'.$query;
-echo 'Search results for: '.$rq;
+echo '<br>Search results for: '.$rq;
 $results = $db->query($query);
 $resultListEntryA= '<ul><li><a href="'; # url
 $resultListEntryB= '"><b>'; #title

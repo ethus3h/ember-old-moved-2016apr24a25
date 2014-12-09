@@ -2,7 +2,7 @@
 <p>A little index tool for a subset of the files in the Internet Archive.</p>
 <!-- this and iarqh.php are based on dceutils 2.6 -->        <h3>Search for:</h3>
 <center><form><input type="text" id="data" onKeyPress="sync();">&nbsp;</form>
-<h3>Limit to how many results?</h3>
+<h3>Limit to how many results? <small><small><br>Append ,1 (comma one) for substring search of original URLs eg. 10,1 for 10 results. <br>,2 = substring search of processed URLs. <br>,3 = text search of original URLs</small></small></h3>
 <form><input type="text" id="limit" onKeyPress="sync();" value="10"></form>
 <br><br><p id="result">
 </p> <script type="text/javascript">
