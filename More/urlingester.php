@@ -12,8 +12,9 @@ $la = explode(';',$line);
 $url = $la[0];
 $filename = $la[1];
 $sha = $la[2];
-$urlsha = sha1($la[0]);
-$query = 'INSERT INTO `data` (`id`, `url`, `text`, `sha`, `filename`, `urlsha`) VALUES (NULL, \''.$url.'\', \'\', \''.$sha.'\', \''.$filename.'\', \''.$urlsha.'\');';
+$date = $la[3];
+$urlsha = hash('sha512',$la[0].$la[3].$sha);
+$query = 'INSERT INTO `data` (`id`, `url`, `text`, `sha`, `filename`, `urlsha`, `date`) VALUES (NULL, \''.$url.'\', \'\', \''.$sha.'\', \''.$filename.'\', \''.$urlsha.'\', \''.$date.'\');';
 #echo "\n".'Running query:'.$query;
 $db->query($query);
 
