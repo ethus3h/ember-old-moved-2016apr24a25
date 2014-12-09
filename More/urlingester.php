@@ -14,7 +14,8 @@ $filename = $la[1];
 $sha = $la[2];
 $date = $la[3];
 $urlsha = hash('sha512',$la[0].$la[3].$sha);
-$query = 'INSERT INTO `data` (`id`, `url`, `text`, `sha`, `filename`, `urlsha`, `date`) VALUES (NULL, \''.$url.'\', \'\', \''.$sha.'\', \''.$filename.'\', \''.$urlsha.'\', \''.$date.'\');';
+$urly = str_replace('-',' ',str_replace('.',' ',str_replace('/', ' ', $filename)));
+$query = 'INSERT INTO `data` (`id`, `url`, `text`, `sha`, `filename`, `urlsha`, `date`, `urly`) VALUES (NULL, \''.$url.'\', \'\', \''.$sha.'\', \''.$filename.'\', \''.$urlsha.'\', \''.$date.'\', \''.$urly.'\');';
 #echo "\n".'Running query:'.$query;
 $db->query($query);
 
