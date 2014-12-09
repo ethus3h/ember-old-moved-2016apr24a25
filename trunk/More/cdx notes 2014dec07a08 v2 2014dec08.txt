@@ -4,6 +4,6 @@ version 2, 2014dec08
 
 1. Delete 1st line
 2. replace
-[^ \n]+ \d+ (https?://[^ \n]+) [^ \n]+ [-\d]+ (\w+) [-\w]+ [-\w]+ \d+ \d+ [^ \n]+\n
+[^ \n]+ (\d+) (https?://[^ \n]+) [^ \n]+ [-\d]+ (\w+) [-\w]+ [-\w]+ \d+ \d+ [^ \n]+\n
 with
-https://web\.archive\.org/web/2014/\1;\1;\2\n
+https://web\.archive\.org/web/\1/\2;\2;\3;\1\n
