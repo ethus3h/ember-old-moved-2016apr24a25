@@ -65,12 +65,37 @@ hour = time.strftime("%H")
 minute = time.strftime("%M")
 second = time.strftime("%S")
 action = 'save';
+def log_add(text):
+	text = str(text)
+	print text
+	global timeRunning
+	f = open('log-'+timeRunning+'.log', 'a')
+	f.write(text+"\n")
+	f.close()
+def run(command):
+	log_add(command)
+	global errored
+	commandResult = ''
+	try:
+		commandRes=check_output(command, shell=True, stderr=subprocess.STDOUT)
+		commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandRes + "\n\n\n\n"
+	except Exception, e:
+		commandRes=''
+		try:
+			commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandResult + str(e.output) + "\n\n\n\nError encountered while running command. This is probably not a big deal.\n\n"
+		except Exception, e:
+			commandResult = "\n\n\n\nError encountered while running command: \n\n" + command + "\n\n\n\nThis is probably not a big deal. Possibly the command line was incorrectly structured?\n\n"
+		errored=True
+	log_add('Command result: ' +commandResult)
+	log_add("\n\n")
+	log_add('Command res: ' +commandRes)
+	return [commandResult,commandRes]
 #Is there anything to do? If so do it.
 #help from http://stackoverflow.com/questions/2632205/count-the-number-of-files-in-a-directory-using-python
-os.system('du -hs')
+run('du -hs')
 td = raw_input("Still do it? [y]es/[n]o ")
 if td == 'y':
-	print len(glob.glob('*'))
+	log_add(len(glob.glob('*')))
 	if len(glob.glob('*')) > 3:
 		ccgo = os.path.expanduser("~/.pbzc")
 		ad = ''
@@ -82,7 +107,7 @@ if td == 'y':
 			pass
 		if len(ad) < 1:
 			ad = raw_input('Give a name / description to this computer: ');
-			os.system('rm -v ~/.pbzc 2> /dev/null')
+			run('rm -v ~/.pbzc 2> /dev/null')
 			ax = open(ccgo,'wb')
 			ax.write(ad)
 			ax.close()
@@ -96,8 +121,8 @@ if td == 'y':
 			pass
 		if len(ad) < 1:
 			ad = uuid.uuid4().hex;
-			print 'You have been assigned the following pbz installation ID: '+ad
-			os.system('rm -v ~/.pbziid 2> /dev/null')
+			log_add('You have been assigned the following pbz installation ID: '+ad)
+			run('rm -v ~/.pbziid 2> /dev/null')
 			ax = open(ccgo,'wb')
 			ax.write(ad)
 			ax.close()
@@ -106,7 +131,7 @@ if td == 'y':
 			ad = '.'
 			opr = ad+"/.tmp.Packed-"+now
 			opd = ad+"/Packed-"+now
-			print 'Outputting to: '+opd
+			log_add('Outputting to: '+opd)
 			return opr
 		def enci():
 			cfgp = os.path.expanduser("~/.pbz")
@@ -119,13 +144,13 @@ if td == 'y':
 				pass
 			if len(ad) < 1:
 				ad = raw_input('confirm authkey? ');
-				os.system('rm -v ~/.pbz 2> /dev/null')
+				run('rm -v ~/.pbz 2> /dev/null')
 				ax = open(cfgp,'wb')
 				ax.write(ad)
 				ax.close()
 		def pack(of):
-			os.system('mkdir '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/')
-			os.system('mkdir '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/.config-'+now+'.AddedToPackedDirOnPack.pcb/')
+			run('mkdir '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/')
+			run('mkdir '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/.config-'+now+'.AddedToPackedDirOnPack.pcb/')
 			timefile = urllib.URLopener()
 			timefn = os.path.expanduser(inf).replace('\\','')+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.ptd'
 			try:
@@ -144,32 +169,32 @@ if td == 'y':
 			vfl.write(pbzversion)
 			vfl.close()
 			userpath = os.path.expanduser("~")
-			print 'Directories should not be copied now'
-			os.system('cp -v '+userpath+'/.pbz* '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/.config-'+now+'.AddedToPackedDirOnPack.pcb/')
-			print 'Directories should be copied now'
-			os.system('cp -Rv '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/ '+of+'.pmb/')
+			log_add('Directories should not be copied now')
+			run('cp -v '+userpath+'/.pbz* '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/.config-'+now+'.AddedToPackedDirOnPack.pcb/')
+			log_add('Directories should be copied now')
+			run('cp -Rv '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/ '+of+'.pmb/')
 			ofpmbpath = of+'.pmb'
 			tarc = 'tar -cvj --format pax -f '+of+'.pmbz -C '+os.path.dirname(ofpmbpath)+' '+os.path.basename(ofpmbpath)+'/'
-			print 'Running: '+tarc
-			os.system(tarc)
-			os.system('rm -rv '+of+'.pmb/')
-			os.system('hashdeep -o f -c sha1 -r '+inf+' > '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx')
-			os.system('cp -v '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx '+of+'.pdx')
-			os.system('bzip2 '+of+'.pdx')
-			os.system('tar -cvj --format pax -f '+of+'.pbz '+inf)
+			log_add('Running: '+tarc)
+			run(tarc)
+			run('rm -rv '+of+'.pmb/')
+			run('hashdeep -o f -c sha1 -r '+inf+' > '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx')
+			run('cp -v '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx '+of+'.pdx')
+			run('bzip2 '+of+'.pdx')
+			run('tar -cvj --format pax -f '+of+'.pbz '+inf)
 		def encrypt(of):
-			os.system('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ~/.pbz '+of+'.pbz')
-			os.system('mv -v '+of+'.pbz.gpg '+of+'.pbze')
-			os.system('rm -v '+of+'.pbz')
-			os.system('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ~/.pbz '+of+'.pmbz')
-			os.system('mv -v '+of+'.pmbz.gpg '+of+'.pmbze')
-			os.system('rm -v '+of+'.pmbz')
-			os.system('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ~/.pbz '+of+'.pdx.bz2')
-			os.system('mv -v '+of+'.pdx.bz2.gpg '+of+'.pdxe')
-			os.system('rm -v '+of+'.pdx.bz2')
+			run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ~/.pbz '+of+'.pbz')
+			run('mv -v '+of+'.pbz.gpg '+of+'.pbze')
+			run('rm -v '+of+'.pbz')
+			run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ~/.pbz '+of+'.pmbz')
+			run('mv -v '+of+'.pmbz.gpg '+of+'.pmbze')
+			run('rm -v '+of+'.pmbz')
+			run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ~/.pbz '+of+'.pdx.bz2')
+			run('mv -v '+of+'.pdx.bz2.gpg '+of+'.pdxe')
+			run('rm -v '+of+'.pdx.bz2')
 		def finish():
 			ad = '.'
-			print 'Copying indices...'
+			log_add('Copying indices...')
 			global timeRunning;
 			global title;
 			global uuidG;
@@ -180,23 +205,23 @@ if td == 'y':
 			global hour
 			global minute
 			global second
-			os.system('mkdir ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/');
-			os.system('cp -Rv '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/ ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/');
-			os.system('mv -v ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pdx');
-			print 'Note that some warnings from mv that look like "mv: rename /blahblahblah to /blahblahblah: No such file or directory" are ok here.'
-			os.system('mv -v '+ad+'/.tmp.Packed-'+now+'.pbz '+ad+'/Packed-'+now+'.pbz')
-			os.system('mv -v '+ad+'/.tmp.Packed-'+now+'.pdx '+ad+'/Packed-'+now+'.pdx')
-			os.system('mv -v '+ad+'/.tmp.Packed-'+now+'.pmbz '+ad+'/Packed-'+now+'.pmbz')
-			os.system('mv -v '+ad+'/.tmp.Packed-'+now+'.pbze '+ad+'/Packed-'+now+'.pbze')
-			os.system('mv -v '+ad+'/.tmp.Packed-'+now+'.pdxe '+ad+'/Packed-'+now+'.pdxe')
-			os.system('mv -v '+ad+'/.tmp.Packed-'+now+'.pmbze '+ad+'/Packed-'+now+'.pmbze')
-			print 'You shouldn\'t see any more warnings from mv now.'
-			print 'Done!'
+			run('mkdir ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/');
+			run('cp -Rv '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/ ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/');
+			run('mv -v ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pdx');
+			log_add('Note that some warnings from mv that look like "mv: rename /blahblahblah to /blahblahblah: No such file or directory" are ok here.')
+			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pbz '+ad+'/Packed-'+now+'.pbz')
+			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pdx '+ad+'/Packed-'+now+'.pdx')
+			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pmbz '+ad+'/Packed-'+now+'.pmbz')
+			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pbze '+ad+'/Packed-'+now+'.pbze')
+			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pdxe '+ad+'/Packed-'+now+'.pdxe')
+			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pmbze '+ad+'/Packed-'+now+'.pmbze')
+			log_add('You shouldn\'t see any more warnings from mv now.')
+			log_add('Done!')
 		#od = raw_input('new output directory? (have 30gb free space for it there) ')
 		od = ''
 		#od = os.path.expanduser(od)
 		cfgo = os.path.expanduser("~/.pbzl")
-		os.system('rm -v ~/.pbzl 2> /dev/null')
+		run('rm -v ~/.pbzl 2> /dev/null')
 		ax = open(cfgo,'wb')
 		ax.write(od)
 		ax.close()
@@ -231,28 +256,6 @@ if td == 'y':
 
 		convertlang = {'ar': 'Arabic', 'de': 'German', 'en': 'English', 'es': 'Spanish', 'fr': 'French', 'it': 'Italian', 'ja': 'Japanese', 'nl': 'Dutch', 'pl': 'Polish', 'pt': 'Portuguese', 'ru': 'Russian'}
 		errored = False
-		def run(command):
-			print command
-			global errored
-			commandResult = ''
-			try:
-				commandRes=check_output(command, shell=True, stderr=subprocess.STDOUT)
-				commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandRes + "\n\n\n\n"
-			except Exception, e:
-				commandRes=''
-				try:
-					commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandResult + str(e.output) + "\n\n\n\nError encountered while running command. This is probably not a big deal.\n\n"
-				except Exception, e:
-					commandResult = "\n\n\n\nError encountered while running command: \n\n" + command + "\n\n\n\nThis is probably not a big deal. Possibly the command line was incorrectly structured?\n\n"
-				errored=True
-			return [commandResult,commandRes]
-		def log_add(text):
-			text = str(text)
-			print text
-			global timeRunning
-			f = open('log-'+timeRunning+'.log', 'a')
-			f.write(text+"\n")
-			f.close()
 		def log(wiki, dump, msg):
 			global timeRunning
 			f = open('uploader-'+timeRunning+'.log', 'a')
@@ -280,9 +283,9 @@ if td == 'y':
 			for dirname, dirnames, filenames in os.walk('.'):
 				if dirname == '.':
 					for f in filenames:
-						print 'Filename being checked: '+f
+						log_add('Filename being checked: '+f)
 						if (f.startswith('Packed')):
-							print 'Filename matched; is appended: '+f
+							log_add('Filename matched; is appended: '+f)
 							dumps.append(f)
 					break
 			log_add(dumps)
@@ -332,7 +335,7 @@ if td == 'y':
 				if errored:
 					sys.exit()
 				if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
-					os.system('rm '+dump)
+					run('rm '+dump)
 					log_add('Removing file: '+dump+'\n')
 					statDuro = True
 				else:
@@ -368,12 +371,12 @@ if td == 'y':
 					for file in files:
 						if not ((os.path.join(root,file).startswith('./log-') and os.path.join(root,file).endswith('-_E.log')) or (os.path.join(root,file) == './crystallise.py') or (os.path.join(root,file)=='./config.txt') or (os.path.join(root,file)=='./now.txt')):
 							log_add('\n\nRemoving file: '+file+'\n\n')
-							os.system('rm -rv \''+os.path.join(root,file).replace('\'','\'\\\'\'')+'\'')
+							run('rm -rv \''+os.path.join(root,file).replace('\'','\'\\\'\'')+'\'')
 			#help from http://unix.stackexchange.com/questions/46322/how-can-i-recursively-delete-empty-directories-in-my-home-directory
 			#help from http://askubuntu.com/questions/153770/how-to-have-find-not-return-the-current-directory
-			os.system('find `pwd` -type d -mindepth 1 -not -name \'.pbz-meta-*\' -exec rm -rv {} + 2>/dev/null')
+			run('find `pwd` -type d -mindepth 1 -not -name \'.pbz-meta-*\' -exec rm -rv {} + 2>/dev/null')
 			log_add('Sleeping 10 seconds')
-			os.system('mv ./log-'+timeRunning+'.log ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
+			run('mv ./log-'+timeRunning+'.log ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
 			time.sleep(10)
 		main()
-print 'Done.'
+log_add('Done.')
