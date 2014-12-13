@@ -266,7 +266,7 @@ if td == 'y':
 			f = open('uploader-'+timeRunning+'.log', 'a')
 			f.write('\n%s;%s;%s' % (wiki, dump, msg))
 			f.close()
-		#timeFetchResult=run('bash -c \'wget --no-check-certificate --warc-file='+timeRunning+'.Now -O now.txt "http://www.timeapi.org/utc/now?\\Y-\\m-\\d-\\H-\\M-\\S-\\6N-\\z"\'')[0]
+		timeFetchResult=run('bash -c \'wget --no-check-certificate --warc-file='+timeRunning+'.Now -O now.txt "http://www.timeapi.org/utc/now?\\Y-\\m-\\d-\\H-\\M-\\S-\\6N-\\z"\'')[0]
 
 		log_add('Running from: '+run('pwd')[0])
 		with open ("now.txt", "r") as timeFile:
