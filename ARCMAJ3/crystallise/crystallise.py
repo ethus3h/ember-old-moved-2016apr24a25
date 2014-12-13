@@ -66,6 +66,25 @@ hour = time.strftime("%H")
 minute = time.strftime("%M")
 second = time.strftime("%S")
 action = 'save';
+def check_output(*popenargs, **kwargs):
+	r"""Run command with arguments and return its output as a byte string.
+
+	Backported from Python 2.7 as it's implemented as pure python on stdlib.
+
+	>>> check_output(['/usr/bin/python', '--version'])
+	Python 2.6.2
+	"""
+	process = subprocess.Popen(stdout=subprocess.PIPE, *popenargs, **kwargs)
+	output, unused_err = process.communicate()
+	retcode = process.poll()
+	if retcode:
+		cmd = kwargs.get("args")
+		if cmd is None:
+			cmd = popenargs[0]
+		error = subprocess.CalledProcessError(retcode, cmd)
+		error.output = output
+		raise error
+	return output
 def log_add(text):
 	text = str(text)
 	print text
@@ -239,26 +258,6 @@ if td == 'y':
 
 		def shellesc(s):
 			return s.replace("'", "%27").replace(' ','%20').replace('<','%3C').replace('>','%3E').replace('[','%5B').replace(']','%5D').replace('(','%28').replace(')','%29').replace(';','%3B').replace("\x00",'%00').replace("\x0c",'%0C').replace("\x0b",'%0B').replace("\x08",'%08').replace("\x03",'%03')
-
-		def check_output(*popenargs, **kwargs):
-			r"""Run command with arguments and return its output as a byte string.
-	
-			Backported from Python 2.7 as it's implemented as pure python on stdlib.
-	
-			>>> check_output(['/usr/bin/python', '--version'])
-			Python 2.6.2
-			"""
-			process = subprocess.Popen(stdout=subprocess.PIPE, *popenargs, **kwargs)
-			output, unused_err = process.communicate()
-			retcode = process.poll()
-			if retcode:
-				cmd = kwargs.get("args")
-				if cmd is None:
-					cmd = popenargs[0]
-				error = subprocess.CalledProcessError(retcode, cmd)
-				error.output = output
-				raise error
-			return output
 
 		convertlang = {'ar': 'Arabic', 'de': 'German', 'en': 'English', 'es': 'Spanish', 'fr': 'French', 'it': 'Italian', 'ja': 'Japanese', 'nl': 'Dutch', 'pl': 'Polish', 'pt': 'Portuguese', 'ru': 'Russian'}
 		errored = False
