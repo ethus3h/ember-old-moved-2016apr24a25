@@ -83,7 +83,9 @@ def run(command):
 	except Exception, e:
 		commandRes=''
 		try:
-			commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandResult + str(e.output) + "\n\n\n\nError encountered while running command. This is probably not a big deal.\n\n"
+			log_add(traceback.format_exc())
+			log_add(sys.exc_info()[0])
+			commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandResult + str(e) + "See above for error details. \n\n\n\nError encountered while running command. This is probably not a big deal.\n\n"
 		except Exception, e:
 			#based on http://stackoverflow.com/questions/3702675/print-the-full-traceback-in-python-without-halting-the-program
 			log_add(traceback.format_exc())
