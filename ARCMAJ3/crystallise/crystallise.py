@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # Crystallise
 # Version:
-version = '1.01.3'
-#, 2014.dec.05, based on WARCdealer 1.2 and pbz 9.
+version = '1.01.4'
+#, 2014.dec.13, based on WARCdealer 1.2 and pbz 9.
 #IMPORTANT USAGE NOTES: 1) RUN AS ROOT 
 # 2) MAKE SURE YOU HAVE ENOUGH DISK SPACE (4X INPUT), OR IT WILL DESTROY YOUR DATA
 # 3) DON'T INTERRUPT IT, OR IT WILL DESTROY YOUR DATA
@@ -260,6 +260,7 @@ if td == 'y':
 			f.close()
 		#timeFetchResult=run('bash -c \'wget --no-check-certificate --warc-file='+timeRunning+'.Now -O now.txt "http://www.timeapi.org/utc/now?\\Y-\\m-\\d-\\H-\\M-\\S-\\6N-\\z"\'')[0]
 
+		log_add('Running from: '+run('pwd')[0])
 		with open ("now.txt", "r") as timeFile:
 			timeRemote=timeFile.read()
 		#log_add("\Current time fetch output: \n"+timeFetchResult+"\n\n")
