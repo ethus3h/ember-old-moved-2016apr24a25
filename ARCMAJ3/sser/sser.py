@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # sser
-# Version 0.14, 2014.dec.02.
+# Version 0.14.1, 2014-dec-16.
 #
 # Copyright 2014 Elliot Wallace
 # Portions copyright (C) 2011-2012 WikiTeam
@@ -108,7 +108,7 @@ def log_add(text):
     text = str(text)
     print text
     global ltime
-    f = open('log-'+ltime+'.log', 'a')
+    f = open('Meta/Revisions/Logs/log-'+ltime+'.log', 'a')
     f.write(text+"\n")
     f.close()
 # http://amix.dk/blog/post/19408
