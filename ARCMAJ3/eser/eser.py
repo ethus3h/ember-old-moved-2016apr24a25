@@ -104,19 +104,18 @@ def timeout_command(command, timeout):
     return process.stdout.read()
 def run(command):
     log_add("Running: "+command)
+    print command
     global errored
     commandResult = ''
     try:
         commandRes=check_output(command, shell=True, stderr=subprocess.STDOUT)
-        commandResult = "Running command: \n" + command + "\n" + commandRes + "\n"
+        commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandRes + "\n\n\n\n"
     except Exception, e:
-    	# http://stackoverflow.com/questions/9555133/e-printstacktrace-equivalent-in-python
-    	traceback.print_exc()
         commandRes=''
         try:
-            commandResult = "Running command: \n" + command + "\n" + commandResult + str(e.output) + "\nError encountered while running command. This is probably not a big deal."
+            commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandResult + str(e.output) + "\n\n\n\nError encountered while running command. This is probably not a big deal.\n\n"
         except Exception, e:
-            commandResult = "Error encountered while running command: \n" + command + "\nThis is probably not a big deal. Possibly the command line was incorrectly structured?"
+            commandResult = "\n\n\n\nError encountered while running command: \n\n" + command + "\n\n\n\nThis is probably not a big deal. Possibly the command line was incorrectly structured?\n\n"
         errored=True
     log_add('Command result: '+commandResult+'\n')
     log_add('Command output: '+commandRes+'\n')
@@ -124,7 +123,7 @@ def run(command):
 #Done command definitions
 
 ltime = time.strftime("%Y.%m.%d.%H.%M.%S.%f.%z", time.gmtime())		
-pwd = run('pwd')[0]
+pwd = run('pwd')[1]
 run('mkdir ./Archive/Meta/Revisions/Archive.eserdb/snapshots/'+ltime+'/')
 run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/snapshots/'+ltime+'/localTime')
 timefile = urllib.URLopener()
@@ -147,26 +146,26 @@ try:
 	ak = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf','rb')
 	ad = ak.read()
 	ak.close()
-	if len(ad) < 1:
-		ak = raw_input('access key? ');
-		sk = raw_input('secret key? ');
-		ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf','wb')
-		ax.write(ak+"\n"+sk)
-		ax.close()
 except:
 	pass
+if len(ad) < 1:
+	ak = raw_input('access key? ');
+	sk = raw_input('secret key? ');
+	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf','wb')
+	ax.write(ak+"\n"+sk)
+	ax.close()
 
 try:
 	ak = open('./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase','rb')
 	ad = ak.read()
 	ak.close()
-	if len(ad) < 1:
-		sz = raw_input('passphrase? ');
-		ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase','wb')
-		ax.write(sz)
-		ax.close()
 except:
 	pass
+if len(ad) < 1:
+	sz = raw_input('passphrase? ');
+	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase','wb')
+	ax.write(sz)
+	ax.close()
 
 uu = ''
 try:
@@ -174,29 +173,29 @@ try:
 	global uu
 	uu = ak.read()
 	ak.close()
-	if len(uu) < 1:
-		global uu
-		uu = uuid.uuid4().hex;
-		ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/uuid','wb')
-		print 'You have been assigned the following eser repository ID: '+uu
-		ax.write(uu)
-		ax.close()
 except:
 	pass
+if len(uu) < 1:
+	global uu
+	uu = uuid.uuid4().hex;
+	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/uuid','wb')
+	print 'You have been assigned the following eser repository ID: '+uu
+	ax.write(uu)
+	ax.close()
 
 ad = raw_input('Type y and press enter if you want to make a new snapshot, or press enter for a patch: ');
 if ad == 'y':
 	snapshot = True;
 	run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
 	run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
-	run('tar -cvz --format pax -f Archive.snapshot.'+ltime+'.egz -C '+pwd+' ./')
-	run('rm -v Archive.snapshot.'+ltime+'.egz')
+	run('tar -cvz --format pax -f Archive.snapshot.'+ltime+'.egz -C '+pwd.strip()+' ./Archive/')
 	run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase Archive.snapshot.'+ltime+'.egz')
 	run('mv -v Archive.snapshot.'+ltime+'.egz.gpg Archive.snapshot.'+ltime+'.egze')
+	run('rm -v Archive.snapshot.'+ltime+'.egz')
 	#Starting upload to IA
 	global uu
 	identifier='Collistar_eser_db_'+uu+'_'+ltime
-	log_add('Uploading: ' + item[0])
+	log_add('Uploading...')
 	time.sleep(0.1)
 	title = "Colistarr Initiative: eser_db "+uu+" rev. "+ltime
 	description = "Colistarr Initiative: eser_db "+uu+" rev. "+ltime
