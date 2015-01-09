@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # sser
-# Version 0.14.1, 2014-dec-16.
+# Version 0.14.2, 2015-jan-08.
 #
 # Copyright 2014 Elliot Wallace
 # Portions copyright (C) 2011-2012 WikiTeam
