@@ -311,7 +311,6 @@ else:
 	  sys.exit()
 	errored = False
 	time.sleep(10)
-	c = c+1
 	#Done upload to IA
 	os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latestPatch')
 	run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latestPatch')
