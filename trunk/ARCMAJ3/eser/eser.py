@@ -269,7 +269,7 @@ else:
 	latest = ak.read()
 	#Starting upload to IA
 	identifier='Collistar_eser_patch_'+uu+'_'+ltime
-	log_add('Uploading: ' + item[0])
+	log_add('Uploading...')
 	time.sleep(0.1)
 	global uu
 	title = "Colistarr Initiative: eser_db patch "+uu+" rev. "+ltime+" for "+latest
