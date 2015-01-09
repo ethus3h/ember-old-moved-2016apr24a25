@@ -147,7 +147,12 @@ try:
 	ad = ak.read()
 	ak.close()
 except:
-	pass
+	ak = raw_input('access key? ');
+	sk = raw_input('secret key? ');
+	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf','wb')
+	ax.write(ak+"\n"+sk)
+	ax.close()
+	ad = ak
 if len(ad) < 1:
 	ak = raw_input('access key? ');
 	sk = raw_input('secret key? ');
@@ -160,7 +165,11 @@ try:
 	ad = ak.read()
 	ak.close()
 except:
-	pass
+	sz = raw_input('passphrase? ');
+	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase','wb')
+	ax.write(sz)
+	ax.close()
+	ad = sz
 if len(ad) < 1:
 	sz = raw_input('passphrase? ');
 	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase','wb')
@@ -174,7 +183,12 @@ try:
 	uu = ak.read()
 	ak.close()
 except:
-	pass
+	global uu
+	uu = uuid.uuid4().hex;
+	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/uuid','wb')
+	print 'You have been assigned the following eser repository ID: '+uu
+	ax.write(uu)
+	ax.close()
 if len(uu) < 1:
 	global uu
 	uu = uuid.uuid4().hex;
