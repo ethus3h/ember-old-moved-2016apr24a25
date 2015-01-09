@@ -48,6 +48,12 @@ import sys
 
 print 'Welcome to eser. Please run eser as root.'
 
+os.system('mkdir ./Archive/Meta/')
+os.system('mkdir ./Archive/Meta/Revisions/')
+os.system('mkdir ./Archive/Meta/Revisions/Logs/')
+os.system('mkdir ./Archive/Meta/Revisions/Archive.eserdb')
+os.system('mkdir ./Archive/Meta/Revisions/Archive.eserdb/meta/')
+
 #Command definitions
 errored = False
 def check_output(*popenargs, **kwargs):
@@ -73,7 +79,7 @@ def log_add(text):
     text = str(text)
     print text
     global ltime
-    f = open('Meta/Revisions/Logs/log-'+ltime+'.log', 'a')
+    f = open('./Archive/Meta/Revisions/Logs/log-'+ltime+'.log', 'a')
     f.write(text+"\n")
     f.close()
 # http://amix.dk/blog/post/19408
@@ -135,11 +141,6 @@ tfres.read()
 tfres.close()
 log_add('Current time: '+ltime)
 
-os.system('mkdir ./Archive/Meta/')
-os.system('mkdir ./Archive/Meta/Revisions/')
-os.system('mkdir ./Archive/Meta/Revisions/Logs/')
-os.system('mkdir ./Archive/Meta/Revisions/Archive.eserdb')
-os.system('mkdir ./Archive/Meta/Revisions/Archive.eserdb/meta/')
 try:
 	ak = open('./Archive/Meta/Revisions/Archive.sserdb/meta/conf','rb')
 	ad = ak.read()
