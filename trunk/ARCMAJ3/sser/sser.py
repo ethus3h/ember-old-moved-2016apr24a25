@@ -51,6 +51,9 @@ try:
 except:
 	pass
 if len(ad) < 1:
+	os.system('mkdir ./Meta/')
+	os.system('mkdir ./Meta/Revisions/')
+	os.system('mkdir ./Meta/Revisions/Logs/')
 	os.system('mkdir ./Meta/Revisions/Archive.sserdb')
 	os.system('mkdir ./Meta/Revisions/Archive.sserdb/meta/')
 	os.system('mkdir ./Meta/Revisions/Archive.sserdb/snapshots/')
@@ -58,9 +61,6 @@ if len(ad) < 1:
 	os.system('mkdir ./Meta/Revisions/Archive.sserdb/ehdb/')
 	os.system('mkdir ./Meta/Revisions/Archive.sserdb/encdb/')
 	os.system('mkdir ./Meta/Revisions/Archive.sserdb/hashesdb/')
-	os.system('mkdir ./Meta/')
-	os.system('mkdir ./Meta/Revisions/')
-	os.system('mkdir ./Meta/Revisions/Logs/')
 	ad = '0';
 	print 'Initializing new sser repository'
 	ax = open('./Meta/Revisions/Archive.sserdb/meta/latest','wb')
