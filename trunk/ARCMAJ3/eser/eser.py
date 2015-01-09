@@ -242,7 +242,6 @@ if ad == 'y':
 	errored = False
 	uploadFetchResultB = run(curlline)[0]
 	log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
-	c += 1
 	if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
 	  log_add('Removing file\n')
 	  try:
@@ -301,7 +300,6 @@ else:
 	errored = False
 	uploadFetchResultB = run(curlline)[0]
 	log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
-	c += 1
 	if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
 	  log_add('Removing file\n')
 	  try:
