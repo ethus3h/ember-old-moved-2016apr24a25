@@ -53,6 +53,7 @@ os.system('mkdir ./Archive/Meta/Revisions/')
 os.system('mkdir ./Archive/Meta/Revisions/Logs/')
 os.system('mkdir ./Archive/Meta/Revisions/Archive.eserdb')
 os.system('mkdir ./Archive/Meta/Revisions/Archive.eserdb/meta/')
+os.system('mkdir ./Archive/Meta/Revisions/Archive.eserdb/snapshots/')
 
 #Command definitions
 errored = False
@@ -124,9 +125,10 @@ def run(command):
 
 ltime = time.strftime("%Y.%m.%d.%H.%M.%S.%f.%z", time.gmtime())		
 pwd = run('pwd')[0]
+run('mkdir ./Archive/Meta/Revisions/Archive.eserdb/snapshots/'+ltime+'/')
 run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/snapshots/'+ltime+'/localTime')
 timefile = urllib.URLopener()
-timefn = './Archive/Meta/Revisions/Archive.sserdb/snapshots/'+ltime+'/remoteTime'
+timefn = './Archive/Meta/Revisions/Archive.eserdb/snapshots/'+ltime+'/remoteTime'
 try:
 	timefile.retrieve("http://www.timeapi.org/utc/now?format=%25Y.%25m.%25d.%25H.%25M.%25S.%25Z", timefn)
 except:
@@ -142,46 +144,49 @@ tfres.close()
 log_add('Current time: '+ltime)
 
 try:
-	ak = open('./Archive/Meta/Revisions/Archive.sserdb/meta/conf','rb')
+	ak = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf','rb')
 	ad = ak.read()
 	ak.close()
+	if len(ad) < 1:
+		ak = raw_input('access key? ');
+		sk = raw_input('secret key? ');
+		ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf','wb')
+		ax.write(ak+"\n"+sk)
+		ax.close()
 except:
 	pass
-if len(ad) < 1:
-	ak = raw_input('access key? ');
-	sk = raw_input('secret key? ');
-	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf','wb')
-	ax.write(ak+"\n"+sk)
-	ax.close()
 
 try:
-	ak = open('./Archive/Meta/Revisions/Archive.sserdb/meta/passphrase','rb')
+	ak = open('./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase','rb')
 	ad = ak.read()
 	ak.close()
+	if len(ad) < 1:
+		sz = raw_input('passphrase? ');
+		ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase','wb')
+		ax.write(sz)
+		ax.close()
 except:
 	pass
-if len(ad) < 1:
-	sz = raw_input('passphrase? ');
-	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase','wb')
-	ax.write(sz)
-	ax.close()
 
+uu = ''
 try:
-	ak = open('./Archive/Meta/Revisions/Archive.sserdb/meta/uuid','rb')
+	ak = open('./Archive/Meta/Revisions/Archive.eserdb/meta/uuid','rb')
+	global uu
 	uu = ak.read()
 	ak.close()
+	if len(uu) < 1:
+		global uu
+		uu = uuid.uuid4().hex;
+		ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/uuid','wb')
+		print 'You have been assigned the following eser repository ID: '+uu
+		ax.write(uu)
+		ax.close()
 except:
 	pass
-if len(uu) < 1:
-	uu = uuid.uuid4().hex;
-	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/uuid','wb')
-	print 'You have been assigned the following eser repository ID: '+uu
-	ax.write(uu)
-	ax.close()
 
 ad = raw_input('Type y and press enter if you want to make a new snapshot, or press enter for a patch: ');
 if ad == 'y':
-	snapshot = true;
+	snapshot = True;
 	run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
 	run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
 	run('tar -cvz --format pax -f Archive.snapshot.'+ltime+'.egz -C '+pwd+' ./')
@@ -189,6 +194,7 @@ if ad == 'y':
 	run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase Archive.snapshot.'+ltime+'.egz')
 	run('mv -v Archive.snapshot.'+ltime+'.egz.gpg Archive.snapshot.'+ltime+'.egze')
 	#Starting upload to IA
+	global uu
 	identifier='Collistar_eser_db_'+uu+'_'+ltime
 	log_add('Uploading: ' + item[0])
 	time.sleep(0.1)
@@ -236,21 +242,22 @@ if ad == 'y':
 	time.sleep(10)
 	c = c+1
 	#Done upload to IA
-	os.system('rm ./Archive/Meta/Revisions/Archive.sserdb/latest')
-	run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.sserdb/latest')
+	os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latest')
+	run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latest')
 else:
-	snapshot = false;
+	snapshot = False;
 	#http://unix.stackexchange.com/questions/25195/how-do-i-save-changed-files
 	run('rsync --only-write-batch=Archive.patch.'+ltime+'.egp -av --progress --delete --checksum Archive/ Archive.stable/')
 	run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase Archive.patch.'+ltime+'.egp')
 	run('mv -v Archive.patch.'+ltime+'.egp.gpg Archive.patch.'+ltime+'.egpe')
 	run('rm -v Archive.patch.'+ltime+'.egp')
-	ak = open('./Archive/Meta/Revisions/Archive.sserdb/latest','rb')
+	ak = open('./Archive/Meta/Revisions/Archive.eserdb/latest','rb')
 	latest = ak.read()
 	#Starting upload to IA
 	identifier='Collistar_eser_patch_'+uu+'_'+ltime
 	log_add('Uploading: ' + item[0])
 	time.sleep(0.1)
+	global uu
 	title = "Colistarr Initiative: eser_db patch "+uu+" rev. "+ltime+" for "+latest
 	description = "Colistarr Initiative: eser_db patch "+uu+" rev. "+ltime+" for "+latest
 	keywords = ['Colistarr','Colistarr Initiative','eser','eser_db','archive','snapshot', title]                        
@@ -295,5 +302,5 @@ else:
 	time.sleep(10)
 	c = c+1
 	#Done upload to IA
-	os.system('rm ./Archive/Meta/Revisions/Archive.sserdb/latestPatch')
-	run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.sserdb/latestPatch')
+	os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latestPatch')
+	run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latestPatch')
