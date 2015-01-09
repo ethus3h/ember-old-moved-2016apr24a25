@@ -220,6 +220,9 @@ for item in records:
 	if os.path.isfile('./Meta/Revisions/Archive.sserdb/hashesdb/'+item[1]):
 		break; # file already in repo
 	else: # new file since last snapshot
+		if not os.path.isfile(item[0]):
+			print 'File has disappeared!:'+item[0]
+			break;
 		run('cp -v '+item[0]+' ./Meta/Revisions/Archive.sserdb/encdb/enctmp')
 		run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./Meta/Revisions/Archive.sserdb/meta/passphrase ./Meta/Revisions/Archive.sserdb/encdb/enctmp')
 		try:
