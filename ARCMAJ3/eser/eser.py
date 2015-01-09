@@ -243,15 +243,15 @@ if ad == 'y':
 	uploadFetchResultB = run(curlline)[0]
 	log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
 	if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
-	  log_add('Removing file\n')
-	  try:
-		run('rm -v Archive.snapshot.'+ltime+'.egze')
-		os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latest')
-		run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latest')
-		os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latestSnapshot')
-		run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latestSnapshot')
-	  except:
-		  traceback.print_exc()
+		log_add('Removing file\n')
+		try:
+			run('rm -v Archive.snapshot.'+ltime+'.egze')
+			os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latest')
+			run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latest')
+			os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latestSnapshot')
+			run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latestSnapshot')
+		except:
+			traceback.print_exc()
 	else:
 	  log_add('ERROR UPLOADING FILE. THIS IS NOT GOOD.')
 	  sys.exit()
@@ -302,15 +302,15 @@ else:
 	uploadFetchResultB = run(curlline)[0]
 	log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
 	if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
-	  log_add('Removing file\n')
-	try:
-		run('rm -v Archive.patch.'+ltime+'.egpe')
-		run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
-		run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
-		os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latest')
-		run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latest')
-	except:
-		traceback.print_exc()
+		log_add('Removing file\n')
+		try:
+			run('rm -v Archive.patch.'+ltime+'.egpe')
+			run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
+			run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
+			os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latest')
+			run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latest')
+		except:
+			traceback.print_exc()
 	else:
 	  log_add('ERROR UPLOADING FILE. THIS IS NOT GOOD.')
 	  sys.exit()
