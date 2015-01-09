@@ -45,39 +45,39 @@ import sys
 print 'Note that this app should have at LEAST 2x the size of the biggest file of free space.'
 ad = ''
 try:
-	ak = open('../Archive.sserdb/meta/latest','rb')
+	ak = open('./Meta/Revisions/Archive.sserdb/meta/latest','rb')
 	ad = ak.read()
 	ak.close()
 except:
 	pass
 if len(ad) < 1:
-	os.system('mkdir ../Archive.sserdb')
-	os.system('mkdir ../Archive.sserdb/meta/')
-	os.system('mkdir ../Archive.sserdb/snapshots/')
-	os.system('mkdir ../Archive.sserdb/snapshots/disabled/')
-	os.system('mkdir ../Archive.sserdb/ehdb/')
-	os.system('mkdir ../Archive.sserdb/encdb/')
-	os.system('mkdir ../Archive.sserdb/hashesdb/')
+	os.system('mkdir ./Meta/Revisions/Archive.sserdb')
+	os.system('mkdir ./Meta/Revisions/Archive.sserdb/meta/')
+	os.system('mkdir ./Meta/Revisions/Archive.sserdb/snapshots/')
+	os.system('mkdir ./Meta/Revisions/Archive.sserdb/snapshots/disabled/')
+	os.system('mkdir ./Meta/Revisions/Archive.sserdb/ehdb/')
+	os.system('mkdir ./Meta/Revisions/Archive.sserdb/encdb/')
+	os.system('mkdir ./Meta/Revisions/Archive.sserdb/hashesdb/')
 	os.system('mkdir ./Meta/')
 	os.system('mkdir ./Meta/Revisions/')
 	os.system('mkdir ./Meta/Revisions/Logs/')
 	ad = '0';
 	print 'Initializing new sser repository'
-	ax = open('../Archive.sserdb/meta/latest','wb')
+	ax = open('./Meta/Revisions/Archive.sserdb/meta/latest','wb')
 	ax.write(ad)
 	ax.close()
 	ad = uuid.uuid4().hex;
-	ax = open('../Archive.sserdb/meta/uuid','wb')
+	ax = open('./Meta/Revisions/Archive.sserdb/meta/uuid','wb')
 	ax.write(ad)
 	ax.close()
 	print 'You have been assigned the following sser repository ID: '+ad
 	ak = raw_input('access key? ');
 	sk = raw_input('secret key? ');
 	pp = raw_input('passphrase? ');
-	ax = open('../Archive.sserdb/meta/conf','wb')
+	ax = open('./Meta/Revisions/Archive.sserdb/meta/conf','wb')
 	ax.write(ak+"\n"+sk)
 	ax.close()
-	ax = open('../Archive.sserdb/meta/passphrase','wb')
+	ax = open('./Meta/Revisions/Archive.sserdb/meta/passphrase','wb')
 	ax.write(pp)
 	ax.close()
 
@@ -152,30 +152,30 @@ def run(command):
     return [commandResult,commandRes]
 #Done command definitions
 
-previousRevision=int(open('../Archive.sserdb/meta/latest', 'r').readlines()[0])
+previousRevision=int(open('./Meta/Revisions/Archive.sserdb/meta/latest', 'r').readlines()[0])
 thisRevision = str(previousRevision + 1)
-uuid = open('../Archive.sserdb/meta/uuid', 'r').readlines()[0]
-accesskey = open('../Archive.sserdb/meta/conf', 'r').readlines()[0].strip()
-secretkey = open('../Archive.sserdb/meta/conf', 'r').readlines()[1].strip()
-passphrase = open('../Archive.sserdb/meta/passphrase', 'r').readlines()[0].strip()
+uuid = open('./Meta/Revisions/Archive.sserdb/meta/uuid', 'r').readlines()[0]
+accesskey = open('./Meta/Revisions/Archive.sserdb/meta/conf', 'r').readlines()[0].strip()
+secretkey = open('./Meta/Revisions/Archive.sserdb/meta/conf', 'r').readlines()[1].strip()
+passphrase = open('./Meta/Revisions/Archive.sserdb/meta/passphrase', 'r').readlines()[0].strip()
 collection = 'coalproject'
 
 try:
-	run('mv -v ../Archive.sserdb/snapshots/'+thisRevision+' ../Archive.sserdb/snapshots/disabled/'+thisRevision+'_'+ltime)
+	run('mv -v ./Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+' ./Meta/Revisions/Archive.sserdb/snapshots/disabled/'+thisRevision+'_'+ltime)
 except:
 	pass
 errored = False #doesn't matter if there were errors before here
-run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision)
-run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision+'/d/')
-run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision+'/idx/')
-run('mkdir -v ../Archive.sserdb/snapshots/'+thisRevision+'/meta/')
-run('mkdir -v ../Archive.sserdb/encdb/')
+run('mkdir -v ./Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision)
+run('mkdir -v ./Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+'/d/')
+run('mkdir -v ./Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+'/idx/')
+run('mkdir -v ./Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+'/meta/')
+run('mkdir -v ./Meta/Revisions/Archive.sserdb/encdb/')
 
 #Start getting time
 run('pwd')
-run('echo "'+ltime+'" > ../Archive.sserdb/snapshots/'+thisRevision+'/localTime')
+run('echo "'+ltime+'" > ./Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+'/localTime')
 timefile = urllib.URLopener()
-timefn = '../Archive.sserdb/snapshots/'+thisRevision+'/remoteTime'
+timefn = './Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+'/remoteTime'
 try:
 	timefile.retrieve("http://www.timeapi.org/utc/now?format=%25Y.%25m.%25d.%25H.%25M.%25S.%25Z", timefn)
 except:
@@ -217,19 +217,19 @@ def printNestedList(nestedList):
 log_add('List: ')
 printNestedList(records)
 for item in records:
-	if os.path.isfile('../Archive.sserdb/hashesdb/'+item[1]):
+	if os.path.isfile('./Meta/Revisions/Archive.sserdb/hashesdb/'+item[1]):
 		break; # file already in repo
 	else: # new file since last snapshot
-		run('cp -v '+item[0]+' ../Archive.sserdb/encdb/enctmp')
-		run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ../Archive.sserdb/meta/passphrase ../Archive.sserdb/encdb/enctmp')
+		run('cp -v '+item[0]+' ./Meta/Revisions/Archive.sserdb/encdb/enctmp')
+		run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./Meta/Revisions/Archive.sserdb/meta/passphrase ./Meta/Revisions/Archive.sserdb/encdb/enctmp')
 		try:
-			run('rm -v ../Archive.sserdb/encdb/enctmp')
+			run('rm -v ./Meta/Revisions/Archive.sserdb/encdb/enctmp')
 		except:
 			traceback.print_exc()
-		run('mv -v ../Archive.sserdb/encdb/enctmp.gpg ../Archive.sserdb/encdb/enctmp')
-		encHash = os.popen('shasum --algorithm 512 ../Archive.sserdb/encdb/enctmp').read()[:128]
-		run('echo "'+encHash+'" > ../Archive.sserdb/hashesdb/'+item[1])
-		run('ln ../Archive.sserdb/encdb/enctmp ../Archive.sserdb/encdb/'+encHash)
+		run('mv -v ./Meta/Revisions/Archive.sserdb/encdb/enctmp.gpg ./Meta/Revisions/Archive.sserdb/encdb/enctmp')
+		encHash = os.popen('shasum --algorithm 512 ./Meta/Revisions/Archive.sserdb/encdb/enctmp').read()[:128]
+		run('echo "'+encHash+'" > ./Meta/Revisions/Archive.sserdb/hashesdb/'+item[1])
+		run('ln ./Meta/Revisions/Archive.sserdb/encdb/enctmp ./Meta/Revisions/Archive.sserdb/encdb/'+encHash)
 
 		#Starting upload to IA
 		identifier='Collistar_sser_db_'+uuid+'_'+thisRevision
@@ -238,7 +238,7 @@ for item in records:
         title = "Colistarr Initiative: sser_db "+uuid+" rev. "+thisRevision
         description = "Colistarr Initiative: sser_db "+uuid+" rev. "+thisRevision
         keywords = ['Colistarr','Colistarr Initiative','sser','sser_db','archive','snapshot', title]                        
-    	barrelSize = int(os.path.getsize('../Archive.sserdb/encdb/'+encHash))
+    	barrelSize = int(os.path.getsize('./Meta/Revisions/Archive.sserdb/encdb/'+encHash))
     	# http://curl.haxx.se/docs/manpage.html
         curl = ['curl', '--location', 
         	'--retry', '7',
@@ -246,7 +246,7 @@ for item in records:
         	#'--max-time', '15', #FOR TESTING ONLY!!!! TODO remove
             '--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
             '--header', "'x-archive-queue-derive:0'",
-            '--header', "'x-archive-size-hint:%d'" % (os.path.getsize('../Archive.sserdb/encdb/'+encHash)), 
+            '--header', "'x-archive-size-hint:%d'" % (os.path.getsize('./Meta/Revisions/Archive.sserdb/encdb/'+encHash)), 
             '--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
         ]
         if c == 0:
@@ -257,7 +257,7 @@ for item in records:
                 '--header', "'x-archive-meta-subject:%s'" % ('; '.join(keywordvision
 keywords = ['Colistarr','Colistarr Initiative','sser','sser_snapshot','archive','snapshot', uuid, uuid+" rev. "+thisRevision, title]                   '--header', "'x-archive-meta-mediatype:data'",
             ]
-        curl += ['--upload-file', "%s" % ('../Archive.sserdb/encdb/'+encHash),
+        curl += ['--upload-file', "%s" % ('./Meta/Revisions/Archive.sserdb/encdb/'+encHash),
                 "http://s3.us.archive.org/" + identifier + '/' + encHash # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
         ]
         curlline = ' '.join(curl)
@@ -269,7 +269,7 @@ keywords = ['Colistarr','Colistarr Initiative','sser','sser_snapshot','archive',
         if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
             log_add('Removing enctmp file\n')
             try:
-            	run('rm -v ../Archive.sserdb/encdb/enctmp')
+            	run('rm -v ./Meta/Revisions/Archive.sserdb/encdb/enctmp')
             except:
             	traceback.print_exc()
         else:
@@ -280,19 +280,17 @@ keywords = ['Colistarr','Colistarr Initiative','sser','sser_snapshot','archive',
         c = c+1
         #Done upload to IA
         
-        run('echo "'+item[1]+'" > ../Archive.sserdb/ehdb/'+encHash)
-log_add(run('rm -rfv ../Archive.sserdb/encdb/')[0])
-# http://www.linuxquestions.org/questions/linux-general-1/how-to-copy-a-directory-tree-withoutitem in recordsles-in-it-10797/
-run('find . -type d -exec mkdir -p ../Archive.sserdb/snapshots/'+thisRevision+'/d/{} \;')
-# 6. foreach {records} as {item}:
-#   I. {item.name} <- "htt-s ../Archive.sserdb/ehdb/ ../Archive.sserdb/snapshots/'+thisRevision+'/idx/ehdb/')
-run('ln -s ../Archive.sserdb/hashesdb/ ../Archive.sserdb/snapshots/'+thisRevision+'/idx/hashesdb/')
-run('ln -s ../Archive.sserdb/meta/ ../Archive.sserdb/snapshots/'+thisRevision+'/meta/')
-run('tar -cvj --dereference/Archive.sserdb/latest}++}/idx/hashesdb/ to ../Archlive.sserdb/hashesdb/
-# 9. ../.tmp.{../Archive.sserdb/uuid}.{time} <- ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/.pax().bzip2().aes256()
-# 10. Upload ../.tmp.{../Archive.sserdb/uuid}ltime)
-run('rm -v ../Archive.sserdb/.tmp.'+uuid+'.'+ltime)
-run('mv -v ../Archive.sserdb/.tmp.'+uuid+'.'+lp.{../Archive.sserdb/uuid}.{time}
+        run('echo "'+item[1]+'" > ./Meta/Revisions/Archive.sserdb/ehdb/'+encHash)
+log_add(run('rm -rfv ./Meta/Revisions/Archive.sserdb/encdb/')[0])
+run('find . -type d -exec mkdir -p ./Meta/Revisionsions/linux-general-1/how-to-copy-a-directory-tree-withoutitem in recordsles-in-it-10797/
+run('find . -type d -exec mkdir -p ../Archive.sserdb/snapshots/'+thisRevision+'/d/{} /Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+'/d/'+item[0])
+run('ln -s ./Meta/Revisions/Archive.sserdb/ehdb/ ./Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+'/idx/ehdb/')
+run('ln -s ./Meta/Revisions/Archive.sserdb/hashesdb/ ./Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+'/idx/hashesdb/')
+run('ln -s ./Meta/Revisions/Archive.sserdb/meta/ ./Meta/Revisions/Archive.sserdb/snapshots/'+thisRevision+'/meta/')
+run('tar -cvj --dereference/Archive.sserdb/la/Meta/Revisions/Archive.sserdb/.tmp.'+uuid+'.'+ltime+' -C . '+'./Meta/Revisionsb/
+# 9. ../.tmp.{../Archive.sserdb/uuid}.{time} <- ../Archive.sserdb/snapshots/{{../Archive.sserdb/latest}++}/.p/Meta/Revisions/Archive.sserdb/meta/passphrase ./Meta/Revisions/Archive.sserdb/.tmp.'+uuid+'.'+ltime)
+run('rm -v ./Meta/Revisions/Archive.sserdb/.tmp.'+uuid+'.'+ltime)
+run('mv -v ./Meta/Revisions/Archive.sserdb/.tmp.'+uuid+'.'+lp.{../Archive.sserdb/uuid}.{time}
 # 12. Move ../.tmp.{../Archive.sserdb/uuid}.{time} to ./Meta/Revisions/{{../Archive.sserdb/latest}++}.sserrev
 # 13. ../Archiv./Meta/Revisions/'+thisRevision+'.sserrev'test++;
 for records as item:
@@ -322,5 +320,6 @@ if c == 0:
 	curl += ['--header', "'x-archive-meta-mediatype:data'",
 		'--header', "'x-archive-meta-collection:%s'" % (collection),
 		'--header', "'x-archive-meta-title:%s'" % (title),
-		'--hos.system('rm ../Archive.sserdb/latest'--header', "'x-archive-meta-description:%s'" % (description),
+		'--hos.system('rm ./Meta/Revisions/Archive.sserdb/latest')
+	run('echo "'+thisRevision+'" > ./Meta/Revisionsion:%s'" % (description),
 		'--header', "'x-archive-meta-subject:%s'" % ('; '.join(wikikeys)), # Keywords should be separated by 
