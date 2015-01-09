@@ -257,7 +257,6 @@ if ad == 'y':
 	  sys.exit()
 	errored = False
 	time.sleep(10)
-	c = c+1
 	#Done upload to IA
 else:
 	snapshot = False;
