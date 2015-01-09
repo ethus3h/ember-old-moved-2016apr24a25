@@ -159,6 +159,8 @@ if len(ad) < 1:
 	ax = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf','wb')
 	ax.write(ak+"\n"+sk)
 	ax.close()
+accesskey = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf', 'r').readlines()[0].strip()
+secretkey = open('./Archive/Meta/Revisions/Archive.eserdb/meta/conf', 'r').readlines()[1].strip()
 
 try:
 	ak = open('./Archive/Meta/Revisions/Archive.eserdb/meta/passphrase','rb')
@@ -225,14 +227,13 @@ if ad == 'y':
 	  '--header', "'x-archive-size-hint:%d'" % (os.path.getsize('Archive.snapshot.'+ltime+'.egze')), 
 	  '--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
 	]
-	if c == 0:
-	  curl += ['--header', "'x-archive-meta-mediatype:data'",
-		  '--header', "'x-archive-meta-collection:%s'" % (collection),
+	curl += ['--header', "'x-archive-meta-mediatype:data'",
+		  '--header', "'x-archive-meta-collection:%s'" % ('coalproject'),
 		  '--header', "'x-archive-meta-title:%s'" % (title),
 		  '--header', "'x-archive-meta-description:%s'" % (description),
 		  '--header', "'x-archive-meta-subject:%s'" % ('; '.join(keywords)), # Keywords should be separated by ; but it doesn't matter much; the alternative is to set one per field with subject[0], subject[1], ...
 		  '--header', "'x-archive-meta-mediatype:data'",
-	  ]
+	]
 	curl += ['--upload-file', "%s" % ('Archive.snapshot.'+ltime+'.egze'),
 		  "http://s3.us.archive.org/" + identifier + '/' + 'Archive.snapshot.'+ltime+'.egze' # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
 	]
@@ -285,14 +286,13 @@ else:
 	  '--header', "'x-archive-size-hint:%d'" % (os.path.getsize('Archive.patch.'+ltime+'.egpe')), 
 	  '--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
 	]
-	if c == 0:
-	  curl += ['--header', "'x-archive-meta-mediatype:data'",
-		  '--header', "'x-archive-meta-collection:%s'" % (collection),
+	curl += ['--header', "'x-archive-meta-mediatype:data'",
+		  '--header', "'x-archive-meta-collection:%s'" % ('coalproject'),
 		  '--header', "'x-archive-meta-title:%s'" % (title),
 		  '--header', "'x-archive-meta-description:%s'" % (description),
 		  '--header', "'x-archive-meta-subject:%s'" % ('; '.join(keywords)), # Keywords should be separated by ; but it doesn't matter much; the alternative is to set one per field with subject[0], subject[1], ...
 		  '--header', "'x-archive-meta-mediatype:data'",
-	  ]
+	]
 	curl += ['--upload-file', "%s" % ('Archive.patch.'+ltime+'.egpe'),
 		  "http://s3.us.archive.org/" + identifier + '/' + 'Archive.patch.'+ltime+'.egpe' # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
 	]
