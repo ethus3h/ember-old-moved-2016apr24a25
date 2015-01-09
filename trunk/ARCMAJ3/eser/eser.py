@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # eser — the Ember SnapshottER
-# Version 0.1, 2015-jan-08 and 2015-jan-08a09.
+# Version 0.11, 2015-jan-09.
 #
 # Copyright 2014 Elliot Wallace
 # Portions copyright (C) 2011-2012 WikiTeam
@@ -245,7 +245,11 @@ if ad == 'y':
 	if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
 	  log_add('Removing file\n')
 	  try:
-		  run('rm -v Archive.snapshot.'+ltime+'.egze')
+		run('rm -v Archive.snapshot.'+ltime+'.egze')
+		os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latest')
+		run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latest')
+		os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latestSnapshot')
+		run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latestSnapshot')
 	  except:
 		  traceback.print_exc()
 	else:
@@ -255,8 +259,6 @@ if ad == 'y':
 	time.sleep(10)
 	c = c+1
 	#Done upload to IA
-	os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latest')
-	run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latest')
 else:
 	snapshot = False;
 	#http://unix.stackexchange.com/questions/25195/how-do-i-save-changed-files
@@ -302,15 +304,17 @@ else:
 	log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
 	if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
 	  log_add('Removing file\n')
-	  try:
-		  run('rm -v Archive.patch.'+ltime+'.egpe')
-	  except:
-		  traceback.print_exc()
+	try:
+		run('rm -v Archive.patch.'+ltime+'.egpe')
+		run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
+		run('rsync -av --progress --delete --checksum ./Archive/ ./Archive.stable/')
+		os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latest')
+		run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latest')
+	except:
+		traceback.print_exc()
 	else:
 	  log_add('ERROR UPLOADING FILE. THIS IS NOT GOOD.')
 	  sys.exit()
 	errored = False
 	time.sleep(10)
 	#Done upload to IA
-	os.system('rm ./Archive/Meta/Revisions/Archive.eserdb/latestPatch')
-	run('echo "'+ltime+'" > ./Archive/Meta/Revisions/Archive.eserdb/latestPatch')
