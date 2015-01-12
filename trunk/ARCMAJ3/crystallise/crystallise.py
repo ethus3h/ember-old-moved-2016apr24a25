@@ -326,7 +326,7 @@ if td == 'y':
 					]
 		
 				curl += ['--upload-file', "%s" % (dump),
-						"http://s3.us.archive.org/" + dumpid + '/' + dump # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
+						"http://s3.us.archive.org/" + dumpid[:99] + '/' + dump # It could happen that the identifier is taken by another user; only wikiteam collection admins will be able to upload more files to it, curl will fail immediately and get a permissions error by s3.
 				]
 				curlline = ' '.join(curl)
 				log_add('Executing curl request: ')
