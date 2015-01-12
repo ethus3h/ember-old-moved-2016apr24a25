@@ -230,9 +230,9 @@ if td == 'y':
 			global hour
 			global minute
 			global second
-			run('mkdir /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/');
-			run('cp -Rv '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/ /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/');
-			run('mv -v /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pdx');
+			run('mkdir /Volumes/disk2s1/FuturamerlinMultimediaArchive/Reference/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/');
+			run('cp -Rv '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/ /Volumes/disk2s1/FuturamerlinMultimediaArchive/Reference/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/');
+			run('mv -v /Volumes/disk2s1/FuturamerlinMultimediaArchive/Reference/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx /Volumes/disk2s1/FuturamerlinMultimediaArchive/Reference/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pdx');
 			log_add('Note that some warnings from mv that look like "mv: rename /blahblahblah to /blahblahblah: No such file or directory" are ok here.')
 			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pbz '+ad+'/Packed-'+now+'.pbz')
 			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pdx '+ad+'/Packed-'+now+'.pdx')
@@ -381,7 +381,7 @@ if td == 'y':
 			#help from http://askubuntu.com/questions/153770/how-to-have-find-not-return-the-current-directory
 			run('find `pwd` -type d -mindepth 1 -not -name \'.pbz-meta-*\' -exec rm -rv {} + 2>/dev/null')
 			log_add('Sleeping 10 seconds')
-			run('mv ./log-'+timeRunning+'.log /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
+			run('mv ./log-'+timeRunning+'.log /Volumes/disk2s1/FuturamerlinMultimediaArchive/Reference/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
 			time.sleep(10)
 		main()
 log_add('Done.')
