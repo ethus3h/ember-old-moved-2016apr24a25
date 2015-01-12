@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # Crystallise
 # Version:
-version = '1.01.4'
-#, 2014.dec.13, based on WARCdealer 1.2 and pbz 9.
+version = '1.01.5'
+#, 2015.jan.11, based on WARCdealer 1.2 and pbz 9.
 #IMPORTANT USAGE NOTES: 1) RUN AS ROOT 
 # 2) MAKE SURE YOU HAVE ENOUGH DISK SPACE (4X INPUT), OR IT WILL DESTROY YOUR DATA
 # 3) DON'T INTERRUPT IT, OR IT WILL DESTROY YOUR DATA
@@ -122,7 +122,7 @@ td = raw_input("Still do it? [y]es/[n]o ")
 if td == 'y':
 	log_add(len(glob.glob('*')))
 	if len(glob.glob('*')) > 3:
-		ccgo = os.path.expanduser("~/.pbzc")
+		ccgo = os.path.expanduser("/Volumes/disk2s1/.pbzc")
 		ad = ''
 		try:
 			ak = open(ccgo,'rb')
@@ -132,11 +132,11 @@ if td == 'y':
 			pass
 		if len(ad) < 1:
 			ad = raw_input('Give a name / description to this computer: ');
-			run('rm -v ~/.pbzc 2> /dev/null')
+			run('rm -v /Volumes/disk2s1/.pbzc 2> /dev/null')
 			ax = open(ccgo,'wb')
 			ax.write(ad)
 			ax.close()
-		ccgo = os.path.expanduser("~/.pbziid")
+		ccgo = os.path.expanduser("/Volumes/disk2s1/.pbziid")
 		ad = ''
 		try:
 			ak = open(ccgo,'rb')
@@ -147,7 +147,7 @@ if td == 'y':
 		if len(ad) < 1:
 			ad = uuid.uuid4().hex;
 			log_add('You have been assigned the following pbz installation ID: '+ad)
-			run('rm -v ~/.pbziid 2> /dev/null')
+			run('rm -v /Volumes/disk2s1/.pbziid 2> /dev/null')
 			ax = open(ccgo,'wb')
 			ax.write(ad)
 			ax.close()
@@ -159,7 +159,7 @@ if td == 'y':
 			log_add('Outputting to: '+opd)
 			return opr
 		def enci():
-			cfgp = os.path.expanduser("~/.pbz")
+			cfgp = os.path.expanduser("/Volumes/disk2s1/.pbz")
 			ad = ''
 			try:
 				ak = open(cfgp,'rb')
@@ -169,7 +169,7 @@ if td == 'y':
 				pass
 			if len(ad) < 1:
 				ad = raw_input('confirm authkey? ');
-				run('rm -v ~/.pbz 2> /dev/null')
+				run('rm -v /Volumes/disk2s1/.pbz 2> /dev/null')
 				ax = open(cfgp,'wb')
 				ax.write(ad)
 				ax.close()
@@ -208,13 +208,13 @@ if td == 'y':
 			run('bzip2 '+of+'.pdx')
 			run('tar -cvj --format pax -f '+of+'.pbz '+inf)
 		def encrypt(of):
-			run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ~/.pbz '+of+'.pbz')
+			run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file /Volumes/disk2s1/.pbz '+of+'.pbz')
 			run('mv -v '+of+'.pbz.gpg '+of+'.pbze')
 			run('rm -v '+of+'.pbz')
-			run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ~/.pbz '+of+'.pmbz')
+			run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file /Volumes/disk2s1/.pbz '+of+'.pmbz')
 			run('mv -v '+of+'.pmbz.gpg '+of+'.pmbze')
 			run('rm -v '+of+'.pmbz')
-			run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ~/.pbz '+of+'.pdx.bz2')
+			run('gpg --yes -c --cipher-algo AES256 --batch --passphrase-file /Volumes/disk2s1/.pbz '+of+'.pdx.bz2')
 			run('mv -v '+of+'.pdx.bz2.gpg '+of+'.pdxe')
 			run('rm -v '+of+'.pdx.bz2')
 		def finish():
@@ -230,9 +230,9 @@ if td == 'y':
 			global hour
 			global minute
 			global second
-			run('mkdir ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/');
-			run('cp -Rv '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/ ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/');
-			run('mv -v ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pdx');
+			run('mkdir /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/');
+			run('cp -Rv '+inf+'/.pbz-meta-'+now+'.AddedToPackedDirOnPack.pmb/ /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/');
+			run('mv -v /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pmb/.Packed-'+now+'.AddedToPackedDirOnPack.pdx /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/Packed-'+now+'.pdx');
 			log_add('Note that some warnings from mv that look like "mv: rename /blahblahblah to /blahblahblah: No such file or directory" are ok here.')
 			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pbz '+ad+'/Packed-'+now+'.pbz')
 			run('mv -v '+ad+'/.tmp.Packed-'+now+'.pdx '+ad+'/Packed-'+now+'.pdx')
@@ -245,8 +245,8 @@ if td == 'y':
 		#od = raw_input('new output directory? (have 30gb free space for it there) ')
 		od = ''
 		#od = os.path.expanduser(od)
-		cfgo = os.path.expanduser("~/.pbzl")
-		run('rm -v ~/.pbzl 2> /dev/null')
+		cfgo = os.path.expanduser("/Volumes/disk2s1/.pbzl")
+		run('rm -v /Volumes/disk2s1/.pbzl 2> /dev/null')
 		ax = open(cfgo,'wb')
 		ax.write(od)
 		ax.close()
@@ -381,7 +381,7 @@ if td == 'y':
 			#help from http://askubuntu.com/questions/153770/how-to-have-find-not-return-the-current-directory
 			run('find `pwd` -type d -mindepth 1 -not -name \'.pbz-meta-*\' -exec rm -rv {} + 2>/dev/null')
 			log_add('Sleeping 10 seconds')
-			run('mv ./log-'+timeRunning+'.log ~/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
+			run('mv ./log-'+timeRunning+'.log /Volumes/disk2s1/FuturamerlinMultimediaArchive/Nonfiction/Data/ColistarrCollectionIndex/\('+year+'-'+month+'-'+day+'-'+hour+'-'+minute+'-'+second+'\)\ Crystallise_ColistarrPack_'+title+'_' + uuidG +'.' +timeRunning+'/')
 			time.sleep(10)
 		main()
 log_add('Done.')
