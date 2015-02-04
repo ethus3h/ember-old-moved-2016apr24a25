@@ -65,8 +65,12 @@
 
 
 /*  General CSS*/
+html {
+        	height: 100% !important;
+}
 body{
     background: #d5e3cf;
+        	height: 100% !important;
 }
 
 a {
@@ -291,6 +295,7 @@ box-shadow: 0px 0px 23px 0px rgba(255,255,255,1);
 /*  Main  */
 .main{
     width: 100%;
+    max-width: 62em;
     height: 100%;
     padding-left: 300px;
     -moz-box-sizing: border-box;
@@ -298,7 +303,7 @@ box-shadow: 0px 0px 23px 0px rgba(255,255,255,1);
     box-sizing: border-box;
     position: relative;
     z-index: 55;
-    background: #f6f6f6;
+    background: #d5e3cf;
     clear: both;
 }
 
@@ -311,7 +316,7 @@ box-shadow: 0px 0px 23px 0px rgba(255,255,255,1);
 /*  Home/portfolio  */
 .main .work{
     display: block;
-    width: 33.33333333333333%;
+    width: 50%;
     height: auto;
     float: left;
     position: relative;
@@ -330,7 +335,7 @@ box-shadow: 0px 0px 23px 0px rgba(255,255,255,1);
     height: 100%;
     top: 0; 
     left: 0;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.2);
     opacity: 0;
 }
 
@@ -454,12 +459,13 @@ box-shadow: 0px 0px 23px 0px rgba(255,255,255,1);
 
 .content{
     color: #4b4848;
+    max-width: 55em;
     font-family: "raleway-regular", arial;
     font-size: 15px;
     line-height: 22px;
     padding: 60px 30px;
     background: #fff;
-
+	height: 100% !important;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -582,6 +588,11 @@ box-shadow: 0px 0px 23px 0px rgba(255,255,255,1);
     header .close_menu{
         float: right;
         margin: 30px 30px 0 0;
+        background-color: #000000 !important;
+            -webkit-box-shadow: 0px 0px 23px 0px rgba(0,0,0,1);
+-moz-box-shadow: 0px 0px 23px 0px rgba(0,0,0,1);
+box-shadow: 0px 0px 23px 0px rgba(0,0,0,1);
+         
     }
     header nav ul{
         list-style: none;
@@ -628,6 +639,7 @@ box-shadow: 0px 0px 23px 0px rgba(255,255,255,1);
 
 @media (max-width:550px){
      .main .work{
-        width: 100%;
+     width: 50%;
+       /* width: 100%; */
     }
 }
