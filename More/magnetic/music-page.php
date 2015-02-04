@@ -1,6 +1,9 @@
 <?php
 #Music page. Version 1, 2015feb03a04.
-
+#from http://stackoverflow.com/questions/845021/how-to-get-useful-error-messages-in-php
+ini_set('display_startup_errors',1);
+error_reporting(-1);
+ini_set('display_errors', 1);
 $fragmentA = <<<'EOD'
 <!doctype html>
 <html>
@@ -701,15 +704,15 @@ EOD;
       */
 //        <img class="musicthumb" src="http://futuramerlin.com/d/s/music/r/a/fullmoon/t1.png" alt="Full Moon" onClick="hideAll();document.getElementById('fullmoon').style.display='block';">
 
-$releases = [
-0 => ["test release", "identifier", "date"]
-]
+$releases = array(
+0 => array("test release", "identifier", "date")
+);
 
-$tracks = [
-[0, "test track 1", "filename", "3.00"]
-[0, "test track 2", "filename", "3.00"]
+$tracks = array(
+array(0, "test track 1", "filename", "3.00"),
+array(0, "test track 2", "filename", "3.00")
 
-]
+);
 echo $fragmentA;
 foreach ($releases as $id=>$release) {
 echo '<img class="musicthumb" src="http://futuramerlin.com/d/s/music/r/a/'.$release[1].'/t1.png" alt="'.$release[0].'" onClick="hideAll();document.getElementById(\'release'.$id.'\').style.display=\'block\';">';
