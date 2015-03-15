@@ -16,6 +16,9 @@ ini_set("display_errors",1);
 		if(!isset($_REQUEST[$name])) {
 			return new Exception('Unset variable');
 		}
+		else {
+			return $_REQUEST[$name];
+		}
 	}
 	
 	function md5s($data) { 
@@ -95,13 +98,13 @@ ini_set("display_errors",1);
 	}
 	else {
 		switch($action) {
-			case 'showIndex':
+			case "showIndex":
 				showIndex();
 				break;
-			case 'showTests':
+			case "showTests":
 				showTests();
 				break;
-			case 'showTestEDFDocument':
+			case "showTestEDFDocument":
 				showTestEDFDocument();
 				break;
 			default:
