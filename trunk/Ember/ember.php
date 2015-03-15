@@ -1,11 +1,14 @@
 <?php
 
-# 2015mar11, 1st version
+# Header and setup
+{
+# 2015mar14, version 2
 
 #based on the other ember.php, version 8-0.91.44
 error_reporting(E_ALL);
 ini_set("display_errors",1);
-echo "hello";
+}
+
 # 0. Set up utilitarian functions that I need.
 {
 	function rq($name) {
@@ -15,6 +18,7 @@ echo "hello";
 		}
 	}
 }
+
 # 1. Set up procedures I'll use.
 {
 	#Code snippets
@@ -35,6 +39,7 @@ echo "hello";
 		}
 	}
 }
+
 # 2. Determine what I'm supposed to do
 {
 	$action = rq('action');
