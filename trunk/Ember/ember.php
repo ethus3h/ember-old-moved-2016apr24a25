@@ -11,7 +11,12 @@
 	ini_set("display_errors",1);
 	
 	$formats = array(
-		"ascii" => array("ASCII text","*.txt","Y (pending)","Y (pending)","No notes at this time"),
+		"dc" => array("Ember Document Format ASCII Dc List","EDF Dc List","*.edc","No","No","This is Ember's native \"pivot\" format"),
+		"edf_latest" => array("Ember Document Format, latest version (updates). Currently an alias of edf_1_0_44.","Ember Document Format","*.edf","No","No","No notes at this time"),
+		"ascii" => array("ASCII text","Legacy text encodings","*.txt","Partial","No","No notes at this time"),
+		"data" => array("Uninterpreted binary data, in octets","Data","*","No","No","Raw binary data cannot be read or written that is not a multiple of 8 bytes"),
+		"edf_1_0_43" => array("Ember Document Format, old, incompatible file format specified in <i>Ember</i> version 1.0.43","EDF 1.0.43 Legacy","*.edf","No","Partial","No notes at this time"),
+		"edf_1_0_44" => array("Ember Document Format, current version specified in <i>Ember</i> version 1.0.44","Ember Document Format","*.edf","No","Partial","No notes at this time"),
 		
 	);
 }
@@ -117,6 +122,15 @@
 				}
 			}
 		}
+		
+		function formatFilename($name,$format) {
+			global $formats;
+			if(array_key_exists($format,$formats)) {
+				$formatData = $formats[$format];
+				return str_replace($formatData[2],"*",$name);
+			}
+			return new Exception('Unknown format');
+		}
 	}
 	#Values
 	{
@@ -148,24 +162,6 @@
 	#Data converters
 	{
 	
-		function getExtension($format) {
-			switch($format) {
-				case 'ascii':
-					return '.txt';
-					break;
-				case 'edf_1_0_43':
-					return '.edf';
-					break;
-				case 'edf_1_0_44':
-					return '.edf';
-					break;
-				case 'latinascii':
-					return '.txt';
-					break;
-				default:
-					return new Exception('Unknown format');
-			}
-		}
 		function convert($data,$sourceFormat,$targetFormat,$options=array()) {
 			if($sourceFormat == $targetFormat) {
 				return $data;
@@ -320,19 +316,21 @@
 	#Main actions
 	{
 		function showDocumentation() {
-			createHtmlPage("Ember","<style>table, th {border:1px solid;}tr, td {border:1px dotted;}</style>");
+			createHtmlPage("Ember","<style>table, th {border:1px solid;}tr, td {border:1px dotted;} .formatDocumentationCell { background-color:#EEEE77; }</style>");
 			echo '<h1>Data formats</h1>
+			<p>Most significant entries listed at the beginning of the table; other entries sorted by type and then alphabetically</p>
 			<table>
-			<tr><th>Format</th><th>Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr>';
+			<tr><th>Format</th><th>Class</th><th class="formatDocumentationCell">Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr>';
 			global $formats;
 			foreach($formats as $format=>$traits) {
 				echo "<tr>";
 				echo "<td>".$traits[0]."</td>";
-				echo "<td>".$format."</td>";
 				echo "<td>".$traits[1]."</td>";
+				echo "<td class=\"formatDocumentationCell\">".$format."</td>";
 				echo "<td>".$traits[2]."</td>";
 				echo "<td>".$traits[3]."</td>";
 				echo "<td>".$traits[4]."</td>";
+				echo "<td>".$traits[5]."</td>";
 				echo "</tr>";
 			}
 			echo '</table>';
@@ -343,9 +341,9 @@
 			$helloWorld = getHelloWorld($format);
 			#help from http://webdesign.about.com/od/php/ht/force_download.htm
 			$filename = 'HelloWorld_'.$format.'_Generated'.date('c');
-			$extension = getExtension($format);
+			$filename = formatFilename($filename,$format);
 			$length = strlen($helloWorld);
-			header("Content-disposition: attachment; filename=".$filename.$extension);
+			header("Content-disposition: attachment; filename=".$filename);
 			header("Content-type: application/octet-stream");
 			header("Content-length: ".$length);
 			echo $helloWorld;
@@ -360,7 +358,12 @@
 		}
 		function showWelcomePage() {
 			createHtmlPage();
-			echo 'Welcome to Ember.<br>';
+			echo '<center><h1>Welcome to Ember.</h1><br>
+			<ul>
+			<li><a href="ember.php?action=showDocumentation">Documentation</a></li>
+			<li><a href="ember.php?action=showTests">Run and display tests</a></li>
+			<li><a href="ember.php?action=showHelloWorld&format=edf_1_0_44">Generate Hello World! demo file</a></li>
+			</ul></center>';
 			endHtmlPage();
 		}
 	}
