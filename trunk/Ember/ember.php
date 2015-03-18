@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015mar17
+	# 2015mar17 and 2015mar17a18
 
 	$emberVersion = "1.0.45";
 
@@ -61,76 +61,105 @@
 			$baggage_claim = new baggage_claim;
 		}
 		
-		#String functions based on Weave: str_trunc, strrposlimit, shorten
+		function getSyncFunction($database,$table,$row,$column,$identifier,$appendExtraRowIfNoneExists = false) {
+			return '<script type="text/javascript">
+				function sync_'.$identifier.'() {
+				
+					setTimeout(function () {   var elementToSync = document.getElementById("'.$identifier.'").innerHTML;
+					var elementToSync = document.getElementById("'.$identifier.'").value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
+					var send="ember.php?action=storeDataValue&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+elementToSync;
+					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
+				
+					if(!document.getElementById("'.str_replace($identifier,'row'.$row,'row'.$row+1).'"))
+					{
+						#help from http://stackoverflow.com/questions/17650776/add-remove-html-inside-div-using-javascript
+						var newRow = document.createElement("div");
+						newRow.innerHTML = \'\'
+						document.getElementById("'.$identifier.'Table").appendChild(newRow);
+					}
+            	
+            	} 
+				</script>';
+		}
+		
+		#String functions
 		{
-			function str_trunc($str, $max, $strict = TRUE, $trunc = '')
+		
+			#String functions based on Weave: str_trunc, strrposlimit, shorten
 			{
-				// Returns a trunctated version of $str up to $max chars, excluding $trunc.
-				//Not written by me.
-				// $strict = FALSE will allow longer strings to fit the last word.
-				if (strlen($str) <= $max) {
-					return $str;
-				} else {
-					if ($strict) {
-						return substr($str, 0, strrposlimit($str, ' ', 0, $max + 1)) . $trunc;
+				function str_trunc($str, $max, $strict = TRUE, $trunc = '')
+				{
+					// Returns a trunctated version of $str up to $max chars, excluding $trunc.
+					//Not written by me.
+					// $strict = FALSE will allow longer strings to fit the last word.
+					if (strlen($str) <= $max) {
+						return $str;
 					} else {
-						$strloc = strpos($str, ' ', $max);
-						if (strlen($strloc) != 0) {
-							return substr($str, 0, $strloc) . $trunc;
+						if ($strict) {
+							return substr($str, 0, strrposlimit($str, ' ', 0, $max + 1)) . $trunc;
 						} else {
-							return $str;
+							$strloc = strpos($str, ' ', $max);
+							if (strlen($strloc) != 0) {
+								return substr($str, 0, $strloc) . $trunc;
+							} else {
+								return $str;
+							}
 						}
 					}
 				}
-			}
-			function strrposlimit($haystack, $needle, $offset = 0, $limit = NULL)
-			{
-				// Works like strrpos, but allows a limit
-				//Not written by me.
-				if ($limit === NULL) {
-					return strrpos($haystack, $needle, $offset);
-				} else {
-					$search = substr($haystack, $offset, $limit);
-					return strrpos($search, $needle, 0);
-				}
-			}
-			function shorten($content)
-			{
-				//Shorten a string
-				if (strlen($content) > 32) {
-					//trim to 64 but round by words
-					$shortenedstring = str_trunc($content, 32) . "…";
-					global $baggage_claim;
-					$baggage_claim->check_luggage('Shortened', 'true');
-					if (strlen($shortenedstring) > 40) {
-						//trim to 64
-						$shortenedstring = substr($content, 0, 32) . "…";
+				function strrposlimit($haystack, $needle, $offset = 0, $limit = NULL)
+				{
+					// Works like strrpos, but allows a limit
+					//Not written by me.
+					if ($limit === NULL) {
+						return strrpos($haystack, $needle, $offset);
+					} else {
+						$search = substr($haystack, $offset, $limit);
+						return strrpos($search, $needle, 0);
 					}
-				} else {
-					$shortenedstring = $content;
-					global $baggage_claim;
-					$baggage_claim->check_luggage('Shortened', 'false');
 				}
-				if(strlen($shortenedstring)>38) {
-					return $shortenedstring;
-				}
-				else {
-					$shortenedstring = substr($content,0,64);
-					if(strlen($shortenedstring)<strlen($content)) {
-						$shortenedstring = $shortenedstring.'…';
+				function shorten($content)
+				{
+					//Shorten a string
+					if (strlen($content) > 32) {
+						//trim to 64 but round by words
+						$shortenedstring = str_trunc($content, 32) . "…";
+						global $baggage_claim;
+						$baggage_claim->check_luggage('Shortened', 'true');
+						if (strlen($shortenedstring) > 40) {
+							//trim to 64
+							$shortenedstring = substr($content, 0, 32) . "…";
+						}
+					} else {
+						$shortenedstring = $content;
+						global $baggage_claim;
+						$baggage_claim->check_luggage('Shortened', 'false');
 					}
-					return $shortenedstring;
+					if(strlen($shortenedstring)>38) {
+						return $shortenedstring;
+					}
+					else {
+						$shortenedstring = substr($content,0,64);
+						if(strlen($shortenedstring)<strlen($content)) {
+							$shortenedstring = $shortenedstring.'…';
+						}
+						return $shortenedstring;
+					}
 				}
 			}
-		}
 		
-		function formatFilename($name,$format) {
-			global $formats;
-			if(array_key_exists($format,$formats)) {
-				$formatData = $formats[$format];
-				return str_replace($formatData[2],"*",$name);
+			function formatFilename($name,$format) {
+				global $formats;
+				if(array_key_exists($format,$formats)) {
+					$formatData = $formats[$format];
+					return str_replace($formatData[2],"*",$name);
+				}
+				return new Exception('Unknown format');
 			}
-			return new Exception('Unknown format');
+		
+			function html_sanitize($data) {
+				return htmlspecialchars($data);
+			}
 		}
 		
 		#Database functions
@@ -139,6 +168,8 @@
 				#partly based on FractureDB
 				function query($query)
 				{
+					#Make sure $this->databaseName is set
+					$this->databaseName = $this->databaseName;
 					$dbh = $this->db;
 					$this->queryCount++;
 					$result = $dbh->prepare($query);
@@ -159,20 +190,34 @@
 				
 				function displayTable($tableName,$regionIdentifier) {
 					$data = $this->getTable($tableName);
-					#Get column names
-					{
-						$columnNames = array();
-						$i = 0;
-						foreach($data[0] as $name=>$value) {
-							$columnNames[$i] = $name;
-						}
-					}
 					foreach($data as $index=>$row) {
-						
+						echo "<tr>";
+						foreach($row as $columnName=>$value) {
+							echo '<td class="'.$regionIdentifier.'_'.$columnName.'">'.$value."</td>";
+						}
+						echo "</tr>";
 					}
 				}
 
 				function editTable($tableName,$regionIdentifier) {
+					#partly based on discosync
+					$data = $this->getTable($tableName);
+					foreach($data as $index=>$row) {
+						echo "<tr>";
+						foreach($row as $columnName=>$value) {
+							echo '<td class="'.$regionIdentifier.'_'.$columnName.'"><input type="text" id="'.$regionIdentifier.'_row'.$row['id'].'_'.$columnName.'" onkeypress="sync_'.$regionIdentifier.'_row'.$row['id'].'_'.$columnName.'();" value="'.html_sanitize($value).'"></td>';
+							echo getSyncFunction($this->databaseName,$tableName,$row['id'],$columnName,$regionIdentifier.'_row'.$row['id'].'_'.$columnName);
+						}
+						echo "</tr>";
+					}
+					echo "<tr>";
+					$previousRow = $data[-1];
+					$rowId = ($previousRow['id'])+1;
+					foreach($data[0] as $columnName=>$value) {
+						echo '<td class="'.$regionIdentifier.'_'.$columnName.'"><input type="text" id="'.$regionIdentifier.'_row'.$rowId.'_'.$columnName.'" onkeypress="sync_'.$regionIdentifier.'_row'.$rowId.'_'.$columnName.'();" value="'.html_sanitize($value).'"></td>';
+					}
+					echo "</tr>";
+					echo getSyncFunction($this->databaseName,$tableName,$rowId,$columnName,$regionIdentifier.'_row'.$rowId.'_'.$columnName,true);
 				}
 				
 				function close() {
@@ -183,6 +228,7 @@
 				#help from http://www.if-not-true-then-false.com/2012/php-pdo-sqlite3-example/?PageSpeed=noscript
 				function __construct($name) {
 					$this->db = new PDO('sqlite:'.$name);
+					$this->databaseName = $name;
 					$this->queryCount = 0;
 				}
 			}
@@ -333,7 +379,7 @@
 			return convert("Hello World!",'ascii',$format);
 		}
 		function getTableStyle() {
-			return '<style>table, th {border:1px solid;}tr, td {border:1px dotted;} .highlightedCell { background-color:#FFFFCC; }</style>';
+			return '<style>table, th {border:1px solid;}tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; }</style>';
 		}
 	}
 	#Tests
@@ -390,16 +436,13 @@
 			switch(rq('table')) {
 				case 'dcs':
 					echo '<h1>Dc Reference</h1>';
-					echo '<table>';
+					echo '<table id="dcreferenceTable">';
 					echo '<tr><th>Dc ID</th><th>Glyph</th><th>Unicode</th><th class="highlightedCell">Name</th></tr>';
-					echo $db->displayTable("dcs","dcreference");
-					foreach($db->getTable('dcs') as $id=>$data) {
-						echo "<tr>";
-						echo "<td>".$data['id']."</td>";
-						echo "<td>".$data['htmlEquiv']."</td>";
-						echo "<td>".$data['unicode']."</td>";
-						echo "<td class=\"highlightedCell\">".$data['name']."</td>";
-						echo "</tr>";
+					if(rq('editTable',true) == 'true') {
+						echo $db->editTable("dcs","dcreference");
+					}
+					else {
+						echo $db->displayTable("dcs","dcreference");
 					}
 					echo '</table>';
 					break;
