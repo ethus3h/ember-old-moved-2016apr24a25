@@ -157,6 +157,24 @@
 					return $this->query($query);
 				}
 				
+				function displayTable($tableName,$regionIdentifier) {
+					$data = $this->getTable($tableName);
+					#Get column names
+					{
+						$columnNames = array();
+						$i = 0;
+						foreach($data[0] as $name=>$value) {
+							$columnNames[$i] = $name;
+						}
+					}
+					foreach($data as $index=>$row) {
+						
+					}
+				}
+
+				function editTable($tableName,$regionIdentifier) {
+				}
+				
 				function close() {
 					$this->db = null;
 				}
@@ -374,6 +392,7 @@
 					echo '<h1>Dc Reference</h1>';
 					echo '<table>';
 					echo '<tr><th>Dc ID</th><th>Glyph</th><th>Unicode</th><th class="highlightedCell">Name</th></tr>';
+					echo $db->displayTable("dcs","dcreference");
 					foreach($db->getTable('dcs') as $id=>$data) {
 						echo "<tr>";
 						echo "<td>".$data['id']."</td>";
@@ -383,9 +402,6 @@
 						echo "</tr>";
 					}
 					echo '</table>';
-					echo '<pre>';
-					print_r($db->getTable('dcs'));
-					echo '</pre>';
 					break;
 				case 'encodings':
 					echo '<h1>Data for known encodings</h1>';
