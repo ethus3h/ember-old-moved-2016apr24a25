@@ -61,23 +61,14 @@
 			$baggage_claim = new baggage_claim;
 		}
 		
-		function getSyncFunction($database,$table,$row,$column,$identifier,$appendExtraRowIfNoneExists = false) {
+		function getSyncFunction($database,$table,$row,$column,$identifier) {
+			#partly based on discosync
 			return '<script type="text/javascript">
 				function sync_'.$identifier.'() {
-				
 					setTimeout(function () {   var elementToSync = document.getElementById("'.$identifier.'").innerHTML;
 					var elementToSync = document.getElementById("'.$identifier.'").value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
 					var send="ember.php?action=storeDataValue&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+elementToSync;
 					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
-				
-					if(!document.getElementById("'.str_replace($identifier,'row'.$row,'row'.$row+1).'"))
-					{
-						#help from http://stackoverflow.com/questions/17650776/add-remove-html-inside-div-using-javascript
-						var newRow = document.createElement("div");
-						newRow.innerHTML = \'\'
-						document.getElementById("'.$identifier.'Table").appendChild(newRow);
-					}
-            	
             	} 
 				</script>';
 		}
@@ -190,6 +181,7 @@
 				
 				function displayTable($tableName,$regionIdentifier) {
 					$data = $this->getTable($tableName);
+					echo '<a href="ember.php?action='.rq('action').'&table='.rq('table').'&editTable=true">Edit table</a>';
 					foreach($data as $index=>$row) {
 						echo "<tr>";
 						foreach($row as $columnName=>$value) {
@@ -202,6 +194,7 @@
 				function editTable($tableName,$regionIdentifier) {
 					#partly based on discosync
 					$data = $this->getTable($tableName);
+					echo '<a href="ember.php?action='.rq('action').'&table='.rq('table').'">Done editing</a>';
 					foreach($data as $index=>$row) {
 						echo "<tr>";
 						foreach($row as $columnName=>$value) {
@@ -210,14 +203,6 @@
 						}
 						echo "</tr>";
 					}
-					echo "<tr>";
-					$previousRow = $data[-1];
-					$rowId = ($previousRow['id'])+1;
-					foreach($data[0] as $columnName=>$value) {
-						echo '<td class="'.$regionIdentifier.'_'.$columnName.'"><input type="text" id="'.$regionIdentifier.'_row'.$rowId.'_'.$columnName.'" onkeypress="sync_'.$regionIdentifier.'_row'.$rowId.'_'.$columnName.'();" value="'.html_sanitize($value).'"></td>';
-					}
-					echo "</tr>";
-					echo getSyncFunction($this->databaseName,$tableName,$rowId,$columnName,$regionIdentifier.'_row'.$rowId.'_'.$columnName,true);
 				}
 				
 				function close() {
