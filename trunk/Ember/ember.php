@@ -2,18 +2,19 @@
 
 # 0. Header and setup
 {
-	# 2015mar16 and 2015mar16a17
+	# 2015mar17
 
-	$emberVersion = "1.0.44";
+	$emberVersion = "1.0.45";
 
 	#based on the other ember.php, version 8-0.91.44
 	error_reporting(E_ALL);
 	ini_set("display_errors",1);
 	
 	$formats = array(
-		"dc" => array("Ember Document Format ASCII Dc List","EDF Dc List","*.edc","No","No","This is Ember's native \"pivot\" format"),
+		"dc" => array("Ember Document Format ASCII Dc List","EDF Dc List","*.edc","No","No","This is Ember's native \"pivot\" format. XML"),
 		"edf_latest" => array("Ember Document Format, latest version (updates). Currently an alias of edf_1_0_44.","Ember Document Format","*.edf","No","No","No notes at this time"),
 		"ascii" => array("ASCII text","Legacy text encodings","*.txt","Partial","No","No notes at this time"),
+		"asciilatin" => array("ASCII text, Latin letters subset","Legacy text encodings","*.txt","Partial","No","No notes at this time"),
 		"data" => array("Uninterpreted binary data, in octets","Data","*","No","No","Raw binary data cannot be read or written that is not a multiple of 8 bytes"),
 		"edf_1_0_43" => array("Ember Document Format, old, incompatible file format specified in <i>Ember</i> version 1.0.43","EDF 1.0.43 Legacy","*.edf","No","Partial","No notes at this time"),
 		"edf_1_0_44" => array("Ember Document Format, current version specified in <i>Ember</i> version 1.0.44","Ember Document Format","*.edf","No","Partial","No notes at this time"),
@@ -131,6 +132,43 @@
 			}
 			return new Exception('Unknown format');
 		}
+		
+		#Database functions
+		{
+			class Db {
+				#partly based on FractureDB
+				function query($query)
+				{
+					$dbh = $this->db;
+					$this->queryCount++;
+					$result = $dbh->prepare($query);
+					$result->execute();
+					if (stripos($query, 'INSERT') === 0) {
+						return 'Inserted';
+					}
+					if (stripos($query, 'UPDATE') === 0) {
+						return 'Updated';
+					}
+					return $result->fetchAll(PDO::FETCH_ASSOC);
+				}
+				
+				function getTable($tableName) {
+					$query = 'SELECT * FROM ' . $tableName . ' ORDER BY id;';
+					return $this->query($query);
+				}
+				
+				function close() {
+					$this->db = null;
+				}
+			}
+			class SqliteDb extends Db {
+				#help from http://www.if-not-true-then-false.com/2012/php-pdo-sqlite3-example/?PageSpeed=noscript
+				function __construct($name) {
+					$this->db = new PDO('sqlite:'.$name);
+					$this->queryCount = 0;
+				}
+			}
+		}
 	}
 	#Values
 	{
@@ -161,7 +199,17 @@
 	}
 	#Data converters
 	{
-	
+		class Document {
+			/*
+			Hello_World!:
+
+<?xml version="1.0" encoding="ASCII"?>
+<dcStructure id="XX">
+	<dc57/><dc86/><dc93/><dc93/><dc96/><dc80/><dc72/><dc96/><dc99/><dc93/><dc85/><dc19/>
+</dcStructure id="YY">
+
+			*/
+		}
 		function convert($data,$sourceFormat,$targetFormat,$options=array()) {
 			if($sourceFormat == $targetFormat) {
 				return $data;
@@ -187,8 +235,8 @@
 				return convert_ascii_to_edf_1_0_44($data,$comments);
 			}
 			
-			if($sourceFormat == 'latinascii' && $targetFormat == 'dc') {
-				return convert_latinascii_to_dc($data);
+			if($sourceFormat == 'asciilatin' && $targetFormat == 'dc') {
+				return convert_asciilatin_to_dc($data);
 			}
 
 			return new Exception('Unknown data conversion pair');
@@ -196,7 +244,7 @@
 		
 		#Parsers: X to Dc converters
 		{
-			function convert_latinascii_to_dc($data) {
+			function convert_asciilatin_to_dc($data) {
 			}
 		}
 
@@ -266,6 +314,9 @@
 			if($format == '') { $format = 'ascii'; }
 			return convert("Hello World!",'ascii',$format);
 		}
+		function getTableStyle() {
+			return '<style>table, th {border:1px solid;}tr, td {border:1px dotted;} .highlightedCell { background-color:#FFFFCC; }</style>';
+		}
 	}
 	#Tests
 	{
@@ -315,18 +366,46 @@
 	}
 	#Main actions
 	{
+		function showDceTable() {
+			$db = new SqliteDb('edf.sqlite');
+			createHtmlPage("Ember",getTableStyle());
+			switch(rq('table')) {
+				case 'dcs':
+					echo '<h1>Dc Reference</h1>';
+					echo '<table>';
+					echo '<tr><th>Dc ID</th><th>Glyph</th><th>Unicode</th><th class="highlightedCell">Name</th></tr>';
+					foreach($db->getTable('dcs') as $id=>$data) {
+						echo "<tr>";
+						echo "<td>".$data['id']."</td>";
+						echo "<td>".$data['htmlEquiv']."</td>";
+						echo "<td>".$data['unicode']."</td>";
+						echo "<td class=\"highlightedCell\">".$data['name']."</td>";
+						echo "</tr>";
+					}
+					echo '</table>';
+					echo '<pre>';
+					print_r($db->getTable('dcs'));
+					echo '</pre>';
+					break;
+				case 'encodings':
+					echo '<h1>Data for known encodings</h1>';
+					break;
+			}
+			endHtmlPage();
+			$db->close();
+		}
 		function showDocumentation() {
-			createHtmlPage("Ember","<style>table, th {border:1px solid;}tr, td {border:1px dotted;} .formatDocumentationCell { background-color:#EEEE77; }</style>");
+			createHtmlPage("Ember",getTableStyle());
 			echo '<h1>Data formats</h1>
 			<p>Most significant entries listed at the beginning of the table; other entries sorted by type and then alphabetically</p>
 			<table>
-			<tr><th>Format</th><th>Class</th><th class="formatDocumentationCell">Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr>';
+			<tr><th>Format</th><th>Class</th><th class="highlightedCell">Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr>';
 			global $formats;
 			foreach($formats as $format=>$traits) {
 				echo "<tr>";
 				echo "<td>".$traits[0]."</td>";
 				echo "<td>".$traits[1]."</td>";
-				echo "<td class=\"formatDocumentationCell\">".$format."</td>";
+				echo "<td class=\"highlightedCell\">".$format."</td>";
 				echo "<td>".$traits[2]."</td>";
 				echo "<td>".$traits[3]."</td>";
 				echo "<td>".$traits[4]."</td>";
@@ -334,6 +413,12 @@
 				echo "</tr>";
 			}
 			echo '</table>';
+			echo '<h1>Dc Reference</h1>
+			<br>
+			<ul>
+			<li><a href="ember.php?action=showDceTable&table=dcs">List of Dcs</a></li>
+			<li><a href="ember.php?action=showDceTable&table=encodings">List of encodings, with mappings to and from Dcs</a></li>
+			</ul>';
 			endHtmlPage();
 		}
 		function showHelloWorld() {
@@ -379,6 +464,9 @@
 		switch($action) {
 			case "showDocumentation":
 				showDocumentation();
+				break;
+			case "showDceTable":
+				showDceTable();
 				break;
 			case "showHelloWorld":
 				showHelloWorld();
