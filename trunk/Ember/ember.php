@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015mar17 and 2015mar17a18
+	# 2015mar20
 
 	$emberVersion = "1.0.45";
 
@@ -59,18 +59,6 @@
 			}
 			global $baggage_claim;
 			$baggage_claim = new baggage_claim;
-		}
-		
-		function getSyncFunction($database,$table,$row,$column,$identifier) {
-			#partly based on discosync
-			return '<script type="text/javascript">
-				function sync_'.$identifier.'() {
-					setTimeout(function () {   var elementToSync = document.getElementById("'.$identifier.'").innerHTML;
-					var elementToSync = document.getElementById("'.$identifier.'").value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
-					var send="ember.php?action=storeDataValue&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+elementToSync;
-					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
-            	} 
-				</script>';
 		}
 		
 		#String functions
@@ -205,6 +193,11 @@
 					}
 				}
 				
+				function updateDatabaseField($table,$column,$row,$value) {
+					#help from http://www.w3schools.com/sql/sql_update.asp
+					echo $this->query('UPDATE '.$table.' SET '.$column.'=\''.$value.'\' WHERE id=\''.$row.'\'');
+				}
+				
 				function close() {
 					$this->db = null;
 				}
@@ -213,8 +206,17 @@
 				#help from http://www.if-not-true-then-false.com/2012/php-pdo-sqlite3-example/?PageSpeed=noscript
 				function __construct($name) {
 					$this->db = new PDO('sqlite:'.$name);
+					print_r($this->db);
 					$this->databaseName = $name;
 					$this->queryCount = 0;
+				}
+			}
+			
+			function getDbObjectByName($databaseName) {
+				switch($databaseName) {
+					case 'edf.sqlite':
+						return new SqliteDb($databaseName);
+						break;
 				}
 			}
 		}
@@ -366,6 +368,17 @@
 		function getTableStyle() {
 			return '<style>table, th {border:1px solid;}tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; }</style>';
 		}
+		function getSyncFunction($database,$table,$row,$column,$identifier) {
+			#partly based on discosync
+			return '<script type="text/javascript">
+				function sync_'.$identifier.'() {
+					setTimeout(function () {   var elementToSync = document.getElementById("'.$identifier.'").innerHTML;
+					var elementToSync = document.getElementById("'.$identifier.'").value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
+					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+elementToSync;
+					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
+            	} 
+				</script>';
+		}
 	}
 	#Tests
 	{
@@ -415,76 +428,6 @@
 	}
 	#Main actions
 	{
-		function showDceTable() {
-			$db = new SqliteDb('edf.sqlite');
-			createHtmlPage("Ember",getTableStyle());
-			switch(rq('table')) {
-				case 'dcs':
-					echo '<h1>Dc Reference</h1>';
-					echo '<table id="dcreferenceTable">';
-					echo '<tr><th>Dc ID</th><th>Glyph</th><th>Unicode</th><th class="highlightedCell">Name</th></tr>';
-					if(rq('editTable',true) == 'true') {
-						echo $db->editTable("dcs","dcreference");
-					}
-					else {
-						echo $db->displayTable("dcs","dcreference");
-					}
-					echo '</table>';
-					break;
-				case 'encodings':
-					echo '<h1>Data for known encodings</h1>';
-					break;
-			}
-			endHtmlPage();
-			$db->close();
-		}
-		function showDocumentation() {
-			createHtmlPage("Ember",getTableStyle());
-			echo '<h1>Data formats</h1>
-			<p>Most significant entries listed at the beginning of the table; other entries sorted by type and then alphabetically</p>
-			<table>
-			<tr><th>Format</th><th>Class</th><th class="highlightedCell">Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr>';
-			global $formats;
-			foreach($formats as $format=>$traits) {
-				echo "<tr>";
-				echo "<td>".$traits[0]."</td>";
-				echo "<td>".$traits[1]."</td>";
-				echo "<td class=\"highlightedCell\">".$format."</td>";
-				echo "<td>".$traits[2]."</td>";
-				echo "<td>".$traits[3]."</td>";
-				echo "<td>".$traits[4]."</td>";
-				echo "<td>".$traits[5]."</td>";
-				echo "</tr>";
-			}
-			echo '</table>';
-			echo '<h1>Dc Reference</h1>
-			<br>
-			<ul>
-			<li><a href="ember.php?action=showDceTable&table=dcs">List of Dcs</a></li>
-			<li><a href="ember.php?action=showDceTable&table=encodings">List of encodings, with mappings to and from Dcs</a></li>
-			</ul>';
-			endHtmlPage();
-		}
-		function showHelloWorld() {
-			$format = rq('format',true);
-			$helloWorld = getHelloWorld($format);
-			#help from http://webdesign.about.com/od/php/ht/force_download.htm
-			$filename = 'HelloWorld_'.$format.'_Generated'.date('c');
-			$filename = formatFilename($filename,$format);
-			$length = strlen($helloWorld);
-			header("Content-disposition: attachment; filename=".$filename);
-			header("Content-type: application/octet-stream");
-			header("Content-length: ".$length);
-			echo $helloWorld;
-		}
-		function showTests() {
-			createHtmlPage("Ember: Tests");
-			echo '<div style="white-space:nowrap;">';
-			echo 'Test results:<br>';
-			echo runTests();
-			echo '</div>';
-			endHtmlPage();
-		}
 		function showWelcomePage() {
 			createHtmlPage();
 			echo '<center><h1>Welcome to Ember.</h1><br>
@@ -494,6 +437,89 @@
 			<li><a href="ember.php?action=showHelloWorld&format=edf_1_0_44">Generate Hello World! demo file</a></li>
 			</ul></center>';
 			endHtmlPage();
+		}
+		#Documentation
+		{
+			function showDocumentation() {
+				createHtmlPage("Ember",getTableStyle());
+				echo '<h1>Data formats</h1>
+				<p>Most significant entries listed at the beginning of the table; other entries sorted by type and then alphabetically</p>
+				<table>
+				<tr><th>Format</th><th>Class</th><th class="highlightedCell">Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr>';
+				global $formats;
+				foreach($formats as $format=>$traits) {
+					echo "<tr>";
+					echo "<td>".$traits[0]."</td>";
+					echo "<td>".$traits[1]."</td>";
+					echo "<td class=\"highlightedCell\">".$format."</td>";
+					echo "<td>".$traits[2]."</td>";
+					echo "<td>".$traits[3]."</td>";
+					echo "<td>".$traits[4]."</td>";
+					echo "<td>".$traits[5]."</td>";
+					echo "</tr>";
+				}
+				echo '</table>';
+				echo '<h1>Dc Reference</h1>
+				<br>
+				<ul>
+				<li><a href="ember.php?action=showDceTable&table=dcs">List of Dcs</a></li>
+				<li><a href="ember.php?action=showDceTable&table=encodings">List of encodings, with mappings to and from Dcs</a></li>
+				</ul>';
+				endHtmlPage();
+			}
+			function showDceTable() {
+				$db = new SqliteDb('edf.sqlite');
+				createHtmlPage("Ember",getTableStyle());
+				switch(rq('table')) {
+					case 'dcs':
+						echo '<h1>Dc Reference</h1>';
+						echo '<table id="dcreferenceTable">';
+						echo '<tr><th>Dc ID</th><th>Glyph</th><th>Unicode</th><th class="highlightedCell">Name</th></tr>';
+						if(rq('editTable',true) == 'true') {
+							echo $db->editTable("dcs","dcreference");
+						}
+						else {
+							echo $db->displayTable("dcs","dcreference");
+						}
+						echo '</table>';
+						break;
+					case 'encodings':
+						echo '<h1>Data for known encodings</h1>';
+						break;
+				}
+				endHtmlPage();
+				$db->close();
+			}
+		}
+		#Testing
+		{
+			function showTests() {
+				createHtmlPage("Ember: Tests");
+				echo '<div style="white-space:nowrap;">';
+				echo 'Test results:<br>';
+				echo runTests();
+				echo '</div>';
+				endHtmlPage();
+			}
+			function showHelloWorld() {
+				$format = rq('format',true);
+				$helloWorld = getHelloWorld($format);
+				#help from http://webdesign.about.com/od/php/ht/force_download.htm
+				$filename = 'HelloWorld_'.$format.'_Generated'.date('c');
+				$filename = formatFilename($filename,$format);
+				$length = strlen($helloWorld);
+				header("Content-disposition: attachment; filename=".$filename);
+				header("Content-type: application/octet-stream");
+				header("Content-length: ".$length);
+				echo $helloWorld;
+			}
+		}
+		#Utility
+		{
+			function updateDatabaseFieldAPI() {
+				$db = getDbObjectByName(rq('db'));
+				$db->updateDatabaseField(rq('dataTargetTable'),rq('dataTargetRow'),rq('dataTargetColumn'),rq('dataValue'));
+			}
 		}
 	}
 }
@@ -506,23 +532,29 @@
 	}
 	else {
 		switch($action) {
+			case "showIndex":
+				showIndex();
+				break;
+			case "showWelcomePage":
+				showWelcomePage();
+				break;
+			#Documentation
 			case "showDocumentation":
 				showDocumentation();
 				break;
 			case "showDceTable":
 				showDceTable();
 				break;
-			case "showHelloWorld":
-				showHelloWorld();
-				break;
-			case "showIndex":
-				showIndex();
-				break;
+			#Testing
 			case "showTests":
 				showTests();
 				break;
-			case "showWelcomePage":
-				showWelcomePage();
+			case "showHelloWorld":
+				showHelloWorld();
+				break;
+			#Utility
+			case "updateDatabaseFieldAPI":
+				updateDatabaseFieldAPI();
 				break;
 			default:
 				resetEmber();
