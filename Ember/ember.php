@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015mar20
+	# 2015mar20 and 2015mar20a21
 
 	$emberVersion = "1.0.45";
 
@@ -185,9 +185,12 @@
 					echo '<a href="ember.php?action='.rq('action').'&table='.rq('table').'">Done editing</a> | <a href="ember.php?action=addRowsToTableAPI&db='.$this->databaseName.'&copyRows=true&numberOfRows=5&table='.rq('table').'">Add 5 rows (will be copied from last row)</a> | <a href="ember.php?action=addRowsToTableAPI&db='.$this->databaseName.'&copyRows=false&numberOfRows=5&table='.rq('table').'">Add 5 blank rows</a>';
 					foreach($data as $index=>$row) {
 						echo "<tr>";
+						$i = 0;
 						foreach($row as $columnName=>$value) {
-							echo '<td class="'.$regionIdentifier.'_'.$columnName.'"><input type="text" id="'.$regionIdentifier.'_row'.$row['id'].'_'.$columnName.'" onkeypress="sync_'.$regionIdentifier.'_row'.$row['id'].'_'.$columnName.'(event);" value="'.html_sanitize($value).'"></td>';
-							echo getSyncFunction($this->databaseName,$tableName,$row['id'],$columnName,$regionIdentifier.'_row'.$row['id'].'_'.$columnName);
+							echo '<td class="'.$regionIdentifier.'_'.$columnName.'"><input type="text" id="'.$regionIdentifier.'_row'.$row['id'].'_'.$columnName.'" onkeypress="sync_'.$regionIdentifier.'_row'.$row['id'].'_'.$columnName.'.call(this,event);" value="'.html_sanitize($value).'"></td>';
+							$nextSiblings = str_repeat('.nextSibling',$i*2);
+							echo getSyncFunction($this->databaseName,$tableName,$row['id'],$columnName,$regionIdentifier.'_row'.$row['id'].'_'.$columnName,$nextSiblings);
+							$i++;
 						}
 						echo "</tr>";
 					}
@@ -393,21 +396,21 @@
 		function getTableStyle() {
 			return '<style>table, th {border:1px solid;}tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; }</style>';
 		}
-		function getSyncFunction($database,$table,$row,$column,$identifier) {
+		function getSyncFunction($database,$table,$row,$column,$identifier,$nextSiblings) {
 			#partly based on discosync
 			#http://stackoverflow.com/questions/12407093/focus-the-next-input-with-down-arrow-key-as-with-the-tab-key			
 			return '<script type="text/javascript">
 				function sync_'.$identifier.'(e) {
-				//if (e.keyCode==40) {
-                while (true) {
-	                var node = this.nextSibling;
-                    if (node.tagName==\'INPUT\' || node.tagName==\'SELECT\') {
-                        node.focus();
-                        break;
-                    }
-                    node = node.nextSibling;                
-                //}
-            }
+					if (e.keyCode==40) {
+						var node = this.parentNode.parentNode.nextSibling.firstChild'.$nextSiblings.'.firstChild;
+						//         inpu td         tr         next tr     first td    next td         input
+						node.focus();
+					}
+					if (e.keyCode==38) {
+						var node = this.parentNode.parentNode.previousSibling.firstChild'.$nextSiblings.'.firstChild;
+						//         inpu td         tr         prev tr         first td    next td         input
+						node.focus();
+					}
 					setTimeout(function () {   var elementToSync = document.getElementById("'.$identifier.'").innerHTML;
 					var elementToSync = document.getElementById("'.$identifier.'").value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
 					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+elementToSync;
