@@ -147,6 +147,7 @@
 				#partly based on FractureDB
 				function query($query)
 				{
+					echo $query;
 					#Make sure $this->databaseName is set
 					$this->databaseName = $this->databaseName;
 					$dbh = $this->db;
@@ -195,7 +196,7 @@
 				
 				function updateDatabaseField($table,$column,$row,$value) {
 					#help from http://www.w3schools.com/sql/sql_update.asp
-					echo $this->query('UPDATE '.$table.' SET '.$column.'=\''.$value.'\' WHERE id=\''.$row.'\'');
+					echo $this->query('UPDATE '.$table.' SET '.$column.'=\''.$value.'\' WHERE id=\''.$row.'\';');
 				}
 				
 				function close() {
@@ -206,9 +207,10 @@
 				#help from http://www.if-not-true-then-false.com/2012/php-pdo-sqlite3-example/?PageSpeed=noscript
 				function __construct($name) {
 					$this->db = new PDO('sqlite:'.$name);
-					print_r($this->db);
 					$this->databaseName = $name;
 					$this->queryCount = 0;
+					#Help from Sammitch in IRC 2015mar20
+					$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				}
 			}
 			
