@@ -147,7 +147,6 @@
 				#partly based on FractureDB
 				function query($query)
 				{
-					echo $query;
 					#Make sure $this->databaseName is set
 					$this->databaseName = $this->databaseName;
 					$dbh = $this->db;
@@ -183,7 +182,17 @@
 				function editTable($tableName,$regionIdentifier) {
 					#partly based on discosync
 					$data = $this->getTable($tableName);
-					echo '<a href="ember.php?action='.rq('action').'&table='.rq('table').'">Done editing</a>';
+					echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+						<!-- based on http://stackoverflow.com/questions/12407093/focus-the-next-input-with-down-arrow-key-as-with-the-tab-key -->
+						<script>
+							$(\'input, select\').keydown(function(e) {
+								if (e.keyCode==40) {';
+									foreach($data[0] as $column=>$value) {
+										echo '$(this).next(\'input, select\').focus();'."\n";
+									}
+					echo		'}
+							});
+						</script><a href="ember.php?action='.rq('action').'&table='.rq('table').'">Done editing</a> | <a href="ember.php?action=addRowsToTableAPI&db='.$this->databaseName.'&copyRows=true&numberOfRows=5&table='.rq('table').'">Add 5 rows (will be copied from last row)</a> | <a href="ember.php?action=addRowsToTableAPI&db='.$this->databaseName.'&copyRows=false&numberOfRows=5&table='.rq('table').'">Add 5 blank rows</a>';
 					foreach($data as $index=>$row) {
 						echo "<tr>";
 						foreach($row as $columnName=>$value) {
@@ -194,11 +203,35 @@
 					}
 				}
 				
-				function updateDatabaseField($table,$column,$row,$value) {
+				function updateDatabaseField($table,$row,$column,$value) {
 					#help from http://www.w3schools.com/sql/sql_update.asp
 					echo $this->query('UPDATE '.$table.' SET '.$column.'=\''.$value.'\' WHERE id=\''.$row.'\';');
 				}
 				
+				function addRowsToTable($table,$copyRows,$numberOfRows) {
+					$data = $this->getTable($table);
+					$rowToCopy = end($data);
+					$nextRowID = $rowToCopy['id']+1;
+					$i = 0;
+					while($i < $numberOfRows) {
+						if($copyRows == "true") {
+							$this->query("INSERT INTO ".$table." (id) VALUES ('".$nextRowID."');");
+							foreach($rowToCopy as $column=>$value) {
+								if($column !== "id") {
+									$this->query('UPDATE '.$table.' SET '.$column.'=\''.$value.'\' WHERE id=\''.$nextRowID.'\';');
+								}
+							}
+						}
+						if($copyRows == "false") {
+							#help from http://stackoverflow.com/questions/13605208/how-to-insert-an-empty-line-to-sql-table
+							#$this->query("INSERT INTO ".$table." DEFAULT VALUES;");
+							$this->query("INSERT INTO ".$table." (id) VALUES ('".$nextRowID."');");
+						}
+						$nextRowID++;
+						$i++;
+					}				
+					echo 'Done!';	
+				}
 				function close() {
 					$this->db = null;
 				}
@@ -476,7 +509,7 @@
 					case 'dcs':
 						echo '<h1>Dc Reference</h1>';
 						echo '<table id="dcreferenceTable">';
-						echo '<tr><th>Dc ID</th><th>Glyph</th><th>Unicode</th><th class="highlightedCell">Name</th></tr>';
+						echo '<tr><th>Dc ID</th><th>Glyph</th><th>Unicode output</th><th class="highlightedCell">Name</th><th>Category</th><th>Decomposition</th><th>Description</th><th>Syntax</th><th>Other names</th></tr>';
 						if(rq('editTable',true) == 'true') {
 							echo $db->editTable("dcs","dcreference");
 						}
@@ -522,6 +555,10 @@
 				$db = getDbObjectByName(rq('db'));
 				$db->updateDatabaseField(rq('dataTargetTable'),rq('dataTargetRow'),rq('dataTargetColumn'),rq('dataValue'));
 			}
+			function addRowsToTableAPI() {
+				$db = getDbObjectByName(rq('db'));
+				$db->addRowsToTable(rq('table'),rq('copyRows'),rq('numberOfRows'));
+			}
 		}
 	}
 }
@@ -557,6 +594,9 @@
 			#Utility
 			case "updateDatabaseFieldAPI":
 				updateDatabaseFieldAPI();
+				break;
+			case "addRowsToTableAPI":
+				addRowsToTableAPI();
 				break;
 			default:
 				resetEmber();
