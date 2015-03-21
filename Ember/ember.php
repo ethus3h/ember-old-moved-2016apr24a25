@@ -415,7 +415,7 @@
 					}
 					setTimeout(function () {   var elementToSync = document.getElementById("'.$identifier.'").innerHTML;
 					var elementToSync = document.getElementById("'.$identifier.'").value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
-					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+elementToSync;
+					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+encodeURI(elementToSync);
 					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
             	} 
 				</script>';
