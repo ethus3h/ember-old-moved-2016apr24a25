@@ -405,11 +405,13 @@
 						var node = this.parentNode.parentNode.nextSibling.firstChild'.$nextSiblings.'.firstChild;
 						//         inpu td         tr         next tr     first td    next td         input
 						node.focus();
+						node.select();
 					}
 					if (e.keyCode==38) {
 						var node = this.parentNode.parentNode.previousSibling.firstChild'.$nextSiblings.'.firstChild;
 						//         inpu td         tr         prev tr         first td    next td         input
 						node.focus();
+						node.select();
 					}
 					setTimeout(function () {   var elementToSync = document.getElementById("'.$identifier.'").innerHTML;
 					var elementToSync = document.getElementById("'.$identifier.'").value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
