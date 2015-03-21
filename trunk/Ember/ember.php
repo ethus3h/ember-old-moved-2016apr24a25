@@ -198,7 +198,7 @@
 				
 				function updateDatabaseField($table,$row,$column,$value) {
 					#help from http://www.w3schools.com/sql/sql_update.asp
-					echo $this->query('UPDATE '.$table.' SET '.$column.'=\''.$value.'\' WHERE id=\''.$row.'\';');
+					echo $this->query('UPDATE '.$table.' SET '.$column.'='.$this->db->quote($value).' WHERE id=\''.$row.'\';');
 				}
 				
 				function addRowsToTable($table,$copyRows,$numberOfRows) {
@@ -211,7 +211,7 @@
 							$this->query("INSERT INTO ".$table." (id) VALUES ('".$nextRowID."');");
 							foreach($rowToCopy as $column=>$value) {
 								if($column !== "id") {
-									$this->query('UPDATE '.$table.' SET '.$column.'=\''.$value.'\' WHERE id=\''.$nextRowID.'\';');
+									$this->query('UPDATE '.$table.' SET '.$column.'='.$this->db->quote($value).' WHERE id=\''.$nextRowID.'\';');
 								}
 							}
 						}
@@ -394,7 +394,7 @@
 			return convert("Hello World!",'ascii',$format);
 		}
 		function getTableStyle() {
-			return '<style>table, th {border:1px solid;}tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; }</style>';
+			return '<style>table, th {border:1px solid;}input { width:100%; } tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; }</style>';
 		}
 		function getSyncFunction($database,$table,$row,$column,$identifier,$nextSiblings) {
 			#partly based on discosync
@@ -415,7 +415,8 @@
 					}
 					setTimeout(function () {   var elementToSync = document.getElementById("'.$identifier.'").innerHTML;
 					var elementToSync = document.getElementById("'.$identifier.'").value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
-					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+encodeURI(elementToSync);
+					//help from http://stackoverflow.com/questions/18251399/why-doesnt-encodeuricomponent-encode-sinlge-quotes-apostrophes
+					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+encodeURIComponent(elementToSync).replace(/[!\'()*]/g, escape);
 					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
             	} 
 				</script>';
@@ -515,7 +516,7 @@
 					case 'dcs':
 						echo '<h1>Dc Reference</h1>';
 						echo '<table id="dcreferenceTable">';
-						echo '<tr><th>Dc ID</th><th>Glyph</th><th>Unicode output</th><th class="highlightedCell">Name</th><th>Category</th><th>Decomposition</th><th>Description</th><th>Syntax</th><th>Other names</th></tr>';
+						echo '<tr><th>Dc ID</th><th>Glyph</th><th>U+</th><th class="highlightedCell" style="padding-left:50px !important;padding-right:50px !important;">Name</th><th style="padding-left:10px !important;padding-right:10px !important;">Type</th><th style="padding-left:10px !important;padding-right:10px !important;">Script</th><th><small><small>Sort following<br><small>(blank: previous)</small></small></small></th><th>Decomp.</th><th>Depr.</th><th>Description</th><th>Syntax</th><th>Other names</th></tr>';
 						if(rq('editTable',true) == 'true') {
 							echo $db->editTable("dcs","dcreference");
 						}
