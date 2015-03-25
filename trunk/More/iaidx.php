@@ -24,7 +24,7 @@ else
 document.getElementById('result').innerHTML=xmlhttp.responseText;
     }
   }
- xmlhttp.open('GET','http://141.114.211.12:4352/iarqh.php?data=' + document.getElementById('data').value+'&limit=' + document.getElementById('limit').value,true);
+ xmlhttp.open('GET','iarqh.php?data=' + document.getElementById('data').value+'&limit=' + document.getElementById('limit').value,true);
 xmlhttp.send();
 
 

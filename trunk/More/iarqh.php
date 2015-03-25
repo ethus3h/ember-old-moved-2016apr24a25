@@ -8,7 +8,7 @@ $lar = explode(',',$limite);
 $limit = $lar[0];
 $searchtype = 0;
 @$searchtype = $lar[1];
-$db = new PDO('mysql:host=localhost;dbname=futuqiur_iaidx;charset=utf8', 'futuqiur_iaidx', 'Artemis!');
+$db = new PDO('mysql:host=localhost;dbname=futuqiur_iaidxb;charset=utf8', 'futuqiur_iaidx', 'Artemis!');
 #$query = 'SELECT * FROM `data` WHERE `filename` LIKE \'%'.$rq.'%\' LIMIT 10';
 $query = 'SELECT * FROM `data` WHERE `filename` LIKE \'%'.$rq.'%\' LIMIT '.$limit;
 switch($searchtype) {
@@ -24,7 +24,7 @@ case 3:
 }
 if($searchtype == 1) {
 }
-echo 'Query:'.$query;
+#echo 'Query:'.$query;
 echo '<br>Search results for: '.$rq;
 $results = $db->query($query);
 $resultListEntryA= '<ul><li><a href="'; # url
