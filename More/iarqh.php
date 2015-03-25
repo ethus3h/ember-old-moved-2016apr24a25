@@ -10,7 +10,7 @@ $searchtype = 0;
 @$searchtype = $lar[1];
 $db = new PDO('mysql:host=localhost;dbname=futuqiur_iaidxb;charset=utf8', 'futuqiur_iaidx', 'Artemis!');
 #$query = 'SELECT * FROM `data` WHERE `filename` LIKE \'%'.$rq.'%\' LIMIT 10';
-$query = 'SELECT * FROM `data` WHERE `filename` LIKE \'%'.$rq.'%\' LIMIT '.$limit;
+$query = 'SELECT * FROM `data` WHERE `filename` LIKE '.str_replace(' ','%',$db->quote('%'.$rq.'%')).' LIMIT '.$limit;
 switch($searchtype) {
 case 1:
 	$query = 'SELECT * FROM `data` WHERE MATCH(`urly`) AGAINST(\''.$rq.'\') LIMIT '.$limit;
@@ -24,10 +24,12 @@ case 3:
 }
 if($searchtype == 1) {
 }
+#echo str_replace(' ','%',$db->quote('%'.$rq.'%'));
+#echo $db->quote($rq);
 #echo 'Query:'.$query;
 echo '<br>Search results for: '.$rq;
 $results = $db->query($query);
-$resultListEntryA= '<ul><li><a href="'; # url
+$resultListEntryA= '<ul><li><a target="_blank" href="'; # url
 $resultListEntryB= '"><b>'; #title
 $resultListEntryC = '</b><br>'; # url
 $resultListEntryD = '<br><i>SHA: '; # SHA

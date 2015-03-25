@@ -1,0 +1,9 @@
+2014.dec.07a08
+CDX notes
+version 3, 2015mar24
+
+1. Delete 1st line
+2. replace
+[^ \n]+ (\d+) (https?://[^ \n]+) [^ \n]+ [-\d]+ (\w+) [-\w]+ [-\w]+ \d+ \d+ [^ \n]+\n
+with
+https://web\.archive\.org/web/\1/\2;\2;\3;\1\n
