@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015mar20 and 2015mar20a21
+	# 2015mar22
 
 	$emberVersion = "1.0.45";
 
@@ -182,14 +182,15 @@
 				function editTable($tableName,$regionIdentifier) {
 					#partly based on discosync
 					$data = $this->getTable($tableName);
+					echo getSyncFunction($this->databaseName,$tableName);
 					echo '<a href="ember.php?action='.rq('action').'&table='.rq('table').'">Done editing</a> | <a href="ember.php?action=addRowsToTableAPI&db='.$this->databaseName.'&copyRows=true&numberOfRows=5&table='.rq('table').'">Add 5 rows (will be copied from last row)</a> | <a href="ember.php?action=addRowsToTableAPI&db='.$this->databaseName.'&copyRows=false&numberOfRows=5&table='.rq('table').'">Add 5 blank rows</a>';
 					foreach($data as $index=>$row) {
 						echo "<tr>";
 						$i = 0;
 						foreach($row as $columnName=>$value) {
-							echo '<td class="'.$regionIdentifier.'_'.$columnName.'"><input type="text" id="'.$regionIdentifier.'_row'.$row['id'].'_'.$columnName.'" onkeypress="sync_'.$regionIdentifier.'_row'.$row['id'].'_'.$columnName.'.call(this,event);" value="'.html_sanitize($value).'"></td>';
+							echo '<td class="'.$regionIdentifier.'_'.$columnName.'"><input type="text" id="'.$regionIdentifier.'_row'.$row['id'].'_'.$columnName.'" onkeypress="syncDataField.call(this,event,\''.$regionIdentifier.'\',\''.$row['id'].'\',\''.$columnName.'\',\''.($i).'\');" value="'.html_sanitize($value).'"></td>';
 							$nextSiblings = str_repeat('.nextSibling',$i*2);
-							echo getSyncFunction($this->databaseName,$tableName,$row['id'],$columnName,$regionIdentifier.'_row'.$row['id'].'_'.$columnName,$nextSiblings);
+							#echo getSyncFunction($this->databaseName,$tableName,$row['id'],$columnName,$regionIdentifier.'_row'.$row['id'].'_'.$columnName,$nextSiblings);
 							$i++;
 						}
 						echo "</tr>";
@@ -396,27 +397,42 @@
 		function getTableStyle() {
 			return '<style>table, th {border:1px solid;}input { width:100%; } tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; }</style>';
 		}
-		function getSyncFunction($database,$table,$row,$column,$identifier,$nextSiblings) {
+		function getSyncFunction($database,$table) {
 			#partly based on discosync
 			#http://stackoverflow.com/questions/12407093/focus-the-next-input-with-down-arrow-key-as-with-the-tab-key			
+			# onkeypress="syncDataField.call(this,event,'.$regionIdentifier.','.$row['id'].','.$columnName.'$i*2)
 			return '<script type="text/javascript">
-				function sync_'.$identifier.'(e) {
+				function syncDataField(e,regionIdentifier,rowId,columnName,nextSiblingCount) {
 					if (e.keyCode==40) {
-						var node = this.parentNode.parentNode.nextSibling.firstChild'.$nextSiblings.'.firstChild;
+						var node = this.parentNode.parentNode.nextSibling.firstChild;
+						var i = 0;
+						while (i<nextSiblingCount) {
+							node = node.nextSibling;
+							i++;
+						}
+						node = node.firstChild;
 						//         inpu td         tr         next tr     first td    next td         input
 						node.focus();
 						node.select();
 					}
 					if (e.keyCode==38) {
-						var node = this.parentNode.parentNode.previousSibling.firstChild'.$nextSiblings.'.firstChild;
+						var node = this.parentNode.parentNode.previousSibling.firstChild;
+						var i = 0;
+						while (i<nextSiblingCount) {
+							node = node.nextSibling;
+							i++;
+						}
+						node = node.firstChild;
 						//         inpu td         tr         prev tr         first td    next td         input
 						node.focus();
 						node.select();
 					}
-					setTimeout(function () {   var elementToSync = document.getElementById("'.$identifier.'").innerHTML;
-					var elementToSync = document.getElementById("'.$identifier.'").value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
+					//help from http://www.toptal.com/javascript/10-most-common-javascript-mistakes
+					var self = this;
+					setTimeout(function () {  var elementToSync = self.innerHTML;
+					var elementToSync = self.value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
 					//help from http://stackoverflow.com/questions/18251399/why-doesnt-encodeuricomponent-encode-sinlge-quotes-apostrophes
-					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow='.$row.'&dataTargetColumn='.$column.'&dataValue="+encodeURIComponent(elementToSync).replace(/[!\'()*]/g, escape);
+					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow="+rowId+"&dataTargetColumn="+columnName+"&dataValue="+encodeURIComponent(elementToSync).replace(/[!\'()*]/g, escape);
 					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
             	} 
 				</script>';
