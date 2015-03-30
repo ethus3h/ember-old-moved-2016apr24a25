@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015mar22
+	# 2015mar29a30
 
 	$emberVersion = "1.0.45";
 
@@ -167,7 +167,7 @@
 					return $this->query($query);
 				}
 				
-				function displayTable($tableName,$regionIdentifier) {
+				function displayTable($tableName,$regionIdentifier,$highlightedFieldValues) {
 					$data = $this->getTable($tableName);
 					echo '<a href="ember.php?action='.rq('action').'&table='.rq('table').'&editTable=true">Edit table</a>';
 					foreach($data as $index=>$row) {
@@ -243,6 +243,9 @@
 			
 			function getDbObjectByName($databaseName) {
 				switch($databaseName) {
+					case 'archives.sqlite':
+						return new SqliteDb($databaseName);
+						break;
 					case 'edf.sqlite':
 						return new SqliteDb($databaseName);
 						break;
@@ -432,7 +435,7 @@
 					setTimeout(function () {  var elementToSync = self.innerHTML;
 					var elementToSync = self.value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
 					//help from http://stackoverflow.com/questions/18251399/why-doesnt-encodeuricomponent-encode-sinlge-quotes-apostrophes
-					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow="+rowId+"&dataTargetColumn="+columnName+"&dataValue="+encodeURIComponent(elementToSync).replace(/[!\'()*]/g, escape);
+					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow="+rowId+"&dataTargetColumn="+columnName+"&dataValue="+encodeURIComponent(btoa(elementToSync)).replace(/[!\'()*]/g, escape);
 					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
             	} 
 				</script>';
@@ -548,6 +551,29 @@
 				endHtmlPage();
 				$db->close();
 			}
+			function showArchivalProjectsTable() {
+				$db = new SqliteDb('archives.sqlite');
+				createHtmlPage("Archival Projects",getTableStyle());
+				switch(rq('table')) {
+					case 'archives':
+						echo '<h1>Archival Projects Reference</h1>';
+						echo '<table id="archivalprojectsTable">';
+						echo '<tr><th>ID</th><th>Source URL</th><th>Scope of project</th><th>URL of archived data</th><th class="highlightedCell">Status of project</th></tr>';
+						if(rq('editTable',true) == 'true') {
+							echo $db->editTable("archives","archives");
+						}
+						else {
+							echo $db->displayTable("archives","archives",array("status"=>"Done",));
+						}
+						echo '</table>';
+						break;
+					case 'encodings':
+						echo '<h1>Data for known encodings</h1>';
+						break;
+				}
+				endHtmlPage();
+				$db->close();
+			}
 		}
 		#Testing
 		{
@@ -576,7 +602,7 @@
 		{
 			function updateDatabaseFieldAPI() {
 				$db = getDbObjectByName(rq('db'));
-				$db->updateDatabaseField(rq('dataTargetTable'),rq('dataTargetRow'),rq('dataTargetColumn'),rq('dataValue'));
+				$db->updateDatabaseField(rq('dataTargetTable'),rq('dataTargetRow'),rq('dataTargetColumn'),base64_decode(rq('dataValue')));
 			}
 			function addRowsToTableAPI() {
 				$db = getDbObjectByName(rq('db'));
@@ -603,6 +629,9 @@
 			#Documentation
 			case "showDocumentation":
 				showDocumentation();
+				break;
+			case "showArchivalProjectsTable":
+				showArchivalProjectsTable();
 				break;
 			case "showDceTable":
 				showDceTable();
