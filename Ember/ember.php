@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015mar29a30
+	# 2015mar30
 
 	$emberVersion = "1.0.45";
 
@@ -167,7 +167,7 @@
 					return $this->query($query);
 				}
 				
-				function displayTable($tableName,$regionIdentifier,$highlightedFieldValues) {
+				function displayTable($tableName,$regionIdentifier,$highlightedFieldValues = array()) {
 					$data = $this->getTable($tableName);
 					echo '<a href="ember.php?action='.rq('action').'&table='.rq('table').'&editTable=true">Edit table</a>';
 					foreach($data as $index=>$row) {
