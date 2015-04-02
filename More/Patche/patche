@@ -1,38 +1,45 @@
 #!/bin/bash
 #Patche. Version 1, 2015-April-01
-
+NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
+outfile="./.pch/logs/$NOW.log"
+#exec > >(tee -a $outfile) 2>&1
 #help from http://linuxcommand.org/wss0130.php
 #help from http://stackoverflow.com/questions/2871233/write-stdout-stderr-to-a-logfile-also-write-stderr-to-screen
+#help from http://stackoverflow.com/questions/363223/how-do-i-get-both-stdout-and-stderr-to-go-to-the-terminal-and-a-log-file
 mkdir ./.pch
 mkdir ./.pch/logs
-NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
-(echo -e "Beginning work at $NOW.\nSuggested to run this as root. Run ia configure first." >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+echo -e "Beginning work at $NOW.\nSuggested to run this as root. Run ia configure first." 2>&1 | tee -a $outfile
 if [ "$1" = "init" ]; then
-	(echo "init" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	echo "init" 2>&1 | tee -a $outfile
 	PASSPHRASE="$2"
-	AUTHKEY="$3"
-	SECRETKEY="$4"
-	(mkdir -v ./.pch >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
-	echo -e "$PASSPHRASE\n$AUTHKEY\n$SECRETKEY\n" > ./.pch/.pconf
+	REPOUUID="`uuidgen`"
+	echo "$REPOUUID" > ./.pch/.uuid
+	#AUTHKEY="$3"
+	#SECRETKEY="$4"
+	rm -rfv ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+	mkdir -v ./.pch 2>&1 | tee -a $outfile
+	#echo -e "$PASSPHRASE\n$AUTHKEY\n$SECRETKEY\n" > ./.pch/.pconf
 	echo "$PASSPHRASE" > ./.pch/.pbz
-	(mkdir -v ./.pch/.ptub >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
-	(mkdir -v ./.pch/.pshadow >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
-	(rsync -av --progress --delete --write-batch="./.pch/$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
-	(gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "./.pch/$NOW.pinit" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
-	(mv -v "./.pch/$NOW.pinit.gpg" "./.pch/$NOW.pinite" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	mkdir -v ./.pch/.ptub 2>&1 | tee -a $outfile
+	mkdir -v ./.pch/.pshadow 2>&1 | tee -a $outfile
+	rsync -av --progress --delete --write-batch="./.pch/$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+	gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "./.pch/$NOW.pinit" 2>&1 | tee -a $outfile
+	rm -v "./.pch/$NOW.pinit" 2>&1 | tee -a $outfile
+	mv -v "./.pch/$NOW.pinit.gpg" "./.pch/$NOW.pinite" 2>&1 | tee -a $outfile
 	UUID="`uuidgen`"
-	(ia upload "Patche.$NOW.$UUID.pinite" "./.pch/$NOW.pinite" --delete --checksum --metadata="title:Patche.$NOW.$UUID.pinite" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	IA="`which ia`"
+	python -u "$IA" upload "Patche.$NOW.$UUID.pinite" "./.pch/$NOW.pinite" --log --delete --checksum --metadata="title:Patche.$NOW.$UUID.pinite"
 	else if [ "$1" = "clone" ]; then
-		(echo "clone" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+		echo "clone" 2>&1 | tee -a $outfile
 		else if [ "$1" = "commit" ]; then
-			(echo "commit" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+			echo "commit" 2>&1 | tee -a $outfile
 			else if [ "$1" = "patch" ]; then
-				(echo "patch" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+				echo "patch" 2>&1 | tee -a $outfile
 				else
-					(echo "Unknown action or no action specified. Available actions are: init, clone, commit, patch" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+					echo "Unknown action or no action specified. Available actions are: init, clone, commit, patch" 2>&1 | tee -a $outfile
 				fi
 			fi
 		fi
 	fi
 DONETIME="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
-(echo "Done work at $DONETIME." >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+echo "Done work at $DONETIME." 2>&1 | tee -a $outfile
