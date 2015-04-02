@@ -2,23 +2,37 @@
 #Patche. Version 1, 2015-April-01
 
 #help from http://linuxcommand.org/wss0130.php
+#help from http://stackoverflow.com/questions/2871233/write-stdout-stderr-to-a-logfile-also-write-stderr-to-screen
 mkdir ./.pch
 mkdir ./.pch/logs
 NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
-echo "Beginning work at $NOW." | tee -a "./.pch/logs/$NOW.log"
-if [ "$1" == "init" ]; then
-	echo "init" | tee -a "./.pch/logs/$NOW.log"
-	else if ["$1" == "clone" ]; then
-		echo "clone" | tee -a "./.pch/logs/$NOW.log"
-		else if ["$1" == "commit" ]; then
-			echo "commit" | tee -a "./.pch/logs/$NOW.log"
-			else if ["$1" == "patch" ]; then
-				echo "patch" | tee -a "./.pch/logs/$NOW.log"
+(echo -e "Beginning work at $NOW.\nSuggested to run this as root. Run ia configure first." >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+if [ "$1" = "init" ]; then
+	(echo "init" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	PASSPHRASE="$2"
+	AUTHKEY="$3"
+	SECRETKEY="$4"
+	(mkdir -v ./.pch >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	echo -e "$PASSPHRASE\n$AUTHKEY\n$SECRETKEY\n" > ./.pch/.pconf
+	echo "$PASSPHRASE" > ./.pch/.pbz
+	(mkdir -v ./.pch/.ptub >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	(mkdir -v ./.pch/.pshadow >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	(rsync -av --progress --delete --write-batch="./.pch/$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	(gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "./.pch/$NOW.pinit" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	(mv -v "./.pch/$NOW.pinit.gpg" "./.pch/$NOW.pinite" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	UUID="`uuidgen`"
+	(ia upload "Patche.$NOW.$UUID.pinite" "./.pch/$NOW.pinite" --delete --checksum --metadata="title:Patche.$NOW.$UUID.pinite" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+	else if [ "$1" = "clone" ]; then
+		(echo "clone" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+		else if [ "$1" = "commit" ]; then
+			(echo "commit" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+			else if [ "$1" = "patch" ]; then
+				(echo "patch" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
+				else
+					(echo "Unknown action or no action specified. Available actions are: init, clone, commit, patch" >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
 				fi
 			fi
 		fi
-	else
-		echo "Unknown action. Available actions are: init, clone, commit, patch"
-		fi
 	fi
-echo "Done work at `date '+%Y.%m.%d-%H.%M.%S.%z'`." | tee -a "./.pch/logs/$NOW.log"
+DONETIME="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
+(echo "Done work at $DONETIME." >> "./.pch/logs/$NOW.log") 2>&1 | tee -a "./.pch/logs/$NOW.log"
