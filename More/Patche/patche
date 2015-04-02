@@ -2,23 +2,16 @@
 #Patche. Version 1, 2015-April-01 and 2015-April-01a02
 NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
 outfile="./.pch/logs/$NOW.log"
-#exec > >(tee -a $outfile) 2>&1
-#help from http://linuxcommand.org/wss0130.php
-#help from http://stackoverflow.com/questions/2871233/write-stdout-stderr-to-a-logfile-also-write-stderr-to-screen
-#help from http://stackoverflow.com/questions/363223/how-do-i-get-both-stdout-and-stderr-to-go-to-the-terminal-and-a-log-file
 mkdir ./.pch
 mkdir ./.pch/logs
-echo -e "Beginning work at $NOW.\nSuggested to run this as root. Run ia configure first." 2>&1 | tee -a $outfile
+echo -e "Beginning work at $NOW.\nWrap arguments in single quotation marks.\nSuggested to run this as root. Run ia configure first." 2>&1 | tee -a $outfile
 if [ "$1" = "init" ]; then
 	echo "init" 2>&1 | tee -a $outfile
 	PASSPHRASE="$2"
 	REPOUUID="`uuidgen`"
 	echo "$REPOUUID" > ./.pch/.uuid
-	#AUTHKEY="$3"
-	#SECRETKEY="$4"
 	rm -rfv ./.pch/.pshadow/ 2>&1 | tee -a $outfile
 	mkdir -v ./.pch 2>&1 | tee -a $outfile
-	#echo -e "$PASSPHRASE\n$AUTHKEY\n$SECRETKEY\n" > ./.pch/.pconf
 	echo "$PASSPHRASE" > ./.pch/.pbz
 	mkdir -v ./.pch/.ptub 2>&1 | tee -a $outfile
 	mkdir -v ./.pch/.pshadow 2>&1 | tee -a $outfile
@@ -29,19 +22,62 @@ if [ "$1" = "init" ]; then
 	rm -v "./.pch/$NOW.pinit" 2>&1 | tee -a $outfile
 	mv -v "./.pch/$NOW.pinit.gpg" "./.pch/$NOW.pinite" 2>&1 | tee -a $outfile
 	UUID="`uuidgen`"
-	ia upload "Patche.$NOW.$UUID.pinite" "./.pch/$NOW.pinite" --log --delete --checksum --metadata="title:Patche.$NOW.$UUID.pinite"
+	ia upload "$REPOUUID.$UUID" "./.pch/$NOW.pinite" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.pinite"
+	echo -n "1" > ./.pch/.revision
+	echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/$NOW.pinitu"
+	mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
 	else if [ "$1" = "clone" ]; then
 		echo "clone" 2>&1 | tee -a $outfile
+		IDENTIFIER="$2"
+		FILENAME="$3"
+		PASSPHRASE="$4"
+		wget "https://archive.org/download/$2/$3.pinite" 2>&1 | tee -a $outfile
+		mv -v "./$3.pinite" "./$3.pinit.gpg" 2>&1 | tee -a $outfile
+		echo "$PASSPHRASE" > ./.pbz
+		gpg --yes --batch --passphrase-file ./.pbz "./$3.pinit.gpg" 2>&1 | tee -a $outfile		
+		#rm -v "./.pbz" 2>&1 | tee -a $outfile
+		rm -v "./$3.pinit.gpg" 2>&1 | tee -a $outfile
+		mv -v "./$3.pinit" "./$3.pinit.bz2" 2>&1 | tee -a $outfile
+		bunzip2 "./$3.pinit.bz2" 2>&1 | tee -a $outfile
+		rsync -av --progress --read-batch="./$3.pinit" . 2>&1 | tee -a $outfile
+		rm -v "./$3.pinit" 2>&1 | tee -a $outfile
+		rsync -av --progress --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
 		else if [ "$1" = "commit" ]; then
 			echo "commit" 2>&1 | tee -a $outfile
+			LASTREVISION="`cat ./.pch/.revision`"
+			#help from http://askubuntu.com/questions/385528/how-to-increment-a-variable-in-bash
+			THISREVISION=$(($LASTREVISION+1))
+			rsync -av --progress --delete --write-batch="./.pch/$NOW.patch" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+			bzip2 "./.pch/$NOW.patch" 2>&1 | tee -a $outfile
+			mv -v "./.pch/$NOW.patch.bz2" "./.pch/$NOW.patch" 2>&1 | tee -a $outfile
+			gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "./.pch/$NOW.patch" 2>&1 | tee -a $outfile
+			rm -v "./.pch/$NOW.patch" 2>&1 | tee -a $outfile
+			mv -v "./.pch/$NOW.patch.gpg" "./.pch/$NOW.patche" 2>&1 | tee -a $outfile
+			UUID="`uuidgen`"
+			REPOUUID="`cat ./.pch/.uuid`"
+			ia upload "$REPOUUID.$UUID" "./.pch/$NOW.patche" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.patche"
+			echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/$NOW.pchu"
+			echo -n "$THISREVISION" > ./.pch/.revision
+			mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
 			else if [ "$1" = "patch" ]; then
 				echo "patch" 2>&1 | tee -a $outfile
+				IDENTIFIER="$2"
+				FILENAME="$3"
+				PASSPHRASE="$4"
+				wget "https://archive.org/download/$2/$3.patche" 2>&1 | tee -a $outfile
+				mv -v "./$3.patche" "./$3.patch.gpg" 2>&1 | tee -a $outfile
+				gpg --yes --batch --passphrase-file ./.pch/.pbz "./$3.patch.gpg" 2>&1 | tee -a $outfile		
+				rm -v "./$3.patch.gpg" 2>&1 | tee -a $outfile
+				mv -v "./$3.patch" "./$3.patch.bz2" 2>&1 | tee -a $outfile
+				bunzip2 "./$3.patch.bz2" 2>&1 | tee -a $outfile
+				rsync -av --progress --read-batch="./$3.patch" . 2>&1 | tee -a $outfile
+				rm -v "./$3.patch" 2>&1 | tee -a $outfile
+				rsync -av --progress --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
 				else
 					echo "Unknown action or no action specified. Available actions are: init, clone, commit, patch" 2>&1 | tee -a $outfile
 				fi
 			fi
 		fi
 	fi
-mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
 DONETIME="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
 echo "Done work at $DONETIME." 2>&1 | tee -a $outfile
