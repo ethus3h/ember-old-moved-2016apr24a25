@@ -1,3 +1,24 @@
 #!/bin/bash
 #Patche. Version 1, 2015-April-01
 
+#help from http://linuxcommand.org/wss0130.php
+mkdir ./.pch
+mkdir ./.pch/logs
+NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
+echo "Beginning work at $NOW." | tee -a "./.pch/logs/$NOW.log"
+if [ "$1" == "init" ]; then
+	echo "init" | tee -a "./.pch/logs/$NOW.log"
+	else if ["$1" == "clone" ]; then
+		echo "clone" | tee -a "./.pch/logs/$NOW.log"
+		else if ["$1" == "commit" ]; then
+			echo "commit" | tee -a "./.pch/logs/$NOW.log"
+			else if ["$1" == "patch" ]; then
+				echo "patch" | tee -a "./.pch/logs/$NOW.log"
+				fi
+			fi
+		fi
+	else
+		echo "Unknown action. Available actions are: init, clone, commit, patch"
+		fi
+	fi
+echo "Done work at `date '+%Y.%m.%d-%H.%M.%S.%z'`." | tee -a "./.pch/logs/$NOW.log"
