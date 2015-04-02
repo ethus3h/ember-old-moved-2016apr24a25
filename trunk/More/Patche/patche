@@ -1,10 +1,11 @@
 #!/bin/bash
-#Patche. Version 1, 2015-April-01 and 2015-April-01a02
+#Patche. Version 2, 2015-April-02
 NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
 outfile="./.pch/logs/$NOW.log"
 mkdir ./.pch
 mkdir ./.pch/logs
 echo -e "Beginning work at $NOW.\nWrap arguments in single quotation marks.\nSuggested to run this as root. Run ia configure first." 2>&1 | tee -a $outfile
+
 if [ "$1" = "init" ]; then
 	echo "init" 2>&1 | tee -a $outfile
 	PASSPHRASE="$2"
@@ -23,9 +24,11 @@ if [ "$1" = "init" ]; then
 	UUID="`uuidgen`"
 	ia upload "$REPOUUID.$UUID" "../$NOW.pinite" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.pinite"
 	echo -n "1" > ./.pch/.revision
-	echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/$NOW.pinitu"
+	echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/1. $NOW.pinitu"
 	mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
 	rm -v "../$NOW.pinit" 2>&1 | tee -a $outfile
+
+
 	else if [ "$1" = "clone" ]; then
 		echo "clone" 2>&1 | tee -a $outfile
 		IDENTIFIER="$2"
@@ -42,6 +45,8 @@ if [ "$1" = "init" ]; then
 		rsync -av --progress --read-batch="./$3.pinit" . 2>&1 | tee -a $outfile
 		rm -v "./$3.pinit" 2>&1 | tee -a $outfile
 		rsync -av --progress --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+
+
 		else if [ "$1" = "commit" ]; then
 			echo "commit" 2>&1 | tee -a $outfile
 			LASTREVISION="`cat ./.pch/.revision`"
@@ -55,10 +60,12 @@ if [ "$1" = "init" ]; then
 			UUID="`uuidgen`"
 			REPOUUID="`cat ./.pch/.uuid`"
 			ia upload "$REPOUUID.$UUID" "../$NOW.patche" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.patche"
-			echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/$NOW.pchu"
+			echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/$THISREVISION. $NOW.pchu"
 			echo -n "$THISREVISION" > ./.pch/.revision
 			mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
 			rm -v "../$NOW.patch" 2>&1 | tee -a $outfile
+
+
 			else if [ "$1" = "patch" ]; then
 				echo "patch" 2>&1 | tee -a $outfile
 				IDENTIFIER="$2"
@@ -79,5 +86,7 @@ if [ "$1" = "init" ]; then
 			fi
 		fi
 	fi
+
+
 DONETIME="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
 echo "Done work at $DONETIME." 2>&1 | tee -a $outfile
