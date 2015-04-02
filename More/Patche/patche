@@ -1,5 +1,5 @@
 #!/bin/bash
-#Patche. Version 1, 2015-April-01
+#Patche. Version 1, 2015-April-01 and 2015-April-01a02
 NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
 outfile="./.pch/logs/$NOW.log"
 #exec > >(tee -a $outfile) 2>&1
@@ -23,12 +23,13 @@ if [ "$1" = "init" ]; then
 	mkdir -v ./.pch/.ptub 2>&1 | tee -a $outfile
 	mkdir -v ./.pch/.pshadow 2>&1 | tee -a $outfile
 	rsync -av --progress --delete --write-batch="./.pch/$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+	bzip2 "./.pch/$NOW.pinit" 2>&1 | tee -a $outfile
+	mv -v "./.pch/$NOW.pinit.bz2" "./.pch/$NOW.pinit" 2>&1 | tee -a $outfile
 	gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "./.pch/$NOW.pinit" 2>&1 | tee -a $outfile
 	rm -v "./.pch/$NOW.pinit" 2>&1 | tee -a $outfile
 	mv -v "./.pch/$NOW.pinit.gpg" "./.pch/$NOW.pinite" 2>&1 | tee -a $outfile
 	UUID="`uuidgen`"
-	IA="`which ia`"
-	python -u "$IA" upload "Patche.$NOW.$UUID.pinite" "./.pch/$NOW.pinite" --log --delete --checksum --metadata="title:Patche.$NOW.$UUID.pinite"
+	ia upload "Patche.$NOW.$UUID.pinite" "./.pch/$NOW.pinite" --log --delete --checksum --metadata="title:Patche.$NOW.$UUID.pinite"
 	else if [ "$1" = "clone" ]; then
 		echo "clone" 2>&1 | tee -a $outfile
 		else if [ "$1" = "commit" ]; then
@@ -41,5 +42,6 @@ if [ "$1" = "init" ]; then
 			fi
 		fi
 	fi
+mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
 DONETIME="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
 echo "Done work at $DONETIME." 2>&1 | tee -a $outfile
