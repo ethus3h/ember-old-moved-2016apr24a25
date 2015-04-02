@@ -15,9 +15,10 @@ if [ "$1" = "init" ]; then
 	mkdir -v ./.pch 2>&1 | tee -a $outfile
 	echo "$PASSPHRASE" > ./.pch/.pbz
 	mkdir -v ./.pch/.ptub 2>&1 | tee -a $outfile
+	mkdir -v ./.pch/.patches 2>&1 | tee -a $outfile
 	mkdir -v ./.pch/.pshadow 2>&1 | tee -a $outfile
 	rsync -av --progress --delete --write-batch="../$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
-	bzip2 "../$NOW.pinit" 2>&1 | tee -a $outfile
+	bzip2 -v "../$NOW.pinit" 2>&1 | tee -a $outfile
 	mv -v "../$NOW.pinit.bz2" "../$NOW.pinit" 2>&1 | tee -a $outfile
 	gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "../$NOW.pinit" 2>&1 | tee -a $outfile
 	mv -v "../$NOW.pinit.gpg" "../$NOW.pinite" 2>&1 | tee -a $outfile
@@ -27,6 +28,7 @@ if [ "$1" = "init" ]; then
 	echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/1. $NOW.pinitu"
 	mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
 	rm -v "../$NOW.pinit" 2>&1 | tee -a $outfile
+	mv -v "../$NOW.pinit.sh" "./.pch/.patches/" 2>&1 | tee -a $outfile
 
 
 	else if [ "$1" = "clone" ]; then
@@ -53,7 +55,7 @@ if [ "$1" = "init" ]; then
 			#help from http://askubuntu.com/questions/385528/how-to-increment-a-variable-in-bash
 			THISREVISION=$(($LASTREVISION+1))
 			rsync -av --progress --delete --write-batch="../$NOW.patch" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
-			bzip2 "../$NOW.patch" 2>&1 | tee -a $outfile
+			bzip2 -v "../$NOW.patch" 2>&1 | tee -a $outfile
 			mv -v "../$NOW.patch.bz2" "../$NOW.patch" 2>&1 | tee -a $outfile
 			gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "../$NOW.patch" 2>&1 | tee -a $outfile
 			mv -v "../$NOW.patch.gpg" "../$NOW.patche" 2>&1 | tee -a $outfile
@@ -64,6 +66,7 @@ if [ "$1" = "init" ]; then
 			echo -n "$THISREVISION" > ./.pch/.revision
 			mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
 			rm -v "../$NOW.patch" 2>&1 | tee -a $outfile
+			mv -v "../$NOW.patch.sh" "./.pch/.patches/" 2>&1 | tee -a $outfile
 
 
 			else if [ "$1" = "patch" ]; then
