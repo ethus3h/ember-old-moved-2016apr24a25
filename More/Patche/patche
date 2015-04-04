@@ -1,5 +1,5 @@
 #!/bin/bash
-#Patche. Version 2, 2015-April-02
+#Patche. Version 3, 2015-April-03a04
 NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
 outfile="./.pch/logs/$NOW.log"
 mkdir ./.pch
@@ -17,7 +17,7 @@ if [ "$1" = "init" ]; then
 	mkdir -v ./.pch/.ptub 2>&1 | tee -a $outfile
 	mkdir -v ./.pch/.patches 2>&1 | tee -a $outfile
 	mkdir -v ./.pch/.pshadow 2>&1 | tee -a $outfile
-	rsync -av --progress --delete --write-batch="../$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+	rsync -av --progress --no-i-r --delete --write-batch="../$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
 	bzip2 -v "../$NOW.pinit" 2>&1 | tee -a $outfile
 	mv -v "../$NOW.pinit.bz2" "../$NOW.pinit" 2>&1 | tee -a $outfile
 	gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "../$NOW.pinit" 2>&1 | tee -a $outfile
@@ -46,7 +46,7 @@ if [ "$1" = "init" ]; then
 		bunzip2 "./$3.pinit.bz2" 2>&1 | tee -a $outfile
 		rsync -av --progress --read-batch="./$3.pinit" . 2>&1 | tee -a $outfile
 		rm -v "./$3.pinit" 2>&1 | tee -a $outfile
-		rsync -av --progress --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+		rsync -av --progress --no-i-r --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
 
 
 		else if [ "$1" = "commit" ]; then
@@ -54,7 +54,7 @@ if [ "$1" = "init" ]; then
 			LASTREVISION="`cat ./.pch/.revision`"
 			#help from http://askubuntu.com/questions/385528/how-to-increment-a-variable-in-bash
 			THISREVISION=$(($LASTREVISION+1))
-			rsync -av --progress --delete --write-batch="../$NOW.patch" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+			rsync -av --progress --no-i-r --delete --write-batch="../$NOW.patch" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
 			bzip2 -v "../$NOW.patch" 2>&1 | tee -a $outfile
 			mv -v "../$NOW.patch.bz2" "../$NOW.patch" 2>&1 | tee -a $outfile
 			gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "../$NOW.patch" 2>&1 | tee -a $outfile
@@ -80,9 +80,9 @@ if [ "$1" = "init" ]; then
 				rm -v "./$3.patch.gpg" 2>&1 | tee -a $outfile
 				mv -v "./$3.patch" "./$3.patch.bz2" 2>&1 | tee -a $outfile
 				bunzip2 "./$3.patch.bz2" 2>&1 | tee -a $outfile
-				rsync -av --progress --read-batch="./$3.patch" . 2>&1 | tee -a $outfile
+				rsync -av --progress --no-i-r --read-batch="./$3.patch" . 2>&1 | tee -a $outfile
 				rm -v "./$3.patch" 2>&1 | tee -a $outfile
-				rsync -av --progress --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+				rsync -av --progress --no-i-r --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
 				else
 					echo "Unknown action or no action specified. Available actions are: init, clone, commit, patch" 2>&1 | tee -a $outfile
 				fi
