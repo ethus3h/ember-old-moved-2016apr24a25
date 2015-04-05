@@ -1,5 +1,5 @@
 #!/bin/bash
-#Patche. Version 3, 2015-April-03a04
+#Patche. Version 4, 2015-April-05
 NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
 outfile="./.pch/logs/$NOW.log"
 mkdir ./.pch
@@ -7,29 +7,30 @@ mkdir ./.pch/logs
 echo -e "Beginning work at $NOW.\nWrap arguments in single quotation marks.\nSuggested to run this as root. Run ia configure first." 2>&1 | tee -a $outfile
 
 if [ "$1" = "init" ]; then
-	echo "init" 2>&1 | tee -a $outfile
-	PASSPHRASE="$2"
-	REPOUUID="`uuidgen`"
-	echo "$REPOUUID" > ./.pch/.uuid
-	rm -rfv ./.pch/.pshadow/ 2>&1 | tee -a $outfile
-	mkdir -v ./.pch 2>&1 | tee -a $outfile
-	echo "$PASSPHRASE" > ./.pch/.pbz
-	mkdir -v ./.pch/.ptub 2>&1 | tee -a $outfile
-	mkdir -v ./.pch/.patches 2>&1 | tee -a $outfile
-	mkdir -v ./.pch/.pshadow 2>&1 | tee -a $outfile
-	rsync -av --progress --no-i-r --delete --write-batch="../$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
-	bzip2 -v "../$NOW.pinit" 2>&1 | tee -a $outfile
-	mv -v "../$NOW.pinit.bz2" "../$NOW.pinit" 2>&1 | tee -a $outfile
-	gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "../$NOW.pinit" 2>&1 | tee -a $outfile
-	mv -v "../$NOW.pinit.gpg" "../$NOW.pinite" 2>&1 | tee -a $outfile
-	UUID="`uuidgen`"
-	ia upload "$REPOUUID.$UUID" "../$NOW.pinite" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.pinite"
-	echo -n "1" > ./.pch/.revision
-	echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/1. $NOW.pinitu"
-	mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
-	rm -v "../$NOW.pinit" 2>&1 | tee -a $outfile
-	mv -v "../$NOW.pinit.sh" "./.pch/.patches/" 2>&1 | tee -a $outfile
-
+	if [ "$2" != ""]; then
+		echo "init" 2>&1 | tee -a $outfile
+		PASSPHRASE="$2"
+		REPOUUID="`uuidgen`"
+		echo "$REPOUUID" > ./.pch/.uuid
+		rm -rfv ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+		mkdir -v ./.pch 2>&1 | tee -a $outfile
+		echo "$PASSPHRASE" > ./.pch/.pbz
+		mkdir -v ./.pch/.ptub 2>&1 | tee -a $outfile
+		mkdir -v ./.pch/.patches 2>&1 | tee -a $outfile
+		mkdir -v ./.pch/.pshadow 2>&1 | tee -a $outfile
+		rsync -av --progress --no-i-r --delete --write-batch="../$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
+		bzip2 -v "../$NOW.pinit" 2>&1 | tee -a $outfile
+		mv -v "../$NOW.pinit.bz2" "../$NOW.pinit" 2>&1 | tee -a $outfile
+		gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "../$NOW.pinit" 2>&1 | tee -a $outfile
+		mv -v "../$NOW.pinit.gpg" "../$NOW.pinite" 2>&1 | tee -a $outfile
+		UUID="`uuidgen`"
+		ia upload "$REPOUUID.$UUID" "../$NOW.pinite" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.pinite"
+		echo -n "1" > ./.pch/.revision
+		echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/1. $NOW.pinitu"
+		mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
+		rm -v "../$NOW.pinit" 2>&1 | tee -a $outfile
+		mv -v "../$NOW.pinit.sh" "./.pch/.patches/" 2>&1 | tee -a $outfile
+		fi
 
 	else if [ "$1" = "clone" ]; then
 		echo "clone" 2>&1 | tee -a $outfile
@@ -44,7 +45,7 @@ if [ "$1" = "init" ]; then
 		rm -v "./$3.pinit.gpg" 2>&1 | tee -a $outfile
 		mv -v "./$3.pinit" "./$3.pinit.bz2" 2>&1 | tee -a $outfile
 		bunzip2 "./$3.pinit.bz2" 2>&1 | tee -a $outfile
-		rsync -av --progress --read-batch="./$3.pinit" . 2>&1 | tee -a $outfile
+		rsync -av --progress --delete --read-batch="./$3.pinit" . 2>&1 | tee -a $outfile
 		rm -v "./$3.pinit" 2>&1 | tee -a $outfile
 		rsync -av --progress --no-i-r --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
 
@@ -80,7 +81,7 @@ if [ "$1" = "init" ]; then
 				rm -v "./$3.patch.gpg" 2>&1 | tee -a $outfile
 				mv -v "./$3.patch" "./$3.patch.bz2" 2>&1 | tee -a $outfile
 				bunzip2 "./$3.patch.bz2" 2>&1 | tee -a $outfile
-				rsync -av --progress --no-i-r --read-batch="./$3.patch" . 2>&1 | tee -a $outfile
+				rsync -av --progress --delete --no-i-r --read-batch="./$3.patch" . 2>&1 | tee -a $outfile
 				rm -v "./$3.patch" 2>&1 | tee -a $outfile
 				rsync -av --progress --no-i-r --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
 				else
