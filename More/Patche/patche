@@ -1,5 +1,6 @@
 #!/bin/bash
 #Patche. Version 4, 2015-April-05
+#From http://serverfault.com/questions/137119/rsync-to-multiple-destinations-using-same-filelist I think the rsync in batch mode might need --delete, but I'm not sure.
 NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
 outfile="./.pch/logs/$NOW.log"
 mkdir ./.pch
