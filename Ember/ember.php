@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015mar30
+	# 2015apr09
 
 	$emberVersion = "1.0.45";
 
@@ -398,7 +398,7 @@
 			return convert("Hello World!",'ascii',$format);
 		}
 		function getTableStyle() {
-			return '<style>table, th {border:1px solid;}input { width:100%; } tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; }</style>';
+			return '<style>table, th {border:1px solid;}input { width:100%; } tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; } .tableHeaderDiv { position: sticky; top: 0; background: #FFFFFF; }</style>';
 		}
 		function getSyncFunction($database,$table) {
 			#partly based on discosync
@@ -503,10 +503,11 @@
 		{
 			function showDocumentation() {
 				createHtmlPage("Ember",getTableStyle());
+				#help from http://jsfiddle.net/dPixie/byB9d/3/
 				echo '<h1>Data formats</h1>
 				<p>Most significant entries listed at the beginning of the table; other entries sorted by type and then alphabetically</p>
 				<table>
-				<tr><th>Format</th><th>Class</th><th class="highlightedCell">Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr>';
+				<thead><tr><th>Format <div class="tableHeaderDiv">Format</div></th><th>Class<div class="tableHeaderDiv">Class</div></th><th class="highlightedCell">Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr></thead>';
 				global $formats;
 				foreach($formats as $format=>$traits) {
 					echo "<tr>";
@@ -535,7 +536,7 @@
 					case 'dcs':
 						echo '<h1>Dc Reference</h1>';
 						echo '<table id="dcreferenceTable">';
-						echo '<tr><th>Dc ID</th><th>Glyph</th><th>U+</th><th class="highlightedCell" style="padding-left:50px !important;padding-right:50px !important;">Name</th><th style="padding-left:10px !important;padding-right:10px !important;">Type</th><th style="padding-left:10px !important;padding-right:10px !important;">Script</th><th><small><small>Sort following<br><small>(blank: previous)</small></small></small></th><th>Decomp.</th><th>Depr.</th><th>Description</th><th>Syntax</th><th>Other names</th></tr>';
+						echo '<thead><tr><th>Dc ID <div class="tableHeaderDiv">Dc ID</div></th><th>Glyph</th><th>U+</th><th class="highlightedCell" style="padding-left:50px !important;padding-right:50px !important;">Name</th><th style="padding-left:10px !important;padding-right:10px !important;">Type</th><th style="padding-left:10px !important;padding-right:10px !important;">Script</th><th><small><small>Sort following<br><small>(blank: previous)</small></small></small></th><th>Decomp.</th><th>Depr.</th><th>Description</th><th>Syntax</th><th>Other names</th></tr></thead>';
 						if(rq('editTable',true) == 'true') {
 							echo $db->editTable("dcs","dcreference");
 						}
