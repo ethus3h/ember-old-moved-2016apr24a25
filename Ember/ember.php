@@ -389,7 +389,46 @@
 	{
 		function createHtmlPage($title="Ember",$head="",$doctype="<!DOCTYPE html>") {
 			#jquery code from http://www.w3schools.com/jquery/jquery_get_started.asp
-			echo $doctype.'<html><head><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><title>'.$title.'</title>'.$head.'</head><body class="persist-area">';
+			echo $doctype.'<html><head><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><script>
+            	function UpdateTableHeaders() {
+			   $(".persist-area").each(function() {
+   
+				   var el             = $(this),
+					   offset         = el.offset(),
+					   scrollTop      = $(window).scrollTop(),
+					   floatingHeader = $(".floatingHeader", this)
+	   
+				   if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height())) {
+					   floatingHeader.css({
+						"visibility": "visible"
+					   });
+				   } else {
+					   floatingHeader.css({
+						"visibility": "hidden"
+					   });      
+				   };
+			   });
+			}
+
+			// DOM Ready      
+			$(function() {
+
+			   var clonedHeaderRow;
+
+			   $(".persist-area").each(function() {
+				   clonedHeaderRow = $(".persist-header", this);
+				   clonedHeaderRow
+					 .before(clonedHeaderRow.clone())
+					 .css("width", clonedHeaderRow.width())
+					 .addClass("floatingHeader");
+		 
+			   });
+   
+			   $(window)
+				.scroll(UpdateTableHeaders)
+				.trigger("scroll");
+   
+			});</script><title>'.$title.'</title>'.$head.'</head><body class="persist-area">';
 		}
 		function endHtmlPage() {
 			echo '</body></html>';
@@ -439,45 +478,6 @@
 					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow="+rowId+"&dataTargetColumn="+columnName+"&dataValue="+encodeURIComponent(btoa(elementToSync)).replace(/[!\'()*]/g, escape);
 					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
             	} 
-            	function UpdateTableHeaders() {
-			   $(".persist-area").each(function() {
-   
-				   var el             = $(this),
-					   offset         = el.offset(),
-					   scrollTop      = $(window).scrollTop(),
-					   floatingHeader = $(".floatingHeader", this)
-	   
-				   if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height())) {
-					   floatingHeader.css({
-						"visibility": "visible"
-					   });
-				   } else {
-					   floatingHeader.css({
-						"visibility": "hidden"
-					   });      
-				   };
-			   });
-			}
-
-			// DOM Ready      
-			$(function() {
-
-			   var clonedHeaderRow;
-
-			   $(".persist-area").each(function() {
-				   clonedHeaderRow = $(".persist-header", this);
-				   clonedHeaderRow
-					 .before(clonedHeaderRow.clone())
-					 .css("width", clonedHeaderRow.width())
-					 .addClass("floatingHeader");
-		 
-			   });
-   
-			   $(window)
-				.scroll(UpdateTableHeaders)
-				.trigger("scroll");
-   
-			});
 				</script>';
 		}
 	}
