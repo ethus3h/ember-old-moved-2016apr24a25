@@ -388,7 +388,8 @@
 	#Code snippets
 	{
 		function createHtmlPage($title="Ember",$head="",$doctype="<!DOCTYPE html>") {
-			echo $doctype.'<html><head><title>'.$title.'</title>'.$head.'</head><body>';
+			#jquery code from http://www.w3schools.com/jquery/jquery_get_started.asp
+			echo $doctype.'<html><head><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><title>'.$title.'</title>'.$head.'</head><body class="persist-area">';
 		}
 		function endHtmlPage() {
 			echo '</body></html>';
@@ -398,7 +399,7 @@
 			return convert("Hello World!",'ascii',$format);
 		}
 		function getTableStyle() {
-			return '<style>table, th {border:1px solid;}input { width:100%; } tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; } .tableHeaderDiv { position: sticky; top: 0; background: #FFFFFF; }</style>';
+			return '<style>table, th {border:1px solid;}input { width:100%; } tr, td {border:1px dotted;} .highlightedCell, .dcreference_name { background-color:#FFFFCC; }.floatingHeader {  position: fixed;  top: 0;  visibility: hidden;}</style>';
 		}
 		function getSyncFunction($database,$table) {
 			#partly based on discosync
@@ -438,6 +439,45 @@
 					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow="+rowId+"&dataTargetColumn="+columnName+"&dataValue="+encodeURIComponent(btoa(elementToSync)).replace(/[!\'()*]/g, escape);
 					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
             	} 
+            	function UpdateTableHeaders() {
+			   $(".persist-area").each(function() {
+   
+				   var el             = $(this),
+					   offset         = el.offset(),
+					   scrollTop      = $(window).scrollTop(),
+					   floatingHeader = $(".floatingHeader", this)
+	   
+				   if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height())) {
+					   floatingHeader.css({
+						"visibility": "visible"
+					   });
+				   } else {
+					   floatingHeader.css({
+						"visibility": "hidden"
+					   });      
+				   };
+			   });
+			}
+
+			// DOM Ready      
+			$(function() {
+
+			   var clonedHeaderRow;
+
+			   $(".persist-area").each(function() {
+				   clonedHeaderRow = $(".persist-header", this);
+				   clonedHeaderRow
+					 .before(clonedHeaderRow.clone())
+					 .css("width", clonedHeaderRow.width())
+					 .addClass("floatingHeader");
+		 
+			   });
+   
+			   $(window)
+				.scroll(UpdateTableHeaders)
+				.trigger("scroll");
+   
+			});
 				</script>';
 		}
 	}
@@ -507,7 +547,7 @@
 				echo '<h1>Data formats</h1>
 				<p>Most significant entries listed at the beginning of the table; other entries sorted by type and then alphabetically</p>
 				<table>
-				<thead><tr><th>Format <div class="tableHeaderDiv">Format</div></th><th>Class<div class="tableHeaderDiv">Class</div></th><th class="highlightedCell">Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr></thead>';
+				<thead class="persist-header"><tr><th>Format</th><th>Class</th><th class="highlightedCell">Format code</th><th>Filename Pattern</th><th>Read</th><th>Write</th><th>Notes</th></tr></thead>';
 				global $formats;
 				foreach($formats as $format=>$traits) {
 					echo "<tr>";
@@ -536,7 +576,7 @@
 					case 'dcs':
 						echo '<h1>Dc Reference</h1>';
 						echo '<table id="dcreferenceTable">';
-						echo '<thead><tr><th>Dc ID <div class="tableHeaderDiv">Dc ID</div></th><th>Glyph</th><th>U+</th><th class="highlightedCell" style="padding-left:50px !important;padding-right:50px !important;">Name</th><th style="padding-left:10px !important;padding-right:10px !important;">Type</th><th style="padding-left:10px !important;padding-right:10px !important;">Script</th><th><small><small>Sort following<br><small>(blank: previous)</small></small></small></th><th>Decomp.</th><th>Depr.</th><th>Description</th><th>Syntax</th><th>Other names</th></tr></thead>';
+						echo '<thead class="persistent-header"><tr><th>Dc ID</th><th>Glyph</th><th>U+</th><th class="highlightedCell" style="padding-left:50px !important;padding-right:50px !important;">Name</th><th style="padding-left:10px !important;padding-right:10px !important;">Type</th><th style="padding-left:10px !important;padding-right:10px !important;">Script</th><th><small><small>Sort following<br><small>(blank: previous)</small></small></small></th><th>Decomp.</th><th>Depr.</th><th>Description</th><th>Syntax</th><th>Other names</th></tr></thead>';
 						if(rq('editTable',true) == 'true') {
 							echo $db->editTable("dcs","dcreference");
 						}
