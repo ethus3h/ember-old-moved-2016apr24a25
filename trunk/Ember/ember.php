@@ -132,7 +132,7 @@
 				global $formats;
 				if(array_key_exists($format,$formats)) {
 					$formatData = $formats[$format];
-					return str_replace($formatData[2],"*",$name);
+					return str_replace("*",$name,$formatData[2]);
 				}
 				return new Exception('Unknown format');
 			}
@@ -324,6 +324,22 @@
 			}
 
 			return new Exception('Unknown data conversion pair');
+		}
+		
+		function getConvertedDataFromRequest($base64request = true) {
+			$input = rq('dataEntered');
+			if($base64request) {
+				$input = base64_decode($input);
+			}
+			
+			if(rq("hexInput") == "1") {
+				$input = hex2bin($input);
+			}
+			$output = convert($input,rq('inputFormat'),rq('outputFormat'));
+			if(rq("hexOutput") == "1") {
+				$output = bin2hex($output);
+			}
+			return $output;
 		}
 		
 		#Parsers: X to Dc converters
@@ -555,7 +571,7 @@
 					<input id="outputFormat" name="outputFormat" style="width:8em;" value="dc" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/></th></tr>
 				<tr><td style="width:50%;"><textarea id="dataEntered" name="dataEntered" style="width:100%;height:30em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"></textarea></td><td style="width:50%;">
 				<div style="width:100%;height:30em;" id="outputField"></div></td></tr>
-				</table><input type="submit" value="Download"><input type="hidden" name="action" value="downloadConvertedData"></form>';
+				</table><input type="submit" value="Download"><input type="hidden" name="action" value="downloadConvertedDataAPI"></form>';
 				endHtmlPage();
 		}
 		#Documentation
@@ -670,15 +686,18 @@
 				$db->addRowsToTable(rq('table'),rq('copyRows'),rq('numberOfRows'));
 			}
 			function getConvertedDataAPI() {
-				$input = base64_decode(rq('dataEntered'));
-				if(rq("hexInput") == "1") {
-					$input = hex2bin($input);
-				}
-				$output = convert($input,rq('inputFormat'),rq('outputFormat'));
-				if(rq("hexOutput") == "1") {
-					$output = bin2hex($output);
-				}
-				echo $output;
+				echo getConvertedDataFromRequest();
+			}
+			function downloadConvertedDataAPI() {
+				$data = getConvertedDataFromRequest(false);
+				$format = rq('outputFormat');
+				$filename = 'Converted_'.$format.'_Generated'.date('c');
+				$filename = formatFilename($filename,$format);
+				$length = strlen($data);
+				header("Content-disposition: attachment; filename=".$filename);
+				header("Content-type: application/octet-stream");
+				header("Content-length: ".$length);
+				echo $data;
 			}
 		}
 	}
@@ -727,6 +746,9 @@
 				break;
 			case "getConvertedDataAPI":
 				getConvertedDataAPI();
+				break;
+			case "downloadConvertedDataAPI":
+				downloadConvertedDataAPI();
 				break;
 			default:
 				resetEmber();
