@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015apr09
+	# 2015apr11
 
 	$emberVersion = "1.0.45";
 
@@ -12,6 +12,7 @@
 	
 	$formats = array(
 		"dc" => array("Ember Document Format ASCII Dc List","EDF Dc List","*.edc","No","No","This is Ember's native \"pivot\" format. XML"),
+		"editabledc" => array("Ember Document Format Editable ASCII Dc List","EDF Dc List","*.edceditable","No","No","XML tags for non-editable characters"),
 		"edf_latest" => array("Ember Document Format, latest version (updates). Currently an alias of edf_1_0_44.","Ember Document Format","*.edf","No","No","No notes at this time"),
 		"ascii" => array("ASCII text","Legacy text encodings","*.txt","Partial","No","No notes at this time"),
 		"asciilatin" => array("ASCII text, Latin letters subset","Legacy text encodings","*.txt","Partial","No","No notes at this time"),
@@ -294,10 +295,10 @@
 			*/
 		}
 		function convert($data,$sourceFormat,$targetFormat,$options=array()) {
+			#return "Source: ".$sourceFormat."\n\n Target: ".$targetFormat;
 			if($sourceFormat == $targetFormat) {
 				return $data;
 			}
-			
 			if($sourceFormat == 'ascii' && $targetFormat == 'edf_1_0_43') {
 				if(array_key_exists('version',$options)) {
 					$version = $options['version'];
@@ -409,7 +410,10 @@
 			#http://stackoverflow.com/questions/12407093/focus-the-next-input-with-down-arrow-key-as-with-the-tab-key			
 			# onkeypress="syncDataField.call(this,event,'.$regionIdentifier.','.$row['id'].','.$columnName.'$i*2)
 			return '<script type="text/javascript">
-				function syncDataField(e,regionIdentifier,rowId,columnName,nextSiblingCount) {
+				function syncDataField(e,regionIdentifier,rowId,columnName,nextSiblingCount,action,outputId) {
+					//help from http://stackoverflow.com/questions/12797118/how-can-i-declare-optional-function-parameters-in-javascript
+					action = action || "syncTableField";
+					outputId = outputId || "";
 					if (e.keyCode==40) {
 						var node = this.parentNode.parentNode.nextSibling.firstChild;
 						var i = 0;
@@ -436,11 +440,47 @@
 					}
 					//help from http://www.toptal.com/javascript/10-most-common-javascript-mistakes
 					var self = this;
-					setTimeout(function () {  var elementToSync = self.innerHTML;
-					var elementToSync = self.value; var xmlhttp; if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); } else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); } 
-					//help from http://stackoverflow.com/questions/18251399/why-doesnt-encodeuricomponent-encode-sinlge-quotes-apostrophes
-					var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow="+rowId+"&dataTargetColumn="+columnName+"&dataValue="+encodeURIComponent(btoa(elementToSync)).replace(/[!\'()*]/g, escape);
-					xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded"); xmlhttp.send(send); }, 100); 
+					setTimeout(
+						function () {
+							var elementToSync = self.innerHTML;
+							var elementToSync = self.value;
+							
+							var xmlhttp;
+							if (window.XMLHttpRequest) { 
+								xmlhttp=new XMLHttpRequest();
+							} else {
+								xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+							} 
+							//help from http://stackoverflow.com/questions/18251399/why-doesnt-encodeuricomponent-encode-sinlge-quotes-apostrophes
+							if(action=="syncTableField") {
+								var send="action=updateDatabaseFieldAPI&db='.$database.'&dataTargetTable='.$table.'&dataTargetRow="+rowId+"&dataTargetColumn="+columnName+"&dataValue="+encodeURIComponent(btoa(elementToSync)).replace(/[!\'()*]/g, escape);
+							}
+							if(action=="updateConverter") {
+								var send="action=getConvertedDataAPI"+
+								"&inputFormat="+document.getElementById("inputFormat").value+
+								"&hexInput="+document.getElementById("hexInput").value+
+								"&outputFormat="+document.getElementById("outputFormat").value+
+								"&hexOutput="+document.getElementById("hexOutput").value+
+								"&dataEntered="+encodeURIComponent(btoa(document.getElementById("dataEntered").value)).replace(/[!\'()*]/g, escape)
+								;
+							}
+							
+							//based on dceutils
+							xmlhttp.onreadystatechange=function()
+							{
+								if (xmlhttp.readyState==4 && xmlhttp.status==200)
+								{
+									if(document.getElementById(outputId)) {
+										document.getElementById(outputId).innerHTML=xmlhttp.responseText;
+									}
+								}
+							}
+  							xmlhttp.open("POST","ember.php",true); xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+					
+							xmlhttp.send(send); 
+					
+						},
+					100); 
             	} 
 				</script>';
 		}
@@ -503,6 +543,21 @@
 			</ul></center>';
 			endHtmlPage();
 		}
+		function conversionUtility() { 
+				createHtmlPage("Ember",getTableStyle());
+				#help from http://www.w3schools.com/html/html_forms.asp
+				echo getSyncFunction('none','none').'<form method="post" action="ember.php"><table style="width:100%;"><tr><th>Edit here<br>
+					<small>1 = Hex? </small><input id="hexInput" name="hexInput" style="width:3em;"  onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/>
+					<small>Format? </small>
+					<input id="inputFormat" name="inputFormat" style="width:8em;" value="editabledc"  onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/>
+					</th><th>Converted<br><small>1 = Hex? </small>
+					<input id="hexOutput" name="hexOutput" style="width:3em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');" /> <small>Format? </small>
+					<input id="outputFormat" name="outputFormat" style="width:8em;" value="dc" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/></th></tr>
+				<tr><td style="width:50%;"><textarea id="dataEntered" name="dataEntered" style="width:100%;height:30em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"></textarea></td><td style="width:50%;">
+				<div style="width:100%;height:30em;" id="outputField"></div></td></tr>
+				</table><input type="submit" value="Download"><input type="hidden" name="action" value="downloadConvertedData"></form>';
+				endHtmlPage();
+		}
 		#Documentation
 		{
 			function showDocumentation() {
@@ -529,6 +584,7 @@
 				<br>
 				<ul>
 				<li><a href="ember.php?action=showDceTable&table=dcs">List of Dcs</a></li>
+				<li><a href="ember.php?action=conversionUtility">Data conversion utility</a></li>
 				<li><a href="ember.php?action=showDceTable&table=encodings">List of encodings, with mappings to and from Dcs</a></li>
 				</ul>';
 				endHtmlPage();
@@ -613,6 +669,17 @@
 				$db = getDbObjectByName(rq('db'));
 				$db->addRowsToTable(rq('table'),rq('copyRows'),rq('numberOfRows'));
 			}
+			function getConvertedDataAPI() {
+				$input = base64_decode(rq('dataEntered'));
+				if(rq("hexInput") == "1") {
+					$input = hex2bin($input);
+				}
+				$output = convert($input,rq('inputFormat'),rq('outputFormat'));
+				if(rq("hexOutput") == "1") {
+					$output = bin2hex($output);
+				}
+				echo $output;
+			}
 		}
 	}
 }
@@ -630,6 +697,9 @@
 				break;
 			case "showWelcomePage":
 				showWelcomePage();
+				break;
+			case "conversionUtility":
+				conversionUtility();
 				break;
 			#Documentation
 			case "showDocumentation":
@@ -654,6 +724,9 @@
 				break;
 			case "addRowsToTableAPI":
 				addRowsToTableAPI();
+				break;
+			case "getConvertedDataAPI":
+				getConvertedDataAPI();
 				break;
 			default:
 				resetEmber();
