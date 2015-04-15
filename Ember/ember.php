@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015apr11
+	# 2015apr14
 
 	$emberVersion = "1.0.45";
 
@@ -562,15 +562,15 @@
 		function conversionUtility() { 
 				createHtmlPage("Ember",getTableStyle());
 				#help from http://www.w3schools.com/html/html_forms.asp
-				echo getSyncFunction('none','none').'<form method="post" action="ember.php"><table style="width:100%;"><tr><th>Edit here<br>
+				echo getSyncFunction('none','none').'<form method="post" action="ember.php"><table style="width:100%;table-layout:fixed;"><tr><th>Edit here<br>
 					<small>1 = Hex? </small><input id="hexInput" name="hexInput" style="width:3em;"  onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/>
 					<small>Format? </small>
 					<input id="inputFormat" name="inputFormat" style="width:8em;" value="editabledc"  onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/>
 					</th><th>Converted<br><small>1 = Hex? </small>
 					<input id="hexOutput" name="hexOutput" style="width:3em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');" /> <small>Format? </small>
 					<input id="outputFormat" name="outputFormat" style="width:8em;" value="dc" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/></th></tr>
-				<tr><td style="width:50%;"><textarea id="dataEntered" name="dataEntered" style="width:100%;height:30em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"></textarea></td><td style="width:50%;">
-				<div style="width:100%;height:30em;" id="outputField"></div></td></tr>
+				<tr><td style="width:50%;"><textarea id="dataEntered" name="dataEntered" style="width:100%;height:30em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"></textarea></td><td style="">
+				<div style="display:block;height:30em;overflow-x:scroll;" id="outputField"></div></td></tr>
 				</table><input type="submit" value="Download"><input type="hidden" name="action" value="downloadConvertedDataAPI"></form>';
 				endHtmlPage();
 		}
@@ -623,6 +623,15 @@
 						break;
 					case 'encodings':
 						echo '<h1>Data for known encodings</h1>';
+						echo '<table id="dcreferenceTable">';
+						echo '<thead><tr><th>ID</th><th>Source Encoding</th><th>Source bytes</th><th>Target Dc</th></tr></thead>';
+						if(rq('editTable',true) == 'true') {
+							echo $db->editTable("encodings","encodings");
+						}
+						else {
+							echo $db->displayTable("encodings","encodings");
+						}
+						echo '</table>';
 						break;
 				}
 				endHtmlPage();
