@@ -163,6 +163,11 @@
 					return $result->fetchAll(PDO::FETCH_ASSOC);
 				}
 				
+				function getRows($tableName,$filters) {
+					$query = 'SELECT * FROM '.$tableName.' WHERE '.$filters.';';
+					return $this->query($query);
+				}
+				
 				function getTable($tableName) {
 					$query = 'SELECT * FROM ' . $tableName . ' ORDER BY id;';
 					return $this->query($query);
@@ -294,8 +299,40 @@
 
 			*/
 		}
+		function byteToDc($sourceFormat,$byte) {
+			$byte = strtoupper($byte);
+			$db = new SqliteDb("edf.sqlite");
+			$data = $db->getRows("encodings",'source_encoding = "'.$sourceFormat.'" AND source_bytes = "'.$byte.'"');
+			if(array_key_exists('0',$data)) {
+				$data = $data[0];
+				$data = $data['target_dc'];
+			}
+			else {
+				$data = '';
+				throw new Exception('No mapping found');
+			}
+			return $data;
+		}
 		function convert($data,$sourceFormat,$targetFormat,$options=array()) {
 			#return "Source: ".$sourceFormat."\n\n Target: ".$targetFormat;
+			if($sourceFormat == 'ascii') {
+				$dc = new DOMDocument("1.0","ASCII");
+				#from http://php.net/manual/en/domdocument.savexml.php
+				$dc->formatOutput = true;
+				$root = $dc->createElement('dcStructure');
+				$root = $dc->appendChild($root);
+				$dataWorkingCopy = strtoupper(bin2hex($data));
+				while(strlen($dataWorkingCopy)>0) {
+					$byte = substr($dataWorkingCopy,0,2);
+					$converted = byteToDc($sourceFormat,$byte);
+					#echo $converted;
+					$element = $dc->createElement("dc".$converted);
+					$element = $root->appendChild($element);
+					#print_r($element);
+					$dataWorkingCopy = substr($dataWorkingCopy,2);
+				}
+				return $dc->saveXML();
+			}
 			if($sourceFormat == $targetFormat) {
 				return $data;
 			}
@@ -338,6 +375,9 @@
 			$output = convert($input,rq('inputFormat'),rq('outputFormat'));
 			if(rq("hexOutput") == "1") {
 				$output = bin2hex($output);
+			}
+			if(rq("action") == "getConvertedDataAPI") {
+				$output = htmlspecialchars($output);
 			}
 			return $output;
 		}
@@ -487,7 +527,13 @@
 								if (xmlhttp.readyState==4 && xmlhttp.status==200)
 								{
 									if(document.getElementById(outputId)) {
-										document.getElementById(outputId).innerHTML=xmlhttp.responseText;
+										//help from / based on http://stackoverflow.com/questions/5007574/rendering-plaintext-as-html-maintaining-whitespace-without-pre
+										document.getElementById(outputId).innerHTML=xmlhttp.responseText.replace(/\t/g, "    ")
+										   .replace(/  /g, "&nbsp; ")
+										   .replace(/  /g, " &nbsp;") // second pass
+																	  // handles odd number of spaces, where we 
+																	  // end up with "&nbsp;" + " " + " "
+										   .replace(/\r\n|\n|\r/g, "<br />");
 									}
 								}
 							}
