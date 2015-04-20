@@ -670,7 +670,7 @@
 					case 'encodings':
 						echo '<h1>Data for known encodings</h1>';
 						echo '<table id="dcreferenceTable">';
-						echo '<thead><tr><th>ID</th><th>Source Encoding</th><th>Source bytes</th><th>Target Dc</th></tr></thead>';
+						echo '<thead><tr><th>ID</th><th>Source Encoding</th><th>Source bytes</th><th>Target Dc</th><th>Comments</th></tr></thead>';
 						if(rq('editTable',true) == 'true') {
 							echo $db->editTable("encodings","encodings");
 						}
