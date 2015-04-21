@@ -2,7 +2,7 @@
 
 # 0. Header and setup
 {
-	# 2015apr20
+	# 2015apr21
 
 	$emberVersion = "1.0.45";
 
@@ -11,8 +11,8 @@
 	ini_set("display_errors",1);
 	
 	$formats = array(
-		"dc" => array("Ember Document Format ASCII Dc List","EDF Dc List","*.edc","No","No","This is Ember's native \"pivot\" format. XML"),
-		"editabledc" => array("Ember Document Format Editable ASCII Dc List","EDF Dc List","*.edceditable","No","No","XML tags for non-editable characters"),
+		"dc" => array("Ember Document Format ASCII Dc List","EDF Dc List","*.edc","No","No","This is Ember's native \"pivot\" format."),
+		"editabledc" => array("Ember Document Format Editable ASCII Dc List","EDF Dc List","*.edceditable","No","No","Coded Dc tags for non-editable characters"),
 		"edf_latest" => array("Ember Document Format, latest version (updates). Currently an alias of edf_1_0_44.","Ember Document Format","*.edf","No","No","No notes at this time"),
 		"ascii" => array("ASCII text","Legacy text encodings","*.txt","Partial","No","No notes at this time"),
 		"asciilatin" => array("ASCII text, Latin letters subset","Legacy text encodings","*.txt","Partial","No","No notes at this time"),
@@ -308,8 +308,9 @@
 				$data = $data['target_dc'];
 			}
 			else {
-				$data = '';
-				throw new Exception('No mapping found');
+				#$data = '';
+				#throw new Exception('No mapping found');
+				$data = '207';
 			}
 			return $data;
 		}
@@ -319,11 +320,14 @@
 				$dc = new DOMDocument("1.0","ASCII");
 				#from http://php.net/manual/en/domdocument.savexml.php
 				$dc->formatOutput = true;
-				$root = $dc->createElement('dcStructure');
+				$root = $dc->createElement('dc235');
 				$root = $dc->appendChild($root);
 				$dataWorkingCopy = strtoupper(bin2hex($data));
 				while(strlen($dataWorkingCopy)>0) {
 					$byte = substr($dataWorkingCopy,0,2);
+					if(hexdec($byte) > 127) {
+						throw new Exception('Data is not in ASCII format');
+					}
 					$converted = byteToDc($sourceFormat,$byte);
 					#echo $converted;
 					$element = $dc->createElement("dc".$converted);
@@ -331,9 +335,23 @@
 					#print_r($element);
 					$dataWorkingCopy = substr($dataWorkingCopy,2);
 				}
-				return $dc->saveXML();
 			}
-			if($sourceFormat == $targetFormat) {
+			
+			if($targetFormat == 'dc') {
+				return $dcdata->saveXML();
+			}
+			
+			if($targetFormat == 'ascii') {
+				#Help from http://stackoverflow.com/questions/191923/how-do-i-iterate-through-dom-elements-in-php
+				/* $elements = $dc->getElementsByTagName('foo');
+				foreach($elements as $node){
+					foreach($node->childNodes as $child) {
+						$data[] = array($child->nodeName => $child->nodeValue);
+					}
+				} */
+			}
+			
+			/* if($sourceFormat == $targetFormat) {
 				return $data;
 			}
 			if($sourceFormat == 'ascii' && $targetFormat == 'edf_1_0_43') {
@@ -359,7 +377,8 @@
 			if($sourceFormat == 'asciilatin' && $targetFormat == 'dc') {
 				return convert_asciilatin_to_dc($data);
 			}
-
+			*/
+			
 			return new Exception('Unknown data conversion pair');
 		}
 		
