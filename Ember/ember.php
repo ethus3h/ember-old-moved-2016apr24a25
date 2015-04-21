@@ -314,14 +314,30 @@
 			}
 			return $data;
 		}
+		function DcToByte($dc) {
+			#echo 'Dc to byte: '.$dc.'...';
+			$db = new SqliteDb("edf.sqlite");
+			$data = $db->getRows("dcs",'id = "'.$dc.'"');
+			if(array_key_exists('0',$data)) {
+				$data = $data[0];
+				$data = $data['unicode'];
+			}
+			else {
+				throw new Exception('No mapping found');
+			}
+			if(strlen($data) == 0) {
+				$data = 'FFFD';
+			}
+			if(!is_integer(strlen($data)/2)) {
+				$data = '0' . $data;
+			}
+			return $data;
+		}
 		function convert($data,$sourceFormat,$targetFormat,$options=array()) {
 			#return "Source: ".$sourceFormat."\n\n Target: ".$targetFormat;
 			if($sourceFormat == 'ascii') {
-				$dc = new DOMDocument("1.0","ASCII");
-				#from http://php.net/manual/en/domdocument.savexml.php
-				$dc->formatOutput = true;
-				$root = $dc->createElement('dc235');
-				$root = $dc->appendChild($root);
+				$dc = '';
+				$dc = $dc . '235';
 				$dataWorkingCopy = strtoupper(bin2hex($data));
 				while(strlen($dataWorkingCopy)>0) {
 					$byte = substr($dataWorkingCopy,0,2);
@@ -330,25 +346,43 @@
 					}
 					$converted = byteToDc($sourceFormat,$byte);
 					#echo $converted;
-					$element = $dc->createElement("dc".$converted);
-					$element = $root->appendChild($element);
+					$dc = $dc . ',' . $converted;
 					#print_r($element);
 					$dataWorkingCopy = substr($dataWorkingCopy,2);
 				}
+				$dc = $dc . ',236';
 			}
 			
 			if($targetFormat == 'dc') {
-				return $dcdata->saveXML();
+				return $dc;
 			}
 			
 			if($targetFormat == 'ascii') {
-				#Help from http://stackoverflow.com/questions/191923/how-do-i-iterate-through-dom-elements-in-php
-				/* $elements = $dc->getElementsByTagName('foo');
-				foreach($elements as $node){
-					foreach($node->childNodes as $child) {
-						$data[] = array($child->nodeName => $child->nodeValue);
+				$output = '';
+				while(strlen($dc) > 0) {
+					#echo 'Dc remaining to convert: '.$dc.'Doom!';
+					#help from / based on http://stackoverflow.com/questions/4366730/check-if-string-contains-specific-words
+					if(strpos($dc,',') !== false) {
+						$singledc = substr($dc,0,strpos($dc,','));
+						$converted = DcToByte(str_replace(',','',$singledc));
+						if(hexdec($converted) > 127) {
+							$converted = '';
+						}
+						$output = $output . $converted;
+						#echo 'Output:'.$converted;
+						$dc = substr($dc,strpos($dc,',')+1);
 					}
-				} */
+					else {
+						#echo 'DONE DONE DONE DONE';
+						$converted = DcToByte(str_replace(',','',$dc));
+						if(hexdec($converted) > 127) {
+							$converted = '';
+						}
+						$output = $output . $converted;
+						$dc = '';
+					}
+				}
+				return hex2bin($output);
 			}
 			
 			/* if($sourceFormat == $targetFormat) {
