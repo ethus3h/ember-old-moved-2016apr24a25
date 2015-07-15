@@ -4,7 +4,7 @@
 {
 	# 2015apr21
 
-	$emberVersion = "1.0.45";
+	$emberVersion = "1.0.51";
 
 	#based on the other ember.php, version 8-0.91.44
 	error_reporting(E_ALL);
