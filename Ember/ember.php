@@ -653,6 +653,7 @@
 			echo '<center><h1>Welcome to Ember.</h1><br>
 			<ul>
 			<li><a href="ember.php?action=showDocumentation">Documentation</a></li>
+			<li><a href="ember.php?action=showDiscography">Discography</a></li>
 			<li><a href="ember.php?action=showTests">Run and display tests</a></li>
 			<li><a href="ember.php?action=showHelloWorld&format=edf_1_0_44">Generate Hello World! demo file</a></li>
 			</ul></center>';
