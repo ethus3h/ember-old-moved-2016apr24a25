@@ -302,6 +302,10 @@
 		function byteToDc($sourceFormat,$byte) {
 			$byte = strtoupper($byte);
 			$db = new SqliteDb("edf.sqlite");
+			if($sourceFormat == 'utf32') {
+				$sourceFormat = 'unicode';
+				$byte = ltrim($byte,'0');
+			}
 			$data = $db->getRows("encodings",'source_encoding = "'.$sourceFormat.'" AND source_bytes = "'.$byte.'"');
 			if(array_key_exists('0',$data)) {
 				$data = $data[0];
@@ -333,11 +337,16 @@
 			}
 			return $data;
 		}
+		
+		function DcToHTML($dc) {
+			return $dc;
+		}
+		
 		function convert($data,$sourceFormat,$targetFormat,$options=array()) {
 			#return "Source: ".$sourceFormat."\n\n Target: ".$targetFormat;
+			$dc = '';
+			$dc = $dc . '235';
 			if($sourceFormat == 'ascii') {
-				$dc = '';
-				$dc = $dc . '235';
 				$dataWorkingCopy = strtoupper(bin2hex($data));
 				while(strlen($dataWorkingCopy)>0) {
 					$byte = substr($dataWorkingCopy,0,2);
@@ -350,7 +359,72 @@
 					#print_r($element);
 					$dataWorkingCopy = substr($dataWorkingCopy,2);
 				}
-				$dc = $dc . ',236';
+			}
+			
+			if($sourceFormat == 'utf8') {
+				$data = bin2hex(mb_convert_encoding(bin2hex($data),'UTF-8','UTF-32'));
+				#echo bin2hex($data);
+				#$dc = $dc . substr(convert($data,'utf32','dc'),4,-4);
+				$dc = $dc . $data;
+			}
+			
+			if($sourceFormat == 'utf32') {
+				$dataWorkingCopy = strtoupper(bin2hex($data));
+				$dc = $dc . $dataWorkingCopy;
+				while(strlen($dataWorkingCopy)>0) {
+					$byte = substr($dataWorkingCopy,0,8);
+					$converted = byteToDc($sourceFormat,$byte);
+					$dc = $dc . ',' . $converted;
+					$dataWorkingCopy = substr($dataWorkingCopy,8);
+				}
+			}
+
+			if($sourceFormat == 'editabledc') { 
+				while(strlen($data) > 0) {
+					if(strpos($data,'@') === 0) {
+						$data = substr($data,1);
+						if(strlen(substr($data,0,strpos($data,'@'))) == 0) {
+							$dc = $dc . ',1';
+						}
+						else {
+							$dc = $dc . ',' . substr($data,0,strpos($data,'@'));
+						}
+						$data = substr($data,strpos($data,'@')+1);
+					}
+					else {
+						if(strpos($data,'@') !== false) {
+							$dc = $dc . substr(convert(substr($data,0,strpos($data,'@')),'utf8','dc'),3,-4);
+							$data = '';
+						}
+						else {
+							$dc = $dc . substr(convert($data,'utf8','dc'),3,-4);
+							$data = '';
+						}
+						#$dc = $dc . substr($data,0);
+						#$dc = $dc . substr(convert(substr($data,0,strpos($data,'@')),'utf8','dc'),3,-4);
+						#$data = substr($data,strpos($data,'@')+1);
+					}
+				}
+			}
+			$dc = $dc . ',236';
+			
+			if($targetFormat == 'html') {
+				#go through $dc, and change each dc to html
+				$output = '';
+				while(strlen($dc) > 0) {
+					if(strpos($dc,',') !== false) {
+						$singledc = substr($dc,0,strpos($dc,','));
+						$converted = DcToHTML(str_replace(',','',$singledc));
+						$output = $output . $converted;
+						$dc = substr($dc,strpos($dc,',')+1);
+					}
+					else {
+						$converted = DcToHTML(str_replace(',','',$dc));
+						$output = $output . $converted;
+						$dc = '';
+					}
+				}
+				return hex2bin($output);				
 			}
 			
 			if($targetFormat == 'dc') {
