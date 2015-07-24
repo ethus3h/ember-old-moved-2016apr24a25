@@ -339,7 +339,16 @@
 		}
 		
 		function DcToHTML($dc) {
-			return $dc;
+			$db = new SqliteDb("edf.sqlite");
+			$data = $db->getRows("dcs",'id = "'.$dc.'"');
+			if(array_key_exists('0',$data)) {
+				$data = $data[0];
+				$data = $data['htmlEquiv'];
+			}
+			else {
+				throw new Exception('No mapping found');
+			}
+			return $data;
 		}
 		
 		function convert($data,$sourceFormat,$targetFormat,$options=array()) {
@@ -362,15 +371,16 @@
 			}
 			
 			if($sourceFormat == 'utf8') {
-				$data = bin2hex(mb_convert_encoding(bin2hex($data),'UTF-8','UTF-32'));
+				$data = hex2bin(substr(bin2hex(iconv('UTF-8','UTF-32',$data)),8));
 				#echo bin2hex($data);
-				#$dc = $dc . substr(convert($data,'utf32','dc'),4,-4);
-				$dc = $dc . $data;
+				$dc = $dc . substr(convert($data,'utf32','dc'),3,-4);
+				#$dc = $dc . $data;
 			}
 			
 			if($sourceFormat == 'utf32') {
 				$dataWorkingCopy = strtoupper(bin2hex($data));
-				$dc = $dc . $dataWorkingCopy;
+				#echo '<br>DWC = '.$dataWorkingCopy.'</br>';
+				#$dc = $dc . $dataWorkingCopy;
 				while(strlen($dataWorkingCopy)>0) {
 					$byte = substr($dataWorkingCopy,0,8);
 					$converted = byteToDc($sourceFormat,$byte);
@@ -405,12 +415,15 @@
 						#$data = substr($data,strpos($data,'@')+1);
 					}
 				}
+				#echo $dc;
+				$dc = str_replace('@','',$dc);
 			}
 			$dc = $dc . ',236';
 			
 			if($targetFormat == 'html') {
 				#go through $dc, and change each dc to html
 				$output = '';
+				#echo $dc;
 				while(strlen($dc) > 0) {
 					if(strpos($dc,',') !== false) {
 						$singledc = substr($dc,0,strpos($dc,','));
@@ -424,7 +437,7 @@
 						$dc = '';
 					}
 				}
-				return hex2bin($output);				
+				return $output;				
 			}
 			
 			if($targetFormat == 'dc') {
