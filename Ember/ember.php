@@ -434,17 +434,16 @@
 							$atCode = substr($firstAtCode,1,-1);
 							
 							if(strlen($atCode) === 0) {
-								#No contents of @-code, append nothing
-								log_add('<br>Remaining string to process: '.$data.'.<br><br>');
+								log_add('<br>No contents of @-code, append nothing.<br><br>');
 							}
 							else {
 								if(ctype_digit((string)$atCode)) {
-									#This is a valid @-code! Append to $dc
+									log_add('<br>This is a valid @-code! Append to $dc.<br><br>');
 									$dc = $dc . ',' . $atCode;
 								}
 							
 								else {
-									#Not a valid @-code, because it's not a positive or zero integer inside
+									log_add('<br>Not a valid @-code, because it\'s not a positive or zero integer inside.<br><br>');
 								}
 							}
 							
