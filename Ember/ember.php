@@ -12,10 +12,11 @@
 	
 	$formats = array(
 		"dc" => array("Ember Document Format ASCII Dc List","EDF Dc List","*.edc","No","No","This is Ember's native \"pivot\" format."),
-		"editabledc" => array("Ember Document Format Editable ASCII Dc List","EDF Dc List","*.edceditable","No","No","Coded Dc tags for non-editable characters"),
+		"editabledc" => array("Ember Document Format Editable ASCII Dc List","EDF Dc List","*.edceditable","Yes","No","Coded Dc tags for non-editable characters"),
 		"edf_latest" => array("Ember Document Format, latest version (updates). Currently an alias of edf_1_0_44.","Ember Document Format","*.edf","No","No","No notes at this time"),
 		"ascii" => array("ASCII text","Legacy text encodings","*.txt","Partial","No","No notes at this time"),
 		"asciilatin" => array("ASCII text, Latin letters subset","Legacy text encodings","*.txt","Partial","No","No notes at this time"),
+		"html" => array("HTML document","","*.html","No","Partial","No notes at this time"),
 		"data" => array("Uninterpreted binary data, in octets","Data","*","No","No","Raw binary data cannot be read or written that is not a multiple of 8 bytes"),
 		"edf_1_0_43" => array("Ember Document Format, old, incompatible file format specified in <i>Ember</i> version 1.0.43","EDF 1.0.43 Legacy","*.edf","No","Partial","No notes at this time"),
 		"edf_1_0_44" => array("Ember Document Format, current version specified in <i>Ember</i> version 1.0.44","Ember Document Format","*.edf","No","Partial","No notes at this time"),
@@ -28,7 +29,7 @@
 	#Utilities
 	{
 		function log_add($text) {
-			echo $text;
+			#echo $text;
 		}
 		function rq($name,$returnEmptyIfUndefined = false) {
 			# Return a request variable
@@ -614,7 +615,8 @@
 				$output = bin2hex($output);
 			}
 			if(rq("action") == "getConvertedDataAPI") {
-				$output = htmlspecialchars($output);
+				//$output = htmlspecialchars($output);
+				//Don't remember why I did the htmlspecialchars thing here.... but it's getting in the way now
 			}
 			return $output;
 		}
@@ -987,7 +989,7 @@
 				$filename = 'Converted_'.$format.'_Generated'.date('c');
 				$filename = formatFilename($filename,$format);
 				$length = strlen($data);
-				header("Content-disposition: attachment; filename=".$filename);
+				header("Content-disposition: attachment; filename=".str_replace("\n",'',$filename));
 				header("Content-type: application/octet-stream");
 				header("Content-length: ".$length);
 				echo $data;
