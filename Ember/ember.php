@@ -27,6 +27,9 @@
 {
 	#Utilities
 	{
+		function log_add($text) {
+			echo $text;
+		}
 		function rq($name,$returnEmptyIfUndefined = false) {
 			# Return a request variable
 			if(!isset($_REQUEST[$name])) {
@@ -393,7 +396,7 @@
 			
 				{
 			
-				/*		Possibilities: @, @@, @a, @a@, @1@, a@a, a@1@, 			
+				/*		Possibilities: @, @@, @a, @a@, @1@, a@a, a@1@, a@a@, a@@, a@@a, a@@@a			
 					while strlen data > 0:
 						if(first character is @):
 							if another @ exists:
@@ -409,38 +412,51 @@
 				}
 					
 				while (strlen($data) > 0) {
+					log_add('<br><b>Beginning parse iteration.</b><br><br>');
 					if(substr($data,0,1) == '@') {
+						log_add('<br>String begins with @-code.<br><br>');
 						$dataWithoutFirstAt = substr($data,1);
 						if(strpos($dataWithoutFirstAt,'@') !== false) {
+							log_add('<br>@-code has closing @ sign; trimming and appending to $dc<br><br>');
 							//cut from 1st to 2nd @
-							$firstAtCode = substr($data,0,strpos($dataWithoutFirstAt,'@')+1);
-							$data = substr($data,strpos($dataWithoutFirstAt,'@')+1);
+							$firstAtCode = substr($data,0,strpos($dataWithoutFirstAt,'@')+2);
+							log_add('<br>@-code to process: '.$firstAtCode.'<br><br>');
+							$data = substr($data,strpos($dataWithoutFirstAt,'@')+2);
+							log_add('<br>Remaining string to process: '.$data.'.<br><br>');
 							//decode @-code
 							
 							#TODO
-							$dc = $dc . substr($firstAtCode,1,-1);
+							$dc = $dc . ','.substr($firstAtCode,1,-1);
+							log_add('<br>$dc = '. $dc . '<br><br>');
 						}
 						else {
+							log_add('<br>No closing @ sign; removing initial @ and continuing.<br><br>');
 							$data = substr($data,1);
 						}
 					}
 					//if first character is not @:
 					else {
+						log_add('<br>String does not begin with an @ code.<br><br>');
 						//if an @ exists:
 						if(strpos($data,'@') !== false) {
+							log_add('<br>String contains an @ sign, so beginning will be trimmed, converted, and appended.<br><br>');
 							//cut to 1st @
 							$stringToConvertAndAppend = substr($data,0,strpos($data,'@'));
+							log_add('<br>Beginning string to process: '.$stringToConvertAndAppend.'.<br><br>');
 							$data = substr($data,strpos($data,'@'));
+							log_add('<br>Remaining string to process: '.$data.'.<br><br>');
 							//decode string and append to $dc
 							$dc = $dc . substr(convert($stringToConvertAndAppend,'utf8','dc'),3,-4);
 						}
 						//if no @ exists:
 						else {
+							log_add('<br>String does not contain an @ sign; entire string will be converted and appended.<br><br>');
 							//decode whole string
 							$dc = $dc . substr(convert($data,'utf8','dc'),3,-4);
 							$data = '';
 						}
 					}
+					log_add('<br>Dc and end of iteration: '.$dc.'.<br><br>');
 				}
 				
 				{
@@ -471,10 +487,13 @@
 // 				}
 				}
 				
-				#echo $dc;
+				log_add('<br><br>Done processing. Final $dc: ' . $dc . '<br><br>');
 				$dc = str_replace('@','',$dc);
 			}
 			$dc = $dc . ',236';
+			//remove empty dcs (",," in $dc)
+			//based on http://stackoverflow.com/questions/6723389/remove-repeating-character
+			$dc = preg_replace("/(,)\\1+/","$1",$dc);
 			
 			if($targetFormat == 'html') {
 				#go through $dc, and change each dc to html
