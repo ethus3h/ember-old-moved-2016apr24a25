@@ -20,7 +20,6 @@
 		"data" => array("Uninterpreted binary data, in octets","Data","*","No","No","Raw binary data cannot be read or written that is not a multiple of 8 bytes"),
 		"edf_1_0_43" => array("Ember Document Format, old, incompatible file format specified in <i>Ember</i> version 1.0.43","EDF 1.0.43 Legacy","*.edf","No","Partial","No notes at this time"),
 		"edf_1_0_44" => array("Ember Document Format, current version specified in <i>Ember</i> version 1.0.44","Ember Document Format","*.edf","No","Partial","No notes at this time"),
-		
 	);
 }
 
@@ -513,11 +512,17 @@
 				log_add('<br><br>Done processing. Final $dc: ' . $dc . '<br><br>');
 				$dc = str_replace('@','',$dc);
 			}
+
+
+
 			$dc = $dc . ',236';
 			//remove empty dcs (",," in $dc)
 			//based on http://stackoverflow.com/questions/6723389/remove-repeating-character
 			$dc = preg_replace("/(,)\\1+/","$1",$dc);
 			
+
+
+
 			if($targetFormat == 'html') {
 				#go through $dc, and change each dc to html
 				$output = '';
@@ -860,6 +865,22 @@
 				</table><input type="submit" value="Download"><input type="hidden" name="action" value="downloadConvertedDataAPI"></form>';
 				endHtmlPage();
 		}
+		function dcEditor() {
+				createHtmlPage("Ember",getTableStyle());
+				#Buttons needed: Save, Download HTML, Download Dc
+				#Needs to be able to preload a document by ID from a SQLite database
+				echo getSyncFunction('none','none').'<form method="post" action="ember.php"><table style="width:100%;table-layout:fixed;"><tr><th>Edit here<br>
+					<small>1 = Hex? </small><input id="hexInput" name="hexInput" style="width:3em;"  onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/>
+					<small>Format? </small>
+					<input id="inputFormat" name="inputFormat" style="width:8em;" value="editabledc"  onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/>
+					</th><th>Converted<br><small>1 = Hex? </small>
+					<input id="hexOutput" name="hexOutput" style="width:3em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');" /> <small>Format? </small>
+					<input id="outputFormat" name="outputFormat" style="width:8em;" value="dc" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/></th></tr>
+				<tr><td style="width:50%;"><textarea id="dataEntered" name="dataEntered" style="width:100%;height:30em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"></textarea></td><td style="">
+				<div style="display:block;height:30em;overflow-x:scroll;" id="outputField"></div></td></tr>
+				</table><input type="submit" value="Download"><input type="hidden" name="action" value="downloadConvertedDataAPI"></form>';
+				endHtmlPage();
+		}
 		#Documentation
 		{
 			function showDocumentation() {
@@ -1014,6 +1035,9 @@
 				break;
 			case "conversionUtility":
 				conversionUtility();
+				break;
+			case "dcEditor":
+				dcEditor();
 				break;
 			#Documentation
 			case "showDocumentation":
