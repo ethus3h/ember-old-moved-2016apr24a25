@@ -390,31 +390,87 @@
 			}
 
 			if($sourceFormat == 'editabledc') { 
-				while(strlen($data) > 0) {
-					if(strpos($data,'@') === 0) {
-						$data = substr($data,1);
-						if(strlen(substr($data,0,strpos($data,'@'))) == 0) {
-							$dc = $dc . ',1';
+			
+				{
+			
+				/*		Possibilities: @, @@, @a, @a@, @1@, a@a, a@1@, 			
+					while strlen data > 0:
+						if(first character is @):
+							if another @ exists:
+								cut from 1st to 2nd @
+							If no other @ exists:
+								remove @
+						if first character is not @:
+							if an @ exists:
+								cut to 1st @
+							if no @ exists:
+								decode whole string
+						break;*/
+				}
+					
+				while (strlen($data) > 0) {
+					if(substr($data,0,1) == '@') {
+						$dataWithoutFirstAt = substr($data,1);
+						if(strpos($dataWithoutFirstAt,'@') !== false) {
+							//cut from 1st to 2nd @
+							$firstAtCode = substr($data,0,strpos($dataWithoutFirstAt,'@')+1);
+							$data = substr($data,strpos($dataWithoutFirstAt,'@')+1);
+							//decode @-code
+							
+							#TODO
+							$dc = $dc . substr($firstAtCode,1,-1);
 						}
 						else {
-							$dc = $dc . ',' . substr($data,0,strpos($data,'@'));
+							$data = substr($data,1);
 						}
-						$data = substr($data,strpos($data,'@')+1);
 					}
+					//if first character is not @:
 					else {
+						//if an @ exists:
 						if(strpos($data,'@') !== false) {
-							$dc = $dc . substr(convert(substr($data,0,strpos($data,'@')),'utf8','dc'),3,-4);
-							$data = '';
+							//cut to 1st @
+							$stringToConvertAndAppend = substr($data,0,strpos($data,'@'));
+							$data = substr($data,strpos($data,'@'));
+							//decode string and append to $dc
+							$dc = $dc . substr(convert($stringToConvertAndAppend,'utf8','dc'),3,-4);
 						}
+						//if no @ exists:
 						else {
+							//decode whole string
 							$dc = $dc . substr(convert($data,'utf8','dc'),3,-4);
 							$data = '';
 						}
-						#$dc = $dc . substr($data,0);
-						#$dc = $dc . substr(convert(substr($data,0,strpos($data,'@')),'utf8','dc'),3,-4);
-						#$data = substr($data,strpos($data,'@')+1);
 					}
 				}
+				
+				{
+// 				while(strlen($data) > 0) {
+// 					if(strpos($data,'@') === 0) {
+// 						$data = substr($data,1);
+// 						if(strlen(substr($data,0,strpos($data,'@'))) == 0) {
+// 							$dc = $dc . ',1';
+// 						}
+// 						else {
+// 							$dc = $dc . ',' . substr($data,0,strpos($data,'@'));
+// 						}
+// 						$data = substr($data,strpos($data,'@')+1);
+// 					}
+// 					else {
+// 						if(strpos($data,'@') !== false) {
+// 							$dc = $dc . substr(convert(substr($data,0,strpos($data,'@')),'utf8','dc'),3,-4);
+// 							$data = '';
+// 						}
+// 						else {
+// 							$dc = $dc . substr(convert($data,'utf8','dc'),3,-4);
+// 							$data = '';
+// 						}
+// 						#$dc = $dc . substr($data,0);
+// 						#$dc = $dc . substr(convert(substr($data,0,strpos($data,'@')),'utf8','dc'),3,-4);
+// 						#$data = substr($data,strpos($data,'@')+1);
+// 					}
+// 				}
+				}
+				
 				#echo $dc;
 				$dc = str_replace('@','',$dc);
 			}
