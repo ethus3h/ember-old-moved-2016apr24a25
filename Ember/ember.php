@@ -423,10 +423,33 @@
 							log_add('<br>@-code to process: '.$firstAtCode.'<br><br>');
 							$data = substr($data,strpos($dataWithoutFirstAt,'@')+2);
 							log_add('<br>Remaining string to process: '.$data.'.<br><br>');
-							//decode @-code
 							
+							
+							//decode @-code
+							{							
+							
+
 							#TODO
-							$dc = $dc . ','.substr($firstAtCode,1,-1);
+							
+							$atCode = substr($firstAtCode,1,-1);
+							
+							if(strlen($atCode) === 0) {
+								#No contents of @-code, append nothing
+								log_add('<br>Remaining string to process: '.$data.'.<br><br>');
+							}
+							else {
+								if(ctype_digit((string)$atCode)) {
+									#This is a valid @-code! Append to $dc
+									$dc = $dc . ',' . $atCode;
+								}
+							
+								else {
+									#Not a valid @-code, because it's not a positive or zero integer inside
+								}
+							}
+							
+							
+							}
 							log_add('<br>$dc = '. $dc . '<br><br>');
 						}
 						else {
