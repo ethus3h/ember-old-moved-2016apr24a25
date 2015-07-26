@@ -235,6 +235,12 @@
 					}				
 					echo 'Done!';	
 				}
+				
+				function getLastID($table) {
+					#help from http://stackoverflow.com/questions/16436485/sqlite-selecting-a-value-which-has-maximum-id-number
+					return $this->query('SELECT * FROM '.$table.' ORDER BY id DESC LIMIT 1;');
+				}
+				
 				function close() {
 					$this->db = null;
 				}
@@ -256,6 +262,9 @@
 						return new SqliteDb($databaseName);
 						break;
 					case 'edf.sqlite':
+						return new SqliteDb($databaseName);
+						break;
+					case 'dceditor.sqlite':
 						return new SqliteDb($databaseName);
 						break;
 				}
@@ -881,7 +890,11 @@
 				#If the request says to save the document
 				if(rq('saveDocument') == "1") {
 					#save the document to the database as a new ID
+					$db = getDbObjectByName("dceditor.sqlite");
+					$db->query("INSERT INTO docs (date, contents) VALUES ('now','".rq('documentData')."');");
 					#store saved version as variables to use for building the page and saving revision ID in variable
+					$savedDocument = rq('documentData');
+					$savedDocumentID = $db->getLastID('docs');
 				}
 				#else no request options
 				else {
