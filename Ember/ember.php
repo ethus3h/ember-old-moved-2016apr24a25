@@ -875,6 +875,8 @@
 				endHtmlPage();
 		}
 		function dcEditor() {
+				#Needs to be able to preload a document by ID from a SQLite database
+
 				createHtmlPage("Ember",getTableStyle());
 				#Buttons needed: Save, Download HTML, Download Dc
 				
@@ -901,8 +903,6 @@
 					#do nothing
 				}
 				#build page, using variables to fill in default values and to display the revision ID (display "unsaved" if no revision ID)
-
-				#Needs to be able to preload a document by ID from a SQLite database
 				echo getSyncFunction('none','none').'<form method="post" action="ember.php"><table style="width:100%;table-layout:fixed;"><tr><th>Edit here<br>
 					<small>1 = Hex? </small><input id="hexInput" name="hexInput" style="width:3em;"  onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/>
 					<small>Format? </small>
@@ -914,6 +914,7 @@
 				<div style="display:block;height:30em;overflow-x:scroll;" id="outputField"></div></td></tr>
 				</table><input type="submit" value="Download"><input type="hidden" name="action" value="downloadConvertedDataAPI"></form>';
 				endHtmlPage();
+
 		}
 		#Documentation
 		{
