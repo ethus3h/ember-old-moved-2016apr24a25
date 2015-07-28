@@ -853,6 +853,7 @@
 			echo '<center><h1>Welcome to Ember.</h1><br>
 			<ul>
 			<li><a href="ember.php?action=showDocumentation">Documentation</a></li>
+			<li><a href="ember.php?action=dcEditor">dcEditor</a></li>
 			<li><a href="ember.php?action=showDiscography">Discography</a></li>
 			<li><a href="ember.php?action=showTests">Run and display tests</a></li>
 			<li><a href="ember.php?action=showHelloWorld&format=edf_1_0_44">Generate Hello World! demo file</a></li>
@@ -903,16 +904,18 @@
 					#do nothing
 				}
 				#build page, using variables to fill in default values and to display the revision ID (display "unsaved" if no revision ID)
-				echo getSyncFunction('none','none').'<form method="post" action="ember.php"><table style="width:100%;table-layout:fixed;"><tr><th>Edit here<br>
+				echo getSyncFunction('none','none').'<form method="post" action="ember.php" id="dcEditorForm"><table style="width:100%;table-layout:fixed;"><tr><th>Edit here<br>
 					<small>1 = Hex? </small><input id="hexInput" name="hexInput" style="width:3em;"  onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/>
 					<small>Format? </small>
 					<input id="inputFormat" name="inputFormat" style="width:8em;" value="editabledc"  onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/>
 					</th><th>Converted<br><small>1 = Hex? </small>
 					<input id="hexOutput" name="hexOutput" style="width:3em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');" /> <small>Format? </small>
-					<input id="outputFormat" name="outputFormat" style="width:8em;" value="dc" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/></th></tr>
+					<input id="outputFormat" name="outputFormat" style="width:8em;" value="html" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"/></th></tr>
 				<tr><td style="width:50%;"><textarea id="dataEntered" name="dataEntered" style="width:100%;height:30em;" onkeypress="syncDataField.call(this,event,\'\',\'\',\'\',\'\',\'updateConverter\',\'outputField\');"></textarea></td><td style="">
-				<div style="display:block;height:30em;overflow-x:scroll;" id="outputField"></div></td></tr>
-				</table><input type="submit" value="Download"><input type="hidden" name="action" value="downloadConvertedDataAPI"></form>';
+				<div style="display:block;height:30em;overflow-x:scroll;
+				/*https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/*/ 
+				-ms-word-break: break-all;word-break: break-all;word-wrap: break-word;" id="outputField"></div></td></tr>
+				</table><button type="button" onClick="document.getElementById(\'outputFormat\').value=\'dc\';document.getElementById(\'dcEditorForm\').submit();" style="width:33% !important";>Download dc</button><button type="button" style="width:33% !important";>Save</button><input type="submit" value="Download HTML" style="width:33% !important";><input type="hidden" name="action" value="downloadConvertedDataAPI"></form>';
 				endHtmlPage();
 
 		}
