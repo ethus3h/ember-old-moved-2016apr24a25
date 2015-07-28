@@ -28,7 +28,7 @@
 	#Utilities
 	{
 		function log_add($text) {
-			#echo $text;
+			echo $text;
 		}
 		function rq($name,$returnEmptyIfUndefined = false) {
 			# Return a request variable
@@ -419,7 +419,7 @@
 								decode whole string
 						break;*/
 				}
-					
+				$originalData = $data;	
 				while (strlen($data) > 0) {
 					log_add('<br><b>Beginning parse iteration.</b><br><br>');
 					if(substr($data,0,1) == '@') {
@@ -550,6 +550,10 @@
 					}
 				}
 				return $output;				
+			}
+
+			if($targetFormat == 'editabledc') {
+				return $originalData;
 			}
 			
 			if($targetFormat == 'dc') {
@@ -700,7 +704,7 @@
 		function createHtmlPage($title="Ember",$head="",$doctype="<!DOCTYPE html>") {
 			#jquery code from http://www.w3schools.com/jquery/jquery_get_started.asp
 			#Help from http://stackoverflow.com/questions/24813094/how-to-call-a-jquery-function-in-html-body-onload
-			echo $doctype.'<html><head><script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script><script src="jquery.floatThead.min.js"></script><script>				
+			echo $doctype.'<html><head><script src="jquery-1.11.2.min.js"></script><script src="jquery.floatThead.min.js"></script><script>				
 			 $(document).ready(function() { 
 			 $("table:first").floatThead();});</script><title>'.$title.'</title>'.$head.'</head><body>';
 		}
@@ -718,7 +722,197 @@
 			#partly based on discosync
 			#http://stackoverflow.com/questions/12407093/focus-the-next-input-with-down-arrow-key-as-with-the-tab-key			
 			# onkeypress="syncDataField.call(this,event,'.$regionIdentifier.','.$row['id'].','.$columnName.'$i*2)
-			return '<script type="text/javascript">
+			{
+				//from file:///Volumes/disk2s1/Archive/Reference/Sciences/Computer%20Science/Programming/Mozilla%20Developer%20Network%20%28tweaked,%20latest%20version%20as%20of%202015-03-12%29/en-US/docs/Web/JavaScript/Base64_encoding_and_decoding.html#Solution_.232_.E2.80.93_rewriting_atob%28%29_and_btoa%28%29_using_TypedArrays_and_UTF-8
+				/* examples: */
+				{
+				/* 
+				var sMyInput = "Base 64 \u2014 Mozilla Developer Network";
+				var aMyUTF8Input = strToUTF8Arr(sMyInput);
+				var sMyBase64 = base64EncArr(aMyUTF8Input);
+				alert(sMyBase64);
+				var aMyUTF8Output = base64DecToArr(sMyBase64);
+				var sMyOutput = UTF8ArrToStr(aMyUTF8Output);
+				alert(sMyOutput);
+				*/
+				}
+				{
+				$utf8utils = '"use strict";
+
+					/*\
+					|*|
+					|*|  Base64 / binary data / UTF-8 strings utilities
+					|*|
+					|*|  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Base64_encoding_and_decoding
+					|*|
+					\*/
+
+					/* Array of bytes to base64 string decoding */
+
+					function b64ToUint6 (nChr) {
+
+					  return nChr > 64 && nChr < 91 ?
+						  nChr - 65
+						: nChr > 96 && nChr < 123 ?
+						  nChr - 71
+						: nChr > 47 && nChr < 58 ?
+						  nChr + 4
+						: nChr === 43 ?
+						  62
+						: nChr === 47 ?
+						  63
+						:
+						  0;
+
+					}
+
+					function base64DecToArr (sBase64, nBlocksSize) {
+
+					  var
+						sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""), nInLen = sB64Enc.length,
+						nOutLen = nBlocksSize ? Math.ceil((nInLen * 3 + 1 >> 2) / nBlocksSize) * nBlocksSize : nInLen * 3 + 1 >> 2, taBytes = new Uint8Array(nOutLen);
+
+					  for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx < nInLen; nInIdx++) {
+						nMod4 = nInIdx & 3;
+						nUint24 |= b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << 18 - 6 * nMod4;
+						if (nMod4 === 3 || nInLen - nInIdx === 1) {
+						  for (nMod3 = 0; nMod3 < 3 && nOutIdx < nOutLen; nMod3++, nOutIdx++) {
+							taBytes[nOutIdx] = nUint24 >>> (16 >>> nMod3 & 24) & 255;
+						  }
+						  nUint24 = 0;
+
+						}
+					  }
+
+					  return taBytes;
+					}
+
+					/* Base64 string to array encoding */
+
+					function uint6ToB64 (nUint6) {
+
+					  return nUint6 < 26 ?
+						  nUint6 + 65
+						: nUint6 < 52 ?
+						  nUint6 + 71
+						: nUint6 < 62 ?
+						  nUint6 - 4
+						: nUint6 === 62 ?
+						  43
+						: nUint6 === 63 ?
+						  47
+						:
+						  65;
+
+					}
+
+					function base64EncArr (aBytes) {
+
+					  var nMod3 = 2, sB64Enc = "";
+
+					  for (var nLen = aBytes.length, nUint24 = 0, nIdx = 0; nIdx < nLen; nIdx++) {
+						nMod3 = nIdx % 3;
+						if (nIdx > 0 && (nIdx * 4 / 3) % 76 === 0) { sB64Enc += "\r\n"; }
+						nUint24 |= aBytes[nIdx] << (16 >>> nMod3 & 24);
+						if (nMod3 === 2 || aBytes.length - nIdx === 1) {
+						  sB64Enc += String.fromCharCode(uint6ToB64(nUint24 >>> 18 & 63), uint6ToB64(nUint24 >>> 12 & 63), uint6ToB64(nUint24 >>> 6 & 63), uint6ToB64(nUint24 & 63));
+						  nUint24 = 0;
+						}
+					  }
+
+					  return sB64Enc.substr(0, sB64Enc.length - 2 + nMod3) + (nMod3 === 2 ? '' : nMod3 === 1 ? '=' : '==');
+
+					}
+
+					/* UTF-8 array to DOMString and vice versa */
+
+					function UTF8ArrToStr (aBytes) {
+
+					  var sView = "";
+
+					  for (var nPart, nLen = aBytes.length, nIdx = 0; nIdx < nLen; nIdx++) {
+						nPart = aBytes[nIdx];
+						sView += String.fromCharCode(
+						  nPart > 251 && nPart < 254 && nIdx + 5 < nLen ? /* six bytes */
+							/* (nPart - 252 << 30) may be not so safe in ECMAScript! So...: */
+							(nPart - 252) * 1073741824 + (aBytes[++nIdx] - 128 << 24) + (aBytes[++nIdx] - 128 << 18) + (aBytes[++nIdx] - 128 << 12) + (aBytes[++nIdx] - 128 << 6) + aBytes[++nIdx] - 128
+						  : nPart > 247 && nPart < 252 && nIdx + 4 < nLen ? /* five bytes */
+							(nPart - 248 << 24) + (aBytes[++nIdx] - 128 << 18) + (aBytes[++nIdx] - 128 << 12) + (aBytes[++nIdx] - 128 << 6) + aBytes[++nIdx] - 128
+						  : nPart > 239 && nPart < 248 && nIdx + 3 < nLen ? /* four bytes */
+							(nPart - 240 << 18) + (aBytes[++nIdx] - 128 << 12) + (aBytes[++nIdx] - 128 << 6) + aBytes[++nIdx] - 128
+						  : nPart > 223 && nPart < 240 && nIdx + 2 < nLen ? /* three bytes */
+							(nPart - 224 << 12) + (aBytes[++nIdx] - 128 << 6) + aBytes[++nIdx] - 128
+						  : nPart > 191 && nPart < 224 && nIdx + 1 < nLen ? /* two bytes */
+							(nPart - 192 << 6) + aBytes[++nIdx] - 128
+						  : /* nPart < 127 ? */ /* one byte */
+							nPart
+						);
+					  }
+
+					  return sView;
+
+					}
+
+					function strToUTF8Arr (sDOMStr) {
+
+					  var aBytes, nChr, nStrLen = sDOMStr.length, nArrLen = 0;
+
+					  /* mapping... */
+
+					  for (var nMapIdx = 0; nMapIdx < nStrLen; nMapIdx++) {
+						nChr = sDOMStr.charCodeAt(nMapIdx);
+						nArrLen += nChr < 0x80 ? 1 : nChr < 0x800 ? 2 : nChr < 0x10000 ? 3 : nChr < 0x200000 ? 4 : nChr < 0x4000000 ? 5 : 6;
+					  }
+
+					  aBytes = new Uint8Array(nArrLen);
+
+					  /* transcription... */
+
+					  for (var nIdx = 0, nChrIdx = 0; nIdx < nArrLen; nChrIdx++) {
+						nChr = sDOMStr.charCodeAt(nChrIdx);
+						if (nChr < 128) {
+						  /* one byte */
+						  aBytes[nIdx++] = nChr;
+						} else if (nChr < 0x800) {
+						  /* two bytes */
+						  aBytes[nIdx++] = 192 + (nChr >>> 6);
+						  aBytes[nIdx++] = 128 + (nChr & 63);
+						} else if (nChr < 0x10000) {
+						  /* three bytes */
+						  aBytes[nIdx++] = 224 + (nChr >>> 12);
+						  aBytes[nIdx++] = 128 + (nChr >>> 6 & 63);
+						  aBytes[nIdx++] = 128 + (nChr & 63);
+						} else if (nChr < 0x200000) {
+						  /* four bytes */
+						  aBytes[nIdx++] = 240 + (nChr >>> 18);
+						  aBytes[nIdx++] = 128 + (nChr >>> 12 & 63);
+						  aBytes[nIdx++] = 128 + (nChr >>> 6 & 63);
+						  aBytes[nIdx++] = 128 + (nChr & 63);
+						} else if (nChr < 0x4000000) {
+						  /* five bytes */
+						  aBytes[nIdx++] = 248 + (nChr >>> 24);
+						  aBytes[nIdx++] = 128 + (nChr >>> 18 & 63);
+						  aBytes[nIdx++] = 128 + (nChr >>> 12 & 63);
+						  aBytes[nIdx++] = 128 + (nChr >>> 6 & 63);
+						  aBytes[nIdx++] = 128 + (nChr & 63);
+						} else /* if (nChr <= 0x7fffffff) */ {
+						  /* six bytes */
+						  aBytes[nIdx++] = 252 + (nChr >>> 30);
+						  aBytes[nIdx++] = 128 + (nChr >>> 24 & 63);
+						  aBytes[nIdx++] = 128 + (nChr >>> 18 & 63);
+						  aBytes[nIdx++] = 128 + (nChr >>> 12 & 63);
+						  aBytes[nIdx++] = 128 + (nChr >>> 6 & 63);
+						  aBytes[nIdx++] = 128 + (nChr & 63);
+						}
+					  }
+
+					  return aBytes;
+
+					}';
+				}
+			}
+			
+			return '<script type="text/javascript"> ' . $utf8utils . '
 				function syncDataField(e,regionIdentifier,rowId,columnName,nextSiblingCount,action,outputId) {
 					//help from http://stackoverflow.com/questions/12797118/how-can-i-declare-optional-function-parameters-in-javascript
 					action = action || "syncTableField";
@@ -770,7 +964,15 @@
 								"&hexInput="+document.getElementById("hexInput").value+
 								"&outputFormat="+document.getElementById("outputFormat").value+
 								"&hexOutput="+document.getElementById("hexOutput").value+
-								"&dataEntered="+encodeURIComponent(btoa(document.getElementById("dataEntered").value)).replace(/[!\'()*]/g, escape)
+								"&dataEntered="+encodeURIComponent(
+									btoa(
+										document.getElementById(
+											"dataEntered"
+										)
+									.value
+									)
+								)
+								.replace(/[!\'()*]/g, escape)
 								;
 							}
 							
@@ -915,7 +1117,7 @@
 				<div style="display:block;height:30em;overflow-x:scroll;
 				/*https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/*/ 
 				-ms-word-break: break-all;word-break: break-all;word-wrap: break-word;" id="outputField"></div></td></tr>
-				</table><button type="button" onClick="document.getElementById(\'outputFormat\').value=\'dc\';document.getElementById(\'dcEditorForm\').submit();" style="width:33% !important";>Download dc</button><button type="button" style="width:33% !important";>Save</button><input type="submit" value="Download HTML" style="width:33% !important";><input type="hidden" name="action" value="downloadConvertedDataAPI"></form>';
+				</table><button type="button" onClick="document.getElementById(\'outputFormat\').value=\'editabledc\';document.getElementById(\'dcEditorForm\').submit();" style="width:33% !important";>Download editabledc</button><button type="button" style="width:33% !important";>Save</button><input type="submit" value="Download HTML" style="width:33% !important";><input type="hidden" name="action" value="downloadConvertedDataAPI"></form>';
 				endHtmlPage();
 
 		}
