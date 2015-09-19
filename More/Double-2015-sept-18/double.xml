@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
                        xmlns:moz="http://www.mozilla.org/2006/browser/search/">
-  <!-- Created on 2015-Sept-18 based on http://mycroftproject.com/installos.php/51007/goosegoosego.xml and http://mycroftproject.com/installos.php/14909/google.xml -->
+  <!-- Created on Sat, 19 Sep 2015 02:56:41 GMT -->
   <ShortName>double.php by Futuramerlin.com</ShortName>
   <Description>Searches both GooseGooseGo and Bing. This will only work if you set your browser to ignore X-Frame-Options headers.</Description>
   <Url type="text/html" method="get" template="http://futuramerlin.com/double.php?s={searchTerms}"/>
   <Url type="application/x-suggestions+json" template="https://suggestqueries.google.com/complete/search?output=firefox&amp;client=firefox&amp;hl=en&amp;q={searchTerms}"/>
-  <Image width="16" height="16">http://futuramerlin.com/favicon.ico</Image>
+  <Contact>info@futuramerlin.com</Contact>
+  <!-- <Image width="16" height="16">GENERATEDLATER</Image> -->
   <Developer>Futuramerlin</Developer>
   <InputEncoding>UTF-8</InputEncoding>
   <moz:SearchForm>http://goosegoosego.com/</moz:SearchForm>
+  <!-- <Url type="application/opensearchdescription+xml" rel="self" template="GENERATEDLATER"/> -->
 </OpenSearchDescription>
