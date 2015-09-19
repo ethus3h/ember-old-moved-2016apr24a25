@@ -7,9 +7,9 @@
   <Url type="text/html" method="get" template="http://futuramerlin.com/double.php?s={searchTerms}"/>
   <Url type="application/x-suggestions+json" template="https://suggestqueries.google.com/complete/search?output=firefox&amp;client=firefox&amp;hl=en&amp;q={searchTerms}"/>
   <Contact>info@futuramerlin.com</Contact>
-  <!-- <Image width="16" height="16">GENERATEDLATER</Image> -->
+  <Image width="16" height="16">http://mycroftproject.com/updateos.php/id0/double-php-fm.ico</Image>
   <Developer>Futuramerlin</Developer>
   <InputEncoding>UTF-8</InputEncoding>
   <moz:SearchForm>http://goosegoosego.com/</moz:SearchForm>
-  <!-- <Url type="application/opensearchdescription+xml" rel="self" template="GENERATEDLATER"/> -->
+  <Url type="application/opensearchdescription+xml" rel="self" template="http://mycroftproject.com/updateos.php/id0/double-php-fm.xml"/>
 </OpenSearchDescription>
