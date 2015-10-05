@@ -1,0 +1,52 @@
+Last login: Mon Oct  5 04:23:48 on ttys000
+Elliots-MacBook-Pro:~ elliot$ /Applications/Gunmetal\ Grey/game/launch-unix.sh 
+python: can't open file './src/main.py': [Errno 2] No such file or directory
+Elliots-MacBook-Pro:~ elliot$ cd /Applications/Gunmetal\ Grey/game/
+Elliots-MacBook-Pro:game elliot$ ./launch-unix.sh 
+No music found for level.
+No music found for level.
+Dead
+Dead
+Dead
+Dead
+Traceback (most recent call last):
+  File "./src/main.py", line 10, in <module>
+    myGame.run()
+  File "/Applications/Gunmetal Grey/game/src/game.py", line 80, in run
+    statemgr.update(td)
+  File "/Applications/Gunmetal Grey/game/src/statemgr.py", line 78, in update
+    _state.update(td)
+  File "/Applications/Gunmetal Grey/game/src/states/playstate.py", line 90, in update
+    self.scene.update(td)
+  File "/Applications/Gunmetal Grey/game/src/scene.py", line 70, in update
+    self.object_mgr.update(td)
+  File "/Applications/Gunmetal Grey/game/src/objectmgr.py", line 118, in update
+    obj.update(td)
+  File "/Applications/Gunmetal Grey/game/src/gameobjects/enemy.py", line 52, in update
+    self.spritecollider.collide(self.obj_mgr.enemy_touchable)
+  File "/Applications/Gunmetal Grey/game/src/components/spritecollide.py", line 39, in collide
+    spr.touch(self.gameobject, self,  *args, **kwargs)
+  File "/Applications/Gunmetal Grey/game/src/components/spritecollide.py", line 34, in touch
+    self.gameobject.call("spriteCollide", gameobject, collider, *args, **kwargs)
+  File "/Applications/Gunmetal Grey/game/src/gameobjects/gameobject.py", line 34, in call
+    return getattr(self, func_name)(*args, **kwargs)
+  File "/Applications/Gunmetal Grey/game/src/gameobjects/playerlaser.py", line 48, in spriteCollide
+    gameobject.call("doDamage", self.damage_amount)
+  File "/Applications/Gunmetal Grey/game/src/gameobjects/gameobject.py", line 34, in call
+    return getattr(self, func_name)(*args, **kwargs)
+  File "/Applications/Gunmetal Grey/game/src/gameobjects/chickbot.py", line 57, in doDamage
+    super(ChickBot, self).doDamage(amount)
+  File "/Applications/Gunmetal Grey/game/src/gameobjects/enemy.py", line 76, in doDamage
+    self.health.change(amount)
+  File "/Applications/Gunmetal Grey/game/src/components/health.py", line 29, in change
+    self.gameobject.zeroHealth()
+  File "/Applications/Gunmetal Grey/game/src/gameobjects/enemy.py", line 80, in zeroHealth
+    self.die()
+  File "/Applications/Gunmetal Grey/game/src/gameobjects/enemy.py", line 70, in die
+    self.kill()
+  File "/Applications/Gunmetal Grey/game/src/gameobjects/gameobject.py", line 22, in kill
+    self.scene.object_mgr.remove(self.name)
+  File "/Applications/Gunmetal Grey/game/src/objectmgr.py", line 51, in remove
+    self.objects[name].destroy()
+KeyError: '_obj_2'
+Elliots-MacBook-Pro:game elliot$ 
