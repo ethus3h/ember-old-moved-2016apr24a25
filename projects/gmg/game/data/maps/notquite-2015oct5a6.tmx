@@ -24,14 +24,14 @@
  </layer>
  <layer name="Foreground" width="100" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt1d0KgkAYhOGP0jovqY796/7vsI2U3KUCQ3dW9h14UCkPnEGszKwCAAAAACBBtdM7ndNOjv2X62Y4bwb3BJ5hy+pJr09LpBuwzbwN2n/Knhm2+b7B2I0qbPLeIpXkvklKW4zJeZNUk+smKSfHTVKPuh/28JPbO7KFqDtiDz/qjtjDj7oj9vCT0zdkK1H3xB5+1D2xhx91T+zhR91TLLelCls56p5iuToH57hMbatF3VNMF0t3l52zd06m70m1S2HabcYNSnvtcDZ9N2rTbX4pA0VwHv4vvOfTb2wAAAAAAAAAAAAAILYH4fxKjA==
+   eJztm12O1DAMxz1oAcEbqwoGBC+zs7vPHAWOwevkkitOwG1opLEwHjux8zHpqLVktU2dxP3/6n7N7gQA08o8EB+dy9o9gI/Hxqwvh4ktc3pbufXKdYROPfMPwn5tXcttpDbXnLvVfBZNU7Fam5VbT31oLj35tDhWr2ba8VjGGcVDyrk1G22OUp7W9tQcFh4jmOTmrmWTG7uGRU7Pmtw8+fXkUpN/j+MtYdaK8y0woTrntC493sPsT2SMx9mP57ajsP3A4lvyWAoTL5eanAPRNTqc20oM+z2e/Tkxpye/kTxKc/BwiTVwPDvVka+XGOaBxtmUHtsSmHjzCIl+B6JNSscaHrn+zwXHtBQeNXlwJgejljVmYRn3a9ewW2BSw8PDgupVapa+GFPChJ9jt8rDayVMPCzQSpmMZOGdX+rjNRzDE18a52UymkcLfl7z8PDEabG9z9ERPAJZ8n5o72Z/b9CsNYtcbEmN1DDB993eLLRttM+zf0no1UrfkrFLztXI8fsO4OfsP87LuJ3jUDKnlYcWR9tzOgW2bbHW7LznN47LawvfcyU9SudEXWqZ4X5NIylHi3YeFtZ4Dw86rjY251TLo1UMz8NSA6kYLwurWe4hWBeciWb4jfNJiWvFw8KCM7Fw4Kbx7GXWurDWCLVePDwsUnVitaCs97BcbcTlicTjurXmPfP1YkHPpVIrrS+v5XLXeNBzTjve1jxKWbTggcczqj6inciSHtOJtHl4eK4tLVlE31vEWIBZeEwsnvJArfiYILRb3we59rUson+a/c3sb02qjDNLfXNGGg+61OrGy6MFC/SPsHwu96DzkPREFgD/a6bpxs2jX0sWEpc7GMvmldAm5XtQ2mlt0L6Sbvw7SWq+a7JIsUn5a+Z3bJ3H8T7SvnujPmj0fZGzwL5SbaR+i7OyuBaP0W7RZy/s1+4bXLvc76IbCz+Pie2ndSHx0Mb/xba/ZXJbG4taHhP4eEi2sfjn0rVEi6XXrBNcXq8OcPntXbtWvezy862NxSToZOlDGVCL+n1lOmr2Z+bxe2efcw3Oz10PC84jrsf6iSw+kPiU4bPvaB2W4txy3JAD/caxZ31DYg4aEwzzrsmt9w0eJz3jcq21vt7zYE1u0US7F0tjBLh8HkqNH0i/0VqMdkttWN+nU2NY9q2dR45F3P8gxFDjv7FLY+WeFaIF2HhIltsvmfR3DwDyOFIeATYeqdqQ6gKfW7Xf0WK89vco0hycB8B6eWj3A/q/cdToO0SKicU0HmtlMTn14ywkt/JJjbFmHlYuFhYeLhuPMiZeDhoXT5+Nx/VYe/v9Bf3nxXI=
   </data>
  </layer>
  <objectgroup name="Objects" width="100" height="50">
   <object name="cave" type="Cave" x="1552" y="864" width="128" height="128">
    <properties>
     <property name="cavetype" value="entrance"/>
-    <property name="mapfile" value="maps/cave.tmx"/>
+    <property name="mapfile" value="maps/end.tmx"/>
     <property name="spawnpoint" value="cave_exit"/>
    </properties>
   </object>
@@ -40,12 +40,14 @@
     <property name="filename" value="dialogs/npc_end.json"/>
    </properties>
   </object>
-  <object name="cave_exit" type="Cave" x="1762" y="861" width="128" height="128">
+  <object name="cave_exit" type="Cave" x="1775" y="1096" width="128" height="128">
    <properties>
     <property name="cavetype" value="exit"/>
-    <property name="mapfile" value="maps/notquite-2015oct5a6.tmx"/>
+    <property name="mapfile" value="maps/end.tmx"/>
     <property name="spawnpoint" value="cave"/>
    </properties>
   </object>
+  <object name="outhouse" type="Outhouse" x="1040" y="802" width="128" height="160"/>
+  <!-- <object name="coin" type="Coin" x="2654" y="1342" width="32" height="32"/> -->
  </objectgroup>
 </map>

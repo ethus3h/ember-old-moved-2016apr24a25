@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+#patched 2015-Oct-5a6 to fix the crash on attempting to kill some enemies
 """
 The ObjectManager manages creating, updating, and drawing objects.
 """
@@ -48,8 +48,14 @@ class ObjectManager:
 
     def remove(self, name):
         """Remove an object from the object manager"""
-        self.objects[name].destroy()
-        del self.objects[name]
+        try:
+        	self.objects[name].destroy()
+        except:
+        	print 'Object could not be destroyed'
+        try:
+        	del self.objects[name]
+        except:
+        	print 'Object could not be deleted'
 
     def detach(self, name):
         """The object manager will no longer keep track of this object, but it will not be destroyed. Currently this isn't used."""

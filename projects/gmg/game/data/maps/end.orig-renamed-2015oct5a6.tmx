@@ -40,12 +40,5 @@
     <property name="filename" value="dialogs/npc_end.json"/>
    </properties>
   </object>
-  <object name="cave_exit" type="Cave" x="1762" y="861" width="128" height="128">
-   <properties>
-    <property name="cavetype" value="exit"/>
-    <property name="mapfile" value="maps/notquite-2015oct5a6.tmx"/>
-    <property name="spawnpoint" value="cave"/>
-   </properties>
-  </object>
  </objectgroup>
 </map>

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#patched 2015-Oct-5a6
 
 """
 Game objects that can be created and placed somewhere in a map
@@ -6,8 +7,12 @@ Game objects that can be created and placed somewhere in a map
 
 from testobject import TestObject
 from camera import Camera
+from coin import Coin
 from playerobject import Player
 from energy import Energy
+from emt import EMT
+from ship import Ship
+from tentacle import Tentacle
 from playerlaser import PlayerLaser
 from crawler import Crawler
 from explosion import Explosion
