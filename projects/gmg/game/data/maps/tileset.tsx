@@ -196,6 +196,11 @@
    <property name="type" value="block"/>
   </properties>
  </tile>
+  <tile id="64">
+  <properties>
+   <property name="type" value="block"/>
+  </properties>
+ </tile>
  <tile id="65">
   <properties>
    <property name="type" value="block"/>
@@ -239,6 +244,13 @@
  <tile id="79">
   <properties>
    <property name="type" value="block"/>
+  </properties>
+ </tile>
+  <tile id="80">
+  <properties>
+   <property name="type" value="slope"/>
+   <property name="left_height" value="16"/>
+   <property name="right_height" value="-32"/>
   </properties>
  </tile>
  <tile id="91">

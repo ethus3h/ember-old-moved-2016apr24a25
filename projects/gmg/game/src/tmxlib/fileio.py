@@ -18,7 +18,7 @@ import six
 try:
     from lxml import etree
     have_lxml = True
-except ImportError:
+except ImportError:  # pragma: no cover
     from xml.etree import ElementTree as etree
     have_lxml = False
     warnings.warn(ImportWarning('lxml is recommended'))
@@ -95,7 +95,6 @@ class TMXSerializer(object):
     def __init__(self):
         import tmxlib
         self.map_class = tmxlib.Map
-        self.tileset_class = tmxlib.ImageTileset
         self.tile_layer_class = tmxlib.TileLayer
         self.object_layer_class = tmxlib.ObjectLayer
         self.image_layer_class = tmxlib.ImageLayer
@@ -103,15 +102,16 @@ class TMXSerializer(object):
         self.ellipse_object_class = tmxlib.EllipseObject
         self.polygon_object_class = tmxlib.PolygonObject
         self.polyline_object_class = tmxlib.PolylineObject
-
-        try:
-            from tmxlib import image_pil
-            self.image_class = image_pil.PilImage
-        except ImportError:
-            from tmxlib import image_png
-            self.image_class = image_png.PngImage
+        self.image_class = tmxlib.image.preferred_image_class
 
         self._shared_objects = WeakValueDictionary()
+
+    def tileset_class(self, *args, **kwargs):
+        import tmxlib
+        if 'image' in kwargs:
+            return tmxlib.ImageTileset(*args, **kwargs)
+        else:
+            return tmxlib.IndividualTileTileset(*args, **kwargs)
 
     def load_file(self, filename, base_path=None):
         if base_path:
@@ -136,7 +136,7 @@ class TMXSerializer(object):
     def load(self, cls, obj_type, string, base_path=None):
         if have_lxml:
             tree = etree.XML(string, etree.XMLParser(remove_comments=True))
-        else:
+        else:  # pragma: no cover
             tree = etree.XML(string)
             def strip_comments(elem):
                 for subelem in elem:
@@ -161,7 +161,7 @@ class TMXSerializer(object):
         extra_kwargs = {}
         if have_lxml:
             extra_kwargs = dict(pretty_print=True, xml_declaration=True)
-        else:
+        else:  # pragma: no cover
             extra_kwargs = dict()
         return etree.tostring(self.to_element(obj, obj_type, base_path),
                 encoding='UTF-8', **extra_kwargs)
@@ -189,6 +189,10 @@ class TMXSerializer(object):
                 base_path=base_path,
                 background_color=background_color,
             )
+        render_order = root.attrib.pop('renderorder', None)
+        nextobjectid=root.attrib.pop('nextobjectid', None)
+        if render_order:
+            args['render_order'] = render_order
         assert not root.attrib, 'Unexpected map attributes: %s' % root.attrib
         map = cls(**args)
         for elem in root:
@@ -196,7 +200,7 @@ class TMXSerializer(object):
                 map.properties.update(self.read_properties(elem))
             elif elem.tag == 'tileset':
                 tileset = self.tileset_from_element(
-                        self.tileset_class, elem, base_path=base_path)
+                    self.tileset_class, elem, base_path=base_path)
                 map.tilesets.append(tileset)
                 assert tileset.first_gid(map) == tileset._read_first_gid
             elif elem.tag == 'layer':
@@ -224,6 +228,8 @@ class TMXSerializer(object):
         if map.background_color:
             elem.attrib['backgroundcolor'] = '#{0}'.format(
                 to_hexcolor(map.background_color))
+        if map.render_order:
+            elem.attrib['renderorder'] = map.render_order
         self.append_properties(elem, map.properties)
         for tileset in map.tilesets:
             elem.append(self.tileset_to_element(tileset,
@@ -252,13 +258,16 @@ class TMXSerializer(object):
             tileset._read_first_gid = first_gid
             tileset.source = source
             return tileset
+        kwargs = {}
+        if any(e.tag == 'image' for e in elem):
+            kwargs['margin'] = int(elem.attrib.pop('margin', 0))
+            kwargs['spacing'] = int(elem.attrib.pop('spacing', 0))
+            kwargs['image'] = None
         tileset = cls(
                 name=elem.attrib.pop('name'),
                 tile_size=(int(elem.attrib.pop('tilewidth')),
                     int(elem.attrib.pop('tileheight'))),
-                margin=int(elem.attrib.pop('margin', 0)),
-                spacing=int(elem.attrib.pop('spacing', 0)),
-                image=None,
+                **kwargs
             )
         tileset._read_first_gid = int(elem.attrib.pop('firstgid', 0))
         assert not elem.attrib, (
@@ -298,6 +307,11 @@ class TMXSerializer(object):
                         props = tileset.tile_attributes[id].setdefault(
                             'properties' ,{})
                         props.update(self.read_properties(subsubelem))
+                    elif subsubelem.tag == 'image':
+                        assert id == len(tileset), (id, len(tileset))
+                        image = self.image_from_element(
+                            self.image_class, subsubelem, base_path=base_path)
+                        props = tileset.append_image(image)
                     else:
                         raise ValueError('Unknown tag %s' % subsubelem.tag)
             elif subelem.tag == 'properties':
@@ -307,7 +321,8 @@ class TMXSerializer(object):
                     int(subelem.attrib['x']), int(subelem.attrib['y']))
             else:
                 raise ValueError('Unknown tag %s' % subelem.tag)
-        assert tileset.image
+        if tileset.type == 'image' and not tileset.image:
+            raise ValueError('No image for tileset %s' % tileset.name)
         return tileset
 
     def tileset_to_element(self, tileset, base_path, first_gid=None):
@@ -319,18 +334,18 @@ class TMXSerializer(object):
                 attrib['firstgid'] = str(first_gid)
             return etree.Element('tileset', attrib=attrib)
         else:
-            attrib = dict(
-                    name=tileset.name,
-                    tileheight=str(tileset.tile_height),
-                    tilewidth=str(tileset.tile_width),
-                )
+            attrib = dict(name=tileset.name)
+            if tileset.type == 'image':
+                attrib['tileheight'] = str(tileset.tile_height)
+                attrib['tilewidth'] = str(tileset.tile_width)
             if first_gid:
                 attrib['firstgid'] = str(first_gid)
             element = etree.Element('tileset', attrib=attrib)
-            if tileset.spacing:
-                element.attrib['spacing'] = str(tileset.spacing)
-            if tileset.margin:
-                element.attrib['margin'] = str(tileset.margin)
+            if tileset.type == 'image':
+                if tileset.spacing:
+                    element.attrib['spacing'] = str(tileset.spacing)
+                if tileset.margin:
+                    element.attrib['margin'] = str(tileset.margin)
             if any(tileset.tile_offset):
                 offset_elem = etree.Element('tileoffset',
                         attrib={'x': str(tileset.tile_offset_x),
@@ -383,6 +398,7 @@ class TMXSerializer(object):
         image = cls(
                 source=elem.attrib.pop('source'),
                 **kwargs)
+        image.base_path = base_path
         assert not elem.attrib, (
             'Unexpected image attributes: %s' % elem.attrib)
         return image
@@ -490,7 +506,7 @@ class TMXSerializer(object):
             bytes_io = io.BytesIO()
             if sys.version_info >= (2, 7):
                 kwargs = dict(mtime=getattr(layer, 'mtime', None))
-            else:
+            else:  # pragma: no cover
                 kwargs = dict()
             gzfile = gzip.GzipFile(fileobj=bytes_io, mode='wb', **kwargs)
             gzfile.write(data)
@@ -507,7 +523,7 @@ class TMXSerializer(object):
         else:
             raise ValueError('Bad encoding: %s', encoding)
         data_elem = etree.Element('data', attrib=extra_attrib)
-        if six.PY3:
+        if six.PY3:  # pragma: no cover
             # etree only deals with (unicode) strings
             data = data.decode('ascii')
         data_elem.text = data
@@ -523,9 +539,9 @@ class TMXSerializer(object):
                 opacity=float(elem.attrib.pop('opacity', 1)),
                 visible=bool(int(elem.attrib.pop('visible', 1))),
                 color=color)
-        layer_size = (int(elem.attrib.pop('width')),
-                int(elem.attrib.pop('height')))
-        assert layer_size == map.size
+        layer_size = (int(elem.attrib.pop('width', 1)),
+                int(elem.attrib.pop('height', 1)))
+        #assert layer_size == map.size
         assert not elem.attrib, (
             'Unexpected object layer attributes: %s' % elem.attrib)
         for subelem in elem:
@@ -553,8 +569,8 @@ class TMXSerializer(object):
                 if not kwargs.get('value'):
                     y += height
                 kwargs['pixel_pos'] = x, y
-                assert not subelem.attrib, (
-                    'Unexpected object attributes: %s' % subelem.attrib)
+                #assert not subelem.attrib, (
+                #    'Unexpected object attributes: %s' % subelem.attrib)
                 properties = {}
                 cls = self.rectangle_object_class
                 for subsubelem in subelem:
@@ -682,7 +698,6 @@ class TMXSerializer(object):
             parent.append(element)
 
 def from_hexcolor(string):
-    orig_string = string
     if string.startswith('#'):
         string = string[1:]
     if len(string) == 3:

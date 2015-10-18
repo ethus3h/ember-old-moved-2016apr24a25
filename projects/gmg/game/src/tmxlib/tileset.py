@@ -73,7 +73,7 @@ class TilesetList(helpers.NamedElementList):
                 tile.gid = gid_map[tile.gid]
 
 
-class TilesetTile(helpers.PixelSizeMixin):
+class TilesetTile(object):
     """Reference to a tile within a tileset
 
     init arguents, which become attributes:
@@ -100,7 +100,8 @@ class TilesetTile(helpers.PixelSizeMixin):
         .. attribute:: image
 
             Image this tile uses. Most often this will be a
-            :class:`region <ImageRegion>` of the tileset's image.
+            :class:`region <~tmxlib.image_base.ImageRegion>` of the tileset's
+            image.
 
         .. attribute:: terrain_indices
 
@@ -117,6 +118,8 @@ class TilesetTile(helpers.PixelSizeMixin):
             The probability that this tile will be chosen among others with the
             same terrain information. May be None.
     """
+    pixel_width, pixel_height = helpers.unpacked_properties('pixel_size')
+
     def __init__(self, tileset, number):
         self.tileset = tileset
         self.number = number
@@ -131,7 +134,7 @@ class TilesetTile(helpers.PixelSizeMixin):
 
     @property
     def pixel_size(self):
-        return self.tileset.tile_size
+        return self.image.size
 
     @property
     def properties(self):
@@ -182,6 +185,10 @@ class TilesetTile(helpers.PixelSizeMixin):
     def image(self):
         return self.tileset.tile_image(self.number)
 
+    @image.setter
+    def image(self, value):
+        return self.tileset.set_tile_image(self.number, value)
+
     def get_pixel(self, x, y):
         """Get a pixel at the specified location.
 
@@ -200,10 +207,13 @@ class TilesetTile(helpers.PixelSizeMixin):
         return tuple(result)
 
 
-TileOffsetMixin = helpers.tuple_mixin(
-    'TileOffsetMixin', 'tile_offset', ['tile_offset_x', 'tile_offset_y'])
+class GridTilesetTile(TilesetTile):
+    @property
+    def pixel_size(self):
+        return self.tileset.tile_size
 
-class Tileset(fileio.ReadWriteBase, TileOffsetMixin):
+
+class Tileset(fileio.ReadWriteBase):
     """Base class for a tileset: bank of tiles a map can use.
 
     There are two kinds of tilesets: external and internal.
@@ -274,11 +284,13 @@ class Tileset(fileio.ReadWriteBase, TileOffsetMixin):
     # will only work if all the tilesets are loaded with the same Serializer.)
     column_count = None
     _rw_obj_type = 'tileset'
+    tile_class = TilesetTile
 
-    def __init__(self, name, tile_size, source=None):
+    tile_offset_x, tile_offset_y = helpers.unpacked_properties('tile_offset')
+
+    def __init__(self, name, tile_size):
         self.name = name
         self.tile_size = tile_size
-        self.source = source
         self.properties = {}
         self.terrains = terrain.TerrainList()
         self.tiles = {}
@@ -294,7 +306,7 @@ class Tileset(fileio.ReadWriteBase, TileOffsetMixin):
             try:
                 tile = self.tiles[n]
             except KeyError:
-                tile = self.tiles[n] = TilesetTile(self, n)
+                tile = self.tiles[n] = self.tile_class(self, n)
             return tile
         else:
             return self[len(self) + n]
@@ -363,6 +375,8 @@ class Tileset(fileio.ReadWriteBase, TileOffsetMixin):
         d = dict(
                 name=self.name,
                 properties=self.properties,
+                tilewidth=self.tile_width,
+                tileheight=self.tile_height,
             )
         if 'map' in kwargs:
             d['firstgid'] = self.first_gid(kwargs['map'])
@@ -376,6 +390,8 @@ class Tileset(fileio.ReadWriteBase, TileOffsetMixin):
                 tiles[number]['probability'] = tile.probability
             if tile.terrain_indices:
                 tiles[number]['terrain'] = list(tile.terrain_indices)
+            if getattr(tile.image, 'source', None):
+                tiles[number]['image'] = tile.image.source
         if tile_properties:
             d['tileproperties'] = tile_properties
         if tiles:
@@ -389,10 +405,52 @@ class Tileset(fileio.ReadWriteBase, TileOffsetMixin):
         return d
 
     @classmethod
-    def from_dict(cls, dct):
+    def from_dict(cls, dct, base_path=None):
         """Import from a dict compatible with Tiled's JSON plugin"""
-        raise NotImplementedError(
-            'Tileset.from_dict must be implemented in subclasses')
+        if 'image' in dct:
+            return ImageTileset.from_dict(dct, base_path)
+        else:
+            return IndividualTileTileset.from_dict(dct, base_path)
+
+    def _fill_from_dict(self, dct, base_path):
+        dct.pop('firstgid', None)
+        if base_path:
+            self.base_path = base_path
+        self.properties.update(dct.pop('properties', {}))
+        for number, properties in dct.pop('tileproperties', {}).items():
+            self[int(number)].properties.update(properties)
+        tile_info = dct.pop('tiles', {})
+        for number in sorted(tile_info, key=int):
+            attrs = dict(tile_info[number])
+            number = int(number)
+            probability = attrs.pop('probability', None)
+            if probability is not None:
+                self[number].probability = probability
+            terrain_indices = attrs.pop('terrain', None)
+            if terrain_indices is not None:
+                self[number].terrain_indices = terrain_indices
+            if number > len(tile_info):
+                raise ValueError()
+            while 0 <= len(self) <= number:
+                self._append_placeholder()
+            filename = attrs.pop('image', None)
+            if filename:
+                self[number].image = image.open(filename)
+                if base_path:
+                    self[number].image.base_path = base_path
+            if attrs:
+                raise ValueError('Extra tile attributes: %s' %
+                                 ', '.join(attrs))
+        for terrain in dct.pop('terrains', []):
+            terrain = dict(terrain)
+            self.terrains.append_new(terrain.pop('name'),
+                                     self[int(terrain.pop('tile'))])
+            assert not terrain
+        tileoffset = dct.pop('tileoffset', None)
+        if tileoffset:
+            self.tile_offset = tileoffset['x'], tileoffset['y']
+        dct.pop('margin', None)
+        dct.pop('spacing', None)
 
 
 class ImageTileset(Tileset):
@@ -432,9 +490,13 @@ class ImageTileset(Tileset):
             Number of rows of tiles in the tileset
 
     """
+    type = 'image'
+    tile_class = GridTilesetTile
+
     def __init__(self, name, tile_size, image, margin=0, spacing=0,
             source=None, base_path=None):
-        super(ImageTileset, self).__init__(name, tile_size, source)
+        super(ImageTileset, self).__init__(name, tile_size)
+        self.source = source
         self.image = image
         self.margin = margin
         self.spacing = spacing
@@ -464,7 +526,8 @@ class ImageTileset(Tileset):
         y, x = divmod(number, self.column_count)
         left = self.margin + x * (self.tile_width + self.spacing)
         top = self.margin + y * (self.tile_height + self.spacing)
-        return image.ImageRegion(self.image, (left, top), self.tile_size)
+        return self.image[left:left + self.tile_width,
+                          top:top + self.tile_height]
 
     def to_dict(self, **kwargs):
         """Export to a dict compatible with Tiled's JSON plugin"""
@@ -483,9 +546,8 @@ class ImageTileset(Tileset):
         return d
 
     @helpers.from_dict_method
-    def from_dict(cls, dct):
+    def from_dict(cls, dct, base_path=None):
         """Import from a dict compatible with Tiled's JSON plugin"""
-        dct.pop('firstgid', None)
         html_trans = dct.pop('transparentcolor', None)
         if html_trans:
             trans = fileio.from_hexcolor(html_trans)
@@ -494,32 +556,74 @@ class ImageTileset(Tileset):
         self = cls(
                 name=dct.pop('name'),
                 tile_size=(dct.pop('tilewidth'), dct.pop('tileheight')),
-                image=image.Image(
+                image=image.open(
+                        dct.pop('image'),
                         size=(dct.pop('imagewidth'), dct.pop('imageheight')),
-                        source=dct.pop('image'),
-                        trans = trans,
+                        trans=trans,
                     ),
                 margin=dct.pop('margin', 0),
                 spacing=dct.pop('spacing', 0),
             )
-        self.properties.update(dct.pop('properties', {}))
-        for number, properties in dct.pop('tileproperties', {}).items():
-            self[int(number)].properties.update(properties)
-        for number, attrs in dct.pop('tiles', {}).items():
-            attrs = dict(attrs)
-            probability = attrs.pop('probability', None)
-            if probability is not None:
-                self[int(number)].probability = probability
-            terrain_indices = attrs.pop('terrain', None)
-            if terrain_indices is not None:
-                self[int(number)].terrain_indices = terrain_indices
-            assert not attrs
-        for terrain in dct.pop('terrains', []):
-            terrain = dict(terrain)
-            self.terrains.append_new(terrain.pop('name'),
-                                     self[int(terrain.pop('tile'))])
-            assert not terrain
-        tileoffset = dct.pop('tileoffset', None)
-        if tileoffset:
-            self.tile_offset = tileoffset['x'], tileoffset['y']
+        if base_path:
+            self.image.base_path = base_path
+        self._fill_from_dict(dct, base_path)
+        return self
+
+
+class IndividualTileTileset(Tileset):
+    """A tileset whose tiles have individual images.
+
+    This is the default tileset type in Tiled.
+
+    init arguments, which become attributes:
+
+        .. attribute:: name
+        .. attribute:: tile_size
+        .. attribute:: margin
+
+            Size of a border around the image that does not contain tiles,
+            in pixels.
+
+        .. attribute:: spacing
+
+            Space between adjacent tiles, in pixels.
+    """
+    type = 'individual'
+
+    def __init__(self, name, tile_size):
+        super(IndividualTileTileset, self).__init__(name, tile_size)
+        self.images = []
+
+    def __len__(self):
+        return len(self.images)
+
+    def _append_placeholder(self):
+        self.images.append(None)
+
+    def append_image(self, image):
+        self.images.append(image)
+
+    def tile_image(self, number):
+        return self.images[number]
+
+    def set_tile_image(self, number, image):
+        self.images[number] = image
+
+    def to_dict(self, **kwargs):
+        """Export to a dict compatible with Tiled's JSON plugin"""
+        d = super(IndividualTileTileset, self).to_dict(**kwargs)
+        d.update(dict(
+                margin=0,
+                spacing=0,
+            ))
+        return d
+
+    @helpers.from_dict_method
+    def from_dict(cls, dct, base_path=None):
+        """Import from a dict compatible with Tiled's JSON plugin"""
+        self = cls(
+                name=dct.pop('name'),
+                tile_size=(dct.pop('tilewidth'), dct.pop('tileheight')),
+            )
+        self._fill_from_dict(dct, base_path)
         return self

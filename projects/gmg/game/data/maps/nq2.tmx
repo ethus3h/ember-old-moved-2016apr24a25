@@ -28,7 +28,7 @@
   </data>
  </layer>
  <objectgroup name="Objects">
-  <object id="1" name="cave" type="Cave" x="1552" y="864" width="128" height="128">
+  <object id="1" name="cave" type="Cave" x="2591" y="672" width="128" height="128" visible="0">
    <properties>
     <property name="cavetype" value="entrance"/>
     <property name="mapfile" value="maps/end.tmx"/>
@@ -40,7 +40,7 @@
     <property name="filename" value="dialogs/npc_end.json"/>
    </properties>
   </object>
-  <object id="3" name="cave_exit" type="Cave" x="2561" y="605" width="30" height="98" visible="0">
+  <object id="3" name="cave_exit" type="Cave" x="1891" y="1040" width="153" height="153">
    <properties>
     <property name="cavetype" value="exit"/>
     <property name="mapfile" value="maps/nq2.tmx"/>
@@ -48,54 +48,5 @@
    </properties>
   </object>
   <object id="4" name="outhouse" type="Outhouse" x="1040" y="802" width="128" height="160"/>
-  <object id="5" type="HeliBot" x="2632" y="672" width="128" height="128"/>
-  <object id="6" type="HeliBot" x="2656" y="676" width="128" height="128"/>
-  <object id="7" type="HeliBot" x="2680" y="676" width="128" height="128"/>
-  <object id="8" type="HeliBot" x="2704" y="676" width="128" height="128"/>
-  <object id="9" type="HeliBot" x="2736" y="676" width="128" height="128"/>
-  <object id="10" type="HeliBot" x="2772" y="676" width="128" height="128"/>
-  <object id="11" type="HeliBot" x="2804" y="680" width="128" height="128"/>
-  <object id="12" type="HeliBot" x="2804" y="680" width="128" height="128"/>
-  <object id="13" type="HeliBot" x="2736" y="676" width="128" height="128"/>
-  <object id="14" type="HeliBot" x="2680" y="676" width="128" height="128"/>
-  <object id="15" type="HeliBot" x="2656" y="676" width="128" height="128"/>
-  <object id="16" type="HeliBot" x="2704" y="676" width="128" height="128"/>
-  <object id="17" type="HeliBot" x="2632" y="672" width="128" height="128"/>
-  <object id="18" type="HeliBot" x="2772" y="676" width="128" height="128"/>
-  <object id="19" type="HeliBot" x="2804" y="680" width="128" height="128"/>
-  <object id="20" type="HeliBot" x="2736" y="676" width="128" height="128"/>
-  <object id="21" type="HeliBot" x="2680" y="676" width="128" height="128"/>
-  <object id="22" type="HeliBot" x="2656" y="676" width="128" height="128"/>
-  <object id="23" type="HeliBot" x="2704" y="676" width="128" height="128"/>
-  <object id="24" type="HeliBot" x="2632" y="672" width="128" height="128"/>
-  <object id="25" type="HeliBot" x="2772" y="676" width="128" height="128"/>
-  <object id="26" type="HeliBot" x="2804" y="680" width="128" height="128"/>
-  <object id="27" type="HeliBot" x="2736" y="676" width="128" height="128"/>
-  <object id="28" type="HeliBot" x="2680" y="676" width="128" height="128"/>
-  <object id="29" type="HeliBot" x="2656" y="676" width="128" height="128"/>
-  <object id="30" type="HeliBot" x="2704" y="676" width="128" height="128"/>
-  <object id="31" type="HeliBot" x="2632" y="672" width="128" height="128"/>
-  <object id="32" type="HeliBot" x="2772" y="676" width="128" height="128"/>
-  <object id="33" type="HeliBot" x="2804" y="680" width="128" height="128"/>
-  <object id="34" type="HeliBot" x="2736" y="676" width="128" height="128"/>
-  <object id="35" type="HeliBot" x="2680" y="676" width="128" height="128"/>
-  <object id="36" type="HeliBot" x="2656" y="676" width="128" height="128"/>
-  <object id="37" type="HeliBot" x="2704" y="676" width="128" height="128"/>
-  <object id="38" type="HeliBot" x="2632" y="672" width="128" height="128"/>
-  <object id="39" type="HeliBot" x="2772" y="676" width="128" height="128"/>
-  <object id="40" type="HeliBot" x="2804" y="680" width="128" height="128"/>
-  <object id="41" type="HeliBot" x="2736" y="676" width="128" height="128"/>
-  <object id="42" type="HeliBot" x="2680" y="676" width="128" height="128"/>
-  <object id="43" type="HeliBot" x="2656" y="676" width="128" height="128"/>
-  <object id="44" type="HeliBot" x="2704" y="676" width="128" height="128"/>
-  <object id="45" type="HeliBot" x="2632" y="672" width="128" height="128"/>
-  <object id="46" type="HeliBot" x="2772" y="676" width="128" height="128"/>
-  <object id="47" type="HeliBot" x="2804" y="680" width="128" height="128"/>
-  <object id="48" type="HeliBot" x="2736" y="676" width="128" height="128"/>
-  <object id="49" type="HeliBot" x="2680" y="676" width="128" height="128"/>
-  <object id="50" type="HeliBot" x="2656" y="676" width="128" height="128"/>
-  <object id="51" type="HeliBot" x="2704" y="676" width="128" height="128"/>
-  <object id="52" type="HeliBot" x="2632" y="672" width="128" height="128"/>
-  <object id="53" type="HeliBot" x="2772" y="676" width="128" height="128"/>
  </objectgroup>
 </map>
