@@ -42,7 +42,7 @@
   </object>
   <object id="3" name="cave_exit" type="Cave" x="2561" y="605" width="30" height="98" visible="0">
    <properties>
-    <property name="cavetype" value="exit"/>
+    <property name="cavetype" value="exitinv"/>
     <property name="mapfile" value="maps/nq2.tmx"/>
     <property name="spawnpoint" value="cave"/>
    </properties>

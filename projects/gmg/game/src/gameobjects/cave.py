@@ -13,9 +13,12 @@ class Cave(GameObject):
 
         if cavetype == "entrance":
             self.sprite = StaticSprite(self, assets.getImage("graphics/cave_entrance.png"), offset_y=-13, layer=0)
-        else:
+        if cavetype == "exit":
             self.sprite = StaticSprite(self, assets.getImage("graphics/cave_exit.png"),  offset_y=-13, layer=0)
         self.collider = SpriteCollide(self, 64, 32, 32, 96)
+        if cavetype == "exitinv":
+            self.sprite = StaticSprite(self, assets.getImage("graphics/fish.png"),  offset_y=0, layer=0)
+        self.collider = SpriteCollide(self, 0, 0, 32, 32)
 
     def init(self):
         """Initiation code."""
