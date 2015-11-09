@@ -53,6 +53,7 @@ if [ "$1" = "init" ]; then
 
 		else if [ "$1" = "commit" ]; then
 			echo "commit" 2>&1 | tee -a $outfile
+			echo "NOT UPLOADING! THIS MODE OF OPERATION REQUIRES A MANUAL UPLOAD OF THE PATCHE FILE."
 			LASTREVISION="`cat ./.pch/.revision`"
 			#help from http://askubuntu.com/questions/385528/how-to-increment-a-variable-in-bash
 			THISREVISION=$(($LASTREVISION+1))
@@ -63,7 +64,7 @@ if [ "$1" = "init" ]; then
 			mv -v "../$NOW.patch.gpg" "../$NOW.patche" 2>&1 | tee -a $outfile
 			UUID="`uuidgen`"
 			REPOUUID="`cat ./.pch/.uuid`"
-			ia upload "$REPOUUID.$UUID" "../$NOW.patche" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.patche"
+			#ia upload "$REPOUUID.$UUID" "../$NOW.patche" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.patche"
 			echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/$THISREVISION. $NOW.pchu"
 			echo -n "$THISREVISION" > ./.pch/.revision
 			mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
