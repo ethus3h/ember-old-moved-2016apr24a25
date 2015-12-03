@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # WARCdealer
-# Version 1.2.3, 2015.jan.16a17.
+# Version 1.2.4, 2015.Dec.02a03.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013, 2014 Futuramerlin
@@ -83,10 +83,12 @@ def run(command):
         commandRes=check_output(command, shell=True, stderr=subprocess.STDOUT)
         commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandRes + "\n\n\n\n"
     except Exception, e:
+        print 'Error: ' + sys.exc_info()[0]
         commandRes=''
         try:
             commandResult = "Running command: \n\n" + command + "\n\n\n\n" + commandResult + str(e.output) + "\n\n\n\nError encountered while running command. This is probably not a big deal.\n\n"
         except Exception, e:
+            print 'Error again: ' + sys.exc_info()[0]
             commandResult = "\n\n\n\nError encountered while running command: \n\n" + command + "\n\n\n\nThis is probably not a big deal. Possibly the command line was incorrectly structured?\n\n"
         errored=True
     return [commandResult,commandRes]
@@ -167,9 +169,10 @@ def upload(wikis):
         log_add('Executing curl request: ')
         log_add(curlline+'\n')
         errored = False
-        uploadFetchResultB = run(curlline)[0]
+        uploadFetchResultB = run(curlline)[1]
         log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
         c += 1
+        log_add('Errored: '+str(errored))
         if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
             os.system('rm '+dump)
             log_add('Removing file: '+dump+'\n')
