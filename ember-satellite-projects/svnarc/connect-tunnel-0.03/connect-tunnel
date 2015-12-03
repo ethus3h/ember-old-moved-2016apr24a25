@@ -1,0 +1,337 @@
+#!/usr/bin/perl -w
+use strict;
+use IO::Socket;
+use IO::Select;
+use LWP::UserAgent;
+use Getopt::Long;
+
+use vars qw( %CONF $VERSION );
+
+my %listen;               # listening sockets
+my %socket;               # tunnel sockets
+
+$VERSION = 0.03;
+
+# default configuration
+%CONF = ( 'user-agent' => "connect-tunnel/$VERSION", );
+
+=head1 NAME
+
+connect-tunnel - Create CONNECT tunnels through HTTP proxies
+
+=head1 SYNOPSIS
+
+B<connect-tunnel> S<[ B<-v> ]> S<[ B<-A> I<user:pass> ]> S<[ B<-P> I<proxy:port> ]>
+               B<-T> I<port:host:hostport> S<[ B<-T> I<port:host:hostport> ]>
+
+=head1 DESCRIPTION
+
+B<connect-tunnel> sets up tunneled connections to external hosts
+by redirecting connections to local ports towards thoses hosts/ports
+through a HTTP proxy.
+
+B<connect-tunnel> makes use of the HTTP C<CONNECT> method to ask the
+proxy to create a tunnel to an outside server. Be aware that some
+proxies are set up to deny some outside tunnels (either to ports other
+than 443 or outside a specified set of outside hosts).
+
+=head1 OPTIONS
+
+The  program  follows  the  usual  GNU  command  line syntax, with long
+options starting with two dashes.
+
+=over 4
+
+=item B<-A>, B<--proxy-authentication> I<user:password>
+
+Proxy authentication information.
+
+Please note that all the authentication schemes supported by
+LWP::UserAgent are supported (we use an LWP::UserAgent).
+
+This means we also support NTLM, since it is supported as from libwww-perl
+5.66.
+
+=item B<-L>, B<--local-only>
+
+Create the tunnels so that they will only listen on C<localhost>.
+Thus, only connections originating from the machine that runs
+B<connect-tunnel> will be accepted.
+
+That was the default behaviour in B<connect-tunnel> version 0.02.
+
+=item B<-P>, B<--proxy> I<proxy>[I<:port>]
+
+The proxy is required to connect the tunnels.
+If no port is given, 8080 is used by default.
+
+See also L<ENVIRONMENT VARIABLES>.
+
+=item B<-T>, B<--tunnel> I<port:host:hostport>
+
+Specifies that the given I<port> on the local host is to be forwarded
+to the given I<host> and I<hostport> on the remote side. This works by
+allocating a socket to listen to I<port> on the local side, and whenever
+a connection is made to this I<port>, the connection is forwarded
+through the proxy, and a connection is made to the remote I<host> at
+port I<hostport>.
+
+On Unix systems, only root can forward privileged ports.
+
+Note that you can setup tunnels to multiple destinations, by using
+the B<--tunnel> option several times.
+
+=item B<-U>, B<--user-agent> I<string>
+
+Specify User-Agent value to send in HTTP requests.
+The default is to send C<connect-tunnel/I<version>>.
+
+=item B<-v>, B<--verbose>
+
+Verbose output.
+
+This option can be used several times for more verbose output.
+
+=back
+
+=cut
+
+#
+# get and check the options
+#
+GetOptions( \%CONF, "verbose|v+", "tunnel|T=s@", "proxy|P=s",
+    "proxy-authentication|A=s", "local-only|L", "user-agent|U=s" );
+
+# create a homebrewed user agent class
+{
+    my ( $user, $pass );
+    ( $user, $pass ) = split ':', $CONF{'proxy-authentication'}
+      if defined $CONF{'proxy-authentication'};
+
+    package TunnelAgent;
+
+    use vars qw( @ISA );
+    @ISA = qw(LWP::UserAgent);
+
+    sub get_basic_credentials { return ( $user, $pass ); }
+}
+
+my $ua = TunnelAgent->new(
+    agent => $CONF{'user-agent'},
+    env_proxy => 1,
+);
+
+# check for a proxy
+if ( $CONF{proxy} ) {
+    $CONF{proxy} .= ":8080" if not $CONF{proxy} =~ /:/;
+    $ua->proxy( http => "http://$CONF{proxy}/" );
+}
+die "--proxy <proxy:port> option required$/" unless $ua->proxy( 'http' );
+
+# create the tunnels entrances
+die "--tunnel <port:host:hostport> option required$/"
+  unless exists $CONF{tunnel};
+for ( @{ $CONF{tunnel} } ) {
+    die "--tunnel <port:host:hostport> format required$/"
+      unless /^\d+:[\w.]+:\d+$/;
+    my ( $port, $host, $hostport ) = split ':';
+    my $socket = IO::Socket::INET->new(
+        $CONF{'local-only'} ? ( LocalAddr => 'localhost' ) : (),
+        Listen    => 1,
+        LocalPort => $port,
+        Proto     => 'tcp',
+        ReuseAddr => 1,
+    );
+    die "Tunnel error: $! for $_\n" if not defined $socket;
+    @{ $listen{$socket} }{qw( self port host hostport dest )} =
+      ( $socket, $port, $host, $hostport, "$host:$hostport" );
+}
+
+=head1 EXAMPLES
+
+To connect to a SSH server running beyond the proxy on port 443,
+through the proxy proxy.company.com, running on port 8080,
+use the following command:
+
+ connect-tunnel -P proxy.company.com:8080 -T 22:ssh.example.com:443
+
+And now point your favorite ssh client to the machine running
+B<connect-tunnel>.
+
+You can also emulate a "standard" user-agent:
+
+ connect-tunnel -U "Mozilla/4.03 [en] (X11; I; Linux 2.1.89 i586)"
+                -P proxy.company.com:8080 -T 22:ssh.example.com:443
+
+B<connect-tunnel> can easily use your proxy credentials to connect
+outside:
+
+ connect-tunnel -U "Mozilla/4.03 [en] (X11; I; Linux 2.1.89 i586)"
+                -P proxy.company.com:8080 -T 22:ssh.example.com:443
+                -A book:s3kr3t
+
+But if you don't want anybody else to connect to your tunnels
+and through the proxy with I<your> credentials, use the
+B<--local-only> option:
+
+ connect-tunnel -U "Mozilla/4.03 [en] (X11; I; Linux 2.1.89 i586)"
+                -P proxy.company.com:8080 -T 22:ssh.example.com:443
+                -A book:s3kr3t -L
+
+If you have several destinations, there is no need to run several
+instances of B<connect-tunnel>:
+
+ connect-tunnel -U "Mozilla/4.03 [en] (X11; I; Linux 2.1.89 i586)"
+                -P proxy.company.com:8080 -A book:s3kr3t -L
+                -T 22:ssh.example.com:443
+                -T 222:ssh2.example.com:443
+
+But naturally, you will need to correctly set up the ports in your clients.
+
+Mmm, such a long command line would perfectly fit in an alias or a F<.BAT>
+file. C<;-)>
+
+=head1 ENVIRONMENT VARIABLES
+
+The LWP::UserAgent that is used to connect to the proxy accept
+the usual C<HTTP_PROXY> environment variable to define the proxy.
+
+The environment variable is overriden by the B<--proxy> option,
+if passed to B<connect-tunnel>.
+
+=cut
+
+# listen to the tunnels entrances
+my $select = IO::Select->new;
+$select->add( map { $listen{$_}{self} } keys %listen );
+
+# the loop
+while ( my @ready = $select->can_read ) {
+    for (@ready) {
+
+        # a new connection to the listening ports
+        if ( exists $listen{$_} ) {
+
+            # Create a new socket
+            my $client = $listen{$_}{self}->accept;
+            my ( $port, $addr ) = unpack_sockaddr_in( $client->peername );
+            $addr = join '.', unpack( 'C4', $addr );
+            print "$addr:$port -> $listen{$_}{dest} : connection request$/"
+              if $CONF{verbose} > 0;
+
+            # connect to the proxy
+            my $req =
+              HTTP::Request->new(
+                CONNECT => 'http://' . $listen{$_}{dest} . '/' );
+            my $res = $ua->request($req);
+
+            # authentication failed
+            if ( not $res->is_success ) {
+                warn "$addr:$port -> $listen{$_}{dest} : "
+                  . "connection failed with status "
+                  . $res->status_line
+                  . $/;
+                $client->close;
+                next;
+            }
+
+            # the proxy socket
+            my $proxy = $res->{client_socket};
+            my ( $pport, $paddr ) = unpack_sockaddr_in( $proxy->peername );
+            $paddr = join '.', unpack( 'C4', $paddr );
+            print "$addr:$port -> $listen{$_}{dest} : ",
+              "connection established via $paddr:$pport$/"
+              if $CONF{verbose} > 0;
+
+            # set up peers data structures
+            @{ $socket{$client} }{qw( self peer host port host_port )} =
+              ( $client, $proxy, $addr, $port, "$addr:$port" );
+            @{ $socket{$proxy} }{qw( self peer host port host_port dest )} = (
+                $proxy, $client, $paddr, $pport, "$paddr:$pport",
+                $listen{$_}{dest}
+            );
+            for ( $client, $proxy ) {
+                $_->autoflush(1);
+                $_->blocking(0);
+                $select->add($_);
+            }
+        }
+        else {    # data on established connections
+
+            # useful data
+            my $sock = $socket{$_}{self};
+            my $peer = $socket{$_}{peer};
+            my ( $data, $src, $dst );
+            if ( $CONF{verbose} > 0 ) {
+                $src =
+                  $socket{$sock}{host_port}
+                  . (
+                    exists $socket{$sock}{dest}
+                    ? ' (' . $socket{$sock}{dest} . ')'
+                    : '' );
+                $dst =
+                  $socket{$peer}{host_port}
+                  . (
+                    exists $socket{$peer}{dest}
+                    ? ' (' . $socket{$peer}{dest} . ')'
+                    : '' );
+            }
+
+            # read the data
+            my $read = $sock->sysread( $data, 4096 );
+
+            # check for errors or end of connection
+            if ( not defined $read ) {
+                warn "Unable to read from " . $socket{$sock}{host_port} . $/;
+                $read = 0;
+            }
+
+            # end of connection
+            if ( $read == 0 ) {
+                for ( $sock, $peer ) {
+                    $_->close;
+                    delete $socket{$_};
+
+                    # reset the IO::Select object, since $select->remove
+                    # removes more than we want to
+                    $select = IO::Select->new;
+                    $select->add( map { $listen{$_}{self} } keys %listen );
+                    $select->add( map { $socket{$_}{self} } keys %socket );
+                }
+                print "$src -> $dst : connection closed$/"
+                  if $CONF{verbose} > 0;
+                next;
+            }
+
+            # proxy the data
+            $peer->syswrite($data);
+
+            print "$src -> $dst : ", length($data), " bytes sent$/"
+              if ( $CONF{verbose} > 1 );
+        }
+    }
+}
+
+=head1 TODO
+
+Next version should have an option to create a control port, to which one
+could connect to interact with B<connect-tunnel> and add/remove tunnels,
+close connections, change the User-Agent string, and so on.
+
+=head1 AUTHOR
+
+Philippe "BooK" Bruhat E<lt>book@cpan.orgE<gt>
+
+I seem to have re-invented a well-known wheel with that script, but at
+least hope I have added a few interesting options to it.
+
+Bits of the documentation wording is stolen from OpenSSH documentation
+about options B<-L> and B<-R>.
+
+=head1 COPYRIGHT
+
+This module is free software; you can redistribute it or modify it under
+the same terms as Perl itself.
+
+=cut
+

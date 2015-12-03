@@ -1,0 +1,20 @@
+#!/bin/bash
+#svnarc
+#Use warcprox and Proxifier.
+#Requires svn.
+#Needs port 30428 free on localhost. Be careful, it kills all perl apps.
+#Usage: svnarc [URL scheme, e.g. svn, http, https] [remote domain name] [path of repository] [remote port, usually 3690 for svn:// urls]
+#Example for svn://svn.jdownloader.org/jdownloader:
+# svnarc svn svn.jdownloader.org jdownloader 3690
+
+SDIR="svnarc.$(date +%Y.%m.%d.%H.%M.%S.%N.%z)"
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+$DIR/svnarc.sh $1 $2 $3 $4 $SDIR > ./$SDIR.log

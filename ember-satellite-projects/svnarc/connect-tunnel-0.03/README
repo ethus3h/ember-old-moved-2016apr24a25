@@ -1,0 +1,9 @@
+connect-tunnel is a simple script that lets you tunnel anything
+through a CONNECT aware HTTP proxy.
+
+It supports:
+- multiple tunnels and multiple connections to those tunnels.
+- all the authentication methods that libwww-perl support,
+  namely Basic, Digest and NTLM.
+- Unix, Windows  
+

@@ -1,0 +1,13 @@
+Revision history for Perl script connect-tunnel
+
+0.03  Thu Mar 20 11:57:48 CET 2003
+        - the --local-only option limits access to the tunnels
+        - a test script (please define the HTTP_PROXY environnement
+          variable before runnning make test)
+
+0.02  Tue Mar 18 16:27:27 CET 2003
+        - support multiple tunnels and multiple connections
+        - use a LWP::UserAgent to connect to the proxy
+
+0.01  Mon Mar 17 20:26:39 CET 2003
+        - first, unreleased version
