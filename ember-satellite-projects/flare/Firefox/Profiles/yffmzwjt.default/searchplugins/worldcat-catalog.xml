@@ -1,0 +1,10 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+<os:ShortName>WorldCat Catalog</os:ShortName>
+<os:Description>Searches libraries nation and worldwide for books and other materials.</os:Description>
+<os:InputEncoding>UTF-8</os:InputEncoding>
+<os:Image width="16" height="16">data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAAsTAAALEwEAmpwYAAACqElEQVR4nG2SXUhTcRjG352dL913TnO6LZ3U/MDPMihMzQjFuquQLoogpKuki4isLgwhqouI8CISi0KjsgtLMNQ0KwfaVjrSJLVsM9uH39vOdtw5//PvYpYgPjfPxfP84H3hkWGMAUDCWBAlhpIDgCThBf/KxIQn6IuIAtIkxO2vsDIsDQAAQMas3T7bO+a5dSJfSZEdT+0DXWM8F11vUITZos/INGwASMLP7bOu5Ugoimxvxrtfjih08YcrMxKMWpaWkTRrsujhn0gAcC2Gfy6GswxqLYXfdjhVWvrC9UrFcmj+yw+0FlVnGIAXgKY2gO/e1dCaWGzUuKf9XIAvP7LLZNJ3nr0nBCOxUlySpuRurS7TuA4EeAQAWjWzuhDBGEwWPclQeeePipEoqWD9jqm5PufQlScVLXWMTilvaGjwBfiur94UJXOs1JJoVu3dZ6UZclu2WZ+3Q6ePpFQUhbzBBcc0pVEkFlgIACgy61K1bOc330f3avmhXIWKjV0iLUzzbafQwO2c2iqCkv/uGRHDawQA6BT0xUqriFDds9FzrY5IFMUAmcogY1Voskeh5BLy0wMzvqB7nvCFvG3O1j1pxJ3juTu3K13zHMcLgbXAoHuQJ0m5tQqHl7Fv3FS9m9bES1EROidelT0oOdN++tPssD8Y/rMUXgmv1HdfOthcavtlE+yPucZ0YfQFEhHnWZKQRB5IK3PMfX4/8+5qb312Uk6yMtnpcXpDHqvempVoRR+aQE7JtGZCTsQn6wBAhjHGWOqf7n808tDP+ZCEWJItMBReK71MDjULtvtyczFT0wJ0/PpjsfEBAC9EJhenuGgwRW00UgrUd1Mcey1j1UxNM5Fa+H8agLdStPcG15gebipDruFNEQlbSZ5djUmGKjopUxs2RX8B27FT4rJJPvQAAAAASUVORK5CYII=</os:Image>
+<SearchForm>http://www.worldcat.org</SearchForm>
+<os:Url type="text/html" method="GET" template="http://www.worldcat.org/search?qt=worldcat_org_all&amp;q={searchTerms}">
+</os:Url><os:Url type="application/opensearchdescription+xml" method="GET" template="http://mycroft.mozdev.org/updateos.php/id0/worldcat_cu.xml" rel="self">
+</os:Url>
+</SearchPlugin>

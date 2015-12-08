@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Add-on for firefox for quick bookmarking.
+    Copyright (C) 2010  Konstantin Plotnikov
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<?xml-stylesheet href="chrome://save2read/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://save2read/skin/s2rList.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://save2read/locale/overlay.dtd">
+<overlay id="save2read-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <script src="s2rGeneral.js"/>
+    <script src="s2rList.js" />
+    <script src="s2rPanel.js" />
+    <script src="overlay.js"/>
+    <script src="ff-overlay.js"/>
+    <script src="reporterOverlay.js"/>
+
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="save2read-strings" src="chrome://save2read/locale/overlay.properties"/>
+    </stringbundleset>
+
+    <toolbarpalette id="BrowserToolbarPalette">
+        <toolbarbutton id="save2read-toolbar-button-sidebar" class="toolbarbutton-1 chromeclass-toolbar-additional"
+            label="&toolbarButton.sidebarLabel;" tooltiptext="&toolbarButton.sidebarTooltip;"
+            unread="0"  hidecounter="true"
+            oncommand="s2rGlobal.s2rOverlay.onToolbarButtonCommand()"/>
+        <toolbarbutton id="save2read-toolbar-button-panel" class="toolbarbutton-1 chromeclass-toolbar-additional"
+            label="&toolbarButton.panelLabel;" tooltiptext="&toolbarButton.panelTooltip;"
+            unread="0" hidecounter="true"
+            popup="s2r_panel" />
+        <toolbarbutton id="save2read-toolbar-button-open" class="toolbarbutton-1 chromeclass-toolbar-additional"
+            label="&toolbarButton.openItemLabel;" tooltiptext="&toolbarButton.openItemTooltip;"
+            unread="0" hidecounter="true"
+            oncommand="s2rGlobal.s2rOverlay.openItemCommand();" />
+    </toolbarpalette>
+
+    <popupset id="mainPopupSet">
+        <panel id="s2r_panel" position="after_start" style="max-height:550px; max-width:400px" onpopupshowing="s2rGlobal.s2rList.panelShowing(this);" onclick="s2rGlobal.s2rList.hideDetailsPanel(event);">
+            <vbox flex="1">
+                <hbox style="-moz-box-align: center">
+                    <textbox type="search" emptytext="&search.empty_text;" oncommand="s2rGlobal.s2rList.requestFillList(this.value, false);" flex="3" clickSelectsAll="true" />
+                    <menulist id="save2read_panel_sort_by" oncommand="s2rGlobal.s2rList.changeSorting(this.value);" flex="0">
+                        <menupopup>
+                            <menuitem label="&sort_by.time_asc;"    value="time_asc"/>
+                            <menuitem label="&sort_by.time_desc;"   value="time_desc"/>
+                            <menuitem label="&sort_by.name_asc;"    value="name_asc"/>
+                            <menuitem label="&sort_by.name_desc;"   value="name_desc"/>
+                        </menupopup>
+                    </menulist>
+                </hbox>
+
+                <label id="s2r_no_bookmarks_message" hidden="true" class="noBookmarksMessage" value="&list.no_bookmarks;" />
+
+                <grid flex="10" class="s2r-grid">
+                    <columns>
+                        <column />
+                        <column flex="2" minwidth="100" />
+                        <column />
+                        <column />
+                    </columns>
+                    <rows id="s2r_panelList">
+                    </rows>
+                </grid>
+            </vbox>
+        </panel>
+        <panel id="save2read_panelBookmarkDetails" position="after_start" class="editDetailsPanel" onpopuphiding="s2rGlobal.s2rOverlay.bookmarkDetailsClosed();" >
+            <vbox flex="1">
+                <label id="save2read_panelDetailsHeader" crop="end" style="margin:6px;text-decoration:underline;" value="" />
+                <label value="&panel.input_tags;" />
+                <textbox id="save2read_panelTagsField" />
+                <label value="&panel.input_description;" />
+                <textbox id="save2read_panelDescriptionField" multiline="true" flex="1" />
+            </vbox>
+        </panel>
+    </popupset>
+
+    <menupopup id="viewSidebarMenu">
+        <menuitem key="key_openSidebar_save2read" observes="viewSidebar_save2read" />
+    </menupopup>
+
+    <popup id="contentAreaContextMenu">
+        <menuitem id="s2r_context_menu_item_add"
+                    image="chrome://save2read/skin/list-add.png"
+                    label="&contexMenuItemAdd.label;"
+                    oncommand="s2rGlobal.s2rOverlay.onContextAddClick();"
+                    insertafter="context-bookmarklink" />
+        <menuitem id="s2r_context_menu_item_remove"
+                    image="chrome://save2read/skin/list-remove.png"
+                    label="&contexMenuItemRemove.label;"
+                    oncommand="s2rGlobal.s2rOverlay.onContextRemoveClick();"
+                    insertafter="context-bookmarklink" />
+    </popup>
+
+    <keyset id="mainKeyset">
+        <key id="s2r_key_bookmark"          oncommand="s2rGlobal.s2rOverlay.toggleBookmark(event);" modifiers="alt" key="W" />
+        <key id="s2r_key_bookmark_edit"     oncommand="event.button=2;s2rGlobal.s2rOverlay.toggleBookmark(event);"
+                                                                                                    modifiers="alt" key="Q" />
+        <key id="s2r_key_sidebar"           oncommand="toggleSidebar('viewSidebar_save2read');"     modifiers="alt" key="[" />
+        <key id="s2r_key_panel"             oncommand="s2rGlobal.s2rOverlay.showPanel();"           modifiers="alt" key="]" />
+        <key id="s2r_key_open"              oncommand="s2rGlobal.s2rOverlay.openItemCommand();"     modifiers="alt" key="O" />
+    </keyset>
+
+    <broadcasterset id="mainBroadcasterSet">
+        <broadcaster id="viewSidebar_save2read"
+                    label="&sidebar.label;"
+                    autoCheck="false"
+                    type="checkbox"
+                    group="sidebar"
+                    sidebarurl="chrome://save2read/content/ff-sidebar.xul"
+                    sidebartitle="&sidebar.label;"
+                    oncommand="toggleSidebar('viewSidebar_save2read');" />
+    </broadcasterset>
+
+    <hbox id="urlbar-icons">
+        <image id="s2r_urlBarAddIcon" insertbefore="go-button" oncontextmenu="return false;"
+            tooltiptext="&urlBarAddIconTooltip.label;"
+            src="chrome://save2read/skin/list-add.png"
+            onclick="s2rGlobal.s2rOverlay.onUrlBarAddClick(event)"
+            hidden="true" />
+        <image id="s2r_urlBarRemoveIcon" insertbefore="go-button" oncontextmenu="return false;"
+            tooltiptext="&urlBarRemoveIconTooltip.label;"
+            src="chrome://save2read/skin/list-remove.png"
+            onclick="s2rGlobal.s2rOverlay.onUrlBarRemoveClick()"
+            hidden="true" />
+    </hbox>
+
+</overlay>

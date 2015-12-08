@@ -1,0 +1,66 @@
+label.noBookmarksMessage
+{
+    font-weight:        bold;
+    font-size:          larger;
+    color:              red;
+    background-color:   yellow;
+    margin:             0px;
+    padding:            5px;
+    text-align:         center;
+}
+
+panel.editDetailsPanel
+{
+    max-height: 200px;
+    max-width:  410px;
+    min-height: 200px;
+    min-width:  410px;
+}
+
+grid.s2r-grid
+{
+    background-color:   white;
+    overflow:           auto
+}
+
+row.s2r-row
+{
+    margin-left:    3px;
+    margin-top:     3px;
+    -moz-box-align: center
+}
+
+image.s2r-row-favicon
+{
+    max-height: 16px;
+    max-width:  16px
+}
+
+image.s2r-row-add-remove-button
+{
+    max-height: 16px;
+    max-width:  16px
+}
+
+label.s2r-host
+{
+    font-weight: bold;
+    font-size: smaller;
+    color: gray;
+    text-decoration: none
+}
+label.s2r-host:hover
+{
+    text-decoration: underline
+}
+
+label.s2r-list-item
+{
+    color: black;
+    text-decoration: none
+}
+label.s2r-list-item:hover
+{
+    text-decoration: underline
+}
+

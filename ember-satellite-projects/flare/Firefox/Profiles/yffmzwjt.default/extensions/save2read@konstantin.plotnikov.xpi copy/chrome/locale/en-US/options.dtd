@@ -1,0 +1,47 @@
+<!ENTITY prefwindow.title "Save-To-Read preferences">
+
+<!ENTITY sort_by.label      "Sort:">
+<!ENTITY sort_by.time_asc   "Date added (newest first)">
+<!ENTITY sort_by.time_desc  "Date added (oldest first)">
+<!ENTITY sort_by.name_asc   "Name A->Z">
+<!ENTITY sort_by.name_desc  "Name Z->A">
+
+<!ENTITY viewMode.label     "Select view:">
+<!ENTITY viewMode.full      "Full">
+<!ENTITY viewMode.compact   "Compact">
+
+<!ENTITY folderName.label "Select folder name:">
+
+<!ENTITY tabs.general   "General settings">
+<!ENTITY tabs.view      "View settings">
+<!ENTITY tabs.shortcuts "Shortcuts">
+
+<!ENTITY shortcuts.sidebar          "Open/Close sidebar:">
+<!ENTITY shortcuts.bookmark         "Add/Remove bookmark:">
+<!ENTITY shortcuts.bookmark_edit    "Add+edit/Remove bookmark:">
+<!ENTITY shortcuts.notice           "Please note: shortcuts settings will apply to the new windows only.">
+<!ENTITY shortcuts.panel            "Show panel:">
+<!ENTITY shortcuts.open             "Open bookmark:">
+
+<!ENTITY openTabForLeftClick.label      "Open new tab for left click">
+<!ENTITY closePanelOnClick.label        "Close drop-down panel on click">
+<!ENTITY useRightButton.label           "Use right button click to edit bookmark details">
+<!ENTITY removeOnReadButton.label       "Open button removes bookmark">
+<!ENTITY removeOnLeftClick.label        "Remove bookmark on left click">
+<!ENTITY closePageOnSave.label          "Close current tab when it is added to Save-To-Read list">
+
+<!ENTITY readButtonPreference.label     "Open button opens:">
+<!ENTITY readButtonPreference.oldest    "Oldest bookmark">
+<!ENTITY readButtonPreference.newest    "Newest bookmark">
+<!ENTITY readButtonPreference.first     "Fist bookmark in list">
+<!ENTITY readButtonPreference.last      "Last bookmark in list">
+<!ENTITY readButtonPreference.random    "Random bookmark">
+
+<!ENTITY autoTags.label "Tags for new bookmarks (separate with comma):">
+
+<!ENTITY fullViewWithURL.label      "Show URL in Full view mode" >
+<!ENTITY showTooltip.label          "Show tooltip" >
+
+<!ENTITY counterOnSidebarBtn.label 'Show count of saved pages on "Sidebar" button' >
+<!ENTITY counterOnPanelBtn.label   'Show count of saved pages on "Panel" button' >
+<!ENTITY counterOnOpenBtn.label    'Show count of saved pages on "Open" button' >

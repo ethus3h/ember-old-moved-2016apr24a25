@@ -1,0 +1,44 @@
+#save2read-toolbar-button-sidebar
+{
+    -moz-binding: url("chrome://save2read/content/overlay.xml#s2r-toolbarbutton");
+    list-style-image: url("chrome://save2read/skin/sidebar.png");
+}
+[iconsize="small"] #save2read-toolbar-button-sidebar
+{
+    list-style-image: url("chrome://save2read/skin/sidebar-small.png");
+}
+
+#save2read-toolbar-button-panel
+{
+    -moz-binding: url("chrome://save2read/content/overlay.xml#s2r-toolbarbutton");
+    list-style-image: url("chrome://save2read/skin/panel.png");
+}
+[iconsize="small"] #save2read-toolbar-button-panel
+{
+    list-style-image: url("chrome://save2read/skin/panel-small.png");
+}
+
+#save2read-toolbar-button-open
+{
+    -moz-binding: url("chrome://save2read/content/overlay.xml#s2r-toolbarbutton");
+    list-style-image: url("chrome://save2read/skin/open.png");
+}
+[iconsize="small"] #save2read-toolbar-button-open
+{
+    list-style-image: url("chrome://save2read/skin/open-small.png");
+}
+
+/* Toolbar button extensions*/
+toolbar[mode="text"] #s2r-toolbar-hbox {
+    display: none;
+}
+
+label.s2r-unread-counter
+{
+    font-size:           10px;
+    padding:             0px;
+    margin:              0px;
+    background-image:    url('chrome://save2read/skin/counter-background.png');
+    background-repeat:   repeat-x;
+    background-position: 0% 25%;
+}

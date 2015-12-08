@@ -1,0 +1,24 @@
+<!ENTITY toolbarButton.sidebarLabel        "Save-To-Read Sidebar" >
+<!ENTITY toolbarButton.sidebarTooltip      "Open/close Save-To-Read sidebar" >
+<!ENTITY toolbarButton.panelLabel          "Save-To-Read Panel" >
+<!ENTITY toolbarButton.panelTooltip        "Show Save-To-Read floating panel" >
+<!ENTITY toolbarButton.openItemLabel       "Read now" >
+<!ENTITY toolbarButton.openItemTooltip     "Open item from list" >
+<!ENTITY sidebar.label                     "Save-To-Read" >
+<!ENTITY urlBarAddIconTooltip.label        "Click to save" >
+<!ENTITY urlBarRemoveIconTooltip.label     "Click to remove" >
+<!ENTITY contexMenuItemAdd.label           "Add to Save-To-Read List" >
+<!ENTITY contexMenuItemRemove.label        "Remove from Save-To-Read List" >
+
+<!ENTITY sort_by.time_asc   "Newest first">
+<!ENTITY sort_by.time_desc  "Oldest first">
+<!ENTITY sort_by.name_asc   "Name A->Z">
+<!ENTITY sort_by.name_desc  "Name Z->A">
+
+<!ENTITY search.empty_text "Search in title, url, tags or description">
+
+<!ENTITY list.no_bookmarks "You have no bookmarks in your list." >
+
+<!ENTITY panel.input_tags           "Tags (separate with commas):" >
+<!ENTITY panel.input_description    "Description:" >
+<!ENTITY panel.tags                 "Tags:" >

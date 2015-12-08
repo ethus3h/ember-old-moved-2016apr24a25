@@ -1,0 +1,16 @@
+<overlay id="custombuttons-profile-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<!-- Firefox -->
+	<toolbarpalette id="BrowserToolbarPalette"><toolbarbutton id="custombuttons-button0" label="Save in Wayback Machine" tooltiptext="Save in Wayback Machine" class="toolbarbutton-1 chromeclass-toolbar-additional" context="custombuttons-contextpopup" cb-stdicon="custombuttons-stdicon-3" cb-oncommand="loadURI (&quot;javascript:(function(){window.open('https://web.archive.org/save/'+(''+window.location));})();&quot;);" cb-init="/*Initialization Code*/" cb-mode="0"/><toolbarbutton id="custombuttons-button1" label="Reader Mode" tooltiptext="Reader Mode" class="toolbarbutton-1 chromeclass-toolbar-additional" context="custombuttons-contextpopup" cb-stdicon="custombuttons-stdicon-4" cb-oncommand="(function() {ReaderParent.toggleReaderMode(event);})()&#xA;" cb-init="/*Initialization Code*/" cb-mode="0"/><toolbarbutton id="custombuttons-button2" label="Bookmark this page" tooltiptext="Bookmark this page" class="toolbarbutton-1 chromeclass-toolbar-additional" context="custombuttons-contextpopup" cb-stdicon="custombuttons-stdicon-2" cb-oncommand="    PlacesCommandHook.bookmarkCurrentPage(true, PlacesUtils.bookmarksMenuFolderId);" cb-init="/*Initialization Code*/" cb-mode="0"/><toolbarbutton id="custombuttons-button3" label="Add to reading list" tooltiptext="Add to reading list" class="toolbarbutton-1 chromeclass-toolbar-additional" context="custombuttons-contextpopup" cb-stdicon="custombuttons-stdicon-1" cb-oncommand="javascript:function(){var bookmarked = s2rGlobal.s2rGeneral.bookmarks_checkURI(gContextMenu.linkURL, s2rGlobal.s2rPref.getFolderId());if(bookmarked){s2rGlobal.s2rOverlay.onContextRemoveClick();}else{s2rGlobal.s2rOverlay.onContextAddClick();}}();" cb-init="/*Initialization Code*/" cb-mode="0"/></toolbarpalette>
+	
+	<!-- Thunderbird -->
+	<toolbarpalette id="MailToolbarPalette"/> <!-- main window -->
+	<toolbarpalette id="MsgComposeToolbarPalette"/> <!-- message compose -->
+	
+	<!-- Sunbird -->
+	<toolbarpalette id="calendarToolbarPalette"/>
+	
+	<!-- KompoZer -->
+	<toolbarpalette id="NvuToolbarPalette"/>
+
+</overlay>

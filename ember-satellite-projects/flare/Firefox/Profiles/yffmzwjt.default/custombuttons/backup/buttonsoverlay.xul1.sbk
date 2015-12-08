@@ -1,0 +1,16 @@
+<overlay id="custombuttons-profile-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<!-- Firefox -->
+	<toolbarpalette id="BrowserToolbarPalette"><toolbarbutton id="custombuttons-button0" label="Save in Wayback Machine" tooltiptext="Save in Wayback Machine" class="toolbarbutton-1 chromeclass-toolbar-additional" context="custombuttons-contextpopup" cb-stdicon="custombuttons-stdicon-3" cb-oncommand="loadURI (&quot;javascript:(function(){window.open('https://web.archive.org/save/'+(''+window.location));})();&quot;);" cb-init="/*Initialization Code*/" cb-mode="0"/><toolbarbutton id="custombuttons-button1" label="Reader Mode" tooltiptext="Reader Mode" class="toolbarbutton-1 chromeclass-toolbar-additional" context="custombuttons-contextpopup" cb-stdicon="custombuttons-stdicon-1" cb-oncommand="alert('doom!');&#xA;browser.uitour.readerViewTrigger();" cb-init="/*Initialization Code*/" cb-mode="0"/></toolbarpalette>
+	
+	<!-- Thunderbird -->
+	<toolbarpalette id="MailToolbarPalette"/> <!-- main window -->
+	<toolbarpalette id="MsgComposeToolbarPalette"/> <!-- message compose -->
+	
+	<!-- Sunbird -->
+	<toolbarpalette id="calendarToolbarPalette"/>
+	
+	<!-- KompoZer -->
+	<toolbarpalette id="NvuToolbarPalette"/>
+
+</overlay>

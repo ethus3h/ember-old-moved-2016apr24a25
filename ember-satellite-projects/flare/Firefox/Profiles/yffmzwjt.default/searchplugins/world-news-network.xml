@@ -1,0 +1,12 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/">
+<os:ShortName>World News Network</os:ShortName>
+<os:Description>World News search</os:Description>
+<os:InputEncoding>ISO-8859-1</os:InputEncoding>
+<os:Image width="16" height="16">data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKGAUTJVoVRhsAAAGlSURBVDjLfZPBSxtBFMZ/u8kpUExA2rKsEBBEKBhLsl71JoVCCIoXwdSCWDDUUw+5+I/00ksOLbQiKp57KwniRhBEUUGXUIvFlYAUze54WGbY3Wzz4DEf897MvO978zT70ROOKzCzGklmpHU6PV/h5o3HXddXcR2IHDbSunKATs9XWNrQM12tmv3oifiLg6zT83FcEa2gfXBCKW9RylvstY4xzCKGWWSvdUzzxlMYwHFFP4XC6zGsqUkA3ljj1Os1AP5dnjE1nFL7kq6kAJCW4EP9E63KIpvfd1XwS+MH17//0HH21V64fFVB+IW19Q0AKuVZWk17oB5mVgsukMJVyrMAzK1WeftuCYAXL59HBAx3zXFFfxdKeUuVbJhFeu9/AbAwobM0A1ttweefgp2Pen8FRlqP8JV4ZVrj26HP34tT1qb1ZA0GWbkQlFzdHuXoylM0HFcEFyT9tjhneyNoZ+0r5DIxEWVy3B1XkMsEYjmuoLEc5N7ehyjIYJJL22oH+NVIinkrOnRa4/xByMG46/qRX5bUd9k+iVX2/w7LRClafHqfAGk2w/cNWgILAAAAAElFTkSuQmCC</os:Image>
+<UpdateInterval>7</UpdateInterval>
+<UpdateUrl>http://www.scriptsocket.com/firefoxplugins/1351056181-1965443316-World_News_Network.src</UpdateUrl>
+<IconUpdateUrl>http://www.scriptsocket.com/firefoxplugins/1351056181-1965443316-World_News_Network.png</IconUpdateUrl>
+<SearchForm>http://wn.com/</SearchForm>
+<os:Url type="text/html" method="GET" template="http://search.wn.com/?search_string={searchTerms}&amp;results_type=news&amp;action=search&amp;corpus=current&amp;template=cheetah-search-adv%2Findex.txt">
+</os:Url>
+</SearchPlugin>

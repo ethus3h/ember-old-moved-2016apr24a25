@@ -1,0 +1,131 @@
+Generated File. Do not edit.
+
+[HEADER]
+Version:0.17:$
+Arch:x86_64-gcc3:$
+
+[PLUGINS]
+SharePointBrowserPlugin.plugin:$
+/Library/Internet Plug-Ins/SharePointBrowserPlugin.plugin:$
+14.1.3:$
+1312527600000:0:0:0:$
+Microsoft Office for Mac SharePoint Browser Plug-in:$
+SharePoint Browser Plug-in:$
+1
+0:application/x-sharepoint:Microsoft Office for Mac SharePoint Browser Plug-in::$
+Silverlight.plugin:$
+/Library/Internet Plug-Ins/Silverlight.plugin:$
+5.1.30514.0:$
+1400202705000:0:0:0:$
+5.1.30514.0:$
+Silverlight Plug-In:$
+2
+0:application/x-silverlight:Microsoft Silverlight:xaml:$
+1:application/x-silverlight-2:Microsoft Silverlight:xaml:$
+Mathematica.plugin:$
+/Library/Internet Plug-Ins/Mathematica.plugin:$
+10.0.0:$
+1403999658000:0:0:0:$
+Enables the interaction of Mathematica content with the latest installed version of Mathematica.:$
+Wolfram Mathematica:$
+5
+0:application/vnd.wolfram.mathematica:Wolfram Mathematica Notebook:nb:$
+1:application/mathematica:Wolfram Mathematica Notebook:nb,nbp:$
+2:application/vnd.wolfram.cdf.text:Computable Document Format:cdf:$
+3:application/vnd.wolfram.cdf:Computable Document Format:cdf:$
+4:application/vnd.wolfram.player:Wolfram Mathematica Player Notebook:nbp:$
+WacomTabletPlugin.plugin:$
+/Library/Internet Plug-Ins/WacomTabletPlugin.plugin:$
+WacomTabletPlugin 2.1.0.6:$
+1410220994000:0:0:0:$
+Plugin for Wacom tablets.:$
+WacomTabletPlugin:$
+1
+0:application/x-wacomtabletplugin:Plugin for Wacom tablets.::$
+AdobeAAMDetect.plugin:$
+/Library/Internet Plug-Ins/AdobeAAMDetect.plugin:$
+AdobeAAMDetect 1.0.0.0:$
+1414205607000:0:0:0:$
+A plugin to detect whether the Adobe Application Manager is installed on this machine.:$
+AdobeAAMDetect:$
+1
+0:application/x-adobeaamdetect:A plugin to detect whether the Adobe Application Manager is installed on this machine.::$
+googletalkbrowserplugin.plugin:$
+/Library/Internet Plug-Ins/googletalkbrowserplugin.plugin:$
+5.41.0.0:$
+1427413713000:0:0:0:$
+Version 5.41.0.0:$
+Google Talk Plugin:$
+1
+0:application/googletalk:Google voice and video chat:googletalk:$
+o1dbrowserplugin.plugin:$
+/Library/Internet Plug-Ins/o1dbrowserplugin.plugin:$
+5.41.0.0:$
+1427413713000:0:0:0:$
+Version 5.41.0.0:$
+Google Talk Plugin Video Renderer:$
+1
+0:application/o1d:Google Talk Plugin Video Renderer:o1d:$
+Default Browser.plugin:$
+/Library/Internet Plug-Ins/Default Browser.plugin:$
+601:$
+1441341995000:0:0:0:$
+Provides information about the default web browser:$
+Default Browser Helper:$
+1
+0:application/apple-default-browser:Provides information about the default web browser::$
+JavaAppletPlugin.plugin:$
+/Library/Internet Plug-Ins/JavaAppletPlugin.plugin:$
+Java 8 Update 66 build 17:$
+1444173920000:0:0:0:$
+Displays Java applet content, or a placeholder if Java is not installed.:$
+Java Applet Plug-in:$
+21
+0:application/x-java-applet;version=1.4:Java Applet::$
+1:application/x-java-applet;version=1.2.1:Java Applet::$
+2:application/x-java-applet;version=1.2.2:Java Applet::$
+3:application/x-java-applet;version=1.3:Java Applet::$
+4:application/x-java-applet;version=1.8:Java Applet::$
+5:application/x-java-vm:Java Applet::$
+6:application/x-java-applet;version=1.1.1:Java Applet::$
+7:application/x-java-applet;deploy=11.66.2:Java Applet::$
+8:application/x-java-applet;version=1.2:Java Applet::$
+9:application/x-java-applet;version=1.7:Java Applet::$
+10:application/x-java-applet;version=1.4.1:Java Applet::$
+11:application/x-java-applet;version=1.1.2:Java Applet::$
+12:application/x-java-applet:Basic Java Applet::$
+13:application/x-java-applet;javafx=8.0.66:JavaFX Applet::$
+14:application/x-java-applet;version=1.1:Java Applet::$
+15:application/x-java-applet;version=1.1.3:Java Applet::$
+16:application/x-java-applet;version=1.6:Java Applet::$
+17:application/x-java-applet;version=1.4.2:Java Applet::$
+18:application/x-java-applet;version=1.3.1:Java Applet::$
+19:application/x-java-applet;version=1.5:Java Applet::$
+20:application/x-java-applet;jpi-version=1.8.0_66:Java Applet::$
+Flash Player.plugin:$
+/Library/Internet Plug-Ins/Flash Player.plugin:$
+19.0.0.245:$
+1447279121000:0:0:0:$
+Shockwave Flash 19.0 r0:$
+Shockwave Flash:$
+2
+0:application/x-shockwave-flash:Shockwave Flash:swf:$
+1:application/futuresplash:FutureSplash Player:spl:$
+ScreenleapPlugin_1.0.0.plugin:$
+/Users/elliot/Library/Internet Plug-Ins/ScreenleapPlugin_1.0.0.plugin:$
+1.0.0:$
+1444158300000:0:0:0:$
+Screenleap Plugin 1.0.0:$
+Screenleap Plugin:$
+1
+0:application/x-screenleap-1-plugin:Screenleap Screensharing Plugin::$
+
+[INVALID]
+/Library/Internet Plug-Ins/SharePointWebKitPlugin.webplugin:$
+1312527600000:$
+/Library/Internet Plug-Ins/Disabled Plug-Ins:$
+1440295931000:$
+/Library/Internet Plug-Ins/Quartz Composer.webplugin:$
+1440303248000:$
+/Library/Internet Plug-Ins/flashplayer.xpt:$
+1446060705000:$

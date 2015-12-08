@@ -1,0 +1,24 @@
+<!ENTITY toolbarButton.sidebarLabel        "Save-To-Read oldalsáv" >
+<!ENTITY toolbarButton.sidebarTooltip      "Save-To-Read oldalsáv megnyitása/bezárása" >
+<!ENTITY toolbarButton.panelLabel          "Save-To-Read panel" >
+<!ENTITY toolbarButton.panelTooltip        "Save-To-Read úszópanel mutatása" >
+<!ENTITY toolbarButton.openItemLabel       "Olvasás most" >
+<!ENTITY toolbarButton.openItemTooltip     "Egy elem olvasásra megnyitása a listáról" >
+<!ENTITY sidebar.label                     "Save-To-Read" >
+<!ENTITY urlBarAddIconTooltip.label        "Kattints ide az oldal mentéséhez" >
+<!ENTITY urlBarRemoveIconTooltip.label     "Kattints ide az oldal eltávolításához" >
+<!ENTITY contexMenuItemAdd.label           "Add to Save-To-Read List" >
+<!ENTITY contexMenuItemRemove.label        "Remove from Save-To-Read List" >
+
+<!ENTITY sort_by.time_asc   "Legújabb a felső">
+<!ENTITY sort_by.time_desc  "Legrégebbi a felső">
+<!ENTITY sort_by.name_asc   "Nevek A->Z">
+<!ENTITY sort_by.name_desc  "Nevek Z->A">
+
+<!ENTITY search.empty_text "Cím, url, címke vagy leírás között keresés">
+
+<!ENTITY list.no_bookmarks "Nincs könyvjelző a listán." >
+
+<!ENTITY panel.input_tags           "Címkék (vesszővel elválasztva):" >
+<!ENTITY panel.input_description    "Leírás:" >
+<!ENTITY panel.tags                 "Címkék:" >

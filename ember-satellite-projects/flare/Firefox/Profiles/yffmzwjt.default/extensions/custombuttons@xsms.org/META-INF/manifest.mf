@@ -1,0 +1,87 @@
+Manifest-Version: 1.0
+
+Name: install.rdf
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: iDb+nKiabkGmi8vCmLvSbQ==
+SHA1-Digest: pQ2yEW/IM26+9/a3Nq6FeewzUUs=
+
+Name: chrome.manifest
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: hNoshAIKtDihE0XQXzWjcQ==
+SHA1-Digest: 7Akui7t4iqtPzBTV31z/f8nn754=
+
+Name: changelog.txt
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 33hsHlT6kgZe1ZFUOWvdlg==
+SHA1-Digest: btS6e3majulbgqKWqICbNlZW/pI=
+
+Name: chrome/button.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: uf2kaY+Qu+3c6/Ir3nKPUQ==
+SHA1-Digest: Sq+dX1H+etaqP0ekOlkwj8+jGPs=
+
+Name: chrome/custombuttons.jar
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: I9usvvCJY/dNaHqW3s2aFg==
+SHA1-Digest: 6/CtHrEyZaxclkic972p15Mgqdc=
+
+Name: chrome/icons/default/custombuttonsEditor.ico
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: p9WnzdVZukWUQEnx24a1uA==
+SHA1-Digest: hcM64jKgPJeLAi90w0dVC6t3gI0=
+
+Name: chrome/icons/default/custombuttonsEditor.xpm
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 53y4LEAbfLZWdyGPRsKlUg==
+SHA1-Digest: 7HFuV5Y2hpTXmfoBNI3P5oo67Z4=
+
+Name: components/CBCommandLine.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: V0vHS9juqY5NFJ38KJ8GTQ==
+SHA1-Digest: Nzv/oMK2DZBKlGtJp9L6d3R9ILs=
+
+Name: components/CBContentPolicy.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: ndi858YHMAv92aPrF6f0Bg==
+SHA1-Digest: kw8dcVYkSMZciTBjmom5vcae8as=
+
+Name: components/CBKeyMapComponent.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: AoiUitHLQ9lMfz4nIvZbTg==
+SHA1-Digest: 1llJZiBCXINik05/iUAvGIWpygE=
+
+Name: components/CBKeyMapComponent.xpt
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: Jg4mTzPZKszFkaSLtlYV8A==
+SHA1-Digest: NwdGUvvj+XBF2UNzCpu0jh6CkxM=
+
+Name: components/CustomButtonProtocol.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: CuBXHee/Z0La7iJLhe/p/A==
+SHA1-Digest: KoXk7n1liRHRoPOUuK06hCRJSkA=
+
+Name: components/CustomButtonsService.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: 4Enej7XF88VdbMPaTjKoIA==
+SHA1-Digest: 8pPJV7XiicjqvoVQISDupxPWcxA=
+
+Name: components/CustomButtonsService.xpt
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: k3bDz11aH+wUuGHGASktGw==
+SHA1-Digest: 7SKiMSdOaBBiTBrImngc9ww/XAc=
+
+Name: defaults/preferences/prefs.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: xhWWslaathmhjYKRy/8JwQ==
+SHA1-Digest: 9SB5zSHXDUOwZwiZc6K6jsJr63w=
+
+Name: modules/addons4.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: YSCymK+LxjAh98Io2burJA==
+SHA1-Digest: VXBOgTbUba8KkyjntME3cFrBfcs=
+
+Name: license.txt
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: eBUQg9AJRLQRB8RPUtfcVQ==
+SHA1-Digest: 8hRPk4ZO8RNS5Lit79TZ91PlBOQ=
+
