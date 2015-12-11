@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # WARCdealer
-# Version 1.2.5, 2015.Dec.03.
+# Version 1.2.6, 2015.Dec.03.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013, 2014 Futuramerlin
@@ -126,7 +126,7 @@ def upload(wikis):
         if dirname == '.':
             for f in filenames:
                 #log_add('Filenames: ' + str(f))
-                if (f.endswith('.json') or f.endswith('.warc.gz') or ('megawarc' in f and (f.endswith('.tar') or f.endswith('.json.gz') or f.endswith('.warc.gz')))):
+                if (f.endswith('.json') or f.endswith('.warc') or f.endswith('.warc.gz') or ('megawarc' in f and (f.endswith('.tar') or f.endswith('.json.gz') or f.endswith('.warc.gz')))):
                     dumps.append(f)
                     #dumps.append(f)
             break
@@ -191,6 +191,7 @@ def concatW():
     #based on "# find / -iname "*.mp3" -type f -exec /bin/mv {} /mnt/mp3 \;" from http://www.cyberciti.biz/tips/howto-linux-unix-find-move-all-mp3-file.html
     #find . -iname "*.warc.gz" -type f -exec /bin/mv {} . \;
     run('bash -c \'find . -iname "*.warc.gz" -type f -exec /bin/mv {} . \;\';')
+    run('bash -c \'find . -iname "*.warc" -type f -exec /bin/mv {} . \;\';')
 #     cctRes=run('bash -c \'./megawarc pack WARCdealer_'+title+'_' + uuidG +'.' +timeRunning+'_' + uuidG+' *.warc.gz *.megawarc.tar *.megawarc.json.gz;\';')
 #     log_add("\n\n"+cctRes[0]+"\n\n")
 #     log_add("\n--\n"+"#"*73)
@@ -232,6 +233,6 @@ def main():
     concatW()
     log_add('\n\nUploading barrel data back to base.\n\n');
     upload(wikis)
-    log_add('Sleeping 1800 seconds (1/2 hour)')
-    time.sleep(1800)
+    log_add('Sleeping 180 seconds (3 minutes)')
+    time.sleep(180)
 main()
