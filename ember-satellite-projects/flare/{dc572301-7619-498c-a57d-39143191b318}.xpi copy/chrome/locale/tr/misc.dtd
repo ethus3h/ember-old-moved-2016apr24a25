@@ -1,0 +1,17 @@
+<!ENTITY searchTabFocus.label "Arkaplanda yükle">
+<!ENTITY searchTabFocus.accesskey "A">
+<!ENTITY renametab.panel.title "Edit Tab Title">
+<!ENTITY renametab.reset.label "Reset to default title">
+<!ENTITY title.label "Başlık">
+<!ENTITY default.label "Default">
+<!ENTITY renametab.permanently.label "Rename this tab regardless of its address">
+<!ENTITY renametab.permanently.tooltip "tab with history - the new name will remain when address changes">
+<!ENTITY forum.label "Forum">
+<!ENTITY faq.label "SSS">
+<!ENTITY help.label "Yardım">
+<!ENTITY tabmix.label "Tab Mix Plus">
+<!ENTITY reloadtime.label1 "Listeden bir süre seçin ya da istediğiniz süreyi girin">
+<!ENTITY specifyreload.label "Tazeleme Süresi Belirle">
+<!ENTITY sanitizer.entry "Tab Mix Plus kayıtlı oturumlar">
+<!ENTITY sanitizer.entry.accesskey "T">
+<!ENTITY sanitizer.entry.confirm "Yedekler de dahil TÜM kayıtlı oturumları silmek istediğinize emin misiniz?">
