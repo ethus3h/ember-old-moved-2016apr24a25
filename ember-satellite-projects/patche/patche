@@ -5,6 +5,7 @@
 
 #TODO: Bundle files for upload to IA; 30 seconds * 400000 files = 12000000 = ~139 days
 #TODO: Test patch action.
+#TODO: Fix the annoying error on commit. See (2016-01-01a02n2) URGHHH Terminal Saved Output.txt (in Nonfiction) for a log.
 
 #Script should run as root.
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
