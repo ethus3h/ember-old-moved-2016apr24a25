@@ -34,7 +34,7 @@ newuuid() {
 #Main function body
 patche() {
 	if [ "$1" = "patch" ]; then
-		
+		true
 	fi
 	if [ "$1" = "init" ]; then
 		if [ "$2" != "" ]; then
@@ -82,7 +82,7 @@ patche() {
 	fi
 	if [ "$1" = "commit" ]; then
 		LASTREVISION="$(cat ./.patche-repo/revisions/latest)"
-		THISREVISION="$(($LASTREVISION+1))"
+		THISREVISION=$((LASTREVISION+1))
 		cp -Rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/" "./.patche-repo/revisions/$THISREVISION/records-by-hash/"
 
 		#records-by-hash: ln -s each file to its sha256
@@ -90,7 +90,7 @@ patche() {
 			#Records-by-hash linker
 			#Link to records-by-hash
 			SHA=$("shasum -a 512 \"$1\"")
-			$LINKTARGET="./.patche-repo/revisions/$THISREVISION/records-by-hash/$SHA"
+			LINKTARGET="./.patche-repo/revisions/$THISREVISION/records-by-hash/$SHA"
 			ln -sv "$1" "$LINKTARGET"
 		}
 		export -f patchelink
@@ -104,7 +104,7 @@ patche() {
 		patcheupload() {
 			#Record uploader
 			SHA=$("shasum -a 512 \"$1\"")
-			if ! [ -f "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/$SHA" ]
+			if ! [ -f "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/$SHA" ]; then
 				#File hasn't already been uploaded, so upload it. $1 should be a symlink, but cp should follow it and work with the real file.
 				cp "$1" "./.patche-repo/current.bin"
 				#Compress and encrypt current.bin
@@ -121,6 +121,7 @@ patche() {
 				echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/snapshot/""$1"
 				echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/""$SHA"
 				rm -v "./.patche-repo/$NEWUUID"".patche5"
+			fi
 		}
 		export -f patcheupload
 		find "./.patche-repo/revisions/$THISREVISION/records-by-hash/" -type f -exec bash -c 'patcheupload "$0"' {} \;
@@ -145,10 +146,10 @@ patche() {
 	fi
 	echo "No action or unknown action specified. Available actions are: patch, init, commit"
 
-	DONETIME="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
+	DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 	echo "Done work at $DONETIME."
 
-	: <<'END'
+	: <<-'END'
 	clone directory tree
 	for each file, make a file in the cloned directory tree that contains its ia URL
 	ln -s each file to its sha256
@@ -180,7 +181,7 @@ read -n1 -r -p "Press space to continue if you're sure." key
 
 if [ "$key" = ' ' ]; then
     # Space pressed
-    patche() 2>&1 | tee -a $outfile
+    patche "$@" 2>&1 | tee -a "$outfile"
 else
     # Anything else pressed
     echo "Aborting."
