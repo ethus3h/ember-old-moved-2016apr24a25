@@ -3,6 +3,9 @@
 
 # Needs at least as much disk space as the biggest file in the directory.
 
+#TODO: Bundle files for upload to IA; 30 seconds * 400000 files = 12000000 = ~139 days
+#TODO: Test patch action.
+
 #Script should run as root.
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
 
@@ -262,7 +265,8 @@ patche() {
 		rm -rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/"
 		echo "Removing: "
 		rm -rfv "./.patche-repo/revisions/$LASTREVISION/snapshot/"
-		find "./.patche-repo/revisions/" ! -path "./.patche-repo/revisions/$THISREVISION/*" ! -path "./.patche-repo/revisions/latest" -exec rm -rfv {} \;
+		echo -n "$THISREVISION" > "./.patche-repo/revisions/latest"
+		find "./.patche-repo/revisions/." ! -path "./.patche-repo/revisions/." ! -path "./.patche-repo/revisions/./" ! -path "./.patche-repo/revisions/./$THISREVISION/" ! -path "./.patche-repo/revisions/./$THISREVISION/*" ! -path "./.patche-repo/revisions/$THISREVISION/" ! -path "./.patche-repo/revisions/$THISREVISION/*" ! -path "./.patche-repo/revisions/./latest" ! -path "./.patche-repo/revisions/latest" -exec rm -rfv {} \;
 		echo -n "$THISREVISION" > "./.patche-repo/revisions/latest"
 		echo "Committed revision $THISREVISION."
 		echo "This revision of this repository can be downloaded from:"
