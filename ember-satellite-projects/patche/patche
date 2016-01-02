@@ -12,11 +12,8 @@ PATCHEVERSION="5"
 #Exit if a command returns a nonzero value.
 set -e;
 
-#Set up logging
+#Set up logging, part 1
 NOW="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
-echo "Setting up logging..."
-mkdir -p -v "./.patche-repo/logs"
-outfile="./.patche-repo/logs/$NOW.log"
 
 #UUID creator
 newuuid() {
@@ -26,7 +23,22 @@ newuuid() {
 #Main function body
 patche() {
 	echo "Started Patche at $NOW."
-	if [ "$1" = "patch" ]; then
+	if [ "$1" == "help" ]; then
+		printf "%b\n" "Commands available:"
+		printf "%b\n" " * help"
+		printf "%b\n" "   |-> Usage: patche help"
+		printf "%b\n" "   '-> Displays this output."
+		printf "%b\n" " * patch"
+		printf "%b\n" "   |-> Usage: patche patch \e[4mrevision-url\e[0m [\e[4mpassphrase\e[0m]"
+		printf "%b\n" "   '-> Downloads and extracts the repository snapshot stored at the given URL."
+		printf "%b\n" " * init"
+		printf "%b\n" "   |-> Usage: patche init \e[4mpassphrase\e[0m"
+		printf "%b\n" "   '-> Creates an empty repository in the current directory."
+		printf "%b\n" " * commit"
+		printf "%b\n" "   |-> Usage: patche commit"
+		printf "%b\n" "   '-> Commits the repository to the server."
+	fi
+	if [ "$1" == "patch" ]; then
 		if [ "$2" != "" ]; then
 			mkdir -v "./.patche-repo-temp"
 			if [ -d "./.patche-repo" ]; then
@@ -38,7 +50,8 @@ patche() {
 					echo -n "$3" > "./.patche-repo-temp/.pbz"
 				else
 					echo "You did not provide a passphrase, or the passphrase was empty. Please provide a non-empty passphrase as the third argument to the patche command."
-					echo "Aborting."
+					DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+					echo "Aborting at $DONETIME."
 					exit 1
 				fi
 			fi
@@ -99,13 +112,16 @@ patche() {
 			#Delete any remaining files known by their sha512s.
 			echo "Done patching repository; cleaning up..."
 			rm -rfv "./.patche-repo-temp/"
+			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			echo "Done work at $DONETIME."
 		else
 			echo "You did not provide a revision URL to patch into this directory. Please provide the desired revision URL (it's probably a URL ending with \".patcherev5\") as the second argument to the patche command."
-			echo "Aborting."
+			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			echo "Aborting at $DONETIME."
 			exit 1
 		fi
 	fi
-	if [ "$1" = "init" ]; then
+	if [ "$1" == "init" ]; then
 		if [ "$2" != "" ]; then
 			#Initialize repository
 			echo "Initializing repository..."
@@ -133,15 +149,17 @@ patche() {
 			echo "Set repository passphrase to second argument."
 			echo -n "$NEWUUID" > "./.patche-repo/config/.uuid"
 			echo "Set repository ID to $NEWUUID."
-			echo "Done."
-			exit 0;
+			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			echo "Done work at $DONETIME."
+			exit 0
 		else
 			echo "You did not provide a passphrase. Please provide your desired passphrase as the second argument to the patche command."
-			echo "Aborting."
-			exit 1;
+			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			echo "Aborting at $DONETIME."
+			exit 1
 		fi
 	fi
-	if [ "$1" = "commit" ]; then
+	if [ "$1" == "commit" ]; then
 		echo "Committing changes..."
 		#Configure iu
 		iu() {
@@ -157,10 +175,9 @@ patche() {
 		THISREVISION=$((LASTREVISION+1))
 		cp -Rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/" "./.patche-repo/revisions/$THISREVISION/records-by-hash/"
 
-		#records-by-hash: ln -s each file to its sha256
+		#records-by-hash: ln -s each file to its sha512
 		patchelink() { 
-			#Records-by-hash linker
-			#Link to records-by-hash
+			#Link records into records-by-hash
 			SHA=$("shasum -a 512 \"$1\"")
 			LINKTARGET="./.patche-repo/revisions/$THISREVISION/records-by-hash/$SHA"
 			ln -sv "$1" "$LINKTARGET"
@@ -217,50 +234,34 @@ patche() {
 		rm -rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/"
 		rm -rv "./.patche-repo/revisions/$LASTREVISION/snapshot/"
 		echo -n "$THISREVISION" > "./.patche-repo/revisions/latest"
+		echo "Committed revision $THISREVISION."
+		echo "This revision of this repository can be downloaded from:"
+		echo "$UPLOADURL"
+		DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+		echo "Done work at $DONETIME."
 	fi
-	echo "No action or unknown action specified. Available actions are: patch, init, commit"
-	echo "Aborting."
-	
+	echo "No action or unknown action specified. Available actions are: help, patch, init, commit"
 	DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
-	echo "Done work at $DONETIME."
-
-	: <<-'END'
-	clone directory tree
-	for each file, make a file in the cloned directory tree that contains its ia URL
-	ln -s each file to its sha256
-	Maintain a folder with all the sha256s that have been uled
-	Any new ones, upload them
-	and add them to that folder
-	(as a sha256 containing the IA URL)
-	Then pax.xz the folder of sha256s containg the IA url, and the folder of ln -ses
-	and upload that.
-	So, that file with the IA URLs by sha256 and the ln -ses are all that's needed to clone the repo
-	I think that's pretty cool!
-	When cloning, it'll 1) dl the pax.xz, 2) extract it, 3) donwnload any missing sha256s with the contents
-	In the upload and download process, gpg the files.
-	And pax.xz them
-	in the other order
-	1st step: If there aren't the necessary folder,s create them
-	For the encryption, use a config file
-	with the passphrase
-	And that should be all that's needed to make this app work!
-	I't'll need only the amuont of free disk space as the biggest file
-	unlike Patche, which I'm using now, and needs 3x the free disk space of the whole repository
-	END
+	echo "Aborting at $DONETIME."
+	exit 1
 }
 
-echo "Are you sure you want to continue? This may destroy the directory structure and any data in $(pwd); back it up first! Make sure you have run ia configure before using Patche."
-
-#based on http://unix.stackexchange.com/questions/134437/press-space-to-continue
-read -n1 -r -p "Press space to continue if you're sure." key
-
-if [ "$key" = ' ' ]; then
-    # Space pressed
-    patche "$@" 2>&1 | tee -a "$outfile"
+if [ "$1" == "help" ]; then
+	patche "$@"
 else
-    # Anything else pressed
-    echo "Aborting."
-    exit 0
+	#Set up logging, part 2
+	echo "Setting up logging..."
+	mkdir -p -v "./.patche-repo/logs"
+	outfile="./.patche-repo/logs/$NOW.log"
+	echo "Are you sure you want to continue? This may destroy the directory structure and any data in $(pwd); back it up first! Make sure you have run ia configure before using Patche."
+	read -n1 -r -p "Press space to continue if you're sure." key
+	if [ "$key" == ' ' ]; then
+		# Space pressed
+		patche "$@" 2>&1 | tee -a "$outfile"
+	else
+		# Anything else pressed
+		echo "Aborting."
+		exit 0
+	fi
 fi
-
 #eof
