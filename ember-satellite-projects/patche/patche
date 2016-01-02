@@ -14,17 +14,9 @@ set -e;
 
 #Set up logging
 NOW="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+echo "Setting up logging..."
+mkdir -p -v "./.patche-repo/logs"
 outfile="./.patche-repo/logs/$NOW.log"
-
-#Configure iu
-iu() {
-	TIMEZONE=$(date +%z)
-	IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$TIMEZONE")
-	DIRECTORY=$(pwd)
-	DIRECTORYHEX=$(xxd -pu <<< "$DIRECTORY")
-	ia upload "$IUIDENTIFIER" --metadata="subject:Uploaded using iu for Patche $PATCHEVERSION; $DIRECTORYHEX; 0D4F70AC-B0FD-11E5-9069-5A1D60F10656" "$@"
-	UPLOADURLPREFIX='https://archive.org/download/'$IUIDENTIFIER
-}
 
 #UUID creator
 newuuid() {
@@ -33,54 +25,134 @@ newuuid() {
 
 #Main function body
 patche() {
+	echo "Started Patche at $NOW."
 	if [ "$1" = "patch" ]; then
-		true
+		if [ "$2" != "" ]; then
+			mkdir -v "./.patche-repo-temp"
+			if [ -d "./.patche-repo" ]; then
+				echo "Repository needs updating. Removing previous repository data"
+				mv -v "./.patche-repo/config/.pbz" "./.patche-repo-temp/.pbz"
+				rm -rv "./.patche-repo"
+			else
+				if [ "$3" != "" ]; then
+					echo -n "$3" > "./.patche-repo-temp/.pbz"
+				else
+					echo "You did not provide a passphrase, or the passphrase was empty. Please provide a non-empty passphrase as the third argument to the patche command."
+					echo "Aborting."
+					exit 1
+				fi
+			fi
+			echo "Downloading new repository data"
+			wget -O "./.patche-repo-temp/seed.pax.xz.gpg" "$2"
+			gpg --yes --batch --passphrase-file "./.patche-repo-temp/.pbz" "./.patche-repo-temp/seed.pax.xz.gpg"
+			rm -v "./.patche-repo-temp/seed.pax.xz.gpg"
+			unxz -v "./.patche-repo-temp/seed.pax.xz"
+			rm -v "./.patche-repo-temp/seed.pax.xz"
+			tar -x -v "./.patche-repo-temp/seed.pax"
+			rm -v "./.patche-repo-temp/seed.pax"
+			echo "Done extracting downloaded seed record; now patching payload into repository."
+			
+			#Move all files in current directory to their sha512s
+			mkdir -v "./.patche-repo-temp/record-data-by-hash"
+			patchemover() {
+				#Record mover
+				SHA=$("shasum -a 512 \"$1\"")
+				mv -fv "$1" "./.patche-repo-temp/record-data-by-hash/$SHA"
+			}
+			export -f patchemover
+			find . -type f ! -path "./.patche-repo-temp/*" ! -path "./.patche-repo/*" -exec bash -c 'patchemover "$0"' {} \;
+
+			#Remove remaining stuff in current directory
+			find . ! -path "./.patche-repo-temp/*" ! -path "./.patche-repo/*" -exec rm -rfv {} \;
+
+			#Rsync snapshot directory to current director
+			THISREVISION="$(cat ./.patche-repo/revisions/latest)"
+			rsync -av --progress ".patche-repo/revisions/$THISREVISION/snapshot/" "./"
+			
+			#For every file in the current directory
+				#(not in ./.patche-repo or ./.patche-repo-temp), replace it
+				#with the actual file data
+			patcherecordunpacker() {
+				#Record unpacker
+				SHA=$("head -n 1 \"$1\"")
+				if [ -f "./.patche-repo-temp/record-data-by-hash/$SHA" ]; then
+					#If the sha512 contained within that file is the same as
+						#one held locally on disk already, move the local file.
+					mv -fv "./.patche-repo-temp/record-data-by-hash/$SHA" "$1"
+				else
+					#Else, download the necessary file from IA.
+					IAURL=$("sed -n 2p \"$1\"")
+					wget -O "./.patche-repo-temp/current.bin.pax.xz.gpg" "$IAURL"
+					gpg --yes --batch --passphrase-file "./.patche-repo-temp/.pbz" "./.patche-repo-temp/current.bin.pax.xz.gpg"
+					rm -v "./.patche-repo-temp/current.bin.pax.xz.gpg"
+					unxz -v "./.patche-repo-temp/current.bin.pax.xz"
+					rm -v "./.patche-repo-temp/current.bin.pax.xz"
+					tar -x -v "./.patche-repo-temp/current.bin.pax"
+					rm -v "./.patche-repo-temp/current.bin.pax"
+					echo "Done extracting downloaded record; now patching payload into repository."
+					mv -v "./.patche-repo-temp/current.bin" "$1"
+				fi
+			}
+			export -f patcherecordunpacker
+			find . -type f ! -path "./.patche-repo-temp/*" ! -path "./.patche-repo/*" -exec bash -c 'patcherecordunpacker "$0"' {} \;
+			
+			#Delete any remaining files known by their sha512s.
+			echo "Done patching repository; cleaning up..."
+			rm -rfv "./.patche-repo-temp/"
+		else
+			echo "You did not provide a revision URL to patch into this directory. Please provide the desired revision URL (it's probably a URL ending with \".patcherev5\") as the second argument to the patche command."
+			echo "Aborting."
+			exit 1
+		fi
 	fi
 	if [ "$1" = "init" ]; then
 		if [ "$2" != "" ]; then
 			#Initialize repository
-			if [ -d "./.patche-repo" ]; then
-				echo "Repository does not exist; initializing"
-				mkdir "./.patche-repo"
-			else
-				echo "Repository already exists! Aborting. Rename or remove ./.patche-repo to create a new repository."
-				exit 1;
-			fi
-			if [ -d "./.patche-repo/logs" ]; then
-				echo "Creating logs directory"
-				mkdir "./.patche-repo/logs"
-			fi
-			if [ -d "./.patche-repo/config" ]; then
-				echo "Creating configuration directory"
-				mkdir "./.patche-repo/config"
-			fi
-			if [ -d "./.patche-repo/revisions" ]; then
+			echo "Initializing repository..."
+			mkdir -p -v "./.patche-repo/logs"
+			mkdir -p -v "./.patche-repo/config"
+			if [ ! -d "./.patche-repo/revisions" ]; then
 				echo "Creating revisions directory"
 				mkdir "./.patche-repo/revisions"
 			fi
-			if [ -d "./.patche-repo/revisions/0" ]; then
+			if [ ! -d "./.patche-repo/revisions/0" ]; then
 				echo "Creating initial revision directory"
 				mkdir "./.patche-repo/revisions/0"
 			fi
-			if [ -d "./.patche-repo/revisions/0/records-by-hash" ]; then
+			if [ ! -d "./.patche-repo/revisions/0/records-by-hash" ]; then
 				echo "Creating hash directory"
 				mkdir "./.patche-repo/revisions/0/records-by-hash"
 			fi
-			if [ -d "./.patche-repo/revisions/0/records-by-hash/uploaded" ]; then
+			if [ ! -d "./.patche-repo/revisions/0/records-by-hash/uploaded" ]; then
 				echo "Creating uploaded records directory"
 				mkdir "./.patche-repo/revisions/0/records-by-hash/uploaded"
 			fi
-			echo -n "$2" > "./.patche-repo/config/.pbz"
-			echo "Set repository passphrase to second argument."
 			echo -n "0" > "./.patche-repo/revisions/latest"
 			echo "Set repository revision to 0."
+			echo -n "$2" > "./.patche-repo/config/.pbz"
+			echo "Set repository passphrase to second argument."
+			echo -n "$NEWUUID" > "./.patche-repo/config/.uuid"
+			echo "Set repository ID to $NEWUUID."
+			echo "Done."
 			exit 0;
 		else
 			echo "You did not provide a passphrase. Please provide your desired passphrase as the second argument to the patche command."
+			echo "Aborting."
 			exit 1;
 		fi
 	fi
 	if [ "$1" = "commit" ]; then
+		echo "Committing changes..."
+		#Configure iu
+		iu() {
+			TIMEZONE=$(date +%z)
+			IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$TIMEZONE")
+			DIRECTORY=$(pwd)
+			DIRECTORYHEX=$(xxd -pu <<< "$DIRECTORY")
+			REPOID="$(cat ./.patche-repo/.uuid)"
+			ia upload "$IUIDENTIFIER" --metadata="subject:Uploaded using iu for Patche $PATCHEVERSION; Patche repository $REPOID; $DIRECTORYHEX; 0D4F70AC-B0FD-11E5-9069-5A1D60F10656" "$@"
+			UPLOADURLPREFIX='https://archive.org/download/'$IUIDENTIFIER
+		}
 		LASTREVISION="$(cat ./.patche-repo/revisions/latest)"
 		THISREVISION=$((LASTREVISION+1))
 		cp -Rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/" "./.patche-repo/revisions/$THISREVISION/records-by-hash/"
@@ -118,7 +190,9 @@ patche() {
 				mv "./.patche-repo/current.bin.pax.xz.gpg" "./.patche-repo/$NEWUUID.patche5"
 				iu "./.patche-repo/$NEWUUID"".patche5"
 				UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patche5"
-				echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/snapshot/""$1"
+				printf -v RECORDSUFFIX '\n%s' "$UPLOADURL"
+				RECORDDATA="$SHA$RECORDSUFFIX"
+				echo "$RECORDDATA" > "./.patche-repo/revisions/$THISREVISION/snapshot/""$1"
 				echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/""$SHA"
 				rm -v "./.patche-repo/$NEWUUID"".patche5"
 			fi
@@ -145,7 +219,8 @@ patche() {
 		echo -n "$THISREVISION" > "./.patche-repo/revisions/latest"
 	fi
 	echo "No action or unknown action specified. Available actions are: patch, init, commit"
-
+	echo "Aborting."
+	
 	DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 	echo "Done work at $DONETIME."
 
@@ -174,7 +249,7 @@ patche() {
 	END
 }
 
-echo "Are you sure you want to continue? This may destroy the directory structure in $(pwd); back it up first! Make sure you have run ia configure before using Patche."
+echo "Are you sure you want to continue? This may destroy the directory structure and any data in $(pwd); back it up first! Make sure you have run ia configure before using Patche."
 
 #based on http://unix.stackexchange.com/questions/134437/press-space-to-continue
 read -n1 -r -p "Press space to continue if you're sure." key
@@ -189,104 +264,3 @@ else
 fi
 
 #eof
-
-
-
-
-#!/bin/bash
-#Patche. Version 4, 2015-April-05
-#From http://serverfault.com/questions/137119/rsync-to-multiple-destinations-using-same-filelist I think the rsync in batch mode might need --delete, but I'm not sure.
-NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
-outfile="./.pch/logs/$NOW.log"
-mkdir ./.pch
-mkdir ./.pch/logs
-echo -e "Beginning work at $NOW.\nWrap arguments in single quotation marks.\nSuggested to run this as root. Run ia configure first." 2>&1 | tee -a $outfile
-
-if [ "$1" = "init" ]; then
-	if [ "$2" != ""]; then
-		echo "init" 2>&1 | tee -a $outfile
-		PASSPHRASE="$2"
-		REPOUUID="`uuidgen`"
-		echo "$REPOUUID" > ./.pch/.uuid
-		rm -rfv ./.pch/.pshadow/ 2>&1 | tee -a $outfile
-		mkdir -v ./.pch 2>&1 | tee -a $outfile
-		echo "$PASSPHRASE" > ./.pch/.pbz
-		mkdir -v ./.pch/.ptub 2>&1 | tee -a $outfile
-		mkdir -v ./.pch/.patches 2>&1 | tee -a $outfile
-		mkdir -v ./.pch/.pshadow 2>&1 | tee -a $outfile
-		rsync -av --progress --no-i-r --delete --write-batch="../$NOW.pinit" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
-		bzip2 -v "../$NOW.pinit" 2>&1 | tee -a $outfile
-		mv -v "../$NOW.pinit.bz2" "../$NOW.pinit" 2>&1 | tee -a $outfile
-		gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "../$NOW.pinit" 2>&1 | tee -a $outfile
-		mv -v "../$NOW.pinit.gpg" "../$NOW.pinite" 2>&1 | tee -a $outfile
-		UUID="`uuidgen`"
-		ia upload "$REPOUUID.$UUID" "../$NOW.pinite" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.pinite"
-		echo -n "1" > ./.pch/.revision
-		echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/1. $NOW.pinitu"
-		mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
-		rm -v "../$NOW.pinit" 2>&1 | tee -a $outfile
-		mv -v "../$NOW.pinit.sh" "./.pch/.patches/" 2>&1 | tee -a $outfile
-		fi
-
-	else if [ "$1" = "clone" ]; then
-		echo "clone" 2>&1 | tee -a $outfile
-		IDENTIFIER="$2"
-		FILENAME="$3"
-		PASSPHRASE="$4"
-		wget "https://archive.org/download/$2/$3.pinite" 2>&1 | tee -a $outfile
-		mv -v "./$3.pinite" "./$3.pinit.gpg" 2>&1 | tee -a $outfile
-		echo "$PASSPHRASE" > ./.pbz
-		gpg --yes --batch --passphrase-file ./.pbz "./$3.pinit.gpg" 2>&1 | tee -a $outfile		
-		#rm -v "./.pbz" 2>&1 | tee -a $outfile
-		rm -v "./$3.pinit.gpg" 2>&1 | tee -a $outfile
-		mv -v "./$3.pinit" "./$3.pinit.bz2" 2>&1 | tee -a $outfile
-		bunzip2 "./$3.pinit.bz2" 2>&1 | tee -a $outfile
-		rsync -av --progress --delete --read-batch="./$3.pinit" . 2>&1 | tee -a $outfile
-		rm -v "./$3.pinit" 2>&1 | tee -a $outfile
-		rsync -av --progress --no-i-r --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
-
-
-		else if [ "$1" = "commit" ]; then
-			echo "commit" 2>&1 | tee -a $outfile
-			LASTREVISION="`cat ./.pch/.revision`"
-			#help from http://askubuntu.com/questions/385528/how-to-increment-a-variable-in-bash
-			THISREVISION=$(($LASTREVISION+1))
-			rsync -av --progress --no-i-r --delete --write-batch="../$NOW.patch" --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
-			bzip2 -v "../$NOW.patch" 2>&1 | tee -a $outfile
-			mv -v "../$NOW.patch.bz2" "../$NOW.patch" 2>&1 | tee -a $outfile
-			gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.pch/.pbz "../$NOW.patch" 2>&1 | tee -a $outfile
-			mv -v "../$NOW.patch.gpg" "../$NOW.patche" 2>&1 | tee -a $outfile
-			UUID="`uuidgen`"
-			REPOUUID="`cat ./.pch/.uuid`"
-			ia upload "$REPOUUID.$UUID" "../$NOW.patche" --log --delete --checksum --metadata="title:Patche.$REPOUUID.$NOW.$UUID.patche"
-			echo -n "$REPOUUID.$UUID $NOW" > "./.pch/.ptub/$THISREVISION. $NOW.pchu"
-			echo -n "$THISREVISION" > ./.pch/.revision
-			mv -v ./internetarchive.log "./.pch/logs/$NOW.ia.log" 2>&1 | tee -a $outfile
-			rm -v "../$NOW.patch" 2>&1 | tee -a $outfile
-			mv -v "../$NOW.patch.sh" "./.pch/.patches/" 2>&1 | tee -a $outfile
-
-
-			else if [ "$1" = "patch" ]; then
-				echo "patch" 2>&1 | tee -a $outfile
-				IDENTIFIER="$2"
-				FILENAME="$3"
-				PASSPHRASE="$4"
-				wget "https://archive.org/download/$2/$3.patche" 2>&1 | tee -a $outfile
-				mv -v "./$3.patche" "./$3.patch.gpg" 2>&1 | tee -a $outfile
-				gpg --yes --batch --passphrase-file ./.pch/.pbz "./$3.patch.gpg" 2>&1 | tee -a $outfile		
-				rm -v "./$3.patch.gpg" 2>&1 | tee -a $outfile
-				mv -v "./$3.patch" "./$3.patch.bz2" 2>&1 | tee -a $outfile
-				bunzip2 "./$3.patch.bz2" 2>&1 | tee -a $outfile
-				rsync -av --progress --delete --no-i-r --read-batch="./$3.patch" . 2>&1 | tee -a $outfile
-				rm -v "./$3.patch" 2>&1 | tee -a $outfile
-				rsync -av --progress --no-i-r --delete --exclude=".pch/.pshadow" . ./.pch/.pshadow/ 2>&1 | tee -a $outfile
-				else
-					echo "Unknown action or no action specified. Available actions are: init, clone, commit, patch" 2>&1 | tee -a $outfile
-				fi
-			fi
-		fi
-	fi
-
-
-DONETIME="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
-echo "Done work at $DONETIME." 2>&1 | tee -a $outfile
