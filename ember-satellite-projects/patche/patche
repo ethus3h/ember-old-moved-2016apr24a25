@@ -6,8 +6,8 @@
 PATCHEVERSION="5"
 
 #Script should run as root.
-#Uncomment the next line and the eof for final version.
-#exec sudo -s /bin/bash - << eof
+#Comment the next line and the eof to use Shellcheck to check this script.
+exec sudo -s /bin/bash - << eof
 
 #Exit if a command returns a nonzero value.
 set -e;
@@ -255,7 +255,7 @@ else
 	outfile="./.patche-repo/logs/$NOW.log"
 	echo "Are you sure you want to continue? This may destroy the directory structure and any data in $(pwd); back it up first! Make sure you have run ia configure before using Patche."
 	read -n1 -r -p "Press space to continue if you're sure." key
-	if [ "$key" == ' ' ]; then
+	if [ "$key" = ' ' ]; then
 		# Space pressed
 		patche "$@" 2>&1 | tee -a "$outfile"
 	else
@@ -264,4 +264,4 @@ else
 		exit 0
 	fi
 fi
-#eof
+eof
