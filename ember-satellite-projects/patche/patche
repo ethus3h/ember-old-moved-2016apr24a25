@@ -11,17 +11,18 @@ export PATCHEVERSION="5"
 #Exit if a command returns a nonzero value.
 set -e
 
-#Set up logging, part 1
+echo "Setting up logging, part 1"
 export NOW="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 
-#UUID creator
+echo "Initializing UUID creator"
 newuuid() {
 	export NEWUUID=$(python -c 'import uuid; print str(uuid.uuid4())')
 }
+export -f newuuid
 
-#Main function body
+echo "Initializing main function body"
 patche() {
-	echo "Started Patche at $NOW."
+	echo "Started Patche at $NOW, in $(pwd)."
 	if [ "$1" == "help" ]; then
 		printf "%b\n" "Commands available:"
 		printf "%b\n" " * help"
@@ -36,6 +37,9 @@ patche() {
 		printf "%b\n" " * commit"
 		printf "%b\n" "   |-> Usage: patche commit"
 		printf "%b\n" "   '-> Commits the repository to the server."
+		DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+		echo "Done work at $DONETIME."
+		exit 0
 	fi
 	if [ "$1" == "patch" ]; then
 		if [ "$2" != "" ]; then
@@ -49,7 +53,7 @@ patche() {
 					echo -n "$3" > "./.patche-repo-temp/.pbz"
 				else
 					echo "You did not provide a passphrase, or the passphrase was empty. Please provide a non-empty passphrase as the third argument to the patche command."
-					export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+					DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 					echo "Aborting at $DONETIME."
 					exit 1
 				fi
@@ -64,36 +68,37 @@ patche() {
 			rm -v "./.patche-repo-temp/seed.pax"
 			echo "Done extracting downloaded seed record; now patching payload into repository."
 			
-			#Move all files in current directory to their sha512s
+			echo "Moving all files in current directory to their sha512s"
 			mkdir -v "./.patche-repo-temp/record-data-by-hash"
 			patchemover() {
 				#Record mover
-				export SHA=$(shasum -a 512 "$1")
+				SHAP=$(shasum -a 512 "$1")
+				SHA=${SHAP%% *}
 				mv -fv "$1" "./.patche-repo-temp/record-data-by-hash/$SHA"
 			}
 			export -f patchemover
 			find . -type f ! -path "./.patche-repo-temp/*" ! -path "./.patche-repo/*" -exec bash -c 'patchemover "$0"' {} \;
 
-			#Remove remaining stuff in current directory
+			echo "Removing remaining stuff in current directory"
 			find . ! -path "./.patche-repo-temp/*" ! -path "./.patche-repo/*" -exec rm -rfv {} \;
 
-			#Rsync snapshot directory to current director
-			export THISREVISION="$(cat ./.patche-repo/revisions/latest)"
+			echo "Rsyncing snapshot directory to current director"
+			THISREVISION="$(cat ./.patche-repo/revisions/latest)"
 			rsync -av --progress ".patche-repo/revisions/$THISREVISION/snapshot/" "./"
 			
-			#For every file in the current directory
-				#(not in ./.patche-repo or ./.patche-repo-temp), replace it
-				#with the actual file data
+			echo "For every file in the current directory\
+				(not in ./.patche-repo or ./.patche-repo-temp), replace it\
+				with the actual file data"
 			patcherecordunpacker() {
 				#Record unpacker
-				export SHA=$(head -n 1 "$1")
+				SHA=$(head -n 1 "$1")
 				if [ -f "./.patche-repo-temp/record-data-by-hash/$SHA" ]; then
-					#If the sha512 contained within that file is the same as
-						#one held locally on disk already, move the local file.
+					echo "Since the sha512 contained within that file is the same as\
+						one held locally on disk already, moving the local file."
 					mv -fv "./.patche-repo-temp/record-data-by-hash/$SHA" "$1"
 				else
-					#Else, download the necessary file from IA.
-					export IAURL=$(sed -n 2p "$1")
+					echo "Downloading the necessary file from IA, since it is not available locally."
+					IAURL=$(sed -n 2p "$1")
 					wget -O "./.patche-repo-temp/current.bin.pax.xz.gpg" "$IAURL"
 					gpg --yes --batch --passphrase-file "./.patche-repo-temp/.pbz" "./.patche-repo-temp/current.bin.pax.xz.gpg"
 					rm -v "./.patche-repo-temp/current.bin.pax.xz.gpg"
@@ -108,21 +113,20 @@ patche() {
 			export -f patcherecordunpacker
 			find . -type f ! -path "./.patche-repo-temp/*" ! -path "./.patche-repo/*" -exec bash -c 'patcherecordunpacker "$0"' {} \;
 			
-			#Delete any remaining files known by their sha512s.
+			echo "Deleting any remaining files known by their sha512s."
 			echo "Done patching repository; cleaning up..."
 			rm -rfv "./.patche-repo-temp/"
-			export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 			echo "Done work at $DONETIME."
 		else
 			echo "You did not provide a revision URL to patch into this directory. Please provide the desired revision URL (it's probably a URL ending with \".patcherev5\") as the second argument to the patche command."
-			export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 			echo "Aborting at $DONETIME."
 			exit 1
 		fi
 	fi
 	if [ "$1" == "init" ]; then
 		if [ "$2" != "" ]; then
-			#Initialize repository
 			echo "Initializing repository..."
 			mkdir -p -v "./.patche-repo/logs"
 			mkdir -p -v "./.patche-repo/config"
@@ -146,101 +150,129 @@ patche() {
 			echo "Set repository revision to 0."
 			echo -n "$2" > "./.patche-repo/config/.pbz"
 			echo "Set repository passphrase to second argument."
+			newuuid
 			echo -n "$NEWUUID" > "./.patche-repo/config/.uuid"
 			echo "Set repository ID to $NEWUUID."
-			export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 			echo "Done work at $DONETIME."
 			exit 0
 		else
 			echo "You did not provide a passphrase. Please provide your desired passphrase as the second argument to the patche command."
-			export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 			echo "Aborting at $DONETIME."
 			exit 1
 		fi
 	fi
 	if [ "$1" == "commit" ]; then
 		echo "Committing changes..."
-		#Configure iu
+		echo "Configuring iu"
 		iu() {
-			export TIMEZONE=$(date +%z)
-			export IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$TIMEZONE")
-			export DIRECTORY=$(pwd)
-			export DIRECTORYHEX=$(xxd -pu <<< "$DIRECTORY")
-			export REPOID="$(cat ./.patche-repo/.uuid)"
-			ia upload "$IUIDENTIFIER" --metadata="subject:Uploaded using iu for Patche $PATCHEVERSION; Patche repository $REPOID; $DIRECTORYHEX; 0D4F70AC-B0FD-11E5-9069-5A1D60F10656" "$@"
-			export UPLOADURLPREFIX='https://archive.org/download/'$IUIDENTIFIER
+			TIMEZONE=$(date +%z)
+			IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$TIMEZONE")
+			DIRECTORY=$(pwd)
+			DIRECTORYHEX=$(xxd -pu <<< "$DIRECTORY")
+			REPOID="$(cat ./.patche-repo/config/.uuid)"
+			export UPLOADURLPREFIX='https://archive.org/download/'"$IUIDENTIFIER"'/'
+			echo "Uploading to $UPLOADURLPREFIX""..."
+			ia upload "$IUIDENTIFIER" --metadata="subject:Uploaded using iu for Patche $PATCHEVERSION; Patche repository $REPOID; $DIRECTORYHEX; 0D4F70AC-B0FD-11E5-9069-5A1D60F10656" "$1"
 		}
-		export LASTREVISION="$(cat ./.patche-repo/revisions/latest)"
+		export -f iu
+		LASTREVISION="$(cat ./.patche-repo/revisions/latest)"
 		export THISREVISION=$((LASTREVISION+1))
+
+		if [ -d "./.patche-repo/revisions/$THISREVISION" ]; then
+			echo "Moving failed revision directory"
+			mv -v "./.patche-repo/revisions/$THISREVISION" "./.patche-repo/revisions/$THISREVISION-$NOW"
+		fi
+
+		echo "Copying old revision records"
+		mkdir -v -p "./.patche-repo/revisions/$THISREVISION/"
 		cp -Rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/" "./.patche-repo/revisions/$THISREVISION/records-by-hash/"
 
-		#records-by-hash: ln -s each file to its sha512
+		echo "records-by-hash: Softlinking each file to its sha512"
 		patchelink() { 
-			#Link records into records-by-hash
-			export SHA=$(shasum -a 512 "$1")
-			export LINKTARGET="./.patche-repo/revisions/$THISREVISION/records-by-hash/$SHA"
-			ln -sv "$1" "$LINKTARGET"
+			echo "Linking record into records-by-hash"
+			SHAP=$(shasum -a 512 "$1")
+			SHA=${SHAP%% *}
+			LINKTARGET="./.patche-repo/revisions/$THISREVISION/records-by-hash/$SHA"
+			ln -svf "../../../../$1" "$LINKTARGET"
 		}
 		export -f patchelink
-		find . -type f -exec bash -c 'patchelink "$0"' {} \;
+		find . -type f ! -path "./.patche-repo/revisions/$THISREVISION/records-by-hash/*" -exec bash -c 'patchelink "$0"' {} \;
 
-		#snapshot: Clone the directory tree, copying any special files
-		rsync -av --progress --exclude=.patche-repo/revisions/"$THISREVISION"/snapshot --no-i-r --include '*/' --exclude '*' . "./.patche-repo/revisions/$THISREVISION/snapshot"
-		find . ! -type f -print0 | rsync -0 -av --progress --no-i-r --files-from=- "./.patche-repo/revisions/$THISREVISION/snapshot/"
+		echo "snapshot: Cloning the directory tree, copying any special files"
+		rsync -av --progress --exclude=.patche-repo/revisions/"$LASTREVISION"/snapshot --exclude=.patche-repo/revisions/"$THISREVISION"/snapshot --no-i-r --include '*/' --exclude '*' . "./.patche-repo/revisions/$THISREVISION/snapshot"
+		find . ! -type f -print0 > "./.patche-repo/revisions/$THISREVISION/oddfilelist"
+		rsync -0 -av --progress --no-i-r --files-from="./.patche-repo/revisions/$THISREVISION/oddfilelist" ./ "./.patche-repo/revisions/$THISREVISION/snapshot/"
 
-		#uploaded: For each file present in records-by-hash and not in uploaded, upload it and add the URL to uploaded folder
+		echo "uploaded: For each file present in records-by-hash and not in uploaded, uploading it and adding the URL to uploaded folder"
 		patcheupload() {
-			#Record uploader
-			export SHA=$(shasum -a 512 "$1")
+			echo "Starting record uploader"
+			SHAP=$(shasum -a 512 "$1")
+			SHA=${SHAP%% *}
 			if ! [ -f "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/$SHA" ]; then
-				#File hasn't already been uploaded, so upload it. $1 should be a symlink, but cp should follow it and work with the real file.
+				echo 'File hasn'"'"'t already been uploaded, so uploading it. $1 should be a symlink, but cp should follow it and work with the real file.'
 				cp "$1" "./.patche-repo/current.bin"
-				#Compress and encrypt current.bin
+				echo "Compressing and encrypting current.bin"
 				tar -cv --format pax -f "./.patche-repo/current.bin.pax" "./.patche-repo/current.bin"
 				rm -v "./.patche-repo/current.bin"
 				xz -k -C sha256 -9 -e -v "./.patche-repo/current.bin.pax"
 				rm -v "./.patche-repo/current.bin.pax"
-				gpg --yes -c --cipher-algo AES256 --batch --passphrase-file "./.patche-repo/.pbz" "./.patche-repo/config/current.bin.pax.xz"
+				gpg --yes -c --cipher-algo AES256 --batch --passphrase-file "./.patche-repo/config/.pbz" "./.patche-repo/current.bin.pax.xz"
 				rm -v "./.patche-repo/current.bin.pax.xz"
 				newuuid
 				mv "./.patche-repo/current.bin.pax.xz.gpg" "./.patche-repo/$NEWUUID.patche5"
 				iu "./.patche-repo/$NEWUUID"".patche5"
-				export UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patche5"
+				UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patche5"
 				printf -v RECORDSUFFIX '\n%s' "$UPLOADURL"
-				export RECORDDATA="$SHA$RECORDSUFFIX"
+				RECORDDATA="$SHA$RECORDSUFFIX"
+				echo "Record data: "
+				echo "$RECORDDATA"
 				echo "$RECORDDATA" > "./.patche-repo/revisions/$THISREVISION/snapshot/""$1"
 				echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/""$SHA"
+				echo "Removing: "
 				rm -v "./.patche-repo/$NEWUUID"".patche5"
 			fi
 		}
 		export -f patcheupload
-		find "./.patche-repo/revisions/$THISREVISION/records-by-hash/" -type f -exec bash -c 'patcheupload "$0"' {} \;
+		find "./.patche-repo/revisions/$THISREVISION/records-by-hash/" -type l -exec bash -c 'patcheupload "$0"' {} \;
 
-		#Compress and upload repository data
+		echo "Compressing and uploading repository data"
+		echo "Removing: "
+		rm -fv "./.patche-repo/snapshot.pax"
+		echo "Removing: "
+		rm -fv "./.patche-repo/snapshot.pax.xz"
 		tar -cv --format pax --exclude "./.patche-repo/snapshot.pax" -f "./.patche-repo/snapshot.pax" "./.patche-repo/"
 		xz -k -C sha256 -9 -e -v "./.patche-repo/snapshot.pax"
+		echo "Removing: "
 		rm -v "./.patche-repo/snapshot.pax"
-		gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.patche-repo/.pbz "./.patche-repo/config/snapshot.pax.xz"
+		gpg --yes -c --cipher-algo AES256 --batch --passphrase-file "./.patche-repo/config/.pbz" "./.patche-repo/snapshot.pax.xz"
+		echo "Removing: "
 		rm -v "./.patche-repo/snapshot.pax.xz"
 		newuuid
 		mv "./.patche-repo/snapshot.pax.xz.gpg" "./.patche-repo/$NEWUUID.patcherev5"
 		iu "./.patche-repo/$NEWUUID"".patcherev5"
-		export UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patcherev5"
+		UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patcherev5"
 		echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/revision"
+		echo "Removing: "
 		rm -v "./.patche-repo/$NEWUUID"".patcherev5"
 
-		#Commit is now complete and was successful, so clean up the previous revision data, and increment the latest revision ID.
+		echo "Commit is now complete and was successful, so cleaning up the previous revision data, and increment the latest revision ID."
+		echo "Removing: "
 		rm -rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/"
-		rm -rv "./.patche-repo/revisions/$LASTREVISION/snapshot/"
+		echo "Removing: "
+		rm -rfv "./.patche-repo/revisions/$LASTREVISION/snapshot/"
+		find "./.patche-repo/revisions/" ! -path "./.patche-repo/revisions/$THISREVISION/*" ! -path "./.patche-repo/revisions/latest" -exec rm -rfv {} \;
 		echo -n "$THISREVISION" > "./.patche-repo/revisions/latest"
 		echo "Committed revision $THISREVISION."
 		echo "This revision of this repository can be downloaded from:"
 		echo "$UPLOADURL"
-		export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+		DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 		echo "Done work at $DONETIME."
+		exit 0
 	fi
 	echo "No action or unknown action specified. Available actions are: help, patch, init, commit"
-	export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+	DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 	echo "Aborting at $DONETIME."
 	exit 1
 }
@@ -250,17 +282,19 @@ if [ "$1" == "help" ]; then
 elif [ "$1" == "" ]; then
 	patche "$@"
 else
-	#Set up logging, part 2
+	echo "Set up logging, step 2"
 	echo "Setting up logging..."
 	mkdir -p -v "./.patche-repo/logs"
 	outfile="./.patche-repo/logs/$NOW.log"
 	echo "Are you sure you want to continue? This may destroy the directory structure and any data in $(pwd); back it up first! Make sure you have run ia configure before using Patche."
-	read -n1 -r -p "Press space to continue if you're sure." key
-	if [ "$key" = ' ' ]; then
+	read -n1 -r -p "Press y to continue if you're sure; any other key to cancel. " RESPONSE
+	if [ "$RESPONSE" == 'y' ]; then
 		# Space pressed
+		echo
 		patche "$@" 2>&1 | tee -a "$outfile"
 	else
 		# Anything else pressed
+		echo
 		echo "Aborting."
 		exit 0
 	fi
