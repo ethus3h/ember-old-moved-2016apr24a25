@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Patche. Version 5.
 
 # Needs at least as much disk space as the biggest file in the directory.
@@ -6,31 +6,14 @@
 PATCHEVERSION="5"
 
 #Script should run as root.
-exec sudo -s /bin/bash - << eof
+#Uncomment the next line and the eof for final version.
+#exec sudo -s /bin/bash - << eof
 
 #Exit if a command returns a nonzero value.
 set -e;
 
-#Initialize repository if necessary
-if [ -d "./.patche-repo" ]; then
-	echo "Repository does not exist; initializing"
-	mkdir "./.patche-repo"
-fi
-if [ -d "./.patche-repo/logs" ]; then
-	echo "Creating logs directory"
-	mkdir "./.patche-repo/logs"
-fi
-if [ -d "./.patche-repo/records-by-hash" ]; then
-	echo "Creating hash directory"
-	mkdir "./.patche-repo/records-by-hash"
-fi
-if [ -d "./.patche-repo/records-by-hash/uploaded" ]; then
-	echo "Creating uploaded records directory"
-	mkdir "./.patche-repo/records-by-hash/uploaded"
-fi
-
 #Set up logging
-NOW="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
+NOW="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 outfile="./.patche-repo/logs/$NOW.log"
 
 #Configure iu
@@ -39,59 +22,155 @@ iu() {
 	IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$TIMEZONE")
 	DIRECTORY=$(pwd)
 	DIRECTORYHEX=$(xxd -pu <<< "$DIRECTORY")
-	ia upload $IUIDENTIFIER --metadata="subject:Uploaded using iu for Patche $PATCHEVERSION; $DIRECTORYHEX; 0D4F70AC-B0FD-11E5-9069-5A1D60F10656" "$@"
-	UPLOADURL='https://archive.org/download/'$IUIDENTIFIER
+	ia upload "$IUIDENTIFIER" --metadata="subject:Uploaded using iu for Patche $PATCHEVERSION; $DIRECTORYHEX; 0D4F70AC-B0FD-11E5-9069-5A1D60F10656" "$@"
+	UPLOADURLPREFIX='https://archive.org/download/'$IUIDENTIFIER
+}
+
+#UUID creator
+newuuid() {
+	NEWUUID=$(python -c 'import uuid; print str(uuid.uuid4())')
 }
 
 #Main function body
 patche() {
+	if [ "$1" = "patch" ]; then
+		
+	fi
+	if [ "$1" = "init" ]; then
+		if [ "$2" != "" ]; then
+			#Initialize repository
+			if [ -d "./.patche-repo" ]; then
+				echo "Repository does not exist; initializing"
+				mkdir "./.patche-repo"
+			else
+				echo "Repository already exists! Aborting. Rename or remove ./.patche-repo to create a new repository."
+				exit 1;
+			fi
+			if [ -d "./.patche-repo/logs" ]; then
+				echo "Creating logs directory"
+				mkdir "./.patche-repo/logs"
+			fi
+			if [ -d "./.patche-repo/config" ]; then
+				echo "Creating configuration directory"
+				mkdir "./.patche-repo/config"
+			fi
+			if [ -d "./.patche-repo/revisions" ]; then
+				echo "Creating revisions directory"
+				mkdir "./.patche-repo/revisions"
+			fi
+			if [ -d "./.patche-repo/revisions/0" ]; then
+				echo "Creating initial revision directory"
+				mkdir "./.patche-repo/revisions/0"
+			fi
+			if [ -d "./.patche-repo/revisions/0/records-by-hash" ]; then
+				echo "Creating hash directory"
+				mkdir "./.patche-repo/revisions/0/records-by-hash"
+			fi
+			if [ -d "./.patche-repo/revisions/0/records-by-hash/uploaded" ]; then
+				echo "Creating uploaded records directory"
+				mkdir "./.patche-repo/revisions/0/records-by-hash/uploaded"
+			fi
+			echo -n "$2" > "./.patche-repo/config/.pbz"
+			echo "Set repository passphrase to second argument."
+			echo -n "0" > "./.patche-repo/revisions/latest"
+			echo "Set repository revision to 0."
+			exit 0;
+		else
+			echo "You did not provide a passphrase. Please provide your desired passphrase as the second argument to the patche command."
+			exit 1;
+		fi
+	fi
 	if [ "$1" = "commit" ]; then
-		export -f patchelink() { 
-			SHA=$("shasum -a 512 $1")
-			$LINKTARGET="./.patche-repo/records-by-hash/$SHA"
+		LASTREVISION="$(cat ./.patche-repo/revisions/latest)"
+		THISREVISION="$(($LASTREVISION+1))"
+		cp -Rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/" "./.patche-repo/revisions/$THISREVISION/records-by-hash/"
+
+		#records-by-hash: ln -s each file to its sha256
+		patchelink() { 
+			#Records-by-hash linker
+			#Link to records-by-hash
+			SHA=$("shasum -a 512 \"$1\"")
+			$LINKTARGET="./.patche-repo/revisions/$THISREVISION/records-by-hash/$SHA"
 			ln -sv "$1" "$LINKTARGET"
 		}
+		export -f patchelink
+		find . -type f -exec bash -c 'patchelink "$0"' {} \;
 
-		#ln -s each file to its sha256
-		bash -c 'find . -type f -exec bash -c \'patchelink "$0"\' {} \;'
+		#snapshot: Clone the directory tree, copying any special files
+		rsync -av --progress --exclude=.patche-repo/revisions/"$THISREVISION"/snapshot --no-i-r --include '*/' --exclude '*' . "./.patche-repo/revisions/$THISREVISION/snapshot"
+		find . ! -type f -print0 | rsync -0 -av --progress --no-i-r --files-from=- "./.patche-repo/revisions/$THISREVISION/snapshot/"
 
-		#Clone the directory tree, copying any special files
-		bash -c 'find . -type f -exec  "$0"\' {} \;'
-		find . -type f -exec cp --parents \{\} ./.patche-repo/snapshot/ \
-		rsync -av --progress --exclude=.patche-repo/snapshot --no-i-r --include '*/' --exclude '*' . "./.patche-repo/snapshot"
-		find . -not -type f -exec cp \{\} ./.patche-repo/snapshot/ \
-		find . -not -type f | rsync -av --progress --exclude=.patche-repo/snapshot --no-i-r --files-from=- --include '*/' . "./.patche-repo/snapshot"
-		#For each file present in records-by-hash and not in uploaded, upload it and add the URL to uploaded folder
-		bash -c 'find ./.patche-repo/records-by-hash/ -type f -exec bash -c \'patcheupload "$0"\' {} \;';
+		#uploaded: For each file present in records-by-hash and not in uploaded, upload it and add the URL to uploaded folder
+		patcheupload() {
+			#Record uploader
+			SHA=$("shasum -a 512 \"$1\"")
+			if ! [ -f "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/$SHA" ]
+				#File hasn't already been uploaded, so upload it. $1 should be a symlink, but cp should follow it and work with the real file.
+				cp "$1" "./.patche-repo/current.bin"
+				#Compress and encrypt current.bin
+				tar -cv --format pax -f "./.patche-repo/current.bin.pax" "./.patche-repo/current.bin"
+				rm -v "./.patche-repo/current.bin"
+				xz -k -C sha256 -9 -e -v "./.patche-repo/current.bin.pax"
+				rm -v "./.patche-repo/current.bin.pax"
+				gpg --yes -c --cipher-algo AES256 --batch --passphrase-file "./.patche-repo/.pbz" "./.patche-repo/config/current.bin.pax.xz"
+				rm -v "./.patche-repo/current.bin.pax.xz"
+				newuuid
+				mv "./.patche-repo/current.bin.pax.xz.gpg" "./.patche-repo/$NEWUUID.patche5"
+				iu "./.patche-repo/$NEWUUID"".patche5"
+				UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patche5"
+				echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/snapshot/""$1"
+				echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/""$SHA"
+				rm -v "./.patche-repo/$NEWUUID"".patche5"
+		}
+		export -f patcheupload
+		find "./.patche-repo/revisions/$THISREVISION/records-by-hash/" -type f -exec bash -c 'patcheupload "$0"' {} \;
 
-		tar -cv --format pax -f "./.autoarc-repo/snapshot-$NOW.pax" "./.autoarc-repo/"
+		#Compress and upload repository data
+		tar -cv --format pax --exclude "./.patche-repo/snapshot.pax" -f "./.patche-repo/snapshot.pax" "./.patche-repo/"
+		xz -k -C sha256 -9 -e -v "./.patche-repo/snapshot.pax"
+		rm -v "./.patche-repo/snapshot.pax"
+		gpg --yes -c --cipher-algo AES256 --batch --passphrase-file ./.patche-repo/.pbz "./.patche-repo/config/snapshot.pax.xz"
+		rm -v "./.patche-repo/snapshot.pax.xz"
+		newuuid
+		mv "./.patche-repo/snapshot.pax.xz.gpg" "./.patche-repo/$NEWUUID.patcherev5"
+		iu "./.patche-repo/$NEWUUID"".patcherev5"
+		UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patcherev5"
+		echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/revision"
+		rm -v "./.patche-repo/$NEWUUID"".patcherev5"
 
+		#Commit is now complete and was successful, so clean up the previous revision data, and increment the latest revision ID.
+		rm -rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/"
+		rm -rv "./.patche-repo/revisions/$LASTREVISION/snapshot/"
+		echo -n "$THISREVISION" > "./.patche-repo/revisions/latest"
 	fi
+	echo "No action or unknown action specified. Available actions are: patch, init, commit"
 
-		: <<'END'
-		ln -s each file to its sha256
-		clone directory tree
-		for each file, ln -s it into the cloned directory tree
-		Maintain a folder with all the sha256s that have been uled
-		Any new ones, upload them
-		and add them to that folder
-		(as a sha256 containing the IA URL)
-		Then pax.xz the folder of sha256s containg the IA url, and the folder of ln -ses
-		and upload that.
-		So, that file with the IA URLs by sha256 and the ln -ses are all that's needed to clone the repo
-		I think that's pretty cool!
-		When cloning, it'll 1) dl the pax.xz, 2) extract it, 3) donwnload any missing sha256s with the contents
-		In the upload and download process, gpg the files.
-		And pax.xz them
-		in the other order
-		1st step: If there aren't the necessary folder,s create them
-		For the encryption, use a config file
-		with the passphrase
-		And that should be all that's needed to make this app work!
-		I't'll need only the amuont of free disk space as the biggest file
-		unlike Patche, which I'm using now, and needs 3x the free disk space of the whole repository
-		END
-	
+	DONETIME="`date '+%Y.%m.%d-%H.%M.%S.%z'`"
+	echo "Done work at $DONETIME."
+
+	: <<'END'
+	clone directory tree
+	for each file, make a file in the cloned directory tree that contains its ia URL
+	ln -s each file to its sha256
+	Maintain a folder with all the sha256s that have been uled
+	Any new ones, upload them
+	and add them to that folder
+	(as a sha256 containing the IA URL)
+	Then pax.xz the folder of sha256s containg the IA url, and the folder of ln -ses
+	and upload that.
+	So, that file with the IA URLs by sha256 and the ln -ses are all that's needed to clone the repo
+	I think that's pretty cool!
+	When cloning, it'll 1) dl the pax.xz, 2) extract it, 3) donwnload any missing sha256s with the contents
+	In the upload and download process, gpg the files.
+	And pax.xz them
+	in the other order
+	1st step: If there aren't the necessary folder,s create them
+	For the encryption, use a config file
+	with the passphrase
+	And that should be all that's needed to make this app work!
+	I't'll need only the amuont of free disk space as the biggest file
+	unlike Patche, which I'm using now, and needs 3x the free disk space of the whole repository
+	END
 }
 
 echo "Are you sure you want to continue? This may destroy the directory structure in $(pwd); back it up first! Make sure you have run ia configure before using Patche."
@@ -104,9 +183,11 @@ if [ "$key" = ' ' ]; then
     patche() 2>&1 | tee -a $outfile
 else
     # Anything else pressed
+    echo "Aborting."
     exit 0
 fi
 
+#eof
 
 
 
