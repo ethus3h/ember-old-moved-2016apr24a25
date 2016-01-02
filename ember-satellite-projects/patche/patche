@@ -3,21 +3,20 @@
 
 # Needs at least as much disk space as the biggest file in the directory.
 
-PATCHEVERSION="5"
-
 #Script should run as root.
-#Comment the next line and the eof to use Shellcheck to check this script.
-exec sudo -s /bin/bash - << eof
+[ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
+
+export PATCHEVERSION="5"
 
 #Exit if a command returns a nonzero value.
-set -e;
+set -e
 
 #Set up logging, part 1
-NOW="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+export NOW="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 
 #UUID creator
 newuuid() {
-	NEWUUID=$(python -c 'import uuid; print str(uuid.uuid4())')
+	export NEWUUID=$(python -c 'import uuid; print str(uuid.uuid4())')
 }
 
 #Main function body
@@ -50,7 +49,7 @@ patche() {
 					echo -n "$3" > "./.patche-repo-temp/.pbz"
 				else
 					echo "You did not provide a passphrase, or the passphrase was empty. Please provide a non-empty passphrase as the third argument to the patche command."
-					DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+					export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 					echo "Aborting at $DONETIME."
 					exit 1
 				fi
@@ -69,7 +68,7 @@ patche() {
 			mkdir -v "./.patche-repo-temp/record-data-by-hash"
 			patchemover() {
 				#Record mover
-				SHA=$("shasum -a 512 \"$1\"")
+				export SHA=$(shasum -a 512 "$1")
 				mv -fv "$1" "./.patche-repo-temp/record-data-by-hash/$SHA"
 			}
 			export -f patchemover
@@ -79,7 +78,7 @@ patche() {
 			find . ! -path "./.patche-repo-temp/*" ! -path "./.patche-repo/*" -exec rm -rfv {} \;
 
 			#Rsync snapshot directory to current director
-			THISREVISION="$(cat ./.patche-repo/revisions/latest)"
+			export THISREVISION="$(cat ./.patche-repo/revisions/latest)"
 			rsync -av --progress ".patche-repo/revisions/$THISREVISION/snapshot/" "./"
 			
 			#For every file in the current directory
@@ -87,14 +86,14 @@ patche() {
 				#with the actual file data
 			patcherecordunpacker() {
 				#Record unpacker
-				SHA=$("head -n 1 \"$1\"")
+				export SHA=$(head -n 1 "$1")
 				if [ -f "./.patche-repo-temp/record-data-by-hash/$SHA" ]; then
 					#If the sha512 contained within that file is the same as
 						#one held locally on disk already, move the local file.
 					mv -fv "./.patche-repo-temp/record-data-by-hash/$SHA" "$1"
 				else
 					#Else, download the necessary file from IA.
-					IAURL=$("sed -n 2p \"$1\"")
+					export IAURL=$(sed -n 2p "$1")
 					wget -O "./.patche-repo-temp/current.bin.pax.xz.gpg" "$IAURL"
 					gpg --yes --batch --passphrase-file "./.patche-repo-temp/.pbz" "./.patche-repo-temp/current.bin.pax.xz.gpg"
 					rm -v "./.patche-repo-temp/current.bin.pax.xz.gpg"
@@ -112,11 +111,11 @@ patche() {
 			#Delete any remaining files known by their sha512s.
 			echo "Done patching repository; cleaning up..."
 			rm -rfv "./.patche-repo-temp/"
-			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 			echo "Done work at $DONETIME."
 		else
 			echo "You did not provide a revision URL to patch into this directory. Please provide the desired revision URL (it's probably a URL ending with \".patcherev5\") as the second argument to the patche command."
-			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 			echo "Aborting at $DONETIME."
 			exit 1
 		fi
@@ -149,12 +148,12 @@ patche() {
 			echo "Set repository passphrase to second argument."
 			echo -n "$NEWUUID" > "./.patche-repo/config/.uuid"
 			echo "Set repository ID to $NEWUUID."
-			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 			echo "Done work at $DONETIME."
 			exit 0
 		else
 			echo "You did not provide a passphrase. Please provide your desired passphrase as the second argument to the patche command."
-			DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+			export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 			echo "Aborting at $DONETIME."
 			exit 1
 		fi
@@ -163,23 +162,23 @@ patche() {
 		echo "Committing changes..."
 		#Configure iu
 		iu() {
-			TIMEZONE=$(date +%z)
-			IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$TIMEZONE")
-			DIRECTORY=$(pwd)
-			DIRECTORYHEX=$(xxd -pu <<< "$DIRECTORY")
-			REPOID="$(cat ./.patche-repo/.uuid)"
+			export TIMEZONE=$(date +%z)
+			export IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$TIMEZONE")
+			export DIRECTORY=$(pwd)
+			export DIRECTORYHEX=$(xxd -pu <<< "$DIRECTORY")
+			export REPOID="$(cat ./.patche-repo/.uuid)"
 			ia upload "$IUIDENTIFIER" --metadata="subject:Uploaded using iu for Patche $PATCHEVERSION; Patche repository $REPOID; $DIRECTORYHEX; 0D4F70AC-B0FD-11E5-9069-5A1D60F10656" "$@"
-			UPLOADURLPREFIX='https://archive.org/download/'$IUIDENTIFIER
+			export UPLOADURLPREFIX='https://archive.org/download/'$IUIDENTIFIER
 		}
-		LASTREVISION="$(cat ./.patche-repo/revisions/latest)"
-		THISREVISION=$((LASTREVISION+1))
+		export LASTREVISION="$(cat ./.patche-repo/revisions/latest)"
+		export THISREVISION=$((LASTREVISION+1))
 		cp -Rv "./.patche-repo/revisions/$LASTREVISION/records-by-hash/" "./.patche-repo/revisions/$THISREVISION/records-by-hash/"
 
 		#records-by-hash: ln -s each file to its sha512
 		patchelink() { 
 			#Link records into records-by-hash
-			SHA=$("shasum -a 512 \"$1\"")
-			LINKTARGET="./.patche-repo/revisions/$THISREVISION/records-by-hash/$SHA"
+			export SHA=$(shasum -a 512 "$1")
+			export LINKTARGET="./.patche-repo/revisions/$THISREVISION/records-by-hash/$SHA"
 			ln -sv "$1" "$LINKTARGET"
 		}
 		export -f patchelink
@@ -192,7 +191,7 @@ patche() {
 		#uploaded: For each file present in records-by-hash and not in uploaded, upload it and add the URL to uploaded folder
 		patcheupload() {
 			#Record uploader
-			SHA=$("shasum -a 512 \"$1\"")
+			export SHA=$(shasum -a 512 "$1")
 			if ! [ -f "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/$SHA" ]; then
 				#File hasn't already been uploaded, so upload it. $1 should be a symlink, but cp should follow it and work with the real file.
 				cp "$1" "./.patche-repo/current.bin"
@@ -206,9 +205,9 @@ patche() {
 				newuuid
 				mv "./.patche-repo/current.bin.pax.xz.gpg" "./.patche-repo/$NEWUUID.patche5"
 				iu "./.patche-repo/$NEWUUID"".patche5"
-				UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patche5"
+				export UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patche5"
 				printf -v RECORDSUFFIX '\n%s' "$UPLOADURL"
-				RECORDDATA="$SHA$RECORDSUFFIX"
+				export RECORDDATA="$SHA$RECORDSUFFIX"
 				echo "$RECORDDATA" > "./.patche-repo/revisions/$THISREVISION/snapshot/""$1"
 				echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/records-by-hash/uploaded/""$SHA"
 				rm -v "./.patche-repo/$NEWUUID"".patche5"
@@ -226,7 +225,7 @@ patche() {
 		newuuid
 		mv "./.patche-repo/snapshot.pax.xz.gpg" "./.patche-repo/$NEWUUID.patcherev5"
 		iu "./.patche-repo/$NEWUUID"".patcherev5"
-		UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patcherev5"
+		export UPLOADURL="$UPLOADURLPREFIX$NEWUUID"".patcherev5"
 		echo -n "$UPLOADURL" > "./.patche-repo/revisions/$THISREVISION/revision"
 		rm -v "./.patche-repo/$NEWUUID"".patcherev5"
 
@@ -237,16 +236,18 @@ patche() {
 		echo "Committed revision $THISREVISION."
 		echo "This revision of this repository can be downloaded from:"
 		echo "$UPLOADURL"
-		DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+		export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 		echo "Done work at $DONETIME."
 	fi
 	echo "No action or unknown action specified. Available actions are: help, patch, init, commit"
-	DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
+	export DONETIME="$(date '+%Y.%m.%d-%H.%M.%S.%z')"
 	echo "Aborting at $DONETIME."
 	exit 1
 }
 
 if [ "$1" == "help" ]; then
+	patche "$@"
+elif [ "$1" == "" ]; then
 	patche "$@"
 else
 	#Set up logging, part 2
@@ -264,4 +265,3 @@ else
 		exit 0
 	fi
 fi
-eof
