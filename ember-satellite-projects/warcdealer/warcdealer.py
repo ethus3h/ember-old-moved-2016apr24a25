@@ -189,31 +189,11 @@ def upload(wikis):
     log_add(dumps)
     c = 0
     for dump in dumps:
-        dumpid = 'WARCdealer_BarrelData_' + title + '_' + uuidG + '.' + \
-            timeRunning
         log_add("#" * 73)
         log_add('ATTEMPTING TO UPLOAD DUMP DATA: ' + dump)
         log_add('DUMP ID: ' + dumpid)
         log_add("#" * 73)
         time.sleep(0.1)
-        iatitle = "WARCdealer pack. WARC in set labeled: " + title + \
-            ', ID: ' + uuidG
-        iadescription = "WARCdealer pack. WARC in set labeled: " + title + \
-            ', ID ' + uuidG + '. ' + title + '_' + uuidG + '.' + timeRunning
-        iakeywords = [
-            'Arcmaj3',
-            'WARC',
-            'snapshot',
-            'archive',
-            'WARCdealer',
-            'WARCdealer pack',
-            title,
-            title +
-            '_' +
-            uuidG +
-            '.' +
-            timeRunning]
-        barrelSize = int(os.path.getsize(dump))
         global sslTypeS
         curl = ['curl', '--location',
                 '--retry', '7',
@@ -256,27 +236,28 @@ def upload(wikis):
         log_add(curlline + '\n')
         errored = False
         uploadFetchResultB = run(curlline)[1]
-        log_add('\n\ncurl request result:\n' + uploadFetchResultB + '\n\n')
         c += 1
         log_add('Errored: ' + str(errored))
-        if not (errored or 'XML' in uploadFetchResultB or 'xml' in
-                uploadFetchResultB or 'html' in uploadFetchResultB or
-                'HTML' in uploadFetchResultB):
+        if not (errored):
             os.system('rm ' + dump)
             log_add('Removing file: ' + dump + '\n')
             statDuro = True
         else:
             log_add('ERROR UPLOADING BARREL. THIS IS NOT GOOD.')
         errored = False
-        log_add('Logging added item: ' + 'https://archive.org/details/' +
-                dumpid[:99] + '\n\n\n\n\n')
 
 
 def concatW():
     global errored
     errored = False
-    run('bash -c \'find . -iname "*.warc.gz" -type f -exec /bin/mv {} . \;\';')
-    run('bash -c \'find . -iname "*.warc" -type f -exec /bin/mv {} . \;\';')
+    run('bash -c \'while IFS= read -r -d \\\'\\\' file\; do mv -v "$file" ' +
+        '~/warcdealer/"$(python -c \\\'import uuid\; print str(uuid.uuid4())' +
+        '\\\')-$(date \\\'+%Y.%m.%d-%H.%M.%S.%z\\\')"\\\'.warc\\\'\; done < ' +
+        '<(find . -type f -name \\*.warc -print0)\;\';')
+    run('bash -c \'while IFS= read -r -d \\\'\\\' file\; do mv -v "$file" ' +
+        '~/warcdealer/"$(python -c \\\'import uuid\; print str(uuid.uuid4())' +
+        '\\\')-$(date \\\'+%Y.%m.%d-%H.%M.%S.%z\\\')"\\\'.warc.gz\\\'\; done' +
+        ' < <(find . -type f -name \\*.warc.gz -print0)\;\';')
 
 log_add('\nPreparing main function\n')
 
