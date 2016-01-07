@@ -54,14 +54,37 @@ collection = 'amjbarreldata'
 
 
 def shellesc(s):
-    return s.replace("'",
-                     "%27").replace(' ', '%20').replace('<',
-                     '%3C').replace('>', '%3E').replace('[', '%5B').replace(']',
-                     '%5D').replace('(', '%28').replace(')', '%29').replace(';',
-                     '%3B').replace("\x00", '%00').replace("\x0c", '%0C').replace("\x0b",
-                     '%0B').replace("\x08", '%08').replace("\x03", '%03')
+    return s.replace(
+        "'",
+        "%27").replace(
+        ' ',
+        '%20').replace(
+            '<',
+            '%3C').replace(
+                '>',
+                '%3E').replace(
+                    '[',
+                    '%5B').replace(
+                        ']',
+                        '%5D').replace(
+                            '(',
+                            '%28').replace(
+                                ')',
+                                '%29').replace(
+                                    ';',
+                                    '%3B').replace(
+                                        "\x00",
+                                        '%00').replace(
+                                            "\x0c",
+                                            '%0C').replace(
+                                                "\x0b",
+                                                '%0B').replace(
+                                                    "\x08",
+                                                    '%08').replace(
+                                                        "\x03",
+        '%03')
 
- 
+
 def check_output(*popenargs, **kwargs):
     r"""Run command with arguments and return its output as a byte string.
 
@@ -70,7 +93,7 @@ def check_output(*popenargs, **kwargs):
     >>> check_output(['/usr/bin/python', '--version'])
     Python 2.6.2
     """
-    process = subprocess.Popen(stdout = subprocess.PIPE, *popenargs, **kwargs)
+    process = subprocess.Popen(stdout=subprocess.PIPE, *popenargs, **kwargs)
     output, unused_err = process.communicate()
     retcode = process.poll()
     if retcode:
@@ -86,52 +109,62 @@ now = datetime.datetime.now()
 uuidG = str(uuid.uuid4())
 timeRunning = now.strftime("%Y-%m-%d-%H-%M-%S-%f-%Z_E")
 errored = False
+
+
 def run(command):
     print command
     global errored
     commandResult = ''
     try:
-        commandRes = check_output(command, shell = True,
-            stderr = subprocess.STDOUT)
-        commandResult = "Running command: \n\n" + command + "\n\n\n\n" +
-            commandRes + "\n\n\n\n"
-    except Exception, e:
+        commandRes = check_output(command, shell=True,
+                                  stderr=subprocess.STDOUT)
+        commandResult = "Running command: \n\n" + \
+            command + "\n\n\n\n" + commandRes + "\n\n\n\n"
+    except Exception as e:
         print 'Error: ' + sys.exc_info()[0]
         commandRes = ''
         try:
-            commandResult = "Running command: \n\n" + command + "\n\n\n\n" +
-                commandResult + str(e.output) +
-                "\n\n\n\nError encountered while running command. " +
+            commandResult = "Running command: \n\n" + command + "\n\n\n\n" + \
+                commandResult + str(e.output) + \
+                "\n\n\n\nError encountered while running command. " + \
                 "This is probably not a big deal.\n\n"
-        except Exception, e:
+        except Exception as e:
             print 'Error again: ' + sys.exc_info()[0]
-            commandResult =
-                "\n\n\n\nError encountered while running command: \n\n" +
-                command + "\n\n\n\nThis is probably not a big deal. " +
+            commandResult = \
+                "\n\n\n\nError encountered while running command: \n\n" + \
+                command + "\n\n\n\nThis is probably not a big deal. " + \
                 "Possibly the command line was incorrectly structured?\n\n"
         errored = True
-    return [commandResult,commandRes]
+    return [commandResult, commandRes]
+
+
 def log_add(text):
     text = str(text)
     print text
     global timeRunning
-    f = open('log-'+timeRunning+'.log', 'a')
-    f.write(text+"\n")
+    f = open('log-' + timeRunning + '.log', 'a')
+    f.write(text + "\n")
     f.close()
+
+
 def log(wiki, dump, msg):
     global timeRunning
-    f = open('uploader-'+timeRunning+'.log', 'a')
+    f = open('uploader-' + timeRunning + '.log', 'a')
     f.write('\n%s;%s;%s' % (wiki, dump, msg))
     f.close()
-timeFetchResult = run('bash -c \'wget --no-check-certificate --warc-file=' +
-    timeRunning + '.Now -O now.txt "http://www.timeapi.org/utc/now?\\Y-\\m' +
+timeFetchResult = run(
+    'bash -c \'wget --no-check-certificate --warc-file=' +
+    timeRunning +
+    '.Now -O now.txt "http://www.timeapi.org/utc/now?\\Y-\\m' +
     '-\\d-\\H-\\M-\\S-\\6N-\\z"\'')[0]
 
-with open ("now.txt", "r") as timeFile:
+with open("now.txt", "r") as timeFile:
     timeRemote = timeFile.read()
-log_add("\Current time fetch output: \n"+timeFetchResult+"\n\n")
-log_add("\nCurrent time retrieved remotely: \n"+timeRemote+"\n\n")
+log_add("\Current time fetch output: \n" + timeFetchResult + "\n\n")
+log_add("\nCurrent time retrieved remotely: \n" + timeRemote + "\n\n")
 statDuro = False
+
+
 def upload(wikis):
     global uuidG
     global errored
@@ -139,88 +172,105 @@ def upload(wikis):
     global title
     global statDuro
     log_add(wikis)
-    log_add("#"*73)
+    log_add("#" * 73)
     log_add("# Uploading record")
-    log_add("#"*73)
+    log_add("#" * 73)
     dumps = []
     for dirname, dirnames, filenames in os.walk('.'):
         if dirname == '.':
             for f in filenames:
-                #log_add('Filenames: ' + str(f))
                 if (f.endswith('.json') or f.endswith('.warc') or
                     f.endswith('.warc.gz') or ('megawarc' in f and
-                    (f.endswith('.tar') or f.endswith('.json.gz') or
-                    f.endswith('.warc.gz')))):
+                                               (f.endswith('.tar') or
+                                                f.endswith('.json.gz') or
+                                                f.endswith('.warc.gz')))):
                     dumps.append(f)
-                    #dumps.append(f)
             break
     log_add(dumps)
     c = 0
     for dump in dumps:
-        dumpid='WARCdealer_BarrelData_'+title+'_' + uuidG +'.' +timeRunning
-        log_add("#"*73)
+        dumpid = 'WARCdealer_BarrelData_' + title + '_' + uuidG + '.' + \
+            timeRunning
+        log_add("#" * 73)
         log_add('ATTEMPTING TO UPLOAD DUMP DATA: ' + dump)
         log_add('DUMP ID: ' + dumpid)
-        log_add("#"*73)
+        log_add("#" * 73)
         time.sleep(0.1)
-        iatitle = "WARCdealer pack. WARC in set labeled: "+ title +
+        iatitle = "WARCdealer pack. WARC in set labeled: " + title + \
             ', ID: ' + uuidG
-        iadescription = "WARCdealer pack. WARC in set labeled: "+ title + ', ID ' +
-            uuidG+'. '+title+'_' + uuidG +'.' +timeRunning
-        iakeywords = ['Arcmaj3','WARC','snapshot','archive','WARCdealer',
-            'WARCdealer pack', title, title+'_' + uuidG +'.' +timeRunning]
+        iadescription = "WARCdealer pack. WARC in set labeled: " + title + \
+            ', ID ' + uuidG + '. ' + title + '_' + uuidG + '.' + timeRunning
+        iakeywords = [
+            'Arcmaj3',
+            'WARC',
+            'snapshot',
+            'archive',
+            'WARCdealer',
+            'WARCdealer pack',
+            title,
+            title +
+            '_' +
+            uuidG +
+            '.' +
+            timeRunning]
         barrelSize = int(os.path.getsize(dump))
         global sslTypeS
         curl = ['curl', '--location',
-            '--retry', '7',
-            '--retry-max-time', '0',
-            '--header', "'x-amz-auto-make-bucket:1'", # Creates the item
-                #automatically, need to give some time for the item to
-                #correctly be created on archive.org, or everything else will
-                #fail, showing "bucket not found" error
-            '--header', "'x-archive-queue-derive:0'",
-            '--header', "'x-archive-size-hint:%d'" % (os.path.getsize(dump)),
-            '--header', "'authorization: LOW %s:%s'" % (accesskey, secretkey),
-        ]
+                '--retry', '7',
+                '--retry-max-time', '0',
+                '--header', "'x-amz-auto-make-bucket:1'",  # Creates the item
+                # automatically, need to give some time for the item to
+                # correctly be created on archive.org, or everything else will
+                # fail, showing "bucket not found" error
+                '--header', "'x-archive-queue-derive:0'",
+                '--header', "'x-archive-size-hint:%d'" % (
+                    os.path.getsize(dump)),
+                '--header', "'authorization: LOW %s:%s'" % (
+                    accesskey, secretkey),
+                ]
         if c == 0:
             curl += ['--header', "'x-archive-meta-mediatype:web'",
-                '--header', "'x-archive-meta-collection:%s'" % (collection),
-                '--header', "'x-archive-meta-title:%s'" % (iatitle),
-                '--header', "'x-archive-meta-description:%s'" % (iadescription),
-                '--header', "'x-archive-meta-subject:%s'" % ('; '.
-                    join(iakeywords)), # Keywords should be separated by ; but
-                        #it doesn't matter much; the alternative is to set one
-                        #per field with subject[0], subject[1], ...
-                '--header', "'x-archive-meta-mediatype:web'",
+                     '--header', "'x-archive-meta-collection:%s'" % (
+                         collection),
+                     '--header', "'x-archive-meta-title:%s'" % (iatitle),
+                     '--header', "'x-archive-meta-description:%s'" % (
+                         iadescription),
+                     '--header',
+                     "'x-archive-meta-subject:%s'" % ('; '.join(iakeywords)),
+                     # Keywords should be separated by ; but
+                     # it doesn't matter much; the alternative is to set one
+                     # per field with subject[0], subject[1], ...
+                     '--header', "'x-archive-meta-mediatype:web'",
 
-            ]
+                     ]
 
         curl += ['--upload-file', "%s" % (dump),
-                "http://s3.us.archive.org/" + dumpid[:99] + '/' + dump # It
-                    #could happen that the identifier is taken by another
-                    #user; only wikiteam collection admins will be able to
-                    #upload more files to it, curl will fail immediately and
-                    #get a permissions error by s3.
-        ]
+                 "http://s3.us.archive.org/" + dumpid[:99] + '/' + dump  # It
+                 # could happen that the identifier is taken by another
+                 # user; only wikiteam collection admins will be able to
+                 # upload more files to it, curl will fail immediately and
+                 # get a permissions error by s3.
+                 ]
         curlline = ' '.join(curl)
         log_add('Executing curl request: ')
-        log_add(curlline+'\n')
+        log_add(curlline + '\n')
         errored = False
         uploadFetchResultB = run(curlline)[1]
-        log_add('\n\ncurl request result:\n'+uploadFetchResultB+'\n\n')
+        log_add('\n\ncurl request result:\n' + uploadFetchResultB + '\n\n')
         c += 1
-        log_add('Errored: '+str(errored))
+        log_add('Errored: ' + str(errored))
         if not (errored or 'XML' in uploadFetchResultB or 'xml' in
-            uploadFetchResultB or 'html' in uploadFetchResultB or
-            'HTML' in uploadFetchResultB):
-            os.system('rm '+dump)
-            log_add('Removing file: '+dump+'\n')
+                uploadFetchResultB or 'html' in uploadFetchResultB or
+                'HTML' in uploadFetchResultB):
+            os.system('rm ' + dump)
+            log_add('Removing file: ' + dump + '\n')
             statDuro = True
         else:
             log_add('ERROR UPLOADING BARREL. THIS IS NOT GOOD.')
         errored = False
         log_add('Logging added item: ' + 'https://archive.org/details/' +
-            dumpid[:99] + '\n\n\n\n\n')
+                dumpid[:99] + '\n\n\n\n\n')
+
 
 def concatW():
     global errored
@@ -229,6 +279,7 @@ def concatW():
     run('bash -c \'find . -iname "*.warc" -type f -exec /bin/mv {} . \;\';')
 
 log_add('\nPreparing main function\n')
+
 
 def main():
     log_add('\nEntering main function\n')
@@ -239,9 +290,9 @@ def main():
     global UserAgentChoice
     global userName
     global timeRunning
-    iId=1
+    iId = 1
     concatW()
-    log_add('\n\nUploading barrel data back to base.\n\n');
+    log_add('\n\nUploading barrel data back to base.\n\n')
     upload(wikis)
     log_add('Sleeping 180 seconds (3 minutes)')
     time.sleep(180)
