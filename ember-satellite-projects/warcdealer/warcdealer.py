@@ -195,20 +195,23 @@ def upload(wikis):
         log_add("#" * 73)
         time.sleep(0.1)
         global sslTypeS
-        run('iu() { IUIDENTIFIER=$(python -c \'import uuid; print str(' +
-            'uuid.uuid4())\')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu' +
-            ' <<< "$(date +%z)"); ia upload $IUIDENTIFIER --metadata="' +
-            'collection:amjbarreldata; subject:Uploaded using iu v3 for' +
-            ' warcdealer; warcdealer; 249707AC-B4EF-11E5-B573-45D037852114;' +
-            ' $IUIDENTIFIER" "$@"; echo \'https://archive.org/download/\'' +
-            '$IUIDENTIFIER; }')
+        run('iu() { IUIDENTIFIER=$(python -c \'import uuid; print ' +
+            'str(uuid.uuid4())\')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(' +
+            'xxd -pu <<< "$(date +%z)"); ia upload $IUIDENTIFIER --' +
+            'metadata="collection:amjbarreldata; subject:Uploaded ' +
+            'using iu v3 for warcdealer; warcdealer; 249707AC-B4EF-' +
+            '11E5-B573-45D037852114; $IUIDENTIFIER" "$@"; echo ' +
+            '\'https://archive.org/download/\'$IUIDENTIFIER; }; ' +
+            'export -f iu')
         log_add('Uploading: ')
+        run('bash -c \'iu '+dump+'\'')
+        log_add('Done upload')
         errored = False
         c += 1
         log_add('Errored: ' + str(errored))
         if not (errored):
-            os.system('rm ' + dump)
             log_add('Removing file: ' + dump + '\n')
+            os.system('rm -v ' + dump)
             statDuro = True
         else:
             log_add('ERROR UPLOADING BARREL. THIS IS NOT GOOD.')
@@ -218,14 +221,14 @@ def upload(wikis):
 def concatW():
     global errored
     errored = False
-    run('bash -c \'while IFS= read -r -d \\\'\\\' file\; do mv -v "$file" ' +
-        '~/warcdealer/"$(python -c \\\'import uuid\; print str(uuid.uuid4())' +
-        '\\\')-$(date \\\'+%Y.%m.%d-%H.%M.%S.%z\\\')"\\\'.warc\\\'\; done < ' +
-        '<(find . -type f -name \\*.warc -print0)\;\';')
-    run('bash -c \'while IFS= read -r -d \\\'\\\' file\; do mv -v "$file" ' +
-        '~/warcdealer/"$(python -c \\\'import uuid\; print str(uuid.uuid4())' +
-        '\\\')-$(date \\\'+%Y.%m.%d-%H.%M.%S.%z\\\')"\\\'.warc.gz\\\'\; done' +
-        ' < <(find . -type f -name \\*.warc.gz -print0)\;\';')
+    run('while IFS= read -r -d \'\' file; do mv -v "$file" ./"$(' +
+        'python -c \'import uuid\; print str(uuid.uuid4())\')-$(' +
+        'date \'+%Y.%m.%d-%H.%M.%S.%z\')"\'.warc\'; done < <(find' +
+        ' . -type f -name \*.warc -print0)')
+    run('while IFS= read -r -d \'\' file; do mv -v "$file" ./"$(' +
+        'python -c \'import uuid\; print str(uuid.uuid4())\')-$(' +
+        'date \'+%Y.%m.%d-%H.%M.%S.%z\')"\'.warc.gz\'; done < <(find' +
+        ' . -type f -name \*.warc.gz -print0)')
 
 log_add('\nPreparing main function\n')
 
