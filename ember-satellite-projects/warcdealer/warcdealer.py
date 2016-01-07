@@ -25,18 +25,6 @@
 # TODO: minor bug - don't overwrite existing files with same filename
 #    s3 without pause in the same identifier
 
-# CONFIGURATION
-# You need a file named config.txt with username, access key, secret key, and a
-# title for the uploaded items, each in its own line.
-userName = open('config.txt', 'r').readlines()[0].strip()
-accesskey = open('config.txt', 'r').readlines()[1].strip()
-secretkey = open('config.txt', 'r').readlines()[2].strip()
-title = open('config.txt', 'r').readlines()[3].strip()
-collection = 'amjbarreldata'
-# Replace "amjbarreldata" with "opensource" if you are not an admin of the
-#    collection
-# end configuration
-
 import os
 import re
 import subprocess
@@ -51,12 +39,28 @@ import uuid
 import datetime
 import string
 import random
+
+# CONFIGURATION
+# You need a file named config.txt with username, access key, secret key, and a
+# title for the uploaded items, each in its own line.
+userName = open('config.txt', 'r').readlines()[0].strip()
+accesskey = open('config.txt', 'r').readlines()[1].strip()
+secretkey = open('config.txt', 'r').readlines()[2].strip()
+title = open('config.txt', 'r').readlines()[3].strip()
+collection = 'amjbarreldata'
+# Replace "amjbarreldata" with "opensource" if you are not an admin of the
+#    collection
+# end configuration
+
+
 def shellesc(s):
-    return s.replace("'", "%27").replace(' ','%20').replace('<',
-        '%3C').replace('>','%3E').replace('[','%5B').replace(']',
-        '%5D').replace('(','%28').replace(')','%29').replace(';',
-        '%3B').replace("\x00",'%00').replace("\x0c",'%0C').replace("\x0b",
-        '%0B').replace("\x08",'%08').replace("\x03",'%03')
+    return s.replace("'",
+                     "%27").replace(' ', '%20').replace('<',
+                     '%3C').replace('>', '%3E').replace('[', '%5B').replace(']',
+                     '%5D').replace('(', '%28').replace(')', '%29').replace(';',
+                     '%3B').replace("\x00", '%00').replace("\x0c", '%0C').replace("\x0b",
+                     '%0B').replace("\x08", '%08').replace("\x03", '%03')
+
 
 def check_output(*popenargs, **kwargs):
     r"""Run command with arguments and return its output as a byte string.
@@ -88,7 +92,7 @@ def run(command):
     commandResult = ''
     try:
         commandRes = check_output(command, shell = True,
-        	stderr = subprocess.STDOUT)
+            stderr = subprocess.STDOUT)
         commandResult = "Running command: \n\n" + command + "\n\n\n\n" +
             commandRes + "\n\n\n\n"
     except Exception, e:
