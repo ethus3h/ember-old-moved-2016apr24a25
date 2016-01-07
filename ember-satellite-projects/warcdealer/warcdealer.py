@@ -38,6 +38,7 @@ import urllib2
 import uuid
 import datetime
 import string
+import traceback
 import random
 
 # CONFIGURATION
@@ -121,7 +122,7 @@ def run(command):
         commandResult = "Running command: \n\n" + \
             command + "\n\n\n\n" + commandRes + "\n\n\n\n"
     except Exception as e:
-        print 'Error: ' + sys.exc_info()[0]
+        print 'Error: ' + traceback.format_exc()
         commandRes = ''
         try:
             commandResult = "Running command: \n\n" + command + "\n\n\n\n" + \
@@ -129,7 +130,7 @@ def run(command):
                 "\n\n\n\nError encountered while running command. " + \
                 "This is probably not a big deal.\n\n"
         except Exception as e:
-            print 'Error again: ' + sys.exc_info()[0]
+            print 'Error again: ' + traceback.format_exc()
             commandResult = \
                 "\n\n\n\nError encountered while running command: \n\n" + \
                 command + "\n\n\n\nThis is probably not a big deal. " + \
