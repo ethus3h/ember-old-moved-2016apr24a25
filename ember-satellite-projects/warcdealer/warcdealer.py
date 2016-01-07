@@ -192,7 +192,6 @@ def upload(wikis):
     for dump in dumps:
         log_add("#" * 73)
         log_add('ATTEMPTING TO UPLOAD DUMP DATA: ' + dump)
-        log_add('DUMP ID: ' + dumpid)
         log_add("#" * 73)
         time.sleep(0.1)
         global sslTypeS
