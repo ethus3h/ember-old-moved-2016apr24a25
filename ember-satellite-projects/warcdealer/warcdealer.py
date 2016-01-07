@@ -195,45 +195,14 @@ def upload(wikis):
         log_add("#" * 73)
         time.sleep(0.1)
         global sslTypeS
-        curl = ['curl', '--location',
-                '--retry', '7',
-                '--retry-max-time', '0',
-                '--header', "'x-amz-auto-make-bucket:1'",  # Creates the item
-                # automatically, need to give some time for the item to
-                # correctly be created on archive.org, or everything else will
-                # fail, showing "bucket not found" error
-                '--header', "'x-archive-queue-derive:0'",
-                '--header', "'x-archive-size-hint:%d'" % (
-                    os.path.getsize(dump)),
-                '--header', "'authorization: LOW %s:%s'" % (
-                    accesskey, secretkey),
-                ]
-        if c == 0:
-            curl += ['--header', "'x-archive-meta-mediatype:web'",
-                     '--header', "'x-archive-meta-collection:%s'" % (
-                         collection),
-                     '--header', "'x-archive-meta-title:%s'" % (iatitle),
-                     '--header', "'x-archive-meta-description:%s'" % (
-                         iadescription),
-                     '--header',
-                     "'x-archive-meta-subject:%s'" % ('; '.join(iakeywords)),
-                     # Keywords should be separated by ; but
-                     # it doesn't matter much; the alternative is to set one
-                     # per field with subject[0], subject[1], ...
-                     '--header', "'x-archive-meta-mediatype:web'",
-
-                     ]
-
-        curl += ['--upload-file', "%s" % (dump),
-                 "http://s3.us.archive.org/" + dumpid[:99] + '/' + dump  # It
-                 # could happen that the identifier is taken by another
-                 # user; only wikiteam collection admins will be able to
-                 # upload more files to it, curl will fail immediately and
-                 # get a permissions error by s3.
-                 ]
-        curlline = ' '.join(curl)
-        log_add('Executing curl request: ')
-        log_add(curlline + '\n')
+        run('iu() { IUIDENTIFIER=$(python -c \'import uuid; print str(' +
+            'uuid.uuid4())\')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu' +
+            ' <<< "$(date +%z)"); ia upload $IUIDENTIFIER --metadata="' +
+            'collection:amjbarreldata; subject:Uploaded using iu v3 for' +
+            ' warcdealer; warcdealer; 249707AC-B4EF-11E5-B573-45D037852114;' +
+            ' $IUIDENTIFIER" "$@"; echo \'https://archive.org/download/\'' +
+            '$IUIDENTIFIER; }')
+        log_add('Uploading: ')
         errored = False
         uploadFetchResultB = run(curlline)[1]
         c += 1
