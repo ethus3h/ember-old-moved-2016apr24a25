@@ -61,7 +61,7 @@ def shellesc(s):
                      '%3B').replace("\x00", '%00').replace("\x0c", '%0C').replace("\x0b",
                      '%0B').replace("\x08", '%08').replace("\x03", '%03')
 
-
+ 
 def check_output(*popenargs, **kwargs):
     r"""Run command with arguments and return its output as a byte string.
 
