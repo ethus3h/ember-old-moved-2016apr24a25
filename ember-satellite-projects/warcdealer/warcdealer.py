@@ -204,7 +204,6 @@ def upload(wikis):
             '$IUIDENTIFIER; }')
         log_add('Uploading: ')
         errored = False
-        uploadFetchResultB = run(curlline)[1]
         c += 1
         log_add('Errored: ' + str(errored))
         if not (errored):
