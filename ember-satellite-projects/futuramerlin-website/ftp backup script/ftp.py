@@ -27,24 +27,4 @@ def handle_response(url_info, record_info, response_info):
         tries += 1
         return wpull_hook.actions.RETRY
 
-def handle_error(url_info, record_info, error_info):
-    global max_tries
-    raise Exception('You received status code %d with URL %s'%(item_list.status_code, 'https://archive.org/download/{0}/{1}'.format(item_item, item_file)))
-    prin
-    if item_message.getcode() == 200:
-        try:
-            urllib.request.urlopen(url_info["url"])
-        except Exception as error:
-            error_message = str(error)
-            print("ERROR Received error message " + error_message)
-            sys.stdout.flush()
-            if all(text in error_message for text in item_messages):
-                print('INFO ' + url_info['url'] + ' does not exist, skipping...')
-                sys.stdout.flush()
-                return wpull_hook.actions.FINISH
-
-    if tries >= max_tries:
-        raise Exception('Something went wrong... ABORTING...')
-
 wpull_hook.callbacks.handle_response = handle_response
-wpull_hook.callbacks.handle_error = handle_error
