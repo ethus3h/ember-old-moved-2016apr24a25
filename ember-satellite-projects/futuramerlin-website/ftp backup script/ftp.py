@@ -1,11 +1,9 @@
 import sys
-import urllib.request
-import os
-import re
 
-wpull_hook = globals().get('wpull_hook') # silence code checkers
+wpull_hook = globals().get('wpull_hook')  # silence code checkers
 tries = 0
 max_tries = 10
+
 
 def handle_response(url_info, record_info, response_info):
     global tries
@@ -21,8 +19,11 @@ def handle_response(url_info, record_info, response_info):
         return wpull_hook.actions.FINISH
     else:
         if tries >= max_tries:
-            raise Exception('Something went wrong, received status code %d %d times. ABORTING...'%(response_code, max_tries))
-        print('You received status code %d. Retrying...'%response_code)
+            raise Exception(
+                'Something went wrong, received ' +
+                'status code %d %d times. ABORTING...' %
+                (response_code, max_tries))
+        print('You received status code %d. Retrying...' % response_code)
         sys.stdout.flush()
         tries += 1
         return wpull_hook.actions.RETRY
