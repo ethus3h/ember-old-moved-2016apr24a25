@@ -1,0 +1,241 @@
+
+@font-face{font-family:'anoeyfuturamerlincommedium';src:url('d/f/anoeyfuturamerlincom2.61.eot');src:url('d/f/anoeyfuturamerlincom2.61.eot?#iefix') format('embedded-opentype'),url('d/f/anoeyfuturamerlincom2.61.woff') format('woff'),url('d/f/anoeyfuturamerlincom2.61.ttf') format('truetype'),url('d/f/anoeyfuturamerlincom2.61.svg#anoeyfuturamerlincommedium') format('svg');font-weight:normal;font-style:normal}@font-face{font-family:'wreatherweb';src:url('d/f/wreathe-r.eot');src:url('d/f/wreathe-r.eot?#iefix') format('embedded-opentype'),url('d/f/wreathe-r.woff') format('woff'),url('d/f/wreathe-r.ttf') format('truetype'),url('d/f/wreathe-r.svg#wreatherweb') format('svg');font-weight:normal;font-style:normal}@font-face{font-family:'wreatherweb';src:url('d/f/wreathe-b.eot');src:url('d/f/wreathe-b.eot?#iefix') format('embedded-opentype'),url('d/f/wreathe-b.woff') format('woff'),url('d/f/wreathe-b.ttf') format('truetype'),url('d/f/wreathe-b.svg#wreathebold') format('svg');font-weight:bold;font-style:normal}@font-face{font-family:'wreatherweb';src:url('d/f/wreathe-i.eot');src:url('d/f/wreathe-i.eot?#iefix') format('embedded-opentype'),url('d/f/wreathe-i.woff') format('woff'),url('d/f/wreathe-i.ttf') format('truetype'),url('d/f/wreathe-i.svg#wreatheitalic') format('svg');font-weight:normal;font-style:italic}@font-face{font-family:'wreatherweb';src:url('d/f/wreathe-bi.eot');src:url('d/f/wreathe-bi.eot?#iefix') format('embedded-opentype'),url('d/f/wreathe-bi.woff') format('woff'),url('d/f/wreathe-bi.ttf') format('truetype'),url('d/f/wreathe-bi.svg#wreathebold_italic') format('svg');font-weight:bold;font-style:italic}
+    html, body, div, span {
+        margin:0;
+        padding:0;
+        font-size:100%;
+        background:transparent;
+        line-height:1;
+    }
+
+html {
+        	height: 100% !important;
+}
+body{
+    background: #d5e3cf;
+        	height: 100% !important;
+}
+
+a {
+color: #22520f !important;
+}
+a:hover {
+color: #520f22 !important;
+transition: color 0.5s ease !important;
+}
+
+header .logo{
+margin: 2rem 0 0 2rem;
+display: inline-block;
+}
+
+.clearfix:before,  
+.clearfix:after {  
+    content: " ";  
+    display: table;  
+}  
+.clearfix:after {  
+    clear: both;  
+}  
+ 
+.clearfix {  
+    *zoom: 1;  
+}
+
+
+
+@media (min-width:1000px){
+    header{
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 18rem;
+        min-height: 100%;
+        background: #d5e3cf; 
+    background:-webkit-gradient(radial,0 0,0,50% 0,300,from(#FFF),to(#d5e3cf));
+    background:-moz-radial-gradient(0 0 90deg,circle farthest-side,#FFF,#d5e3cf,#d5e3cf 31.25em);
+    background-repeat:no-repeat;
+        float: left;
+        overflow: hidden;
+        z-index: 9999;
+    }
+
+}
+
+
+
+
+
+/*  Main  */
+.main{
+    width: 100%;
+    max-width: 62em;
+    height: 100%;
+    padding-left: 300px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 55;
+    background: #d5e3cf;
+    clear: both;
+}
+
+
+
+
+
+
+
+
+
+.content{
+    color: #4b4848;
+    max-width: 55em;
+    font-family: "times", times;
+    font-size: 15px;
+    line-height: 22px;
+    padding: 1rem 2rem;
+    background: #fff;
+	height: 100% !important;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+/*  Responsive code  */
+@media (max-width:1100px){
+
+    header{
+        display: block;
+        width: 100%;
+        min-height: 100px;
+        padding: 0;
+        position: relative;
+        background: #d5e3cf; 
+    background:-webkit-gradient(radial,0 0,0,50% 0,300,from(#FFF),to(#d5e3cf));
+    background:-moz-radial-gradient(0 0 90deg,circle farthest-side,#FFF,#d5e3cf,#d5e3cf 31.25em);
+    background-repeat:no-repeat;
+    }
+    header nav ul{
+        list-style: none;
+        display: none;
+        margin-top: 1rem;
+        position: relative;
+    }
+    header nav ul li a{
+        display: block;
+        width: 100%;
+        padding: 1rem 0;
+        text-align: center;
+        color: #454545;
+        font-size: 0.5rem;
+        text-decoration: none;
+        background: #fff;
+    }
+    .main{
+        width: 100%;
+        position: relative;
+        padding-left: 0;
+    }
+}
+
+
+/* Navigation Menu - Background */
+navigation {
+  /* critical sizing and position styles */
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  
+  /* non-critical appearance styles */
+  list-style: none;
+  background: #111;
+}
+
+/* Navigation Menu - List items */
+.nav-item {
+  /* non-critical appearance styles */
+  width: 200px;
+  border-top: 1px solid #111;
+  border-bottom: 1px solid #000;
+}
+
+.nav-item a {
+  /* non-critical appearance styles */
+  display: block;
+  padding: 1em;
+  background: linear-gradient(135deg, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%);
+  color: white;
+  font-size: 1.2em;
+  text-decoration: none;
+  transition: color 0.2s, background 0.5s;
+}
+
+.nav-item a:hover {
+  color: #c74438;
+  background: linear-gradient(135deg, rgba(0,0,0,0) 0%,rgba(75,20,20,0.65) 100%);
+}
+
+/* Site Wrapper - Everything that isn't navigation */
+.site-wrap {
+  /* Critical position and size styles */
+  min-height: 100%;
+  min-width: 100%;
+  background-color: white; /* Needs a background or else the nav will show through */
+  position: relative;
+  top: 0;
+  bottom: 100%;
+  left: 0;
+  z-index: 1;
+  
+}
+
+/* Nav Trigger */
+.nav-trigger {
+  /* critical styles - hide the checkbox input */
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+}
+
+label[for="nav-trigger"] {
+  /* critical positioning styles */
+  position: fixed;
+  left: 15px; top: 15px;
+  z-index: 2;
+  
+  /* non-critical apperance styles */
+  height: 30px;
+  width: 30px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' enable-background='new 0 0 30 30' xml:space='preserve'><rect width='30' height='6'/><rect y='24' width='30' height='6'/><rect y='12' width='30' height='6'/></svg>");
+  background-size: contain;
+}
+
+/* Make the Magic Happen */
+.nav-trigger + label, .site-wrap {
+  transition: left 0.2s;
+}
+
+.nav-trigger:checked + label {
+  left: 215px;
+}
+
+.nav-trigger:checked ~ .site-wrap {
+  left: 200px;
+  box-shadow: 0 0 5px 5px rgba(0,0,0,0.5);
+}
+
+body {
+    /* Without this, the body has excess horizontal scroll when the menu is open */
+  overflow-x: hidden;
+}
