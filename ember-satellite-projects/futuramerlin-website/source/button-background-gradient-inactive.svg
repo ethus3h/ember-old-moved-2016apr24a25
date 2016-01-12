@@ -12,7 +12,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="button-background-gradient-mask.svg"
+   sodipodi:docname="button-background-gradient-inactive.svg"
    inkscape:export-filename="/Volumes/disk2s1/Archive/Futuramerlin Projects/Software/Ember/Git working copy/ember-satellite-projects/futuramerlin-website/source/button-left.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
@@ -26,7 +26,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -44,9 +44,9 @@
      id="namedview16"
      showgrid="false"
      inkscape:zoom="1.84375"
-     inkscape:cx="108.20339"
+     inkscape:cx="22.237288"
      inkscape:cy="172.47458"
-     inkscape:window-x="0"
+     inkscape:window-x="23"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2"
@@ -60,9 +60,9 @@
          stop-opacity="0"
          stop-color="#fff"
          offset="0"
-         style="stop-color:#d3c5e7;stop-opacity:1" />
+         style="stop-color:#f5f6fa;stop-opacity:1" />
       <stop
-         style="stop-color:#c1acda;stop-opacity:1"
+         style="stop-color:#e3daf0;stop-opacity:1"
          offset="0.5"
          stop-color="#fff"
          stop-opacity="0"
@@ -72,7 +72,7 @@
          stop-opacity="0"
          stop-color="#fff"
          offset="1"
-         style="stop-color:#d3c5e7;stop-opacity:1" />
+         style="stop-color:#f5f6fa;stop-opacity:1" />
     </linearGradient>
     <linearGradient
        id="a">

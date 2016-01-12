@@ -163,30 +163,69 @@ display: inline-block;
   
   /* non-critical appearance styles */
   list-style: none;
-  background: #111;
+  background: rgb(226, 218, 241);
 }
 
 /* Navigation Menu - List items */
 .nav-item {
   /* non-critical appearance styles */
   width: 200px;
-  border: 1px solid rgb(135, 118, 157);
 }
 
 .nav-item a {
   /* non-critical appearance styles */
   display: block;
-  padding: 1em;
-  
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+  padding: 0.75em;
+
+  font-family: wreatherweb, serif;
+  color: rgba(0,0,0,0.9);
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  color: rgb(42, 22, 87);
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: color 0.2s, border 0.2s;
+ -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.nav-item-inactive:hover {
+  color: #c74438;
+  border: 0.095rem solid rgb(135, 118, 157);
+  transition: color 0.2s, border 0.2s;
   background: url("http://enjoycss.com/bg-img/custom/18015-dkvmr8.png"),
    url("http://enjoycss.com/bg-img/custom/18015-16qy4bf.png"),
-    url('button-background-gradient-selected.svg'),
-    url('button-background-gradient-selected.svg'),
+    url('button-background-gradient-inactive.svg'),
+    url('button-background-gradient-inactive.svg'),
     linear-gradient(180deg, rgba(216,208,239,0) 0, rgba(255,255,255,0.1) 10%, rgba(255,255,255,0.44) 50%, rgba(211,206,234,0) 50%, rgba(211,206,234,0) 100%),
-    url('button-background-gradient-selected.svg');
+    url('button-background-gradient-inactive.svg');
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+  background-position: left top, right top, left top, right top, 50% 50%, 50% 50%;
+  -webkit-background-origin: padding-box;
+  background-origin: padding-box;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-background-size: auto 50%, auto 50%, auto auto, auto auto, auto auto, auto auto;
+  background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
+}
+
+.nav-item-inactive {
+  transition: color 0.2s, border 0.2s;
+   border-left: 0.095rem solid white;
+   border-right: 0.095rem solid rgb(216,208,239);
+
+   border-top: 0.095rem solid white;
+   border-bottom: 0.095rem solid rgb(216,208,239);
+ -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+ background: url("http://enjoycss.com/bg-img/custom/18015-dkvmr8.png"),
+   url("http://enjoycss.com/bg-img/custom/18015-16qy4bf.png"),
+    url('button-background-gradient-inactive.svg'),
+    url('button-background-gradient-inactive.svg'),
+    linear-gradient(180deg, rgba(216,208,239,0) 0, rgba(255,255,255,0.1) 10%, rgba(255,255,255,0.44) 50%, rgba(211,206,234,0) 50%, rgba(211,206,234,0) 100%),
+    url('button-background-gradient-inactive.svg');
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
   background-position: left top, right top, left top, right top, 50% 50%, 50% 50%;
   -webkit-background-origin: padding-box;
@@ -196,28 +235,20 @@ display: inline-block;
   -webkit-background-size: auto 50%, auto 50%, auto auto, auto auto, auto auto, auto auto;
   background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
 
-  font: normal 16px/normal "Times New Roman", Times, serif;
-  color: rgba(0,0,0,0.9);
-  -o-text-overflow: clip;
-  text-overflow: clip;
-  color: rgb(42, 22, 87);
-  font-size: 1.2em;
-  text-decoration: none;
-  transition: color 0.2s, background 0.5s;
 }
-
-.nav-item a:hover {
-  color: #c74438;
-  background: linear-gradient(135deg, rgba(0,0,0,0) 0%,rgba(75,20,20,0.65) 100%);
-}
-
-.nav-item-selected {
+.nav-item-selected, .nav-item:active {
+box-shadow: inset 11px 11px 9px -15px #000000;
+-webkit-box-shadow: inset 11px 11px 9px -15px #000000;
+-moz-box-shadow: inset 11px 11px 9px -15px #000000;
+-o-box-shadow: inset 11px 11px 9px -15px #000000;
+  transition: color 0.2s, border 0.2s;
+  border: 0.095rem solid rgb(135, 118, 157);
   background: url("http://enjoycss.com/bg-img/custom/18015-dkvmr8.png"),
    url("http://enjoycss.com/bg-img/custom/18015-16qy4bf.png"),
-    url('button-background-gradient-mask.svg'),
-    url('button-background-gradient-mask.svg'),
+    url('button-background-gradient-selected.svg'),
+    url('button-background-gradient-selected.svg'),
     linear-gradient(180deg, rgba(216,208,239,0) 0, rgba(255,255,255,0.1) 10%, rgba(255,255,255,0.44) 50%, rgba(211,206,234,0) 50%, rgba(211,206,234,0) 100%),
-    url('button-background-gradient-mask.svg');
+    url('button-background-gradient-selected.svg');
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
   background-position: left top, right top, left top, right top, 50% 50%, 50% 50%;
   -webkit-background-origin: padding-box;
@@ -243,8 +274,23 @@ display: inline-block;
   
   /* non-critical apperance styles */
   padding: 4em;
-  background-image: linear-gradient(135deg, rgb(254,255,255) 0%,rgb(221,241,249) 35%,rgb(160,216,239) 100%);
-  background-size: 200%;
+ background: -webkit-radial-gradient(circle farthest-corner, rgba(255,255,255,0.5) 0, rgba(255,50,162,0) 69%, rgba(255,0,132,0) 100%), -webkit-linear-gradient(10deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.2) 46%, rgba(255,255,255,0.31) 67%, rgba(255,255,255,0.2) 68%, rgba(255,255,255,0) 80%, rgba(255,255,255,0) 100%), -webkit-linear-gradient(1deg, rgba(255,255,255,0) 0, rgba(193,170,247,0.13) 58%, rgba(255,255,255,0) 97%, rgba(255,255,255,0) 100%), rgba(171,216,242,1);
+  background: -moz-radial-gradient(circle farthest-corner, rgba(255,255,255,0.5) 0, rgba(255,50,162,0) 69%, rgba(255,0,132,0) 100%), -moz-linear-gradient(80deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.2) 46%, rgba(255,255,255,0.31) 67%, rgba(255,255,255,0.2) 68%, rgba(255,255,255,0) 80%, rgba(255,255,255,0) 100%), -moz-linear-gradient(89deg, rgba(255,255,255,0) 0, rgba(193,170,247,0.13) 58%, rgba(255,255,255,0) 97%, rgba(255,255,255,0) 100%), rgba(171,216,242,1);
+  background: radial-gradient(circle farthest-corner, rgba(255,255,255,0.5) 0, rgba(255,50,162,0) 69%, rgba(255,0,132,0) 100%), linear-gradient(80deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.2) 46%, rgba(255,255,255,0.31) 67%, rgba(255,255,255,0.2) 68%, rgba(255,255,255,0) 80%, rgba(255,255,255,0) 100%), linear-gradient(89deg, rgba(255,255,255,0) 0, rgba(193,170,247,0.13) 58%, rgba(255,255,255,0) 97%, rgba(255,255,255,0) 100%), rgba(171,216,242,1);
+  background-repeat: no-repeat, repeat, repeat;
+  background-position: 50% -100vh, 50% 50%, 50% 50%;
+  -webkit-background-origin: border-box, padding-box, padding-box;
+  background-origin: border-box, padding-box, padding-box;
+  -webkit-background-clip: border-box, border-box, border-box;
+  background-clip: border-box, border-box, border-box;
+  -webkit-background-size: auto auto, auto auto, 1em auto;
+  background-size: auto 200%, auto auto, 1em auto;
+  
+  
+box-shadow: inset 11px -6px 9px -15px rgb(42, 22, 87);
+-webkit-box-shadow: inset 11px -6px 9px -15px rgb(42, 22, 87);
+-moz-box-shadow: inset 11px -6px 9px -15px rgb(42, 22, 87);
+-o-box-shadow: inset 11px -6px 9px -15px rgb(42, 22, 87);
 }
 
 /* Nav Trigger */
@@ -283,7 +329,6 @@ not screen and (min-width:1101px) and (max-resolution: 191dpi) {
 
 		.nav-trigger:checked ~ .site-wrap {
 		  left: 200px;
-		  box-shadow: 0 0 5px 5px rgba(0,0,0,0.5);
 		}
 }
 
@@ -297,7 +342,6 @@ not screen and  (max-width:1100px) and (max-resolution: 191dpi) {
 		}
 		.site-wrap {
 		  left: 200px;
-		  box-shadow: 0 0 5px 5px rgba(0,0,0,0.5);
 		}
 }
 
