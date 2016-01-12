@@ -170,8 +170,7 @@ display: inline-block;
 .nav-item {
   /* non-critical appearance styles */
   width: 200px;
-  border-top: 1px solid #111;
-  border-bottom: 1px solid #000;
+  border: 1px solid rgb(135, 118, 157);
 }
 
 .nav-item a {
@@ -182,25 +181,26 @@ display: inline-block;
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
+  background: url("http://enjoycss.com/bg-img/custom/18015-dkvmr8.png"),
+   url("http://enjoycss.com/bg-img/custom/18015-16qy4bf.png"),
+    url('button-background-gradient-selected.svg'),
+    url('button-background-gradient-selected.svg'),
+    linear-gradient(180deg, rgba(216,208,239,0) 0, rgba(255,255,255,0.1) 10%, rgba(255,255,255,0.44) 50%, rgba(211,206,234,0) 50%, rgba(211,206,234,0) 100%),
+    url('button-background-gradient-selected.svg');
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+  background-position: left top, right top, left top, right top, 50% 50%, 50% 50%;
+  -webkit-background-origin: padding-box;
+  background-origin: padding-box;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-background-size: auto 50%, auto 50%, auto auto, auto auto, auto auto, auto auto;
+  background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
 
   font: normal 16px/normal "Times New Roman", Times, serif;
   color: rgba(0,0,0,0.9);
   -o-text-overflow: clip;
   text-overflow: clip;
-  background: url("http://enjoycss.com/bg-img/custom/18015-dkvmr8.png"),
-   url("http://enjoycss.com/bg-img/custom/18015-16qy4bf.png"),
-    linear-gradient(180deg, #D8D0EF 0, #c1bfea 57%, #D3CEEA 100%),
-    linear-gradient(180deg, rgba(216,208,239,0) 0, rgba(216,208,239,0) 10%, rgba(255,255,255,0.44) 50%, rgba(211,206,234,0) 50%, rgba(211,206,234,0) 100%),
-    linear-gradient(180deg, #D8D0EF 0, #c1bfea 57%, #D3CEEA 100%);
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
-  background-position: left top, right top, left top, 50% 50%, 50% 50%;
-  -webkit-background-origin: padding-box;
-  background-origin: padding-box;
-  -webkit-background-clip: border-box;
-  background-clip: border-box;
-  -webkit-background-size: auto 50%, auto 50%, auto auto, auto auto, auto auto;
-  background-size: auto 50%, auto 50%, 100% 100%, auto auto, auto auto;
-  color: white;
+  color: rgb(42, 22, 87);
   font-size: 1.2em;
   text-decoration: none;
   transition: color 0.2s, background 0.5s;
@@ -209,6 +209,24 @@ display: inline-block;
 .nav-item a:hover {
   color: #c74438;
   background: linear-gradient(135deg, rgba(0,0,0,0) 0%,rgba(75,20,20,0.65) 100%);
+}
+
+.nav-item-selected {
+  background: url("http://enjoycss.com/bg-img/custom/18015-dkvmr8.png"),
+   url("http://enjoycss.com/bg-img/custom/18015-16qy4bf.png"),
+    url('button-background-gradient-mask.svg'),
+    url('button-background-gradient-mask.svg'),
+    linear-gradient(180deg, rgba(216,208,239,0) 0, rgba(255,255,255,0.1) 10%, rgba(255,255,255,0.44) 50%, rgba(211,206,234,0) 50%, rgba(211,206,234,0) 100%),
+    url('button-background-gradient-mask.svg');
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+  background-position: left top, right top, left top, right top, 50% 50%, 50% 50%;
+  -webkit-background-origin: padding-box;
+  background-origin: padding-box;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-background-size: auto 50%, auto 50%, auto auto, auto auto, auto auto, auto auto;
+  background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
+
 }
 
 /* Site Wrapper - Everything that isn't navigation */
