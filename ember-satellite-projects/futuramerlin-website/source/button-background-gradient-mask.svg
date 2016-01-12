@@ -8,14 +8,16 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 0 128 128"
+   viewBox="0 0 128 256"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="button-left.svg"
+   sodipodi:docname="button-background-gradient-mask.svg"
    inkscape:export-filename="/Volumes/disk2s1/Archive/Futuramerlin Projects/Software/Ember/Git working copy/ember-satellite-projects/futuramerlin-website/source/button-left.png"
    inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-ydpi="90"
+   width="128"
+   height="256">
   <metadata
      id="metadata18">
     <rdf:RDF>
@@ -37,19 +39,41 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="691"
-     inkscape:window-height="480"
+     inkscape:window-width="1276"
+     inkscape:window-height="1002"
      id="namedview16"
      showgrid="false"
      inkscape:zoom="1.84375"
-     inkscape:cx="64"
-     inkscape:cy="64"
+     inkscape:cx="108.20339"
+     inkscape:cy="194.16949"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:current-layer="svg2"
+     showguides="false" />
   <defs
      id="defs4">
+    <linearGradient
+       id="linearGradient4154">
+      <stop
+         id="stop4156"
+         stop-opacity="0"
+         stop-color="#fff"
+         offset="0"
+         style="stop-color:#d8d0ef;stop-opacity:1" />
+      <stop
+         style="stop-color:#c1bfea;stop-opacity:1"
+         offset="0.56999999"
+         stop-color="#fff"
+         stop-opacity="0"
+         id="stop4162" />
+      <stop
+         id="stop4164"
+         stop-opacity="0"
+         stop-color="#fff"
+         offset="1"
+         style="stop-color:#d3ceea;stop-opacity:1" />
+    </linearGradient>
     <linearGradient
        id="a">
       <stop
@@ -73,15 +97,25 @@
        cx="64"
        cy="988.36218"
        r="64"
-       gradientTransform="matrix(2.00184,0,0,2.00184,-0.118,-1978.547)"
+       gradientTransform="matrix(2.00184,0,0,2.00184,-0.118,-1978.5472)"
        gradientUnits="userSpaceOnUse"
        fy="988.36218"
        fx="64"
        xlink:href="#a" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4154"
+       id="linearGradient4138"
+       x1="0"
+       y1="0"
+       x2="256"
+       y2="0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,0.5,-0.5,0,64,0)" />
   </defs>
   <path
-     d="m 0,-127.99982 256,0 0,256 -256,0 z"
+     d="M 128,0 128,128 0,128 0,0 Z"
      id="path14"
-     style="fill:url(#b)"
+     style="fill:url(#linearGradient4138);fill-opacity:1"
      inkscape:connector-curvature="0" />
 </svg>
