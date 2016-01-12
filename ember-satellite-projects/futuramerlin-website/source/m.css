@@ -1,5 +1,5 @@
 
-@font-face{font-family:'anoeyfuturamerlincommedium';src:url('d/f/anoeyfuturamerlincom2.61.eot');src:url('d/f/anoeyfuturamerlincom2.61.eot?#iefix') format('embedded-opentype'),url('d/f/anoeyfuturamerlincom2.61.woff') format('woff'),url('d/f/anoeyfuturamerlincom2.61.ttf') format('truetype'),url('d/f/anoeyfuturamerlincom2.61.svg#anoeyfuturamerlincommedium') format('svg');font-weight:normal;font-style:normal}@font-face{font-family:'wreatherweb';src:url('d/f/wreathe-r.eot');src:url('d/f/wreathe-r.eot?#iefix') format('embedded-opentype'),url('d/f/wreathe-r.woff') format('woff'),url('d/f/wreathe-r.ttf') format('truetype'),url('d/f/wreathe-r.svg#wreatherweb') format('svg');font-weight:normal;font-style:normal}@font-face{font-family:'wreatherweb';src:url('d/f/wreathe-b.eot');src:url('d/f/wreathe-b.eot?#iefix') format('embedded-opentype'),url('d/f/wreathe-b.woff') format('woff'),url('d/f/wreathe-b.ttf') format('truetype'),url('d/f/wreathe-b.svg#wreathebold') format('svg');font-weight:bold;font-style:normal}@font-face{font-family:'wreatherweb';src:url('d/f/wreathe-i.eot');src:url('d/f/wreathe-i.eot?#iefix') format('embedded-opentype'),url('d/f/wreathe-i.woff') format('woff'),url('d/f/wreathe-i.ttf') format('truetype'),url('d/f/wreathe-i.svg#wreatheitalic') format('svg');font-weight:normal;font-style:italic}@font-face{font-family:'wreatherweb';src:url('d/f/wreathe-bi.eot');src:url('d/f/wreathe-bi.eot?#iefix') format('embedded-opentype'),url('d/f/wreathe-bi.woff') format('woff'),url('d/f/wreathe-bi.ttf') format('truetype'),url('d/f/wreathe-bi.svg#wreathebold_italic') format('svg');font-weight:bold;font-style:italic}
+@font-face{font-family:'anoeyfuturamerlincommedium';src:url('f/anoeyfuturamerlincom2.61.eot');src:url('f/anoeyfuturamerlincom2.61.eot?#iefix') format('embedded-opentype'),url('f/anoeyfuturamerlincom2.61.woff') format('woff'),url('f/anoeyfuturamerlincom2.61.ttf') format('truetype'),url('f/anoeyfuturamerlincom2.61.svg#anoeyfuturamerlincommedium') format('svg');font-weight:normal;font-style:normal}@font-face{font-family:'wreatherweb';src:url('f/wreathe-r.eot');src:url('f/wreathe-r.eot?#iefix') format('embedded-opentype'),url('f/wreathe-r.woff') format('woff'),url('f/wreathe-r.ttf') format('truetype'),url('f/wreathe-r.svg#wreatherweb') format('svg');font-weight:normal;font-style:normal}@font-face{font-family:'wreatherweb';src:url('f/wreathe-b.eot');src:url('f/wreathe-b.eot?#iefix') format('embedded-opentype'),url('f/wreathe-b.woff') format('woff'),url('f/wreathe-b.ttf') format('truetype'),url('f/wreathe-b.svg#wreathebold') format('svg');font-weight:bold;font-style:normal}@font-face{font-family:'wreatherweb';src:url('f/wreathe-i.eot');src:url('f/wreathe-i.eot?#iefix') format('embedded-opentype'),url('f/wreathe-i.woff') format('woff'),url('f/wreathe-i.ttf') format('truetype'),url('f/wreathe-i.svg#wreatheitalic') format('svg');font-weight:normal;font-style:italic}@font-face{font-family:'wreatherweb';src:url('f/wreathe-bi.eot');src:url('f/wreathe-bi.eot?#iefix') format('embedded-opentype'),url('f/wreathe-bi.woff') format('woff'),url('f/wreathe-bi.ttf') format('truetype'),url('f/wreathe-bi.svg#wreathebold_italic') format('svg');font-weight:bold;font-style:italic}
 /* 
     html, body, div, span {
         margin:0;
@@ -178,7 +178,29 @@ display: inline-block;
   /* non-critical appearance styles */
   display: block;
   padding: 1em;
-  background: linear-gradient(135deg, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%);
+  
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  width: 300px;
+  height: 300px;
+  border: none;
+  font: normal 16px/1 "Times New Roman", Times, serif;
+  color: rgba(255,255,255,1);
+  text-align: center;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  background: -webkit-linear-gradient(-90deg, rgba(216,208,239,0) 0, rgba(216,208,239,0) 10%, rgba(255,255,255,0.44) 50%, rgba(211,206,234,0) 50%, rgba(211,206,234,0) 100%), -webkit-linear-gradient(-90deg, #D8D0EF 0, #c1bfea 57%, #D3CEEA 100%);
+  background: -moz-linear-gradient(180deg, rgba(216,208,239,0) 0, rgba(216,208,239,0) 10%, rgba(255,255,255,0.44) 50%, rgba(211,206,234,0) 50%, rgba(211,206,234,0) 100%), -moz-linear-gradient(180deg, #D8D0EF 0, #c1bfea 57%, #D3CEEA 100%);
+  background: linear-gradient(180deg, rgba(216,208,239,0) 0, rgba(216,208,239,0) 10%, rgba(255,255,255,0.44) 50%, rgba(211,206,234,0) 50%, rgba(211,206,234,0) 100%), linear-gradient(180deg, #D8D0EF 0, #c1bfea 57%, #D3CEEA 100%);
+  background-position: 50% 50%;
+  -webkit-background-origin: padding-box;
+  background-origin: padding-box;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-background-size: auto auto;
+  background-size: auto auto;
+  background: linear-gradient(135deg, rgba(150,250,234,0) 0%,rgba(170,190,250,0.65) 100%);
   color: white;
   font-size: 1.2em;
   text-decoration: none;
