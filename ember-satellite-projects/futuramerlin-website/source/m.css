@@ -150,6 +150,7 @@ ul:not(.navigation) {
     color: #2a1657;
     border: none;
     overflow: auto;
+    clip-path: url('#content-clip');
 }
 .content {
     overflow: auto;
