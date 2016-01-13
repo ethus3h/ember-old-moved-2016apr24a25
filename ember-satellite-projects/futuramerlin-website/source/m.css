@@ -153,13 +153,13 @@ ul:not(.navigation) {
     position: fixed;
     top: 0;
     bottom: 100%;
-    right: 0;
+    margin-left: 0;
+        margin-right: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+        bottom: 0;
+           right: 0;
     left: 0;
-    margin-left: 4rem;
-    margin-right: 4rem;
-    margin-top: 4rem;
-    margin-bottom: 4rem;
-    transition: margin 0.2s,top .2s;
     padding: 0rem;
     z-index: 1;
     font-family: wreatherweb;
@@ -170,10 +170,15 @@ ul:not(.navigation) {
 }
 .content {
 	overflow:auto;
-/* 
-margin-right:1rem;
-margin-top:4rem;
- */
+     margin-left: 4rem;
+    margin-right: 4rem;
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+
+    transition: margin 0.2s,top .2s;
+
+     padding: 1rem;
+
 	background:rgba(0,0,0,0.2);
 }
 .contentbackground{
@@ -182,7 +187,10 @@ margin-top:4rem;
    background-color: rgba(226,218,241,0.7);
     position: fixed;
     top: 0;
-    margin-left: 4rem;
+    bottom: 100%;
+    right: 0;
+    left: 0;
+        margin-left: 4rem;
     margin-right: 4rem;
     margin-top: 4rem;
     margin-bottom: 4rem;
@@ -190,16 +198,12 @@ margin-top:4rem;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing:border-box;
-    height: 100%;
-    max-height: 100%;
-    min-height:calc(100% - 4rem);
-    right: 0;
-    left: 0rem;
+        padding: 0rem;
+ 
 /*     margin-right: 4rem; */
 /*     margin-top: 4rem; */
 /*     margin-bottom: -8rem; */
     transition: margin 0.2s,top .2s;
-    padding: 1rem;
     z-index: -1;
     border:0.063em solid white;
 }
@@ -251,7 +255,7 @@ only screen and (max-width:1100px) and (min-resolution: 192dpi),not screen and (
         -o-box-shadow: 0 0 0 0 #FFF;
     }
 
-    .site-wrap, .contentbackground {
+    .content, .contentbackground {
         margin-left: 0;
         margin-right: 0;
         margin-top: 0;
@@ -320,7 +324,7 @@ only screen and (max-width:640px) and (min-resolution: 192dpi),not screen and (m
 
 @media
 only screen and (min-width:1101px) and (min-resolution: 192dpi),not screen and (max-width:550px) and (max-resolution: 191dpi) {
-    /* Large screen */
+    /* Large screen */ /* TODO: fix this. It seems to match zoomed-in screen. */
     label[for="nav-trigger"] {
         display: none;
     }
@@ -333,8 +337,11 @@ only screen and (min-width:1101px) and (min-resolution: 192dpi),not screen and (
         -o-box-shadow: .313rem 0 1.688rem -.875rem #FFF;
     }
 
-    .site-wrap, .contentbackground {
+    .site-wrap, .content, .contentbackground {
         left: 25%;
+    }
+    .content {
+    margin-top: 4rem;
     }
 
     .logo,.background {
