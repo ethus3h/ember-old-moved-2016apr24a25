@@ -122,6 +122,9 @@
 .nodecorate {
     text-decoration: none !important;
 }
+a.logolink{ color:rgb(1,50,32);}
+	a.logolink:visited{ color:rgb(1,50,32);}
+
 ul:not(.navigation) {
     list-style-position: inside;
     padding-left: 1rem;
@@ -156,7 +159,7 @@ ul:not(.navigation) {
     margin-bottom: 4rem;
     transition: margin 0.2s, top .2s;
     padding: 1rem;
-    background: rgba(0, 0, 0, 0.2);
+    /* background: rgba(0, 0, 0, 0.2); */
 }
 .contentbackground {
     min-height: calc(100% - 8rem);
@@ -294,6 +297,7 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi) {
         font-size: 1.2rem;
         transition: font-size 0.2s, left .2s;
     }
+	
     .logo-inner {
         left: calc(100% - 1rem);
         transform: translateX(-100%);
