@@ -266,41 +266,48 @@ only screen and (max-width:1100px) and (min-resolution: 192dpi),not screen and (
     }
 
     label[for="nav-trigger"] {
-    /* critical positioning styles */
-        position: fixed;
-        left: .938rem;
-        top: .938rem;
-        z-index: 3;
-    /* non-critical apperance styles */
-        height: 1.875rem;
-        width: 1.875rem;
-        cursor: pointer;
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' xml:space='preserve'><rect style='fill:rgb(1,50,32);' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='24' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='12' width='30' height='6'/></svg>");
-        background-size: contain;
-    }
+		  /* critical positioning styles */
+		  position: fixed;
+		  left: 0.938rem; top: 0.938rem;
+		  z-index: 3;
+  
+		  /* non-critical apperance styles */
+		  height: 1.875rem;
+		  width: 1.875rem;
+		  cursor: pointer;
+		  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' xml:space='preserve'><rect style='fill:rgb(1,50,32);' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='24' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='12' width='30' height='6'/></svg>");
+		  background-size: contain;
+		}
+		/* Make the Magic Happen */
+		.nav-trigger + label, .navigation, .logo {
+		  transition: left 0.2s, box-shadow 0.2s;
+		}
+		.background, .logo {
+				  transition: font-size 0.2s, left 0.2s;
 
-    /* Make the Magic Happen */
-    .nav-trigger + label,.logo {
-        transition: left 0.2s,box-shadow .2s;
-    }
+		}
 
-    .background,.logo {
-        transition: font-size 0.2s,left .2s;
-    }
+		.nav-trigger:checked + label {
+		  left: calc(25% + 1rem);
+		}
+		/* 
+.nav-trigger:checked ~ .logo {
+		  left: calc(25% + 3.875rem);
+		}
+ */
+.nav-trigger:checked ~ .logo {
+		  transition: font-size 0.2s, left 0.2s;
 
-    .nav-trigger:checked + label {
-        left: calc(25% + 1rem);
-    }
+		}
+		.nav-trigger:checked ~ .navigation {
+			  transition: font-size 0.2s, left 0.2s;
+	  left: 0%;
+  box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-webkit-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-moz-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-o-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
 
-
-    .nav-trigger:checked ~ .navigation {
-        transition: font-size 0.2s,left .2s;
-        left: 0;
-        box-shadow: .313rem 0 1.688rem -.875rem #FFF;
-        -webkit-box-shadow: .313rem 0 1.688rem -.875rem #FFF;
-        -moz-box-shadow: .313rem 0 1.688rem -.875rem #FFF;
-        -o-box-shadow: .313rem 0 1.688rem -.875rem #FFF;
-    }
+		}
 }
 
 @media
