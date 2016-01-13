@@ -158,8 +158,12 @@ ul:not(.navigation) {
     margin-right: 4rem;
     margin-top: 4rem;
     margin-bottom: 4rem;
+    top:4rem;
+    padding-top:1rem;
     transition: margin 0.2s, top .2s;
-    padding: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
     /* background: rgba(0, 0, 0, 0.2); */
 }
 .contentbackground {
@@ -182,7 +186,76 @@ ul:not(.navigation) {
     padding: 0rem;
     transition: margin 0.2s, top .2s;
     z-index: -1;
+    border: none;
+}
+.contentbgborder {
+    min-height: calc(100% - 8rem);
+    max-height: 100%;
+    background: none;
+    position: fixed;
+    top: 0;
+    bottom: 100%;
+    right: 0;
+    left: 0;
+    margin-left: 4rem;
+    margin-right: 4rem;
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+    transition: margin 0.2s, top .2s;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0rem;
+    transition: margin 0.2s, top .2s;
+    z-index: 3;
     border: 0.063em solid white;
+    pointer-events:none;
+}
+.headerbgwrap {
+    width: 100%;
+    height: 4rem;
+    position:fixed;
+    z-index:2;
+    overflow:hidden;
+}
+.headerbackground {
+    background-image: url(background.svg);
+    background-repeat: no-repeat;
+    background-position: center top;
+    -webkit-background-origin: padding-box;
+    background-origin: padding-box;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-background-size: cover;
+    background-size: cover;    
+    width: 100%;
+    height: 100vh;
+    position:relative;
+    z-index:2;
+}
+.footerbgwrap {
+    width: 100%;
+    height: 4rem;
+    bottom:0;
+    position:fixed;
+    z-index:2;
+    overflow:hidden;
+}
+.footerbackground {
+    background-image: url(background.svg);
+    background-repeat: no-repeat;
+    background-position: center top;
+    -webkit-background-origin: padding-box;
+    background-origin: padding-box;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-background-size: cover;
+    background-size: cover;    
+    width: 100%;
+    height: 100vh;
+    position:absolute;
+    top:calc(-1 * (100vh - 4rem));
+    z-index:2;
 }
 .background {
     background-image: url(background.svg);
@@ -234,16 +307,24 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
         -o-box-shadow: 0 0 0 0 #FFF;
     }
     .content,
-    .contentbackground {
+    .contentbackground, .headerbgwrap, .contentbgborder {
         margin-left: 0;
         margin-right: 0;
         margin-bottom: 0;
-        bottom: 0;
         transition: margin 0.2s, top 0.2s, bottom .2s;
-        top: 4rem;
+        
     }
-    .contentbackground {
+     .content,
+    .contentbackground, .contentbgborder {
+        bottom: 0;
+
+    top: 4rem;
+    }
+    .contentbackground, .contentbgborder {
         margin-top: 0;
+    }
+    .footerbgwrap, .footerbackground {
+    display:none;
     }
     .content {
         margin-top: 4rem;
@@ -333,18 +414,20 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi) {
     }
     .site-wrap,
     .content,
-    .contentbackground {
+    .contentbackground, .contentbgborder {
         left: 25%;
     }
     .content {
         margin-top: 4rem;
     }
     .logo,
-    .background {
+    .background, .headerbgwrap, .footerbgwrap {
         transition: font-size 0.2s, left 0.2s, width .2s;
-        position: absolute;
         left: 25%;
         width: 75%;
+    }
+    .logo, .background {
+            position: absolute;
     }
 }
 
