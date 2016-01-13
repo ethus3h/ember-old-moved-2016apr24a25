@@ -55,7 +55,7 @@ display: inline-block;
         min-height: 100%;
         background: #d5e3cf; 
     background:-webkit-gradient(radial,0 0,0,50% 0,300,from(#FFF),to(#d5e3cf));
-    background:-moz-radial-gradient(0 0 90deg,circle farthest-side,#FFF,#d5e3cf,#d5e3cf 31.25em);
+    background:-moz-radial-gradient(0 0 90deg,circle farthest-side,#FFF,#d5e3cf,#d5e3cf 31.25rem);
     background-repeat:no-repeat;
         float: left;
         overflow: hidden;
@@ -73,9 +73,9 @@ display: inline-block;
 /* 
 .main{
     width: 100%;
-    max-width: 62em;
+    max-width: 62rem;
     height: 100%;
-    padding-left: 300px;
+    padding-left: 18.750rem;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -95,10 +95,10 @@ display: inline-block;
 
 .content{
     color: #4b4848;
-    max-width: 55em;
+    max-width: 55rem;
     font-family: "times", times;
-    font-size: 15px;
-    line-height: 22px;
+    font-size: 0.938rem;
+    line-height: 1.375rem;
     padding: 1rem 2rem;
     background: #fff;
 	height: 100% !important;
@@ -117,12 +117,12 @@ display: inline-block;
     header{
         display: block;
         width: 100%;
-        min-height: 100px;
+        min-height: 6.250rem;
         padding: 0;
         position: relative;
         background: #d5e3cf; 
     background:-webkit-gradient(radial,0 0,0,50% 0,300,from(#FFF),to(#d5e3cf));
-    background:-moz-radial-gradient(0 0 90deg,circle farthest-side,#FFF,#d5e3cf,#d5e3cf 31.25em);
+    background:-moz-radial-gradient(0 0 90deg,circle farthest-side,#FFF,#d5e3cf,#d5e3cf 31.25rem);
     background-repeat:no-repeat;
     }
     header nav ul{
@@ -164,10 +164,10 @@ display: inline-block;
   /* non-critical appearance styles */
   list-style: none;
   background: rgb(226, 218, 241);
-  box-shadow: 5px 0px 27px -14px #FFFFFF;
--webkit-box-shadow: 5px 0px 27px -14px #FFFFFF;
--moz-box-shadow: 5px 0px 27px -14px #FFFFFF;
--o-box-shadow: 5px 0px 27px -14px #FFFFFF;
+  box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-webkit-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-moz-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-o-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
 
 }
 
@@ -180,7 +180,7 @@ display: inline-block;
 .nav-item a {
   /* non-critical appearance styles */
   display: block;
-  padding: 0.75em;
+  padding: 0.75rem;
 
   font-family: wreatherweb, serif;
   color: rgba(0,0,0,0.9);
@@ -242,10 +242,10 @@ display: inline-block;
 
 }
 .nav-item-selected, .nav-item:active {
-box-shadow: inset 11px 11px 9px -15px #000000;
--webkit-box-shadow: inset 11px 11px 9px -15px #000000;
--moz-box-shadow: inset 11px 11px 9px -15px #000000;
--o-box-shadow: inset 11px 11px 9px -15px #000000;
+box-shadow: inset 0.668rem 0.668rem 0.563rem -0.938rem #000000;
+-webkit-box-shadow: inset 0.668rem 0.668rem 0.563rem -0.938rem #000000;
+-moz-box-shadow: inset 0.668rem 0.668rem 0.563rem -0.938rem #000000;
+-o-box-shadow: inset 0.668rem 0.668rem 0.563rem -0.938rem #000000;
   transition: color 0.2s, border 0.2s;
   border: 0.095rem solid rgb(135, 118, 157);
   background: url("http://enjoycss.com/bg-img/custom/18015-dkvmr8.png"),
@@ -264,21 +264,41 @@ box-shadow: inset 11px 11px 9px -15px #000000;
   background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
 
 }
-
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+ul:not(.navigation) {
+   list-style-position: inside;
+   padding-left:1rem;
+}
 /* Site Wrapper - Everything that isn't navigation */
 .site-wrap {
   /* Critical position and size styles */
-  min-height: 100%;
-  min-width: 100%;
-  #background-color: white; /* Needs a background or else the nav will show through */
+  min-height: calc(100% - 8rem);
+/*   min-width: calc(100% - 8rem); */
+  background-color: rgba(226, 218, 241,0.7);
   position: absolute;
   top: 0;
   bottom: 100%;
+  right:0;
   left: 0;
+  margin-left:4rem;
+  margin-right:4rem;
+  margin-top:4rem;
+  margin-bottom:-8rem;
+  transition:margin 0.2s, top 0.2s;
+  padding: 1rem;
   z-index: 1;
   
   /* non-critical apperance styles */
-  padding: 4em;
+/* 
+  padding: 4rem;
+ */
+  font-family:wreatherweb;
+  font-size:1.45rem;
+  color:rgb(42, 22, 87);
 }
 .background {
   		  background-image: url("background.svg");
@@ -291,7 +311,7 @@ box-shadow: inset 11px 11px 9px -15px #000000;
   background-clip: border-box;
   -webkit-background-size: cover;
   background-size: cover;
-background-position:fixed;
+/* background-position:fixed; */
 width:100%;height:100%;
 }
 /* Nav Trigger */
@@ -301,52 +321,100 @@ width:100%;height:100%;
   clip: rect(0, 0, 0, 0);
 }
 
+.logo {
+	z-index:2;
+	position:absolute;
+	top:0.25rem;
+	width:100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+/* 	left:3.875rem; */
+font-family: wreatherweb; font-size: 2rem;
+}
 @media
-only screen and (max-width:2200px) and (min-resolution: 192dpi),
-not screen and (min-width:1101px) and (max-resolution: 191dpi) {
+only screen and (max-width:1100px) and (min-resolution: 192dpi),
+not screen and (min-width:551px) and (max-resolution: 191dpi) {
     /* small screen */
     	.navigation {
     	left:-25%;
-  box-shadow: 0px 0px 0px 0px #FFFFFF;
--webkit-box-shadow: 0px 0px 0px 0px #FFFFFF;
--moz-box-shadow: 0px 0px 0px 0px #FFFFFF;
--o-box-shadow: 0px 0px 0px 0px #FFFFFF;
+  box-shadow: 0 0 0 0 #FFFFFF;
+-webkit-box-shadow: 0 0 0 0 #FFFFFF;
+-moz-box-shadow: 0 0 0 0 #FFFFFF;
+-o-box-shadow: 0 0 0 0 #FFFFFF;
+    	}
+    	.site-wrap{
+    	  margin-left:0rem;
+  margin-right:0rem;
+  margin-top:0rem;
+  margin-bottom:0rem;
+  bottom:0;
+transition:margin 0.2s, top 0.2s, bottom 0.2s;
+top:4rem;
     	}
 		label[for="nav-trigger"] {
 		  /* critical positioning styles */
 		  position: fixed;
-		  left: 15px; top: 15px;
-		  z-index: 2;
+		  left: 0.938rem; top: 0.938rem;
+		  z-index: 3;
   
 		  /* non-critical apperance styles */
-		  height: 30px;
-		  width: 30px;
+		  height: 1.875rem;
+		  width: 1.875rem;
 		  cursor: pointer;
 		  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' xml:space='preserve'><rect style='fill:rgb(1,50,32);' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='24' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='12' width='30' height='6'/></svg>");
 		  background-size: contain;
 		}
 		/* Make the Magic Happen */
-		.nav-trigger + label, .navigation, .site-wrap {
+		.nav-trigger + label, .navigation, .logo {
 		  transition: left 0.2s, box-shadow 0.2s;
+		}
+		.background, .logo {
+				  transition: font-size 0.2s, left 0.2s;
+
 		}
 
 		.nav-trigger:checked + label {
-		  left: 30%;
+		  left: calc(25% + 1rem);
 		}
+		/* 
+.nav-trigger:checked ~ .logo {
+		  left: calc(25% + 3.875rem);
+		}
+ */
+.nav-trigger:checked ~ .logo {
+		  transition: font-size 0.2s, left 0.2s;
 
+		}
 		.nav-trigger:checked ~ .navigation {
-		  left: 0%;
-  box-shadow: 5px 0px 27px -14px #FFFFFF;
--webkit-box-shadow: 5px 0px 27px -14px #FFFFFF;
--moz-box-shadow: 5px 0px 27px -14px #FFFFFF;
--o-box-shadow: 5px 0px 27px -14px #FFFFFF;
+			  transition: font-size 0.2s, left 0.2s;
+	  left: 0%;
+  box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-webkit-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-moz-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-o-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
 
 		}
 }
 
 @media
-only screen and (min-width:2201px) and (min-resolution: 192dpi),
-not screen and  (max-width:1100px) and (max-resolution: 191dpi) {
+only screen and (max-width:640px) and (min-resolution: 192dpi),
+not screen and (min-width:321px) and (max-resolution: 191dpi) {
+    /* really small screen */
+  .logo {
+  font-size:1.2rem;
+	    justify-content: flex-end;
+    align-items: flex-end;
+		  transition: font-size 0.2s, left 0.2s;
+
+		}
+}
+
+@media
+only screen and (min-width:1101px) and (min-resolution: 192dpi),
+not screen and  (max-width:550px) and (max-resolution: 191dpi) {
     /* Large screen */
     
 		label[for="nav-trigger"] {
@@ -354,11 +422,20 @@ not screen and  (max-width:1100px) and (max-resolution: 191dpi) {
 		}
 		.navigation {
 		  left: 0;
-  box-shadow: 5px 0px 27px -14px #FFFFFF;
--webkit-box-shadow: 5px 0px 27px -14px #FFFFFF;
--moz-box-shadow: 5px 0px 27px -14px #FFFFFF;
--o-box-shadow: 5px 0px 27px -14px #FFFFFF;
+  box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-webkit-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-moz-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
+-o-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
 
+		}
+		.content{
+		left:25%;
+		}
+		.logo, .background {
+		  transition: font-size 0.2s, left 0.2s, width 0.2s;
+		position:absolute;
+		left:25%;
+		width:75%;
 		}
 }
 
@@ -370,12 +447,12 @@ body {
 /* Additional non-critical styles */
 
 h1, h3, p {
-  max-width: 600px;
-  margin: 0 auto 1em;
+  max-width: 37.500rem;
+  margin: 0 auto 1rem;
 }
 
 code {
-	padding: 2px;
+	padding: 0.125rem;
 	background: #ddd;
 }
 
