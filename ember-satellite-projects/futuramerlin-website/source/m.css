@@ -85,40 +85,80 @@
     -webkit-background-size: auto 50%, auto 50%, auto auto, auto auto, auto auto, auto auto;
     background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
 }
-.nav-item-inactive:after {
-/* help from http://stackoverflow.com/questions/17684215/removing-the-bevel-effect-on-the-corner-of-borders */
+.nav-item-inactive::before {
+    content:' ';
+    background: none;
+	 height:100%;
+    width:100%;
+    box-sizing: border-box;
+    border-left: .095rem solid transparent;
+    border-right: .095rem solid transparent;
+    position:absolute;
+       transition: color 0.2s, background .2s, border .2s;
+    top: 0;
+     left:0;
+    pointer-events:none;
+}
+
+.nav-item-inactive::after {
     content:' ';
     display:block;
-    background: #d8d0ef;
-    height:.095rem;
+/*     border-bottom: .095rem solid #d8d0ef; */
+    border-top: .095rem solid transparent;
+ background-image:
+  url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mO4ceH9fwAIsgOXUctGuwAAAABJRU5ErkJggg==); 
+        background-size: 100% .095rem;
+    box-sizing: border-box;
+    background-position:bottom;
+    background-repeat: no-repeat;
+    height:calc(100% + 0.095rem);
     padding:0 .095rem; /* border width plus div padding */
     width:calc(100% + 0.095rem);
-    position:relative;
+    position:absolute;
        transition: color 0.2s, background .2s, border .2s;
-    top: 0.095rem;
+    top: 0;
     left:0;
     pointer-events:none;
 }
-.nav-item-inactive:hover:after {
-/* help from http://stackoverflow.com/questions/17684215/removing-the-bevel-effect-on-the-corner-of-borders */
+.nav-item-inactive:hover::before {
     content:' ';
+    background: none;
+    box-sizing: border-box;
+	 height:100%;
+    width:100%;
+    border-left: .095rem solid #87769d;
+    border-right: .095rem solid #87769d;
+    position:absolute;
+       transition: color 0.2s, background .2s, border .2s;
+    top: 0;
+     left:0;
+    pointer-events:none;
+}
+.nav-item-inactive:hover::after {
+     box-sizing: border-box;
+   content:' ';
     display:block;
-    background: #87769d;
-    height:.095rem;
+background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNoL5v7HwAFvAKafaBcBQAAAABJRU5ErkJggg==);
+      background-size: 100% .095rem;
+    box-sizing: border-box;
+    background-position:bottom;
+    background-repeat: no-repeat;
+    border-bottom: .095rem solid #d8d0ef;
+    border-top: .095rem solid #87769d;
+    height:calc(100% + 0.095rem);
     padding:0 .095rem; /* border width plus div padding */
     width:calc(100% + 0.095rem);
-           transition: color 0.2s, background .2s, border .2s;
-
-    position:relative;
-    top: 0.095rem;
+    position:absolute;
+       transition: color 0.2s, background .2s, border .2s;
+    top: 0;
     left:0;
     pointer-events:none;
 }
 .nav-item-active:after {
-/* help from http://stackoverflow.com/questions/17684215/removing-the-bevel-effect-on-the-corner-of-borders */
-    content:' ';
+     box-sizing: border-box;
+   content:' ';
     display:block;
-    background: #d8d0ef;
+    border-bottom: #d8d0ef;
     height:.095rem;
     padding:0 .095rem; /* border width plus div padding */
     width:calc(100% + 0.095rem);
@@ -130,6 +170,8 @@
 }
 
 .nav-item-inactive {
+position:relative;
+display:inline-block;
     transition: color 0.2s, border .2s;
    /* 
  border-left: .095rem solid #fff;
