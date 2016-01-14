@@ -41,7 +41,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 2;
+    z-index: 4;
     overflow-y: auto;
     list-style: none;
     background: #e2daf1;
@@ -101,6 +101,25 @@
     -webkit-background-size: auto 50%, auto 50%, auto auto, auto auto, auto auto, auto auto;
     background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
 }
+.demo {
+   transition: color 0.2s, border .2s;
+    border-left: .095rem solid #fff;
+    border-right: .095rem solid #d8d0ef;
+    border-top: .095rem solid #fff;
+    border-bottom: .095rem solid #d8d0ef;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background: url(http://enjoycss.com/bg-img/custom/18015-dkvmr8.png), url(http://enjoycss.com/bg-img/custom/18015-16qy4bf.png), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 256"><defs><linearGradient id="a"><stop stop-color="%23f5f6fa" offset="0"/><stop offset=".5" stop-color="%23e3daf0"/><stop stop-color="%23f5f6fa" offset="1"/></linearGradient><linearGradient id="b" x2="256" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 1 -.5 0 64 0)"/></defs><path fill="url(%23b)" d="M128 0v256H0V0z"/></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 256"><defs><linearGradient id="a"><stop stop-color="%23f5f6fa" offset="0"/><stop offset=".5" stop-color="%23e3daf0"/><stop stop-color="%23f5f6fa" offset="1"/></linearGradient><linearGradient id="b" x2="256" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 1 -.5 0 64 0)"/></defs><path fill="url(%23b)" d="M128 0v256H0V0z"/></svg>'), linear-gradient(180deg, rgba(216, 208, 239, 0) 0, rgba(255, 255, 255, 0.1) 10%, rgba(255, 255, 255, 0.44) 50%, rgba(211, 206, 234, 0) 50%, rgba(211, 206, 234, 0) 100%), url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 128 256'><defs><linearGradient id='a'><stop stop-color='%23f5f6fa' offset='0'/><stop offset='.5' stop-color='%23e3daf0'/><stop stop-color='%23f5f6fa' offset='1'/></linearGradient><linearGradient id='b' x2='256' xlink:href='%23a' gradientUnits='userSpaceOnUse' gradientTransform='matrix(0 1 -.5 0 64 0)'/></defs><path fill='url(%23b)' d='M128 0v256H0V0z'/></svg>");
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+    background-position: left top, right top, left top, right top, 50% 50%, 50% 50%;
+    -webkit-background-origin: padding-box;
+    background-origin: padding-box;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-background-size: auto 50%, auto 50%, auto auto, auto auto, auto auto, auto auto;
+    background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
+}
 .nav-item-selected,
 .nav-item:active {
     box-shadow: inset .668rem .668rem .563rem -.938rem #000;
@@ -145,25 +164,27 @@ ul:not(.navigation) {
     left: 0;
     padding: 0rem;
     z-index: 1;
-    font-family: wreatherweb;
-    font-size: 1.45rem;
-    color: #2a1657;
     border: none;
     overflow: auto;
     clip-path: url('#content-clip');
 }
 .content {
-    overflow: auto;
+position:absolute;
+z-index:1;
+left:25%;
     margin-left: 4rem;
     margin-right: 4rem;
     margin-top: 4rem;
     margin-bottom: 4rem;
-    top:4rem;
+     font-family: wreatherweb;
+    font-size: 1.45rem;
+    color: #2a1657;
+   top:0;
     padding-top:1rem;
     transition: margin 0.2s, top .2s;
     padding-left: 1rem;
     padding-right: 1rem;
-    padding-bottom: 1rem;
+    padding-bottom:5rem;
     /* background: rgba(0, 0, 0, 0.2); */
 }
 .contentbackground {
@@ -185,7 +206,7 @@ ul:not(.navigation) {
     box-sizing: border-box;
     padding: 0rem;
     transition: margin 0.2s, top .2s;
-    z-index: -1;
+    z-index: 0;
     border: none;
 }
 .contentbgborder {
@@ -224,6 +245,7 @@ ul:not(.navigation) {
     background-position: center top;
     -webkit-background-origin: padding-box;
     background-origin: padding-box;
+    background-attachment:fixed;
     -webkit-background-clip: border-box;
     background-clip: border-box;
     -webkit-background-size: cover;
@@ -245,6 +267,7 @@ ul:not(.navigation) {
     background-image: url(background.svg);
     background-repeat: no-repeat;
     background-position: center top;
+    background-attachment:fixed;
     -webkit-background-origin: padding-box;
     background-origin: padding-box;
     -webkit-background-clip: border-box;
@@ -267,8 +290,10 @@ ul:not(.navigation) {
     background-clip: border-box;
     -webkit-background-size: cover;
     background-size: cover;    
+    background-attachment:fixed;
     width: 100%;
     height: 100%;
+    position:fixed;
 }
 
 .nav-trigger {    
@@ -277,7 +302,7 @@ ul:not(.navigation) {
 }
 .logo {
     z-index: 2;
-    position: absolute;
+    position: fixed;
     top: .25rem;
     width: 100%;
     display: flex;
@@ -300,11 +325,12 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
     /* small screen */
     
     .navigation {
-        left: -25%;
+        left: -50%;
         box-shadow: 0 0 0 0 #FFF;
         -webkit-box-shadow: 0 0 0 0 #FFF;
         -moz-box-shadow: 0 0 0 0 #FFF;
         -o-box-shadow: 0 0 0 0 #FFF;
+        width:50%;
     }
     .content,
     .contentbackground, .headerbgwrap, .contentbgborder {
@@ -318,16 +344,17 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
     .contentbackground, .contentbgborder {
         bottom: 0;
 
-    top: 4rem;
     }
     .contentbackground, .contentbgborder {
         margin-top: 0;
-    }
+     top: 4rem;
+   }
     .footerbgwrap, .footerbackground {
     display:none;
     }
     .content {
-        margin-top: 4rem;
+  left:0;
+/*       margin-top: 4rem; */
     }
     label[for="nav-trigger"] {
         /* critical positioning styles */
@@ -347,21 +374,26 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
     /* Make the Magic Happen */
     
     .nav-trigger + label,
-    .navigation,
-    .logo {
+    .navigation {
         transition: left 0.2s, box-shadow 0.2s;
     }
     .background,
     .logo {
-        transition: font-size 0.2s, left 0.2s;
+        transition: font-size 0.2s, left 0.2s, box-shadow 0.2s;
     }
     .nav-trigger:checked + label {
-        left: calc(25% + 1rem);
+        left: calc(50% + 1rem);
     }
     
     .nav-trigger:checked ~ .logo {
-        transition: font-size 0.2s, left 0.2s;
+        transition: font-size 0.2s, box-shadow 0.2s;
+        
     }
+            .nav-trigger:checked ~ .logo > .logo-inner {
+left: calc(100%);
+        transform: translateX(calc(-100% - 1rem));
+font-size: 1.2rem;
+        transition: font-size 0.2s, box-shadow 0.2s;}
     .nav-trigger:checked ~ .navigation {
         transition: font-size 0.2s, left 0.2s;
         left: 0%;
@@ -377,12 +409,12 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi) {
     
     .logo {
         font-size: 1.2rem;
-        transition: font-size 0.2s, left .2s;
+        transition: font-size 0.2s, left 0.2s, box-shadow 0.2s;
     }
 	
     .logo-inner {
-        left: calc(100% - 1rem);
-        transform: translateX(-100%);
+        left: calc(100%);
+        transform: translateX(calc(-100% - 1rem));
     }
     .nav-trigger:checked + label {
         left: calc(75% + 1rem);
@@ -418,7 +450,8 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi) {
         left: 25%;
     }
     .content {
-        margin-top: 4rem;
+left:25%;
+/*         margin-top: 4rem; */
     }
     .logo,
     .background, .headerbgwrap, .footerbgwrap {
@@ -427,7 +460,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi) {
         width: 75%;
     }
     .logo, .background {
-            position: absolute;
+            position: fixed;
     }
 }
 
