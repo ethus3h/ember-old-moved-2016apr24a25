@@ -44,6 +44,7 @@
     z-index: 4;
     overflow-y: auto;
     list-style: none;
+    transition: width 0.2s;
     background: #e2daf1;
     box-shadow: .313rem 0 1.688rem -.875rem #FFF;
     -webkit-box-shadow: .313rem 0 1.688rem -.875rem #FFF;
@@ -375,7 +376,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
     
     .nav-trigger + label,
     .navigation {
-        transition: left 0.2s, box-shadow 0.2s;
+        transition: left 0.2s, box-shadow 0.2s, width 0.2s;
     }
     .background,
     .logo {
