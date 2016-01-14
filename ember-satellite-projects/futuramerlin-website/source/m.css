@@ -45,8 +45,6 @@
     overflow-y: auto;
     list-style: none;
     transition: left 0.2s;
-
-
     background: #e2daf1;
     box-shadow: .313rem 0 1.688rem -.875rem #FFF;
     -webkit-box-shadow: .313rem 0 1.688rem -.875rem #FFF;
@@ -71,12 +69,12 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-.nav-item-inactive:hover, .nav-item-inactive:active {
+.nav-item-inactive:hover,
+.nav-item-inactive:active {
     color: #c74438;
-
-      border-top: .095rem solid #87769d;
+    border-top: .095rem solid #87769d;
     border-bottom: .095rem solid #87769d;
-   transition: color 0.2s, border .2s;
+    transition: color 0.2s, border .2s;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128"><defs><linearGradient id="a"><stop offset="0" stop-color="%23fff" stop-opacity="0"/><stop offset="1" stop-color="%23fff" stop-opacity=".5"/><stop offset="1" stop-color="%23fff" stop-opacity="0"/></linearGradient><radialGradient id="b" cx="64" cy="988.36218" r="64" gradientTransform="translate(-.118 -1978.547) scale(2.00184)" gradientUnits="userSpaceOnUse" fy="988.36218" fx="64" xlink:href="%23a"/></defs><path fill="url(%23b)" d="M0-127.99982h256v256H0z"/></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128"><defs><linearGradient id="a"><stop offset="0" stop-color="%23fff" stop-opacity="0"/><stop offset="1" stop-color="%23fff" stop-opacity=".5"/><stop offset="1" stop-color="%23fff" stop-opacity="0"/></linearGradient><radialGradient id="b" cx="64" cy="988.36218" r="64" gradientTransform="translate(-128.118 -1054.185) scale(2.00184)" gradientUnits="userSpaceOnUse" fy="988.36218" fx="64" xlink:href="%23a"/></defs><path fill="url(%23b)" d="M-128 796.36218h256v256h-256z" transform="translate(0 -924.362)"/></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 256"><defs><linearGradient id="a"><stop stop-color="%23f5f6fa" offset="0"/><stop offset=".5" stop-color="%23e3daf0"/><stop stop-color="%23f5f6fa" offset="1"/></linearGradient><linearGradient id="b" x2="256" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 1 -.5 0 64 0)"/></defs><path fill="url(%23b)" d="M128 0v256H0V0z"/></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 256"><defs><linearGradient id="a"><stop stop-color="%23f5f6fa" offset="0"/><stop offset=".5" stop-color="%23e3daf0"/><stop stop-color="%23f5f6fa" offset="1"/></linearGradient><linearGradient id="b" x2="256" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 1 -.5 0 64 0)"/></defs><path fill="url(%23b)" d="M128 0v256H0V0z"/></svg>'), linear-gradient(180deg, rgba(216, 208, 239, 0) 0, rgba(255, 255, 255, 0.1) 10%, rgba(255, 255, 255, 0.44) 50%, rgba(211, 206, 234, 0) 50%, rgba(211, 206, 234, 0) 100%), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 256"><defs><linearGradient id="a"><stop stop-color="%23f5f6fa" offset="0"/><stop offset=".5" stop-color="%23e3daf0"/><stop stop-color="%23f5f6fa" offset="1"/></linearGradient><linearGradient id="b" x2="256" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 1 -.5 0 64 0)"/></defs><path fill="url(%23b)" d="M128 0v256H0V0z"/></svg>');
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
     background-position: left top, right top, left top, right top, 50% 50%, 50% 50%;
@@ -87,55 +85,46 @@
     -webkit-background-size: auto 50%, auto 50%, auto auto, auto auto, auto auto, auto auto;
     background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
 }
-.nav-item-inactive:active::before, .nav-item-inactive::before {
-    content:' ';
+.nav-item-inactive:active::before,
+.nav-item-inactive::before {
+    content: ' ';
     background: none;
-	 height:100%;
-    width:100%;
+    height: 100%;
+    width: 100%;
     box-sizing: border-box;
     border-left: .095rem solid transparent;
     border-right: .095rem solid transparent;
-    position:absolute;
-       transition: color 0.2s, background .2s, border .2s;
+    position: absolute;
+    transition: color 0.2s, background .2s, border .2s;
     top: 0;
-     left:0;
-    pointer-events:none;
+    left: 0;
+    pointer-events: none;
 }
-
-
- 
-
-.nav-item-inactive:active::before,.nav-item-inactive:hover:active::before, .nav-item-inactive:hover::before {
-    content:' ';
+.nav-item-inactive:active::before,
+.nav-item-inactive:hover:active::before,
+.nav-item-inactive:hover::before {
+    content: ' ';
     background: none;
     box-sizing: border-box;
-	 height:100%;
-    width:100%;
+    height: 100%;
+    width: 100%;
     border-left: .095rem solid #87769d;
     border-right: .095rem solid #87769d;
-    position:absolute;
-       transition: color 0.2s, background .2s, border .2s;
+    position: absolute;
+    transition: color 0.2s, background .2s, border .2s;
     top: 0;
-     left:0;
-    pointer-events:none;
+    left: 0;
+    pointer-events: none;
 }
-
- 
-    
-
 .nav-item {
-margin-bottom:.095rem;
-
+    margin-bottom: .095rem;
 }
 .nav-item-inactive {
-position:relative;
-display:inline-block;
+    position: relative;
+    display: inline-block;
     transition: color 0.2s, border .2s;
-   
-
     border-bottom: .095rem solid transparent;
     border-top: .095rem solid transparent;
-
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -150,8 +139,7 @@ display:inline-block;
     background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
 }
 .demo {
-   transition: color 0.2s, border .2s;
-   
+    transition: color 0.2s, border .2s;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -167,30 +155,25 @@ display:inline-block;
 }
 .nav-item-selected {
     border: .095rem solid #87769d;
-box-shadow: inset .668rem .668rem .563rem -.938rem #000;
-    -webkit-box-shadow: inset .668rem .668rem .563rem -.938rem #000;
-    -moz-box-shadow: inset .668rem .668rem .563rem -.938rem #000;
-    -o-box-shadow: inset .668rem .668rem .563rem -.938rem #000;}
-    .nav-item-active {
-        border: .095rem solid #87769d;
-
-}
-
-
-
-    .nav-item:active {
     box-shadow: inset .668rem .668rem .563rem -.938rem #000;
     -webkit-box-shadow: inset .668rem .668rem .563rem -.938rem #000;
     -moz-box-shadow: inset .668rem .668rem .563rem -.938rem #000;
     -o-box-shadow: inset .668rem .668rem .563rem -.938rem #000;
-    }
-    .nav-item-selected {
-        transition: color 0.2s, border .2s;
-
-    }
+}
+.nav-item-active {
+    border: .095rem solid #87769d;
+}
+.nav-item:active {
+    box-shadow: inset .668rem .668rem .563rem -.938rem #000;
+    -webkit-box-shadow: inset .668rem .668rem .563rem -.938rem #000;
+    -moz-box-shadow: inset .668rem .668rem .563rem -.938rem #000;
+    -o-box-shadow: inset .668rem .668rem .563rem -.938rem #000;
+}
+.nav-item-selected {
+    transition: color 0.2s, border .2s;
+}
 .nav-item-selected,
 .nav-item:active {
-    
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128"><defs><linearGradient id="a"><stop offset="0" stop-color="%23fff" stop-opacity="0"/><stop offset="1" stop-color="%23fff" stop-opacity=".5"/><stop offset="1" stop-color="%23fff" stop-opacity="0"/></linearGradient><radialGradient id="b" cx="64" cy="988.36218" r="64" gradientTransform="translate(-.118 -1978.547) scale(2.00184)" gradientUnits="userSpaceOnUse" fy="988.36218" fx="64" xlink:href="%23a"/></defs><path fill="url(%23b)" d="M0-127.99982h256v256H0z"/></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128"><defs><linearGradient id="a"><stop offset="0" stop-color="%23fff" stop-opacity="0"/><stop offset="1" stop-color="%23fff" stop-opacity=".5"/><stop offset="1" stop-color="%23fff" stop-opacity="0"/></linearGradient><radialGradient id="b" cx="64" cy="988.36218" r="64" gradientTransform="translate(-128.118 -1054.185) scale(2.00184)" gradientUnits="userSpaceOnUse" fy="988.36218" fx="64" xlink:href="%23a"/></defs><path fill="url(%23b)" d="M-128 796.36218h256v256h-256z" transform="translate(0 -924.362)"/></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 256"><defs><linearGradient id="a"><stop stop-color="%23d3c5e7" offset="0"/><stop offset=".5" stop-color="%23c1acda"/><stop stop-color="%23d3c5e7" offset="1"/></linearGradient><linearGradient id="b" x2="256" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 1 -.5 0 64 0)"/></defs><path fill="url(%23b)" d="M128 0v256H0V0z"/></svg>'), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 256"><defs><linearGradient id="a"><stop stop-color="%23d3c5e7" offset="0"/><stop offset=".5" stop-color="%23c1acda"/><stop stop-color="%23d3c5e7" offset="1"/></linearGradient><linearGradient id="b" x2="256" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 1 -.5 0 64 0)"/></defs><path fill="url(%23b)" d="M128 0v256H0V0z"/></svg>'), linear-gradient(180deg, rgba(216, 208, 239, 0) 0, rgba(255, 255, 255, 0.1) 10%, rgba(255, 255, 255, 0.44) 50%, rgba(211, 206, 234, 0) 50%, rgba(211, 206, 234, 0) 100%), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 256"><defs><linearGradient id="a"><stop stop-color="%23d3c5e7" offset="0"/><stop offset=".5" stop-color="%23c1acda"/><stop stop-color="%23d3c5e7" offset="1"/></linearGradient><linearGradient id="b" x2="256" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="matrix(0 1 -.5 0 64 0)"/></defs><path fill="url(%23b)" d="M128 0v256H0V0z"/></svg>');
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
     background-position: left top, right top, left top, right top, 50% 50%, 50% 50%;
@@ -204,9 +187,12 @@ box-shadow: inset .668rem .668rem .563rem -.938rem #000;
 .nodecorate {
     text-decoration: none !important;
 }
-a.logolink{ color:rgb(1,50,32);}
-	a.logolink:visited{ color:rgb(1,50,32);}
-
+a.logolink {
+    color: rgb(1, 50, 32);
+}
+a.logolink:visited {
+    color: rgb(1, 50, 32);
+}
 ul:not(.navigation) {
     list-style-position: inside;
     padding-left: 1rem;
@@ -232,23 +218,22 @@ ul:not(.navigation) {
     clip-path: url('#content-clip');
 }
 .content {
-position:absolute;
-z-index:1;
-left:25%;
+    position: absolute;
+    z-index: 1;
+    left: 25%;
     margin-left: 4rem;
     margin-right: 4rem;
     margin-top: 4rem;
     margin-bottom: 4rem;
-     font-family: wreatherweb;
+    font-family: wreatherweb;
     font-size: 1.45rem;
     color: #2a1657;
-   top:0;
-    padding-top:1rem;
+    top: 0;
+    padding-top: 1rem;
     transition: margin 0.2s, top .2s;
     padding-left: 1rem;
     padding-right: 1rem;
-    padding-bottom:5rem;
-    
+    padding-bottom: 5rem;
 }
 .contentbackground {
     min-height: calc(100% - 8rem);
@@ -264,7 +249,6 @@ left:25%;
     margin-top: 4rem;
     margin-bottom: 4rem;
     transition: margin 0.2s, top 0.2s, bottom 0.2s, height 0.2s;
-    
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -285,22 +269,21 @@ left:25%;
     margin-right: 4rem;
     margin-top: 4rem;
     margin-bottom: 4rem;
- transition: margin 0.2s, top 0.2s, bottom 0.2s, height 0.2s;
-    
-        -webkit-box-sizing: border-box;
+    transition: margin 0.2s, top 0.2s, bottom 0.2s, height 0.2s;
+    -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding: 0rem;
     z-index: 3;
     border: 0.063em solid white;
-    pointer-events:none;
+    pointer-events: none;
 }
 .headerbgwrap {
     width: 100%;
     height: 4rem;
-    position:fixed;
-    z-index:2;
-    overflow:hidden;
+    position: fixed;
+    z-index: 2;
+    overflow: hidden;
 }
 .headerbackground {
     background-image: url(background.svg);
@@ -308,42 +291,42 @@ left:25%;
     background-position: center top;
     -webkit-background-origin: padding-box;
     background-origin: padding-box;
-    background-attachment:fixed;
+    background-attachment: fixed;
     -webkit-background-clip: border-box;
     background-clip: border-box;
     -webkit-background-size: cover;
-    background-size: cover;    
+    background-size: cover;
     width: 100%;
     height: 100vh;
-    position:relative;
-    z-index:2;
+    position: relative;
+    z-index: 2;
 }
 .footerbgwrap {
     width: 100%;
     height: 4rem;
-    bottom:0;
-    position:fixed;
-    z-index:2;
-    overflow:hidden;
-transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
+    bottom: 0;
+    position: fixed;
+    z-index: 2;
+    overflow: hidden;
+    transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
 }
 .footerbackground {
     background-image: url(background.svg);
     background-repeat: no-repeat;
     background-position: center top;
-    background-attachment:fixed;
+    background-attachment: fixed;
     -webkit-background-origin: padding-box;
     background-origin: padding-box;
     -webkit-background-clip: border-box;
     background-clip: border-box;
     -webkit-background-size: cover;
-    background-size: cover;    
+    background-size: cover;
     width: 100%;
     height: 100vh;
-    position:absolute;
-    top:calc(-1 * (100vh - 4rem));
-    z-index:2;
-transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
+    position: absolute;
+    top: calc(-1 * (100vh - 4rem));
+    z-index: 2;
+    transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
 }
 .background {
     background-image: url(background.svg);
@@ -354,14 +337,13 @@ transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
     -webkit-background-clip: border-box;
     background-clip: border-box;
     -webkit-background-size: cover;
-    background-size: cover;    
-    background-attachment:fixed;
+    background-size: cover;
+    background-attachment: fixed;
     width: 100%;
     height: 100%;
-    position:fixed;
+    position: fixed;
 }
-
-.nav-trigger {    
+.nav-trigger {
     position: absolute;
     clip: rect(0, 0, 0, 0);
 }
@@ -387,50 +369,48 @@ transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
 }
 @media only screen and (max-width: 1100px) and (min-resolution: 192dpi),
 not screen and (min-width: 551px) and (max-resolution: 191dpi) {
-        /* small screen */
-
+    /* small screen */
     
     .navigation {
         left: -25%;
-        width:25%;
+        width: 25%;
         box-shadow: 0 0 0 0 #FFF;
         -webkit-box-shadow: 0 0 0 0 #FFF;
         -moz-box-shadow: 0 0 0 0 #FFF;
         -o-box-shadow: 0 0 0 0 #FFF;
     }
     .content,
-    .contentbackground, .headerbgwrap, .contentbgborder {
+    .contentbackground,
+    .headerbgwrap,
+    .contentbgborder {
         margin-left: 0;
         margin-right: 0;
         margin-bottom: 0;
         transition: margin 0.2s, top 0.2s, bottom .2s;
-        
     }
-     .content,
-    .contentbackground, .contentbgborder {
+    .content,
+    .contentbackground,
+    .contentbgborder {
         bottom: 0;
-
     }
-    .contentbackground, .contentbgborder {
+    .contentbackground,
+    .contentbgborder {
         margin-top: 0;
-     top: 4rem;
-   }
-    .footerbgwrap, .footerbackground {
-    bottom:-4rem;
-      transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s, bottom 0.2s;
+        top: 4rem;
+    }
+    .footerbgwrap,
+    .footerbackground {
+        bottom: -4rem;
+        transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s, bottom 0.2s;
     }
     .content {
-  left:0;
-
+        left: 0;
     }
     label[for="nav-trigger"] {
-        
-        
         position: fixed;
         left: 0.938rem;
         top: 0.938rem;
         z-index: 3;
-        
         opacity: 1;
         transition: left 0.2s, box-shadow 0.2s, width 0.2s, opacity 0.2s;
         height: 1.875rem;
@@ -439,8 +419,6 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' xml:space='preserve'><rect style='fill:rgb(1,50,32);' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='24' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='12' width='30' height='6'/></svg>");
         background-size: contain;
     }
-    
-    
     .nav-trigger + label,
     .navigation {
         transition: left 0.2s, box-shadow 0.2s, width 0.2s, opacity 0.2s;
@@ -452,21 +430,18 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
     .nav-trigger:checked + label {
         left: calc(50% + 1rem);
     }
-    
     .nav-trigger:checked ~ .logo {
         transition: font-size 0.2s, box-shadow 0.2s;
-        
     }
-            .nav-trigger:checked ~ .logo > .logo-inner {
-left: calc(100%);
+    .nav-trigger:checked ~ .logo > .logo-inner {
+        left: calc(100%);
         transform: translateX(calc(-100% - 1rem));
-font-size: 1.2rem;
-        transition: font-size 0.2s, box-shadow 0.2s;}
-        
-        
+        font-size: 1.2rem;
+        transition: font-size 0.2s, box-shadow 0.2s;
+    }
     .nav-trigger:checked ~ .navigation {
         transition: font-size 0.2s, left 0.2s, width 0.2s;
-        width:50%;
+        width: 50%;
         left: 0;
         box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
         -webkit-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
@@ -476,14 +451,12 @@ font-size: 1.2rem;
 }
 @media only screen and (max-width: 640px) and (min-resolution: 192dpi),
 not screen and (min-width: 321px) and (max-resolution: 191dpi) {
-        /* really small screen */
-
+    /* really small screen */
     
     .logo {
         font-size: 1.2rem;
         transition: font-size 0.2s, left 0.2s, box-shadow 0.2s;
     }
-	
     .logo-inner {
         left: calc(100%);
         transform: translateX(calc(-100% - 1rem));
@@ -503,19 +476,15 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi) {
 }
 @media only screen and (min-width: 1101px) and (min-resolution: 192dpi),
 not screen and (max-width: 550px) and (max-resolution: 191dpi) {
-        /* Large screen */
+    /* Large screen */
     /* TODO: fix this. It seems to match zoomed-in screen. */
-
-    
     
     label[for="nav-trigger"] {
-
-opacity: 0;
-      position: fixed;
+        opacity: 0;
+        position: fixed;
         left: 0.938rem;
         top: 0.938rem;
         z-index: 3;
-        
         transition: left 0.2s, box-shadow 0.2s, width 0.2s, opacity 0.2s;
         height: 1.875rem;
         width: 1.875rem;
@@ -532,32 +501,37 @@ opacity: 0;
     }
     .site-wrap,
     .content,
-    .contentbackground, .contentbgborder {
+    .contentbackground,
+    .contentbgborder {
         left: 25%;
     }
     .content {
-left:25%;
-
-    }
-    .logo, .background, .headerbgwrap {
-        transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
-}
-.footerbgwrap, .footerbackground {
-        transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s, bottom 0.2s;
-}
-.logo {
         left: 25%;
-width:75%;
-}
-    .background, .headerbgwrap, .footerbgwrap {
-    left:0;
-            width: 125%;
     }
-    .logo, .background {
-            position: fixed;
+    .logo,
+    .background,
+    .headerbgwrap {
+        transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
+    }
+    .footerbgwrap,
+    .footerbackground {
+        transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s, bottom 0.2s;
+    }
+    .logo {
+        left: 25%;
+        width: 75%;
+    }
+    .background,
+    .headerbgwrap,
+    .footerbgwrap {
+        left: 0;
+        width: 125%;
+    }
+    .logo,
+    .background {
+        position: fixed;
     }
 }
-
 h1,
 h3,
 p {
@@ -568,8 +542,6 @@ code {
     padding: .125rem;
     background: #ddd;
 }
-
-
 *,
 :before,
 :after {
