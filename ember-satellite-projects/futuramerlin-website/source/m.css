@@ -44,7 +44,9 @@
     z-index: 4;
     overflow-y: auto;
     list-style: none;
-    transition: width 0.2s;
+    transition: left 0.2s;
+/* right:25%; */
+/* transition:right 0.2s, width 0.2s; */
     background: #e2daf1;
     box-shadow: .313rem 0 1.688rem -.875rem #FFF;
     -webkit-box-shadow: .313rem 0 1.688rem -.875rem #FFF;
@@ -326,12 +328,12 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
     /* small screen */
     
     .navigation {
-        left: -50%;
+        left: -25%;
+        width:25%;
         box-shadow: 0 0 0 0 #FFF;
         -webkit-box-shadow: 0 0 0 0 #FFF;
         -moz-box-shadow: 0 0 0 0 #FFF;
         -o-box-shadow: 0 0 0 0 #FFF;
-        width:50%;
     }
     .content,
     .contentbackground, .headerbgwrap, .contentbgborder {
@@ -365,7 +367,8 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
         top: 0.938rem;
         z-index: 3;
         /* non-critical apperance styles */
-        
+        opacity: 1;
+        transition: left 0.2s, box-shadow 0.2s, width 0.2s, opacity 0.2s;
         height: 1.875rem;
         width: 1.875rem;
         cursor: pointer;
@@ -376,7 +379,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
     
     .nav-trigger + label,
     .navigation {
-        transition: left 0.2s, box-shadow 0.2s, width 0.2s;
+        transition: left 0.2s, box-shadow 0.2s, width 0.2s, opacity 0.2s;
     }
     .background,
     .logo {
@@ -395,9 +398,12 @@ left: calc(100%);
         transform: translateX(calc(-100% - 1rem));
 font-size: 1.2rem;
         transition: font-size 0.2s, box-shadow 0.2s;}
+        
+        
     .nav-trigger:checked ~ .navigation {
-        transition: font-size 0.2s, left 0.2s;
-        left: 0%;
+        transition: font-size 0.2s, left 0.2s, width 0.2s;
+        width:50%;
+        left: 0;
         box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
         -webkit-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
         -moz-box-shadow: 0.313rem 0 1.688rem -0.875rem #FFFFFF;
@@ -436,7 +442,19 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi) {
     /* TODO: fix this. It seems to match zoomed-in screen. */
     
     label[for="nav-trigger"] {
-        display: none;
+/*         display: none; */
+opacity: 0;
+      position: fixed;
+        left: 0.938rem;
+        top: 0.938rem;
+        z-index: 3;
+        /* non-critical apperance styles */
+        transition: left 0.2s, box-shadow 0.2s, width 0.2s, opacity 0.2s;
+        height: 1.875rem;
+        width: 1.875rem;
+        cursor: pointer;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' xml:space='preserve'><rect style='fill:rgb(1,50,32);' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='24' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='12' width='30' height='6'/></svg>");
+        background-size: contain;
     }
     .navigation {
         left: 0;
@@ -454,11 +472,16 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi) {
 left:25%;
 /*         margin-top: 4rem; */
     }
-    .logo,
-    .background, .headerbgwrap, .footerbgwrap {
+    .logo, .background, .headerbgwrap, .footerbgwrap {
         transition: font-size 0.2s, left 0.2s, width .2s;
+}
+.logo {
         left: 25%;
-        width: 75%;
+width:75%;
+}
+    .background, .headerbgwrap, .footerbgwrap {
+    left:0;
+            width: 125%;
     }
     .logo, .background {
             position: fixed;
