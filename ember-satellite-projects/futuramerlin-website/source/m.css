@@ -45,8 +45,8 @@
     overflow-y: auto;
     list-style: none;
     transition: left 0.2s;
-/* right:25%; */
-/* transition:right 0.2s, width 0.2s; */
+
+
     background: #e2daf1;
     box-shadow: .313rem 0 1.688rem -.875rem #FFF;
     -webkit-box-shadow: .313rem 0 1.688rem -.875rem #FFF;
@@ -73,7 +73,7 @@
 }
 .nav-item-inactive:hover, .nav-item-inactive:active {
     color: #c74438;
-/*     border: .095rem solid #87769d; */
+
       border-top: .095rem solid #87769d;
     border-bottom: .095rem solid #87769d;
    transition: color 0.2s, border .2s;
@@ -101,28 +101,9 @@
      left:0;
     pointer-events:none;
 }
-/* 
 
-.nav-item-inactive::after {
-    content:' ';
-    display:block;
-    border-bottom: .095rem solid #d8d0ef;
-    border-top: .095rem solid transparent;
- */
-/* 
-background-color:rgba(255,255,255,0);
-    background-position:bottom;
- */
- /* 
-   height:calc(100% + 0.095rem);
-    padding:0 .095rem; border width plus div padding    width:calc(100% + 0.095rem);
-    position:absolute;
-       transition: color 0.2s, background .2s, border .2s;
-    top: 0;
-    left:0;
-    pointer-events:none;
-}
- */
+
+ 
 
 .nav-item-inactive:active::before,.nav-item-inactive:hover:active::before, .nav-item-inactive:hover::before {
     content:' ';
@@ -138,52 +119,10 @@ background-color:rgba(255,255,255,0);
      left:0;
     pointer-events:none;
 }
-/* 
-.nav-item-inactive:hover::after {
-     box-sizing: border-box;
-   content:' ';
-    display:block;
- */
-/* 
-background-color: #d8d0ef;
-      background-size: 100% .095rem;
-    box-sizing: border-box;
-    background-position:bottom;
-    background-repeat: no-repeat;
- *//* 
 
-    border-bottom: .095rem solid #d8d0ef;
-    border-top: .095rem solid #87769d;
-    height:calc(100% + 0.095rem);
-    padding:0 .095rem;
- */ /* border width plus div padding */
-    /* 
-width:calc(100% + 0.095rem);
-    position:absolute;
-       transition: color 0.2s, background .2s, border .2s;
-    top: 0;
-    left:0;
-    pointer-events:none;
-}
- */
-/* 
-.nav-item-active:after {
-     box-sizing: border-box;
-   content:' ';
-    display:block;
-    border-bottom: #d8d0ef;
-    height:.095rem;
-    padding:0 .095rem; 
- *//* border width plus div padding *//* 
+ 
+    
 
-    width:calc(100% + 0.095rem);
-    position:relative;
-       transition: color 0.2s, background .2s, border .2s;
-    top: 0.095rem;
-    left:0;
-    pointer-events:none;
-}
- */
 .nav-item {
 margin-bottom:.095rem;
 
@@ -192,13 +131,8 @@ margin-bottom:.095rem;
 position:relative;
 display:inline-block;
     transition: color 0.2s, border .2s;
-   /* 
- border-left: .095rem solid #fff;
-    border-right: .095rem solid #d8d0ef;
-    border-top: .095rem solid #fff;
-    border-bottom: .095rem solid #d8d0ef;
- */
-/*      border: .095rem solid transparent; */
+   
+
     border-bottom: .095rem solid transparent;
     border-top: .095rem solid transparent;
 
@@ -217,12 +151,7 @@ display:inline-block;
 }
 .demo {
    transition: color 0.2s, border .2s;
-   /* 
- border-left: .095rem solid #fff;
-    border-right: .095rem solid #d8d0ef;
-    border-top: .095rem solid #fff;
-    border-bottom: .095rem solid #d8d0ef;
- */
+   
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -246,34 +175,8 @@ box-shadow: inset .668rem .668rem .563rem -.938rem #000;
         border: .095rem solid #87769d;
 
 }
-/* 
-.nav-item-inactive:active {
-       
-        border: .095rem solid #87769d;
-transition:none;
-  
-        border-top: .095rem solid #87769d;
-        border-bottom: .095rem solid #87769d;
-border-left:none;
-border-right:none;
-transition:none;
-}
- */
-/* 
-.nav-item-inactive:active::before,.nav-item-inactive:active:hover::before {
-       
-transition:none;
 
-}
-.nav-item-inactive:active:hover {
-       
-        border-top: .095rem solid #87769d;
-        border-bottom: .095rem solid #87769d;
-border-left:none;
-border-right:none;
-transition:none;
-}
- */
+
 
     .nav-item:active {
     box-shadow: inset .668rem .668rem .563rem -.938rem #000;
@@ -345,7 +248,7 @@ left:25%;
     padding-left: 1rem;
     padding-right: 1rem;
     padding-bottom:5rem;
-    /* background: rgba(0, 0, 0, 0.2); */
+    
 }
 .contentbackground {
     min-height: calc(100% - 8rem);
@@ -361,9 +264,7 @@ left:25%;
     margin-top: 4rem;
     margin-bottom: 4rem;
     transition: margin 0.2s, top 0.2s, bottom 0.2s, height 0.2s;
-    /* 
-transition-delay: 0.2s;
- */
+    
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -385,9 +286,7 @@ transition-delay: 0.2s;
     margin-top: 4rem;
     margin-bottom: 4rem;
  transition: margin 0.2s, top 0.2s, bottom 0.2s, height 0.2s;
-    /* 
-transition-delay: 0.2s;
- */
+    
         -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -488,7 +387,8 @@ transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
 }
 @media only screen and (max-width: 1100px) and (min-resolution: 192dpi),
 not screen and (min-width: 551px) and (max-resolution: 191dpi) {
-    /* small screen */
+        /* small screen */
+
     
     .navigation {
         left: -25%;
@@ -521,16 +421,16 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
     }
     .content {
   left:0;
-/*       margin-top: 4rem; */
+
     }
     label[for="nav-trigger"] {
-        /* critical positioning styles */
+        
         
         position: fixed;
         left: 0.938rem;
         top: 0.938rem;
         z-index: 3;
-        /* non-critical apperance styles */
+        
         opacity: 1;
         transition: left 0.2s, box-shadow 0.2s, width 0.2s, opacity 0.2s;
         height: 1.875rem;
@@ -539,7 +439,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi) {
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' xml:space='preserve'><rect style='fill:rgb(1,50,32);' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='24' width='30' height='6'/><rect style='fill:rgb(1,50,32);' y='12' width='30' height='6'/></svg>");
         background-size: contain;
     }
-    /* Make the Magic Happen */
+    
     
     .nav-trigger + label,
     .navigation {
@@ -576,7 +476,8 @@ font-size: 1.2rem;
 }
 @media only screen and (max-width: 640px) and (min-resolution: 192dpi),
 not screen and (min-width: 321px) and (max-resolution: 191dpi) {
-    /* really small screen */
+        /* really small screen */
+
     
     .logo {
         font-size: 1.2rem;
@@ -602,17 +503,19 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi) {
 }
 @media only screen and (min-width: 1101px) and (min-resolution: 192dpi),
 not screen and (max-width: 550px) and (max-resolution: 191dpi) {
-    /* Large screen */
+        /* Large screen */
     /* TODO: fix this. It seems to match zoomed-in screen. */
+
+    
     
     label[for="nav-trigger"] {
-/*         display: none; */
+
 opacity: 0;
       position: fixed;
         left: 0.938rem;
         top: 0.938rem;
         z-index: 3;
-        /* non-critical apperance styles */
+        
         transition: left 0.2s, box-shadow 0.2s, width 0.2s, opacity 0.2s;
         height: 1.875rem;
         width: 1.875rem;
@@ -634,7 +537,7 @@ opacity: 0;
     }
     .content {
 left:25%;
-/*         margin-top: 4rem; */
+
     }
     .logo, .background, .headerbgwrap {
         transition: font-size 0.2s, left 0.2s, width 0.2s, opacity 0.2s;
@@ -665,7 +568,7 @@ code {
     padding: .125rem;
     background: #ddd;
 }
-/* Micro reset */
+
 
 *,
 :before,
