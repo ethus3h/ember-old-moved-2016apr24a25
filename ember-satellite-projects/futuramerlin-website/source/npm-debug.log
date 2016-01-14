@@ -1,0 +1,234 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.32
+4 warn package.json futuramerlin@0.1.0 No description
+5 warn package.json futuramerlin@0.1.0 No repository field.
+6 warn package.json futuramerlin@0.1.0 No README data
+7 verbose readDependencies using package.json deps
+8 verbose install where, deps [ '/Volumes/disk2s1/Archive/Futuramerlin Projects/Software/Ember/Git working copy/ember-satellite-projects/futuramerlin-website/source',
+8 verbose install   [ 'grunt', 'grunt-uncss' ] ]
+9 info preinstall futuramerlin@0.1.0
+10 verbose readDependencies using package.json deps
+11 verbose cache add [ 'grunt@~0.4.5', null ]
+12 verbose cache add name=undefined spec="grunt@~0.4.5" args=["grunt@~0.4.5",null]
+13 verbose parsed url { protocol: null,
+13 verbose parsed url   slashes: null,
+13 verbose parsed url   auth: null,
+13 verbose parsed url   host: null,
+13 verbose parsed url   port: null,
+13 verbose parsed url   hostname: null,
+13 verbose parsed url   hash: null,
+13 verbose parsed url   search: null,
+13 verbose parsed url   query: null,
+13 verbose parsed url   pathname: 'grunt@~0.4.5',
+13 verbose parsed url   path: 'grunt@~0.4.5',
+13 verbose parsed url   href: 'grunt@~0.4.5' }
+14 verbose cache add [ 'grunt-uncss@~0.10.0', null ]
+15 verbose cache add name=undefined spec="grunt-uncss@~0.10.0" args=["grunt-uncss@~0.10.0",null]
+16 verbose parsed url { protocol: null,
+16 verbose parsed url   slashes: null,
+16 verbose parsed url   auth: null,
+16 verbose parsed url   host: null,
+16 verbose parsed url   port: null,
+16 verbose parsed url   hostname: null,
+16 verbose parsed url   hash: null,
+16 verbose parsed url   search: null,
+16 verbose parsed url   query: null,
+16 verbose parsed url   pathname: 'grunt-uncss@~0.10.0',
+16 verbose parsed url   path: 'grunt-uncss@~0.10.0',
+16 verbose parsed url   href: 'grunt-uncss@~0.10.0' }
+17 verbose cache add name="grunt" spec="~0.4.5" args=["grunt","~0.4.5"]
+18 verbose parsed url { protocol: null,
+18 verbose parsed url   slashes: null,
+18 verbose parsed url   auth: null,
+18 verbose parsed url   host: null,
+18 verbose parsed url   port: null,
+18 verbose parsed url   hostname: null,
+18 verbose parsed url   hash: null,
+18 verbose parsed url   search: null,
+18 verbose parsed url   query: null,
+18 verbose parsed url   pathname: '~0.4.5',
+18 verbose parsed url   path: '~0.4.5',
+18 verbose parsed url   href: '~0.4.5' }
+19 verbose addNamed [ 'grunt', '~0.4.5' ]
+20 verbose addNamed [ null, '>=0.4.5-0 <0.5.0-0' ]
+21 verbose cache add name="grunt-uncss" spec="~0.10.0" args=["grunt-uncss","~0.10.0"]
+22 verbose parsed url { protocol: null,
+22 verbose parsed url   slashes: null,
+22 verbose parsed url   auth: null,
+22 verbose parsed url   host: null,
+22 verbose parsed url   port: null,
+22 verbose parsed url   hostname: null,
+22 verbose parsed url   hash: null,
+22 verbose parsed url   search: null,
+22 verbose parsed url   query: null,
+22 verbose parsed url   pathname: '~0.10.0',
+22 verbose parsed url   path: '~0.10.0',
+22 verbose parsed url   href: '~0.10.0' }
+23 verbose addNamed [ 'grunt-uncss', '~0.10.0' ]
+24 verbose addNamed [ null, '>=0.10.0-0 <0.11.0-0' ]
+25 silly lockFile 240974bb-grunt-0-4-5 grunt@~0.4.5
+26 verbose lock grunt@~0.4.5 /Users/elliot/.npm/240974bb-grunt-0-4-5.lock
+27 silly lockFile afb76d5d-grunt-uncss-0-10-0 grunt-uncss@~0.10.0
+28 verbose lock grunt-uncss@~0.10.0 /Users/elliot/.npm/afb76d5d-grunt-uncss-0-10-0.lock
+29 silly addNameRange { name: 'grunt', range: '>=0.4.5-0 <0.5.0-0', hasData: false }
+30 silly addNameRange { name: 'grunt-uncss',
+30 silly addNameRange   range: '>=0.10.0-0 <0.11.0-0',
+30 silly addNameRange   hasData: false }
+31 verbose request where is /grunt
+32 verbose request registry https://registry.npmjs.org/
+33 verbose request id 30e87e945b3d8af2
+34 verbose url raw /grunt
+35 verbose url resolving [ 'https://registry.npmjs.org/', './grunt' ]
+36 verbose url resolved https://registry.npmjs.org/grunt
+37 verbose request where is https://registry.npmjs.org/grunt
+38 info trying registry request attempt 1 at 03:47:32
+39 verbose etag "33JAII4S3ZVVMU37HWTUI8PB3"
+40 http GET https://registry.npmjs.org/grunt
+41 verbose request where is /grunt-uncss
+42 verbose request registry https://registry.npmjs.org/
+43 verbose url raw /grunt-uncss
+44 verbose url resolving [ 'https://registry.npmjs.org/', './grunt-uncss' ]
+45 verbose url resolved https://registry.npmjs.org/grunt-uncss
+46 verbose request where is https://registry.npmjs.org/grunt-uncss
+47 info trying registry request attempt 1 at 03:47:33
+48 verbose etag "CLW08MOXMSBUTC7GMB30D2ZQ4"
+49 http GET https://registry.npmjs.org/grunt-uncss
+50 http 304 https://registry.npmjs.org/grunt-uncss
+51 silly registry.get cb [ 304,
+51 silly registry.get   { date: 'Thu, 14 Jan 2016 08:47:34 GMT',
+51 silly registry.get     via: '1.1 varnish',
+51 silly registry.get     'cache-control': 'max-age=300',
+51 silly registry.get     etag: '"CLW08MOXMSBUTC7GMB30D2ZQ4"',
+51 silly registry.get     age: '0',
+51 silly registry.get     connection: 'keep-alive',
+51 silly registry.get     'x-served-by': 'cache-ord1731-ORD',
+51 silly registry.get     'x-cache': 'HIT',
+51 silly registry.get     'x-cache-hits': '1',
+51 silly registry.get     'x-timer': 'S1452761254.066801,VS0,VE37',
+51 silly registry.get     vary: 'Accept' } ]
+52 verbose etag https://registry.npmjs.org/grunt-uncss from cache
+53 silly addNameRange number 2 { name: 'grunt-uncss',
+53 silly addNameRange   range: '>=0.10.0-0 <0.11.0-0',
+53 silly addNameRange   hasData: true }
+54 silly addNameRange versions [ 'grunt-uncss',
+54 silly addNameRange   [ '0.1.0',
+54 silly addNameRange     '0.1.1',
+54 silly addNameRange     '0.1.2',
+54 silly addNameRange     '0.1.3',
+54 silly addNameRange     '0.1.5',
+54 silly addNameRange     '0.1.6',
+54 silly addNameRange     '0.1.7',
+54 silly addNameRange     '0.1.8',
+54 silly addNameRange     '0.1.9',
+54 silly addNameRange     '0.2.0',
+54 silly addNameRange     '0.2.1',
+54 silly addNameRange     '0.2.2',
+54 silly addNameRange     '0.3.0',
+54 silly addNameRange     '0.3.1',
+54 silly addNameRange     '0.3.2',
+54 silly addNameRange     '0.3.3',
+54 silly addNameRange     '0.3.4',
+54 silly addNameRange     '0.3.5',
+54 silly addNameRange     '0.3.6',
+54 silly addNameRange     '0.3.7',
+54 silly addNameRange     '0.3.8',
+54 silly addNameRange     '0.4.0',
+54 silly addNameRange     '0.4.1',
+54 silly addNameRange     '0.4.2',
+54 silly addNameRange     '0.4.3',
+54 silly addNameRange     '0.4.4' ] ]
+55 silly lockFile afb76d5d-grunt-uncss-0-10-0 grunt-uncss@~0.10.0
+56 silly lockFile afb76d5d-grunt-uncss-0-10-0 grunt-uncss@~0.10.0
+57 http 304 https://registry.npmjs.org/grunt
+58 silly registry.get cb [ 304,
+58 silly registry.get   { date: 'Thu, 14 Jan 2016 08:47:34 GMT',
+58 silly registry.get     via: '1.1 varnish',
+58 silly registry.get     'cache-control': 'max-age=300',
+58 silly registry.get     etag: '"33JAII4S3ZVVMU37HWTUI8PB3"',
+58 silly registry.get     age: '0',
+58 silly registry.get     connection: 'keep-alive',
+58 silly registry.get     'x-served-by': 'cache-ord1731-ORD',
+58 silly registry.get     'x-cache': 'HIT',
+58 silly registry.get     'x-cache-hits': '1',
+58 silly registry.get     'x-timer': 'S1452761254.228708,VS0,VE0',
+58 silly registry.get     vary: 'Accept' } ]
+59 verbose etag https://registry.npmjs.org/grunt from cache
+60 silly addNameRange number 2 { name: 'grunt', range: '>=0.4.5-0 <0.5.0-0', hasData: true }
+61 silly addNameRange versions [ 'grunt',
+61 silly addNameRange   [ '0.1.0',
+61 silly addNameRange     '0.1.1',
+61 silly addNameRange     '0.1.2',
+61 silly addNameRange     '0.2.0',
+61 silly addNameRange     '0.2.1',
+61 silly addNameRange     '0.2.2',
+61 silly addNameRange     '0.2.3',
+61 silly addNameRange     '0.2.4',
+61 silly addNameRange     '0.2.5',
+61 silly addNameRange     '0.2.6',
+61 silly addNameRange     '0.2.7',
+61 silly addNameRange     '0.2.8',
+61 silly addNameRange     '0.2.9',
+61 silly addNameRange     '0.2.10',
+61 silly addNameRange     '0.2.11',
+61 silly addNameRange     '0.2.12',
+61 silly addNameRange     '0.2.13',
+61 silly addNameRange     '0.2.14',
+61 silly addNameRange     '0.2.15',
+61 silly addNameRange     '0.3.0',
+61 silly addNameRange     '0.3.1',
+61 silly addNameRange     '0.3.2',
+61 silly addNameRange     '0.3.3',
+61 silly addNameRange     '0.3.4',
+61 silly addNameRange     '0.3.5',
+61 silly addNameRange     '0.3.6',
+61 silly addNameRange     '0.3.7',
+61 silly addNameRange     '0.3.8',
+61 silly addNameRange     '0.3.9',
+61 silly addNameRange     '0.3.10',
+61 silly addNameRange     '0.3.11',
+61 silly addNameRange     '0.3.12',
+61 silly addNameRange     '0.3.13',
+61 silly addNameRange     '0.3.14',
+61 silly addNameRange     '0.3.15',
+61 silly addNameRange     '0.3.16',
+61 silly addNameRange     '0.3.17',
+61 silly addNameRange     '0.4.0',
+61 silly addNameRange     '0.4.1',
+61 silly addNameRange     '0.4.2',
+61 silly addNameRange     '0.4.3',
+61 silly addNameRange     '0.4.4',
+61 silly addNameRange     '0.4.5',
+61 silly addNameRange     '0.3.13-a',
+61 silly addNameRange     '0.4.0-a',
+61 silly addNameRange     '0.4.0-rc1',
+61 silly addNameRange     '0.4.0-rc2',
+61 silly addNameRange     '0.4.0-rc3',
+61 silly addNameRange     '0.4.0-rc4',
+61 silly addNameRange     '0.4.0-rc5',
+61 silly addNameRange     '0.4.0-rc6',
+61 silly addNameRange     '0.4.0-rc7',
+61 silly addNameRange     '0.4.0-rc8' ] ]
+62 verbose addNamed [ 'grunt', '0.4.5' ]
+63 verbose addNamed [ '0.4.5', '0.4.5' ]
+64 silly lockFile 81abf7ad-grunt-0-4-5 grunt@0.4.5
+65 verbose lock grunt@0.4.5 /Users/elliot/.npm/81abf7ad-grunt-0-4-5.lock
+66 silly lockFile 81abf7ad-grunt-0-4-5 grunt@0.4.5
+67 silly lockFile 81abf7ad-grunt-0-4-5 grunt@0.4.5
+68 silly lockFile 240974bb-grunt-0-4-5 grunt@~0.4.5
+69 silly lockFile 240974bb-grunt-0-4-5 grunt@~0.4.5
+70 error notarget No compatible version found: grunt-uncss@'>=0.10.0-0 <0.11.0-0'
+70 error notarget Valid install targets:
+70 error notarget ["0.1.0","0.1.1","0.1.2","0.1.3","0.1.5","0.1.6","0.1.7","0.1.8","0.1.9","0.2.0","0.2.1","0.2.2","0.3.0","0.3.1","0.3.2","0.3.3","0.3.4","0.3.5","0.3.6","0.3.7","0.3.8","0.4.0","0.4.1","0.4.2","0.4.3","0.4.4"]
+70 error notarget
+70 error notarget This is most likely not a problem with npm itself.
+70 error notarget In most cases you or one of your dependencies are requesting
+70 error notarget a package version that doesn't exist.
+71 error System Darwin 15.2.0
+72 error command "node" "/usr/local/bin/npm" "install"
+73 error cwd /Volumes/disk2s1/Archive/Futuramerlin Projects/Software/Ember/Git working copy/ember-satellite-projects/futuramerlin-website/source
+74 error node -v v0.10.32
+75 error npm -v 1.4.28
+76 error code ETARGET
+77 verbose exit [ 1, true ]
