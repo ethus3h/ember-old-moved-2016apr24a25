@@ -370,7 +370,7 @@ ul:not(.navigation)
     width: 100%;
     height: 100vh;
 
-    background-image: url(background.svg);
+    background-image: url(b.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;
@@ -406,7 +406,7 @@ ul:not(.navigation)
 
     transition: font-size .2s, left .2s, width .2s, opacity .2s;
 
-    background-image: url(background.svg);
+    background-image: url(b.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;
@@ -425,7 +425,7 @@ ul:not(.navigation)
     width: 100%;
     height: 100%;
 
-    background-image: url(background.svg);
+    background-image: url(b.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;
