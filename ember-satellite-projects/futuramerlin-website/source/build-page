@@ -16,11 +16,3 @@ perl -p -i -e 's/> </></g' "./built/$1.htm";
 perl -p -i -e "s/nav-item-inactive $1/nav-item-selected/g" "./built/$1.htm";
 perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "./built/$1.htm";
 rm -v ./built/*.tmp;
-
-cp -v "m.css" "./built/m.css";
-tr '\n' ' ' < "./built/m.css" > "./built/1.tmp";
-tr '\t' ' ' < "./built/1.tmp" > "./built/2.tmp";
-tr '\r' ' ' < "./built/2.tmp" > "./built/3.tmp";
-tr -s " " < "./built/3.tmp" > "./built/m.css";
-minify --no-comments -o "./built/m.css" "./built/m.css";
-rm -v ./built/*.tmp;
