@@ -7,17 +7,18 @@ rm -rv "../built/";
 mkdir "../built/";
 cp -rv ./assets/* "../built/";
 
-#Help from http://stackoverflow.com/questions/4011668/bash-for-loop-on-directories
-for i in ./content/* ; do
-  if [ -d "$i" ]; then
-    echo "Entering directory $i..."
-	for file in ./content/"$i"/*.htm;
-		do ./scripts/build-page-fn "$i/$file";
+traversedirectory() {
+	for i in ./content/"$1"/.[^.]* ./content/"$1"/..?*; do
+		if [ -d "$i" ]; then
+			echo "Entering directory $1/$i...";
+			traversedirectory "$1/$i";
+		else
+			echo "Building page: $1/$i/$file";
+			./scripts/build-page "$1/$i/$(echo \"$file\" | cut -d. -f1)";
+		fi;
 	done;
-  fi
-done
-
-
+}
+traversedirectory "./content/";
 
 cp -v "./assets/m.css" "../built/m.css";
 tr '\n' ' ' < "../built/m.css" > "../built/1.tmp";
