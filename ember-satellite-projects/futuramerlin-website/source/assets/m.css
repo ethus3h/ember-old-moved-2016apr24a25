@@ -829,12 +829,44 @@ figure.thumbnail-top
 ul
 {
     padding-left: 1rem;
+    margin-top: 0.5rem;
     list-style-position: inside;
+    /* See http://stackoverflow.com/questions/10428720/how-to-keep-indent-for-second-line-in-ordered-lists-via-css for what's going on here. */
+    counter-reset: indentation;
+    display: table;
+}
+ul > li
+{
+	counter-increment: indentation;
+	display: table-row;
+}
+ul > li::before
+{
+	content: "•";
+	padding-right: 1rem;
+	display: table-cell;
+	text-align: right;
+	position:relative;
 }
 ul.navigation
 {
     padding-left: 0;
     list-style:none;
+    counter-reset: unset;
+    display: block;
+}
+ul.navigation > li
+{
+    counter-increment: unset;
+	display: block;
+}
+ul.navigation > li::before
+{
+	content: unset;
+	padding-right: unset;
+	display: unset;
+	text-align: unset;
+	position:unset;
 }
 ul.space-below {
 	padding-bottom: 1rem;
