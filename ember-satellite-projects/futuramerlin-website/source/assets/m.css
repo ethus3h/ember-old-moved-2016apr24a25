@@ -745,11 +745,23 @@ figure.thumbnail-right
 {
 	float:right;
 	margin: 1rem;
-	width: 9.375rem;
+	width: 10.375rem;
+	padding: 0.5rem;
+	border: .095rem solid #ddd;
 }
 figure.thumbnail-right > figcaption
 {
 	font-size:1rem;
+}
+figure.thumbnail-right > figcaption::after
+{
+	content:"\aTap image to view.";
+	top:0.25rem;
+	left:0.5rem;
+	position:relative;
+	margin-right:0.5rem;
+	white-space:pre;
+	color:rgba(42,22,87,0.7);
 }
 figure.thumbnail-top
 {
