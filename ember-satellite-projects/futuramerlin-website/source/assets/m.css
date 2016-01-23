@@ -45,7 +45,7 @@
     src: url(f/wreathe-bi.eot);
     src: url(f/wreathe-bi.eot?#iefix) format('embedded-opentype'), url(f/wreathe-bi.woff) format('woff'), url(f/wreathe-bi.ttf) format('truetype'), url(f/wreathe-bi.svg#wreathebold_italic) format('svg');
 }
-.navigation
+navigation
 {
     position: fixed;
     z-index: 4;
@@ -59,7 +59,7 @@
     width: 25%;
     height: 100%;
 
-    list-style: none;
+/*     list-style: none; */
 
     transition: left .2s;
 
@@ -248,12 +248,6 @@ a.logolink
 a.logolink:visited
 {
     color: rgb(1, 50, 32);
-}
-ul:not(.navigation)
-{
-    padding-left: 1rem;
-
-    list-style-position: inside;
 }
 .site-wrap
 {
@@ -474,7 +468,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 {
     /* small screen */
 
-    .navigation
+    navigation
     {
         left: -25%;
 
@@ -539,7 +533,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         background-size: contain;
     }
     .nav-trigger + label,
-    .navigation
+    navigation
     {
         transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
     }
@@ -565,7 +559,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         transition: .4s ease-out;
         transform: translateX(calc(-100% - 1rem));
     }
-    .nav-trigger:checked ~ .navigation
+    .nav-trigger:checked ~ navigation
     {
         left: 0;
 
@@ -601,7 +595,7 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
     {
         left: calc(75% + 1rem);
     }
-    .nav-trigger:checked ~ .navigation
+    .nav-trigger:checked ~ navigation
     {
         left: 0;
 
@@ -639,7 +633,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' version=\'1.1\' x=\'0px\' y=\'0px\' width=\'30px\' height=\'30px\' viewBox=\'0 0 30 30\' xml:space=\'preserve\'><rect style=\'fill:rgb(1,50,32);\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'24\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'12\' width=\'30\' height=\'6\'/></svg>');
         background-size: contain;
     }
-    .navigation
+    navigation
     {
         left: 0;
 
@@ -691,13 +685,14 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         position: fixed;
     }
 }
+/* 
 h1,
 h3,
 p
 {
     max-width: 37.5rem;
-    margin: 0 auto 1rem;
-}
+/*     margin: 0 auto 1rem; */
+/* } */
 code
 {
     padding: .125rem;
@@ -719,4 +714,74 @@ body
 {
     width: 100%;
     height: 100%;
+}
+span.inlineheader
+{
+	font-weight:bold;
+}
+p.big
+{
+	font-size:2rem;
+}
+p.big-address
+{
+	text-align:center;
+}
+p.big-space-below
+{
+	padding-bottom:2rem;
+}
+h1
+{
+	font-weight:bold;
+	font-size:2rem;
+	padding-bottom:1rem;
+}
+figure img
+{
+	width: 100%;
+}
+figure.thumbnail-right
+{
+	float:right;
+	margin: 1rem;
+	width: 9.375rem;
+}
+figure.thumbnail-right > figcaption
+{
+	font-size:1rem;
+}
+figure.thumbnail-top
+{
+	margin-top: 0;
+}
+ul
+{
+    padding-left: 1rem;
+    list-style-position: inside;
+}
+ul.navigation
+{
+    padding-left: 0;
+    list-style:none;
+}
+ul.space-below {
+	padding-bottom: 1rem;
+}
+ul.no-bullets {
+	list-style:none;
+}
+ul.bold-1st-level > li {
+	font-weight:bold;
+}
+ul.bold-1st-level > li > ul {
+	font-weight:normal;
+}
+ul.hanging-indented > li {
+	padding-left:1rem;
+	text-indent:1rem hanging;
+}
+.centered
+{
+	text-align:center;
 }
