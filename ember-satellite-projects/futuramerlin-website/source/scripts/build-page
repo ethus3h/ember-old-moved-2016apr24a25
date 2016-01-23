@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cp -v "./assets/1_start.html" "../built/$1.htm";
-cat "$1.htm" >> "../built/$1.htm";
+cat "./content/$1.htm" >> "../built/$1.htm";
 cat "./assets/2_end.html" >> "../built/$1.htm";
 tidy --new-blocklevel-tags "navigation, content" --output "../built/$1.htm" "../built/$1.htm";
 html-minifier --output "../built/$1.htm" --remove-comments --use-short-doctype "../built/$1.htm";
