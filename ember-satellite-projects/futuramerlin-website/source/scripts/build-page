@@ -19,10 +19,9 @@ perl -p -i -e "s/nav-item-inactive $PAGE/nav-item-selected/g" "../../built/$1";
 echo "pt3";
 perl -p -e "s/^((?!^<h1 class=\"title\">([^<]+)<\/h1>).)*$//g" "../content/$1" > "../../built/4.tmp";
 echo "pt4";
+perl -p -i -e 's/^\s*//;s/\s*$//;s/\s+/ /;' "../../built/4.tmp"
 cat "../../built/4.tmp";
-#help from http://www.cyberciti.biz/tips/delete-leading-spaces-from-front-of-each-word.html
-cat "../../built/4.tmp" | sed '/^$/d' > "../../built/4.tmp";
-perl -p -i -e "s/<h1 class=\"title\">([^<]+)<\/h1>.+/\\1/g" "../../built/4.tmp";
+perl -p -i -e "s/<h1 class=\"title\">([^<]+)<\/h1>.*/\\1/g" "../../built/4.tmp";
 cat "../../built/4.tmp";
 title="$(cat ../../built/4.tmp)";
 ere_quote() {
