@@ -13,9 +13,9 @@ cp -r ./assets/* "../built/";
 	traversedirectory() {
 		echo "Entered directory $1...";
 		for i in "$1"/*; do
-			if [ -d "$i" ]; then
-				if ! [ "$i" == "." ]; then
-					if ! [ "$i" == ".." ]; then
+			if [[ -d "$i" ]]; then
+				if ! [[ "$i" == "." ]]; then
+					if ! [[ "$i" == ".." ]]; then
 						echo "Entering directory $i...";
 						traversedirectory "$i";
 					fi;
