@@ -63,7 +63,7 @@
 
     transition: left .2s;
 
-    border-right: 1px solid white;
+    border-right: 0.063rem solid white;
     background: #e2daf1;
     -webkit-box-shadow: .250rem 0 .250rem -.16rem #fff;
        -moz-box-shadow: .250rem 0 .250rem -.16rem #fff;
@@ -288,7 +288,7 @@ a.logolink:visited
     margin-left: 4rem;
     padding-top: 1rem;
     padding-right: 1rem;
-    padding-bottom: 5rem;
+    padding-bottom: 7rem;
     padding-left: 1rem;
 
     transition: margin .2s, top .2s;
@@ -343,7 +343,7 @@ a.logolink:visited
     transition: margin .2s, top .2s, bottom .2s, height .2s;
     pointer-events: none;
 
-    border: .063em solid white;
+    border: .063rem solid white;
     background: none;
 }
 .headerbgwrap
@@ -355,6 +355,9 @@ a.logolink:visited
 
     width: 100%;
     height: 4rem;
+}
+.clearfloat {
+	clear:both;
 }
 .headerbackground
 {
@@ -716,124 +719,55 @@ body
     height: 100%;
 }
 
-div.musicwrapper {
-	-webkit-box-shadow: 0 0 5px 0 rgba(255, 255, 255, 1);
-	-moz-box-shadow: 0 0 5px 0 rgba(255, 255, 255, 1);
-	box-shadow: 0 0 5px 0 rgba(255, 255, 255, 1);
-	max-width: 680px!important;
-	z-index: 100;
-	height: 100%;
-	position: relative;
-	margin-left: auto;
-	margin-right: auto;
-	border: 1px #888 solid;
-	background-color: rgba(0,0,0,0.1);
-	width: 100%
-}
-
-div.musicpageintro {
-	left: 0!important
-}
-
 div.musicthumbcontainer {
-	background-color: rgba(0,0,0,0.3);
-	float: left;
-	max-width: 30%;
-	width: 10rem;
+	display:table-cell;
+	vertical-align:top;
+	width: 10.375rem;
 	z-index: 110;
-	position: absolute;
-	top: 36px;
-	bottom: 0;
-	overflow-y: auto;
-	overflow-x: hidden
-}
-
-div.musicthumbnails {
-	position: relative;
-	bottom: 0;
-	height: 100%
+	margin-right:1rem;
+	margin-top:1rem;
 }
 
 div.musicbig {
 	display: none;
-	bottom: 0;
-	margin-left: 30%;
-	top: 36px;
 	right: 0;
-	background-color: rgba(0,0,0,0.1);
-	overflow-y: scroll;
-	padding: 15px
+	margin-top:1rem;
 }
-
-img.musicbigimage {
-	width: 100%;
-	-webkit-box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1);
-	-moz-box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1);
-	box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1)
+div.table-columns {
+	display:table;
+	vertical-align:top;
 }
-
-iframe.musicbigplayer {
-	width: 100%;
-	-webkit-box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1);
-	border: 0;
-	-moz-box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1);
-	box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1)
+table {
+	table-layout:fixed;
+	width:100%;
 }
-
 img.musicthumb {
-	width: 80%;
-	max-width: 150px;
-	-webkit-box-shadow: 0 0 8px 0 rgba(255, 255, 255, 1);
-	-moz-box-shadow: 0 0 8px 0 rgba(255, 255, 255, 1);
-	box-shadow: 0 0 8px 0 rgba(255, 255, 255, 1);
+	width:9.375rem;
+	-webkit-box-shadow: 0 0 0.5rem 0 rgba(255, 255, 255, 1);
+	-moz-box-shadow: 0 0 0.5rem 0 rgba(255, 255, 255, 1);
+	box-shadow: 0 0 0.5rem 0 rgba(255, 255, 255, 1);
 	cursor: pointer;
-	margin: 10%
+	box-sizing:content-box;
 }
 
 img.musicthumb:hover {
-	border-left: 3px #FFF solid
+	border-left: 0.188rem #FFF solid;
 }
-
-.mlefti {
-	text-align: left!important;
-	padding-left: 3px
+audio {
+	display:block;
+	margin:0.667rem;
 }
-
-div.bandcamplink {
-	position: fixed;
-	top: 85px;
-	right: 30px;
-	width: 11%;
-	z-index: 115;
-	font-size: 1.5em;
-	border: 1px #666 solid;
-	-webkit-box-shadow: 0 0 10px 0 rgba(255, 255, 255, 1);
-	-moz-box-shadow: 0 0 10px 0 rgba(255, 255, 255, 1);
-	box-shadow: 0 0 10px 0 rgba(255, 255, 255, 1);
-	padding: 8px
-}
-
-div.bandcampbackground {
-	position: absolute;
-	border: 2px #fff dotted;
-	background: #fff;
-	height: 100%;
-	width: 100%;
-	opacity: 0.2;
-	top: -2px;
-	left: -2px;
-	z-index: 114
-}
-
-div.bandcampcontent {
-	position: relative;
-	z-index: 116;
-	text-shadow: 0 0 10px rgba(255, 255, 255, 1)
-}
-
 span.inlineheader
 {
 	font-weight:bold;
+}
+span.anoeyfuturamerlincommedium
+{
+	font-family:anoeyfuturamerlincommedium;
+}
+span.song-title
+{
+	font-style:italic;
 }
 p.big
 {
