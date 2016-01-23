@@ -1,3 +1,0 @@
-#!/bin/bash
-
-./scripts/build-page $(basename "$1" | cut -d. -f1)
