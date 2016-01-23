@@ -1,17 +1,20 @@
 #!/bin/bash
 
-mkdir -pv "../built/$1.htm";
-rm -rv "../built/$1.htm";
-cp -v "./assets/1_start.html" "../built/$1.htm";
-cat "./content/$1.htm" >> "../built/$1.htm";
-cat "./assets/2_end.html" >> "../built/$1.htm";
-tidy --new-blocklevel-tags "navigation, content" --output "../built/$1.htm" "../built/$1.htm";
-html-minifier --output "../built/$1.htm" --remove-comments --use-short-doctype "../built/$1.htm";
-tr '\n' ' ' < "../built/$1.htm" > "../built/1.tmp";
-tr '\t' ' ' < "../built/1.tmp" > "../built/2.tmp";
-tr '\r' ' ' < "../built/2.tmp" > "../built/3.tmp";
-tr -s " " < "../built/3.tmp" > "../built/$1.htm";
-perl -p -i -e 's/> </></g' "../built/$1.htm";
-perl -p -i -e "s/nav-item-inactive $(basename \"$1\" | cut -d. -f1)/nav-item-selected/g" "../built/$1.htm";
-perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../built/$1.htm";
-rm -v ../built/*.tmp;
+PAGENAME="$(basename "$1" | cut -d. -f1)";
+PAGE="$(echo "$1" | cut -d. -f1)";
+rm -rfv "../../built/$1";
+mkdir -pv "../../built/$1";
+rm -rfv "../../built/$1";
+cp -v ".././assets/1_start.html" "../../built/$1";
+cat ".././content/$1" >> "../../built/$1";
+cat ".././assets/2_end.html" >> "../../built/$1";
+# tidy --show-warnings "no" --show-body-only "yes" --show-errors "no" --new-blocklevel-tags "navigation, content" -m "../../built/$1";
+html-minifier --output "../../built/$1" --remove-comments --use-short-doctype "../../built/$1";
+tr '\n' ' ' < "../../built/$1" > "../../built/1.tmp";
+tr '\t' ' ' < "../../built/1.tmp" > "../../built/2.tmp";
+tr '\r' ' ' < "../../built/2.tmp" > "../../built/3.tmp";
+tr -s " " < "../../built/3.tmp" > "../../built/$1";
+perl -p -i -e 's/> </></g' "../../built/$1";
+perl -p -i -e "s/nav-item-inactive $PAGE/nav-item-selected/g" "../../built/$1";
+perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../../built/$1";
+rm -v ../../built/*.tmp;

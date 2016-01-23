@@ -7,6 +7,7 @@ rm -rv "../built";
 mkdir "../built/";
 cp -rv ./assets/* "../built/";
 
+cd "content";
 traversedirectory() {
 	echo "Entered directory $1...";
 	for i in "$1"/*; do
@@ -19,11 +20,12 @@ traversedirectory() {
 			fi;
 		else
 			echo "Building page: $i";
-# 			./scripts/build-page "$1/$i/$(echo \"$file\" | cut -d. -f1)";
+			../scripts/build-page "$i";
 		fi;
 	done;
 }
-traversedirectory "./content";
+traversedirectory ".";
+cd ..;
 
 cp -v "./assets/m.css" "../built/m.css";
 tr '\n' ' ' < "../built/m.css" > "../built/1.tmp";
