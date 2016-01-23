@@ -8,27 +8,26 @@ rm -r "../built";
 mkdir "../built/";
 echo "Copying assets...";
 cp -r ./assets/* "../built/";
-
-cd "content";
-traversedirectory() {
-	echo "Entered directory $1...";
-	for i in "$1"/*; do
-		if [ -d "$i" ]; then
-			if ! [ "$i" == "." ]; then
-				if ! [ "$i" == ".." ]; then
-					echo "Entering directory $i...";
-					traversedirectory "$i";
+(
+	cd "content" || exit;
+	traversedirectory() {
+		echo "Entered directory $1...";
+		for i in "$1"/*; do
+			if [ -d "$i" ]; then
+				if ! [ "$i" == "." ]; then
+					if ! [ "$i" == ".." ]; then
+						echo "Entering directory $i...";
+						traversedirectory "$i";
+					fi;
 				fi;
+			else
+				echo "Building page: $i";
+				../scripts/build-page "$i";
 			fi;
-		else
-			echo "Building page: $i";
-			../scripts/build-page "$i";
-		fi;
-	done;
-}
-traversedirectory ".";
-cd ..;
-
+		done;
+	}
+	traversedirectory ".";
+)
 echo "Processing CSS...";
 cp "./assets/m.css" "../built/m.css";
 tr '\n' ' ' < "../built/m.css" > "../built/1.tmp";
