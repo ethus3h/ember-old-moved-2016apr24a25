@@ -12,20 +12,35 @@ tr '\n' ' ' < "../../built/$1" > "../../built/1.tmp";
 tr '\t' ' ' < "../../built/1.tmp" > "../../built/2.tmp";
 tr '\r' ' ' < "../../built/2.tmp" > "../../built/3.tmp";
 tr -s " " < "../../built/3.tmp" > "../../built/$1";
+echo "pt1";
 perl -p -i -e 's/> </></g' "../../built/$1";
+echo "pt2";
 perl -p -i -e "s/nav-item-inactive $PAGE/nav-item-selected/g" "../../built/$1";
+echo "pt3";
 perl -p -e "s/^((?!^<h1 class=\"title\">([^<]+)<\/h1>).)*$//g" "../content/$1" > "../../built/4.tmp";
+echo "pt4";
+cat "../../built/4.tmp";
+#help from http://www.cyberciti.biz/tips/delete-leading-spaces-from-front-of-each-word.html
+cat "../../built/4.tmp" | sed '/^$/d' > "../../built/4.tmp";
 perl -p -i -e "s/<h1 class=\"title\">([^<]+)<\/h1>.+/\\1/g" "../../built/4.tmp";
+cat "../../built/4.tmp";
 title="$(cat ../../built/4.tmp)";
-#from http://stackoverflow.com/questions/11856054/bash-easy-way-to-pass-a-raw-string-to-grep
 ere_quote() {
     sed 's/[]\.|$(){}?+*^]/\\&/g' <<< "$*"
 }
+echo "pt5";
 title="$(ere_quote $title)";
+echo "pt6";
 if [ -n "$title" ]; then
-	perl -p -i -e "s/<title>Futuramerlin<\/title>/<title>$title &mdash; Futuramerlin<\/title>/g" "../../built/$1";
+	echo "pt7";
+	replace="s/<title>Futuramerlin<\/title>/<title>$title &mdash; Futuramerlin<\/title>/g";
+	echo "$replace";
+	perl -p -i -e "$replace" "../../built/$1";
+	echo "pt8";
 fi
+echo "pt9";
 perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../../built/$1";
+echo "pt10";
 SLASHCOUNTTEMP="${1//[^\/]}";
 SLASHCOUNT=${#SLASHCOUNTTEMP}
 i=1;
