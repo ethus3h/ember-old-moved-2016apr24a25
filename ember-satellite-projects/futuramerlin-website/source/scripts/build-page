@@ -15,16 +15,16 @@ tr -s " " < "../../built/3.tmp" > "../../built/$1";
 perl -p -i -e 's/> </></g' "../../built/$1";
 perl -p -i -e "s/nav-item-inactive $PAGE/nav-item-selected/g" "../../built/$1";
 perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../../built/$1";
-SLASHCOUNT=$(grep -c -o "/" <<< "$1");
+SLASHCOUNTTEMP="${1//[^\/]}";
+SLASHCOUNT=${#SLASHCOUNTTEMP}
+echo $SLASHCOUNT;
 i=1;
 d="";
 while [[ (( $i < $SLASHCOUNT )) ]]; do
 	d=$d"..\/";
 	i=$((i+1));
 done;
-# INSTR=${1//\//\\\/};
-# STRMATCH="s/href=\"([^:\"]+)\"/href=\"$d$INSTR\"/g";
 STRMATCH="s/href=\"([^:\"]+)\"/href=\"$d\\1\"/g";
-# echo "$STRMATCH";
+echo "$STRMATCH";
 perl -p -i -e "$STRMATCH" "../../built/$1";
 rm -f ../../built/*.tmp;
