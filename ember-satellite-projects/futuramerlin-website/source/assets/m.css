@@ -715,6 +715,122 @@ body
     width: 100%;
     height: 100%;
 }
+
+div.musicwrapper {
+	-webkit-box-shadow: 0 0 5px 0 rgba(255, 255, 255, 1);
+	-moz-box-shadow: 0 0 5px 0 rgba(255, 255, 255, 1);
+	box-shadow: 0 0 5px 0 rgba(255, 255, 255, 1);
+	max-width: 680px!important;
+	z-index: 100;
+	height: 100%;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px #888 solid;
+	background-color: rgba(0,0,0,0.1);
+	width: 100%
+}
+
+div.musicpageintro {
+	left: 0!important
+}
+
+div.musicthumbcontainer {
+	background-color: rgba(0,0,0,0.3);
+	float: left;
+	max-width: 30%;
+	width: 10rem;
+	z-index: 110;
+	position: absolute;
+	top: 36px;
+	bottom: 0;
+	overflow-y: auto;
+	overflow-x: hidden
+}
+
+div.musicthumbnails {
+	position: relative;
+	bottom: 0;
+	height: 100%
+}
+
+div.musicbig {
+	display: none;
+	bottom: 0;
+	margin-left: 30%;
+	top: 36px;
+	right: 0;
+	background-color: rgba(0,0,0,0.1);
+	overflow-y: scroll;
+	padding: 15px
+}
+
+img.musicbigimage {
+	width: 100%;
+	-webkit-box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1);
+	-moz-box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1);
+	box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1)
+}
+
+iframe.musicbigplayer {
+	width: 100%;
+	-webkit-box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1);
+	border: 0;
+	-moz-box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1);
+	box-shadow: 0 0 15px 0 rgba(255, 255, 255, 1)
+}
+
+img.musicthumb {
+	width: 80%;
+	max-width: 150px;
+	-webkit-box-shadow: 0 0 8px 0 rgba(255, 255, 255, 1);
+	-moz-box-shadow: 0 0 8px 0 rgba(255, 255, 255, 1);
+	box-shadow: 0 0 8px 0 rgba(255, 255, 255, 1);
+	cursor: pointer;
+	margin: 10%
+}
+
+img.musicthumb:hover {
+	border-left: 3px #FFF solid
+}
+
+.mlefti {
+	text-align: left!important;
+	padding-left: 3px
+}
+
+div.bandcamplink {
+	position: fixed;
+	top: 85px;
+	right: 30px;
+	width: 11%;
+	z-index: 115;
+	font-size: 1.5em;
+	border: 1px #666 solid;
+	-webkit-box-shadow: 0 0 10px 0 rgba(255, 255, 255, 1);
+	-moz-box-shadow: 0 0 10px 0 rgba(255, 255, 255, 1);
+	box-shadow: 0 0 10px 0 rgba(255, 255, 255, 1);
+	padding: 8px
+}
+
+div.bandcampbackground {
+	position: absolute;
+	border: 2px #fff dotted;
+	background: #fff;
+	height: 100%;
+	width: 100%;
+	opacity: 0.2;
+	top: -2px;
+	left: -2px;
+	z-index: 114
+}
+
+div.bandcampcontent {
+	position: relative;
+	z-index: 116;
+	text-shadow: 0 0 10px rgba(255, 255, 255, 1)
+}
+
 span.inlineheader
 {
 	font-weight:bold;
@@ -735,7 +851,16 @@ h1
 {
 	font-weight:bold;
 	font-size:2rem;
-	padding-bottom:1rem;
+	position:relative;
+	padding:1rem;
+}
+h1.title
+{
+	top:-1rem;
+	left:-1rem;
+	background: -webkit-linear-gradient(0deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
+	background: -moz-linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
+	background: linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 }
 figure img
 {
