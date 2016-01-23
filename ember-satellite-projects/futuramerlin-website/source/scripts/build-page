@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PAGE="$(echo "$1" | cut -d. -f1)";
+PAGE="$(basename "$1" | cut -d. -f1)";
 rm -rf "../../built/$1";
 mkdir -p "../../built/$1";
 rm -rf "../../built/$1";

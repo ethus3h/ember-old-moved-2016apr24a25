@@ -45,7 +45,7 @@
     src: url(f/wreathe-bi.eot);
     src: url(f/wreathe-bi.eot?#iefix) format('embedded-opentype'), url(f/wreathe-bi.woff) format('woff'), url(f/wreathe-bi.ttf) format('truetype'), url(f/wreathe-bi.svg#wreathebold_italic) format('svg');
 }
-navigation
+.navigation
 {
     position: fixed;
     z-index: 4;
@@ -468,7 +468,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 {
     /* small screen */
 
-    navigation
+    .navigation
     {
         left: -25%;
 
@@ -533,7 +533,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         background-size: contain;
     }
     .nav-trigger + label,
-    navigation
+    .navigation
     {
         transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
     }
@@ -559,7 +559,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         transition: .4s ease-out;
         transform: translateX(calc(-100% - 1rem));
     }
-    .nav-trigger:checked ~ navigation
+    .nav-trigger:checked ~ .navigation
     {
         left: 0;
 
@@ -595,7 +595,7 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
     {
         left: calc(75% + 1rem);
     }
-    .nav-trigger:checked ~ navigation
+    .nav-trigger:checked ~ .navigation
     {
         left: 0;
 
@@ -633,7 +633,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' version=\'1.1\' x=\'0px\' y=\'0px\' width=\'30px\' height=\'30px\' viewBox=\'0 0 30 30\' xml:space=\'preserve\'><rect style=\'fill:rgb(1,50,32);\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'24\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'12\' width=\'30\' height=\'6\'/></svg>');
         background-size: contain;
     }
-    navigation
+    .navigation
     {
         left: 0;
 
