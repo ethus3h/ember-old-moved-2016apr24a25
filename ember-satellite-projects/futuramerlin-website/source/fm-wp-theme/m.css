@@ -705,6 +705,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     .content
     {
         left: 0;
+        max-width: calc(100%);
     }
     label[for='nav-trigger']
     {
@@ -849,6 +850,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     .contentbgborder
     {
         left: 25%;
+        max-width: calc(75% - 8rem);
     }
     .logo,
     .background,
@@ -881,14 +883,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         position: fixed;
     }
 }
-/* 
-h1,
-h3,
-p
-{
-    max-width: 37.5rem;
-/*     margin: 0 auto 1rem; */
-/* } */
+
 code
 {
     padding: .125rem;
