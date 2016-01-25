@@ -9,11 +9,14 @@ div.musicthumbcontainer {
 	margin-right:1rem;
 	margin-top:1rem;
 }
-
 div.musicbig {
 	display: none;
 	right: 0;
 	margin-top:1rem;
+}
+div.entry-meta
+{
+	font-size:0.75rem;
 }
 div.table-columns {
 	display:table;
@@ -46,6 +49,10 @@ span.inlineheader
 {
 	font-weight:bold;
 }
+span.byline
+{
+	float:right;
+}
 span.anoeyfuturamerlincommedium
 {
 	font-family:anoeyfuturamerlincommedium;
@@ -73,7 +80,7 @@ h1
 	position:relative;
 	padding:1rem;
 }
-h1.title
+h1.title, .single-post header h1
 {
 	top:-1rem;
 	left:-1rem;
@@ -81,11 +88,11 @@ h1.title
 	background: -moz-linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 	background: linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 }
-figure img
+figure img, featured-image a div img
 {
 	width: 100%;
 }
-figure.thumbnail-right
+figure.thumbnail-right, featured-image
 {
 	float:right;
 	margin-left: 1rem;
@@ -776,7 +783,7 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
 {
     /* really small screen */
 
-	figure.thumbnail-right
+	figure.thumbnail-right, featured-image
 	{
 		margin: 1rem;
 		left: 0.75rem;
