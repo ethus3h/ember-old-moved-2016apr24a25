@@ -153,11 +153,11 @@ ul.navigation > li
 }
 ul.navigation > li::before
 {
-	content: unset;
+    content: ' ';
 	padding-right: unset;
 	display: unset;
 	text-align: unset;
-	position:unset;
+    position: absolute;
 }
 ul.space-below {
 	padding-bottom: 1rem;
