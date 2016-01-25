@@ -14,6 +14,52 @@ div.musicbig {
 	right: 0;
 	margin-top:1rem;
 }
+.clearfloat, .post-revisions {
+	clear:both;
+}
+div.post-revisions, .single-post > .entry-footer, div.revision-header, div#revision-diffs {
+	background-color:rgba(0,0,0,0.07);
+}
+div.revision-header, div#revision-diffs, div.post-revisions {
+	padding:1rem;
+	font-size:1.1rem;
+}
+div.revision-header {
+	margin-bottom:1rem;
+}
+div#revision-diffs {
+	position: relative;
+	overflow: auto;
+}
+div#revision-diffs::before {
+	content: "";
+	display: block;
+	padding-top: 50%;
+}
+div#revision-diffs > div {
+	position: absolute;
+	padding:1rem;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+div#revision-diffs > div > .diff {
+	padding-top: 2rem;
+}
+div.post-revisions, div#revision-diffs {
+	border-bottom:0.095rem solid rgba(0,0,0,0.5);
+}
+.post-navigation {
+	font-size:1.1rem;
+}
+.post-navigation .nav-next {
+	text-align:right;
+}
+.entry-footer {
+	padding:1rem;
+	font-size:1.1rem;
+}
 div.entry-meta
 {
 	font-size:1.1rem;
@@ -31,7 +77,11 @@ div.table-columns {
 .contentbackground,.contentbgborder {
 	max-width:100vw;
 }
-header.entry-header {
+.fm-wp-content > main > article:not(.single-post) > .entry-content > .article-rest > .entry-footer
+{
+display: none;
+}
+.single-post > header.entry-header {
 	top:-1rem;
 	left:-1rem;
 	position:relative;
@@ -78,7 +128,7 @@ span.anoeyfuturamerlincommedium
 {
 	font-family:anoeyfuturamerlincommedium;
 }
-span.song-title
+span.song-title, span.meta-nav
 {
 	font-style:italic;
 }
@@ -101,7 +151,6 @@ h1
 	position:relative;
 	padding:1rem;
 	display:block;
-	width:calc(100% + 2rem);
 	overflow:hidden;
 }
 h1.title
@@ -114,16 +163,20 @@ h1.title, .single-post header h1
 {
 	top:-1rem;
 	left:-1rem;
+	width:calc(100% + 2rem);
 }
-.single-post header h1 {
+.post-navigation > h1 {
+	display:none;
+}
+.single-post > header > h1 {
 	display: table-cell;
 	padding-bottom: 0;
 }
-figure img, featured-image a div img
+figure > img, featured-image > a > div > img, figure > a > img
 {
 	width: 100%;
 }
-figure.thumbnail-right, featured-image
+figure.thumbnail-right, featured-image, .wp-caption.alignright
 {
 	float:right;
 	margin-left: 1rem;
@@ -136,17 +189,45 @@ figure.thumbnail-right, featured-image
 	position:relative;
 	transition: width .2s, margin .2s, left .2s;
 }
-figure.thumbnail-right > figcaption
+figure.thumbnail-right > figcaption,
+.wp-caption.alignright > figcaption,
+figure.thumbnail-left > figcaption,
+.wp-caption.alignleft > figcaption
 {
 	font-size:1rem;
 }
-figure.thumbnail-right > figcaption::after
+figure.thumbnail-right > figcaption::after,
+.wp-caption.alignright > figcaption::after
 {
 	content:"\aTap image to view.";
 	top:0.25rem;
 	left:0.5rem;
 	position:relative;
 	margin-right:0.5rem;
+	white-space:pre;
+	color:rgba(42,22,87,0.7);
+}
+figure.thumbnail-left, .wp-caption.alignleft
+{
+	float:left;
+	margin-left: 0rem;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	margin-right: 1rem;
+	width: 10.375rem;
+	padding: 0.5rem;
+	border: .095rem solid #ddd;
+	position:relative;
+	transition: width .2s, margin .2s, right .2s;
+}
+figure.thumbnail-left > figcaption::after,
+.wp-caption.alignleft > figcaption::after
+{
+	content:"\aTap image to view.";
+	top:0.25rem;
+	right:0.5rem;
+	position:relative;
+	margin-left:0.5rem;
 	white-space:pre;
 	color:rgba(42,22,87,0.7);
 }
@@ -586,9 +667,6 @@ a.logolink:visited
 
     width: 100%;
     height: 4rem;
-}
-.clearfloat {
-	clear:both;
 }
 .headerbackground
 {

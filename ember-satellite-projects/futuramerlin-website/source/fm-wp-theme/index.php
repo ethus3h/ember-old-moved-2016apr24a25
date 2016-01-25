@@ -41,28 +41,28 @@
 		</div>
 			<ul class="navigation">
 				<li class="nav-item nav-item-inactive index">
-					<a href=".">Home</a>
+					<a href="/">Home</a>
 				</li>
 				<li class="nav-item nav-item-inactive bio">
-					<a href="bio.htm">Bio</a>
+					<a href="/bio.htm">Bio</a>
 				</li>
 				<li class="nav-item nav-item-inactive news">
-					<a href="news.htm">News</a>
+					<a href="/news.htm">News</a>
 				</li>
 				<li class="nav-item nav-item-inactive blog">
-					<a href="blog.htm">Blog</a>
+					<a href="/blog.htm">Blog</a>
 				</li>
 				<li class="nav-item nav-item-inactive contact">
-					<a href="contact.htm">Contact</a>
+					<a href="/contact.htm">Contact</a>
 				</li>
 				<li class="nav-item nav-item-inactive resume">
-					<a href="resume.htm">Résumé</a>
+					<a href="/resume.htm">Résumé</a>
 				</li>
 				<li class="nav-item nav-item-inactive ember">
-					<a href="ember">Project: Ember</a>
+					<a href="/ember">Project: Ember</a>
 				</li>
 				<li class="nav-item nav-item-inactive music">
-					<a href="music">Music</a>
+					<a href="/music">Music</a>
 				</li>
 			</ul>
 		<div class="site-wrap"></div>
@@ -70,7 +70,7 @@
 		<div class="contentbgborder"></div>
 		<div class="content">
 
-	<div id="primary" class="content-area container col-lg-8 col-md-8">
+	<div id="primary" class="fm-wp-content content-area container col-lg-8 col-md-8">
 		<main id="main" class="site-main">
 
 		<?php if ( have_posts() ) : ?>

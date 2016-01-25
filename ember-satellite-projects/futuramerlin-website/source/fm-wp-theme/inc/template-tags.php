@@ -52,8 +52,8 @@ function raze_post_nav() {
 		<h1 class="screen-reader-text"><?php _e( 'Post navigation', 'raze' ); ?></h1>
 		<div class="nav-links">
 			<?php
-				previous_post_link( '<div class="nav-previous">%link</div>', _x( '<span class="meta-nav">&larr;</span> %title', 'Previous post link', 'raze' ) );
-				next_post_link(     '<div class="nav-next">%link</div>',     _x( '%title <span class="meta-nav">&rarr;</span>', 'Next post link',     'raze' ) );
+				previous_post_link( '<div class="nav-previous">%link</div>', _x( '<span class="meta-nav">&larr; Previous post: </span>%title', 'Previous post link', 'raze' ) );
+				next_post_link(     '<div class="nav-next">%link</div>',     _x( '<span class="meta-nav">Next post: </span>%title<span class="meta-nav"> &rarr;</span>', 'Next post link',     'raze' ) );
 			?>
 		</div><!-- .nav-links -->
 	</nav><!-- .navigation -->
