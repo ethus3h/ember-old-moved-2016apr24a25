@@ -6,10 +6,10 @@
 
 <article id="post-<?php the_ID(); ?>" class="single-post">
 	<header class="entry-header">
-		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 		<div class="entry-meta">
 			<?php raze_posted_on(); ?>
 		</div><!-- .entry-meta -->
+		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 	</header><!-- .entry-header -->
 	<?php if ( has_post_thumbnail() ) {
 	echo the_post_thumbnail();
