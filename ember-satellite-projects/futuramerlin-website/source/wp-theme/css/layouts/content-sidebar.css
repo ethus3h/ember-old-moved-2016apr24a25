@@ -1,0 +1,12 @@
+/*
+Theme Name: raze
+Layout: Content-Sidebar
+*/
+
+.site-main {
+	margin: 0;
+}
+.site-footer {
+	clear: both;
+	width: 100%;
+}
