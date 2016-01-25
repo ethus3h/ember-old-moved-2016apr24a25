@@ -17,6 +17,17 @@ div.musicbig {
 div.entry-meta
 {
 	font-size:1.1rem;
+	position:relative;
+	text-align:right;
+	top:-1rem;
+	right:-1rem;
+	padding:1rem;
+	background:rgba(226,218,241,1);
+	display:table-cell;
+}
+/* 
+div.entry-meta::before
+{
 	background: -webkit-linear-gradient(0deg, rgba(226,218,241,0) 0, rgba(226,218,241,1) 100%);
 	background: -moz-linear-gradient(90deg, rgba(226,218,241,0) 0, rgba(226,218,241,1) 100%);
 	background: linear-gradient(90deg, rgba(226,218,241,0) 0, rgba(226,218,241,1) 100%);
@@ -24,8 +35,9 @@ div.entry-meta
 	text-align:right;
 	top:0;
 	right:0;
-	margin:1rem;
+	padding:1rem;
 }
+ */
 div.table-columns {
 	display:table;
 	vertical-align:top;
@@ -98,6 +110,10 @@ h1.title, .single-post header h1
 	background: -webkit-linear-gradient(0deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 	background: -moz-linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 	background: linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
+}
+.single-post header h1
+{
+	display:table-cell;
 }
 figure img, featured-image a div img
 {
