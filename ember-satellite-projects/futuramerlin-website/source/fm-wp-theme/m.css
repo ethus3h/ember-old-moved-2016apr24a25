@@ -20,9 +20,9 @@ div.entry-meta
 	text-align:right;
 	top:0;
 	right:0;
-	height:0;
+/* 	height:0; */
 	padding-right:1rem;
-	display: table-cell;
+/* 	display: table-cell; */
 }
 div.table-columns {
 	display:table;
@@ -38,6 +38,7 @@ header.entry-header {
 	padding-top:1rem;
 	padding-left:1rem;
 	width:calc(100% + 2rem);
+	display:flex;
 	background: -webkit-linear-gradient(0deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 	background: -moz-linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 	background: linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
@@ -114,9 +115,11 @@ h1.title, .single-post header h1
 	top:-1rem;
 	left:-1rem;
 }
+/* 
 .single-post header h1 {
 	display: table-cell;
 }
+ */
 figure img, featured-image a div img
 {
 	width: 100%;
