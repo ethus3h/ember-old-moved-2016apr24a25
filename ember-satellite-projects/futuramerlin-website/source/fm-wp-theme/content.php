@@ -65,15 +65,15 @@
 		<?php endif; ?>
 
 		<?php edit_post_link( __( 'Edit', 'raze' ), '<span class="edit-link">', '</span>' ); ?>
-	</footer><!-- .entry-footer --></div>
+	</footer></div>
 		<?php
 			wp_link_pages( array(
 				'before' => '<div class="page-links">' . __( 'Pages:', 'raze' ),
 				'after'  => '</div>',
 			) );
 		?>
-	</div><!-- .entry-content -->
+	</div>
 	<?php endif; ?>
 
 	
-</article><!-- #post-## -->
+</article>

@@ -17,7 +17,7 @@ function raze_paging_nav() {
 		return;
 	}
 	?>
-	<nav class="navigation paging-navigation" role="navigation">
+	<nav class="navigation paging-navigation">
 		<h1 class="screen-reader-text"><?php _e( 'Posts navigation', 'raze' ); ?></h1>
 		<div class="nav-links">
 
@@ -48,7 +48,7 @@ function raze_post_nav() {
 		return;
 	}
 	?>
-	<nav class="navigation post-navigation" role="navigation">
+	<nav class="navigation post-navigation">
 		<h1 class="screen-reader-text"><?php _e( 'Post navigation', 'raze' ); ?></h1>
 		<div class="nav-links">
 			<?php

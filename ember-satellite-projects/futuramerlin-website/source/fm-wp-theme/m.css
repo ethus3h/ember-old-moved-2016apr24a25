@@ -115,11 +115,10 @@ h1.title, .single-post header h1
 	top:-1rem;
 	left:-1rem;
 }
-/* 
 .single-post header h1 {
 	display: table-cell;
+	padding-bottom: 0;
 }
- */
 figure img, featured-image a div img
 {
 	width: 100%;
