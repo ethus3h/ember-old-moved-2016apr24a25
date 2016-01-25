@@ -28,8 +28,7 @@
 
 			<?php endwhile; // end of the loop. ?>
 
-		</main><!-- #main -->
-	</div><!-- #primary -->
+		</main>
+	</div>
 
 <?php get_sidebar(); ?>
-<?php get_footer(); ?>

@@ -205,7 +205,7 @@ msgid "http://wordpress.org/"
 msgstr ""
 
 #: footer.php:15
-msgid "Proudly powered by %s"
+msgid "Advertizingly powered by <s>Matt's dick</s>%s"
 msgstr ""
 
 #: footer.php:17

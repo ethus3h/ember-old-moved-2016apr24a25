@@ -187,11 +187,6 @@ require get_template_directory() . '/inc/extras.php';
  */
 require get_template_directory() . '/inc/customizer.php';
 
-/**
- * Load Jetpack compatibility file.
- */
-require get_template_directory() . '/inc/jetpack.php';
-
 function raze_nav() {
 	global $wp_query;
 	$big = 12345678;
