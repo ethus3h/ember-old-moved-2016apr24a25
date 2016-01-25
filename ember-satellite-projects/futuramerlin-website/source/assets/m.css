@@ -187,6 +187,11 @@ ul.hanging-indented > li {
 {
 	text-align:center;
 }
+.comments-link { display: none !important; }
+.bbp-register-link { display: none !important; }
+a[href='https://wordpress.org/'] {display: none !important;}
+a[href='http://futuramerlin.com/c/guestbook/'] {display: none !important;}
+a[href='http://futuramerlin.com/c/forums/forum/futuramerlin-forum/'] {display: none !important;}
 
 @font-face
 {
@@ -905,4 +910,166 @@ body
 {
     width: 100%;
     height: 100%;
+}
+
+/* Wordpress */
+#content .entry-content {
+  padding-bottom: 1rem;
+}
+#content .featured-image img {
+  border: 0.1rem solid #ccc;
+}
+#content .article-rest {
+  padding-bottom: 1.5rem;
+}
+#content .article-rest .entry-title {
+  padding: 1.5rem 0;
+}
+#content .article-rest .entry-meta {
+  margin-bottom: 1rem;
+}
+#content .article-rest .entry-meta .byline {
+  float: right;
+}
+#content .article-rest .entry-footer .tags-links {
+  display: none;
+  float: right;
+}
+.widget {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+.widget ul {
+  list-style: none;
+}
+.widget li {
+  margin: 1rem 0;
+}
+.widget .widget-title {
+  padding: 1rem 0 1rem 0.5rem;
+  border-bottom: solid 0.1rem #ddd;
+  border-left: solid 0.1rem #eee;
+  border-right: solid 0.1rem #eee;
+  border-top: solid 0.1rem #f9f9f9;
+}
+.widget input[type="search"] {
+  margin-top: 2rem;
+}
+#primary .page {
+  padding: none;
+}
+#primary .single-post {
+  padding: 0 1rem 1rem 1rem;
+  margin-bottom: 2rem;
+}
+#primary .single-post .entry-title {
+  padding: 1rem 0;
+  margin: 0 -1rem;
+}
+#primary .entry-title {
+  margin-top: 0;
+}
+#primary .entry-meta {
+  margin: 1rem 0;
+}
+#primary .entry-meta .byline {
+  float: right;
+}
+#primary .nav-links {
+  padding: 1rem .5rem;
+  border: solid 0.1rem #eee;
+}
+#primary .nav-links .nav-previous {
+  display: inline-block;
+}
+#primary .nav-links .nav-next {
+  display: inline-block;
+  float: right;
+}
+#secondary ul {
+  margin: 0 2rem;
+}
+#secondary li {
+  margin: 1rem 0;
+}
+/*Pagination*/
+.pagination {
+  width: 100%;
+  clear: both;
+}
+.pagination ul {
+  display: inline-block;
+}
+.pagination ul > li {
+  display: inline;
+}
+.pagination ul > li a {
+  padding: 1rem 1rem;
+  border: solid 0.1rem #ddd;
+  border-left-width: 0;
+}
+.pagination ul > li .prev {
+  border-left: solid 0.1rem #ddd;
+}
+.pagination ul > li .current {
+  padding: 1rem 1rem;
+}
+/*Comments*/
+code {
+  white-space: normal;
+}
+.comment-body {
+  padding: 0 !important;
+  border: solid 0.1rem #f6f6f6;
+  margin: 1rem 0;
+}
+.comments-title {
+  margin: 3rem 0;
+}
+.says {
+  display: none;
+}
+.comment-meta {
+  padding: 1rem;
+}
+.comment-meta .vcard img {
+  height: 5rem;
+  width: auto;
+  float: left;
+  margin-right: 1rem;
+}
+.comment-meta .comment-metadata {
+  font-size: 1rem;
+  display: block;
+}
+.comment-meta .comment-metadata .edit-link {
+  float: right;
+}
+.comment-content {
+  padding: 1rem;
+}
+.reply {
+  background: #f6f6f6;
+  border-radius: .5rem;
+  padding-left: 1rem;
+  font-style: italic;
+}
+@media screen and (max-width: 1200px) {
+  .featured-image {
+    width: 70%;
+    margin: 0 auto;
+  }
+  .article-rest {
+    margin-top: 3rem;
+    padding-top: 0.3rem;
+  }
+  #site-navigation {
+    padding: 0.3rem;
+  }
+  #site-navigation li {
+    line-height: 3rem;
+  }
+  #site-navigation ul li:hover > ul {
+    margin-top: 0;
+  }
 }
