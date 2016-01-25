@@ -136,10 +136,6 @@ span.song-title, span.meta-nav
 p {
 	text-align:justify;
 	text-indent:1.45rem;
-	-webkit-hyphens: auto;
-	-moz-hyphens: auto;
-	-ms-hyphens: auto;
-	hyphens: auto;
 }
 p.big
 {
@@ -152,6 +148,12 @@ p.big-address
 p.big-space-below
 {
 	padding-bottom:2rem;
+}
+h1, h2, h3, h4, h5, h6, p {
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
 }
 h1
 {

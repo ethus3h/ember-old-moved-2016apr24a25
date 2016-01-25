@@ -35,34 +35,33 @@
 		<label for="nav-trigger">&nbsp;</label>
 		<div class="logo">
 			<div class="logo-inner">
-				<span><i><a class="nodecorate logolink" href=
-				".">futuramerlin</a></i></span>
+				<span><i><a class="nodecorate logolink" href="http://futuramerlin.com/">futuramerlin</a></i></span>
 			</div>
 		</div>
 			<ul class="navigation">
 				<li class="nav-item nav-item-inactive index">
-					<a href="/">Home</a>
+					<a href="http://futuramerlin.com/">Home</a>
 				</li>
 				<li class="nav-item nav-item-inactive bio">
-					<a href="/bio.htm">Bio</a>
+					<a href="http://futuramerlin.com/bio.htm">Bio</a>
 				</li>
 				<li class="nav-item nav-item-inactive news">
-					<a href="/news.htm">News</a>
+					<a href="http://futuramerlin.com/news.htm">News</a>
 				</li>
 				<li class="nav-item nav-item-inactive blog">
-					<a href="/blog.htm">Blog</a>
+					<a href="http://futuramerlin.com/blog.htm">Blog</a>
 				</li>
 				<li class="nav-item nav-item-inactive contact">
-					<a href="/contact.htm">Contact</a>
+					<a href="http://futuramerlin.com/contact.htm">Contact</a>
 				</li>
 				<li class="nav-item nav-item-inactive resume">
-					<a href="/resume.htm">Résumé</a>
+					<a href="http://futuramerlin.com/resume.htm">Résumé</a>
 				</li>
 				<li class="nav-item nav-item-inactive ember">
-					<a href="/ember">Project: Ember</a>
+					<a href="http://futuramerlin.com/ember">Project: Ember</a>
 				</li>
 				<li class="nav-item nav-item-inactive music">
-					<a href="/music">Music</a>
+					<a href="http://futuramerlin.com/music">Music</a>
 				</li>
 			</ul>
 		<div class="site-wrap"></div>
