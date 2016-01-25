@@ -89,6 +89,7 @@ display: none;
 	padding-left:1rem;
 	width:calc(100% + 2rem);
 	display:flex;
+	justify-content:space-between;
 	background: -webkit-linear-gradient(0deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 	background: -moz-linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 	background: linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
@@ -131,6 +132,14 @@ span.anoeyfuturamerlincommedium
 span.song-title, span.meta-nav
 {
 	font-style:italic;
+}
+p {
+	text-align:justify;
+	text-indent:1.45rem;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
 }
 p.big
 {
@@ -892,7 +901,7 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
 {
     /* really small screen */
 
-	figure.thumbnail-right, featured-image
+	figure.thumbnail-right, featured-image, .wp-caption.alignright
 	{
 		margin: 1rem;
 		left: 0.75rem;
@@ -931,6 +940,16 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
 
              -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
     }
+
+    /* really small screen, constrained width */
+	@media only screen and (max-width: 561px) and (min-resolution: 192dpi),
+	not screen and (min-width: 281px) and (max-resolution: 191dpi)
+	{
+		p {
+			text-align:left;
+			text-indent:0.75rem;
+		}
+	}
 }
 @media only screen and (min-width: 1101px) and (min-resolution: 192dpi),
 not screen and (max-width: 550px) and (max-resolution: 191dpi)
@@ -1003,8 +1022,16 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     {
         position: fixed;
     }
+    /* large screen, constrained width */
+	@media only screen and (max-width: 1500px) and (min-resolution: 192dpi),
+	not screen and (min-width: 751px) and (max-resolution: 191dpi)
+	{
+		p {
+			text-align:left;
+			text-indent:0.75rem;
+		}
+	}
 }
-
 code
 {
     padding: .125rem;
