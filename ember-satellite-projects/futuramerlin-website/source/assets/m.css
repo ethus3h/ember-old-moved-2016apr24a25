@@ -131,7 +131,7 @@ display: none;
 	padding:1rem;
 	width:calc(100% - 2rem);
 }
-#secondary > aside:hover > div > a:last-of-type, #secondary > aside:hover > div > ul {
+#secondary > aside:hover > div > a:last-of-type, #secondary > aside:hover > ul > li:last-of-type > a, #secondary > aside:hover > div > ul {
 	padding-bottom:1rem;
 	padding-right:1rem;
 }
