@@ -700,24 +700,8 @@ a.logolink:visited
     border: .063rem solid white;
     background: none;
 }
-.headerbgwrap
-{
-    position: fixed;
-    z-index: 2;
-
-    overflow: hidden;
-
-    width: 100%;
-    height: 4rem;
-}
 .headerbackground
 {
-    position: relative;
-    z-index: 2;
-
-    width: 100%;
-    height: 100vh;
-
     background-image: url(b.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -729,9 +713,27 @@ a.logolink:visited
             background-size: cover;
 
     -webkit-background-origin: padding-box;
+    position: fixed;
+    z-index: 2;
+
+    overflow: hidden;
+
+    width: 100%;
+    height: 4rem;
 }
-.footerbgwrap
+.footerbackground
 {
+    background-image: url(b.svg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center top;
+    -webkit-background-clip: border-box;
+            background-clip: border-box;
+            background-origin: padding-box;
+    -webkit-background-size: cover;
+            background-size: cover;
+
+    -webkit-background-origin: padding-box;
     position: fixed;
     z-index: 2;
     bottom: 0;
@@ -741,19 +743,10 @@ a.logolink:visited
     width: 100%;
     height: 4rem;
 
-    transition: font-size .2s, left .2s, width .2s, opacity .2s;
+    transition: font-size .2s, left .2s, width .2s, bottom .2s, opacity .2s;
 }
-.footerbackground
+.leftbackground
 {
-    position: absolute;
-    z-index: 2;
-    top: calc(-1 * (100vh - 4rem));
-
-    width: 100%;
-    height: 100vh;
-
-    transition: font-size .2s, left .2s, width .2s, opacity .2s;
-
     background-image: url(b.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -765,9 +758,6 @@ a.logolink:visited
             background-size: cover;
 
     -webkit-background-origin: padding-box;
-}
-.leftbgwrap
-{
     position: fixed;
     z-index: 2;
     left: 0;
@@ -779,16 +769,8 @@ a.logolink:visited
 
     transition: font-size .2s, left .2s, width .2s, opacity .2s;
 }
-.leftbackground, .rightbackground
+.rightbackground
 {
-    position: absolute;
-    z-index: 2;
-
-    width: 100%;
-    height: 100vh;
-
-    transition: font-size .2s, left .2s, width .2s, opacity .2s;
-
     background-image: url(b.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -800,9 +782,6 @@ a.logolink:visited
             background-size: cover;
 
     -webkit-background-origin: padding-box;
-}
-.rightbgwrap
-{
     position: fixed;
     z-index: 2;
     right: 0;
@@ -884,7 +863,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     }
     .content,
     .contentbackground,
-    .headerbgwrap,
+    .headerbackground,
     .contentbgborder
     {
         margin-right: 0;
@@ -906,24 +885,23 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
         margin-top: 0;
     }
-    .footerbgwrap,
     .footerbackground
     {
         bottom: -4rem;
 
         transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
     }
-    .content, .leftbgwrap
+    .content, .leftbackground
     {
     	left:0;
         max-width: calc(100%);
         transition: width .2s, left .2s;
     }
-    .leftbgwrap
+    .leftbackground
     {
         left: calc(-1 * (25% + 4rem));
     }
-    .rightbgwrap
+    .rightbackground
     {
     	right: -4rem;
     	transition: width .2s, right .2s;
@@ -1087,11 +1065,10 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     }
     .logo,
     .background,
-    .headerbgwrap
+    .headerbackground
     {
         transition: font-size .2s, left .2s, width .2s, opacity .2s;
     }
-    .footerbgwrap,
     .footerbackground
     {
         transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
@@ -1103,8 +1080,8 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         width: 75%;
     }
     .background,
-    .headerbgwrap,
-    .footerbgwrap
+    .headerbackground,
+    .footerbackground
     {
         left: 0;
 
