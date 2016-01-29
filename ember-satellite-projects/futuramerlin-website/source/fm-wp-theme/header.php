@@ -53,4 +53,4 @@
 			</li>
 		</ul>
 	</nav>
-	<article class="content">
+	<article>
