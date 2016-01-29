@@ -56,6 +56,4 @@
 				<a href="/music">Music</a>
 			</li>
 		</ul>
-	<div class="contentbackground"></div>
-	<div class="contentbgborder"></div>
 	<div class="content">
