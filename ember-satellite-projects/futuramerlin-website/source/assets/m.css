@@ -171,7 +171,7 @@ span.anoeyfuturamerlincommedium
 {
 	font-family:anoeyfuturamerlincommedium;
 }
-span.song-title, span.meta-nav
+span.song-title, span.meta-nav, a.logolink
 {
 	font-style:italic;
 }
@@ -311,7 +311,7 @@ ul > li::before
 	text-align: right;
 	position:relative;
 }
-ul.navigation
+nav ul
 {
     padding-left: 0;
     margin-top: 0;
@@ -319,12 +319,12 @@ ul.navigation
     counter-reset: unset;
     display: block;
 }
-ul.navigation > li
+nav ul > li
 {
     counter-increment: unset;
 	display: block;
 }
-ul.navigation > li::before
+nav ul > li::before
 {
     content: ' ';
 	padding-right: unset;
@@ -411,7 +411,7 @@ a[href='http://futuramerlin.com/c/forums/forum/futuramerlin-forum/'] {display: n
     src: url(f/wreathe-bi.eot);
     src: url(f/wreathe-bi.eot?#iefix) format('embedded-opentype'), url(f/wreathe-bi.woff) format('woff'), url(f/wreathe-bi.ttf) format('truetype'), url(f/wreathe-bi.svg#wreathebold_italic) format('svg');
 }
-.navigation
+nav ul
 {
     position: fixed;
     z-index: 4;
@@ -745,7 +745,7 @@ body .content::after
 
     transition: font-size .2s, left .2s, width .2s, bottom .2s, opacity .2s;
 }
-.leftbackground
+body nav::before
 {
     background-image: url(b.svg);
     background-repeat: no-repeat;
@@ -756,7 +756,7 @@ body .content::after
             background-origin: padding-box;
     -webkit-background-size: cover;
             background-size: cover;
-
+	content: ' ';
     -webkit-background-origin: padding-box;
     position: fixed;
     z-index: 2;
@@ -769,7 +769,7 @@ body .content::after
 
     transition: font-size .2s, left .2s, width .2s, opacity .2s;
 }
-.rightbackground
+body nav::after
 {
     background-image: url(b.svg);
     background-repeat: no-repeat;
@@ -785,7 +785,7 @@ body .content::after
     position: fixed;
     z-index: 2;
     right: 0;
-
+	content: ' ';
     overflow: hidden;
 
     height: 100%;
@@ -849,7 +849,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 {
     /* small screen */
 
-    .navigation
+    nav ul
     {
         left: -25%;
 
@@ -891,17 +891,17 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
         transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
     }
-    .content, .leftbackground
+    .content, body nav::before
     {
     	left:0;
         max-width: calc(100%);
         transition: width .2s, left .2s;
     }
-    .leftbackground
+    body nav::before
     {
         left: calc(-1 * (25% + 4rem));
     }
-    .rightbackground
+    body nav::after
     {
     	right: -4rem;
     	transition: width .2s, right .2s;
@@ -924,7 +924,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         background-size: contain;
     }
     .nav-trigger + label,
-    .navigation
+    nav ul
     {
         transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
     }
@@ -950,7 +950,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         transition: .4s ease-out;
         transform: translateX(calc(-100% - 1rem));
     }
-    .nav-trigger:checked ~ .navigation
+    .nav-trigger:checked ~ nav ul
     {
         left: 0;
 
@@ -995,7 +995,7 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
     {
         left: calc(75% + 1rem);
     }
-    .nav-trigger:checked ~ .navigation
+    .nav-trigger:checked ~ nav ul
     {
         left: 0;
 
@@ -1046,7 +1046,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' version=\'1.1\' x=\'0px\' y=\'0px\' width=\'30px\' height=\'30px\' viewBox=\'0 0 30 30\' xml:space=\'preserve\'><rect style=\'fill:rgb(1,50,32);\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'24\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'12\' width=\'30\' height=\'6\'/></svg>');
         background-size: contain;
     }
-    .navigation
+    nav ul
     {
         left: 0;
 

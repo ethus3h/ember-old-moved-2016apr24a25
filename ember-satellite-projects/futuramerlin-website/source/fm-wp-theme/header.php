@@ -18,19 +18,16 @@
 </head>
 <body>
 	<div class="background"></div>
-	<div class="leftbackground">
-	</div>
-	<div class="rightbackground">
-	</div>
 	<input class="nav-trigger" id="nav-trigger" type="checkbox">
 	<label for="nav-trigger">&nbsp;</label>
-	<div class="logo">
-		<div class="logo-inner">
-			<span><i><a class="nodecorate logolink" href=
-			"/">futuramerlin</a></i></span>
+	<nav>
+		<div class="logo">
+			<div class="logo-inner">
+				<span><a class="nodecorate logolink" href=
+				"/">futuramerlin</a></span>
+			</div>
 		</div>
-	</div>
-		<ul class="navigation">
+		<ul>
 			<li class="nav-item nav-item-inactive index">
 				<a href="/">Home</a>
 			</li>
@@ -56,4 +53,5 @@
 				<a href="/music">Music</a>
 			</li>
 		</ul>
+	</nav>
 	<div class="content">
