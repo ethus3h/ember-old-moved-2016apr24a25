@@ -17,11 +17,7 @@
     <link href="/c/wp-content/themes/fm-wp-theme/m.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<div class="headerbackground">
-	</div>
 	<div class="background"></div>
-	<div class="footerbackground">
-	</div>
 	<div class="leftbackground">
 	</div>
 	<div class="rightbackground">

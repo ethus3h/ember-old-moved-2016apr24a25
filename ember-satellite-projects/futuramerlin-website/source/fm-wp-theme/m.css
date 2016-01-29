@@ -700,7 +700,7 @@ a.logolink:visited
     border: .063rem solid white;
     background: none;
 }
-.headerbackground
+.background::before
 {
     background-image: url(b.svg);
     background-repeat: no-repeat;
@@ -721,7 +721,7 @@ a.logolink:visited
     width: 100%;
     height: 4rem;
 }
-.footerbackground
+.background::after
 {
     background-image: url(b.svg);
     background-repeat: no-repeat;
@@ -863,7 +863,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     }
     .content,
     .contentbackground,
-    .headerbackground,
+    .background::before,
     .contentbgborder
     {
         margin-right: 0;
@@ -885,7 +885,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
         margin-top: 0;
     }
-    .footerbackground
+    .background::after
     {
         bottom: -4rem;
 
@@ -1065,11 +1065,11 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     }
     .logo,
     .background,
-    .headerbackground
+    .background::before
     {
         transition: font-size .2s, left .2s, width .2s, opacity .2s;
     }
-    .footerbackground
+    .background::after
     {
         transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
     }
@@ -1080,8 +1080,8 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         width: 75%;
     }
     .background,
-    .headerbackground,
-    .footerbackground
+    .background::before,
+    .background::after
     {
         left: 0;
 
