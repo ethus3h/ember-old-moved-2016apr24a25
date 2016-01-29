@@ -19,11 +19,11 @@ get_header(); ?>
 				<h1 class="page-title">
 					<?php
 						if ( is_category() ) :
-							single_cat_title();
-
+// 							echo the_archive_title('','');
+							
+							printf( __( 'Posts in category: %s', 'a' ), '<span>' . single_cat_title('',false) . '</span>' );
 						elseif ( is_tag() ) :
-							single_tag_title();
-
+							printf( __( 'Posts tagged "%s"', 'a' ), '<span>' . single_tag_title('',false) . '</span>' );
 						elseif ( is_author() ) :
 							printf( __( 'Author: %s', 'raze' ), '<span class="vcard">' . get_the_author() . '</span>' );
 

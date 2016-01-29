@@ -17,6 +17,7 @@ if ( post_password_required() ) {
 	return;
 }
 ?>
+<?php get_header(); ?>
 
 <div id="comments" class="comments-area">
 
