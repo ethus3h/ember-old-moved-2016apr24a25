@@ -116,9 +116,7 @@ display: none;
 }
 #secondary > aside > ul, #secondary > aside > div {
     display: none;
-}
-#secondary > aside:hover > ul, #secondary > aside:hover > div {
-    display: block;
+    opacity: 0;
     position: fixed;
 	left: calc(25vw + 3.905rem);
 	background-color: rgba(226, 218, 241, 1);
@@ -129,16 +127,24 @@ display: none;
 	font-size:1rem;
 	padding:1rem;
 	border: .095rem solid white;
-	border-top:none;
+/* 	border-top:none; */
+/* 	top: -0.095rem; */
 	width:calc(75vw - 8.595rem);
+	background: repeating-linear-gradient(52deg, rgba(255,255,255,0.44) 0, rgba(255,124,216,0.65) 50%, rgba(124,255,255,0.65) 76%, rgba(207,124,255,0.65) 100%);
 }
-#secondary:hover {
-    position: fixed;
-    left: calc(25vw + 3.905rem);
-	top: 4.037rem;
-	width: calc(75vw - 8.63rem);
+#secondary:hover + #primary {
+	-webkit-filter: blur(0.313rem);
+	-moz-filter: blur(0.313rem);
+	-o-filter: blur(0.313rem);
+	-ms-filter: blur(0.313rem);
+	filter: blur(0.313rem);
+	transition: all 0.1s;
 }
-
+#secondary > aside:hover > ul, #secondary > aside:hover > div {
+    opacity: 1;
+	transition: all 0.3s;
+    display: block;
+}
 #secondary > aside:hover > div > a:last-of-type, #secondary > aside:hover > ul > li:last-of-type > a, #secondary > aside:hover > div > ul {
 	padding-bottom:1rem;
 	padding-right:1rem;
