@@ -17,7 +17,6 @@
     <link href="/c/wp-content/themes/fm-wp-theme/m.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-	<div class="background"></div>
 	<input class="nav-trigger" id="nav-trigger" type="checkbox">
 	<label for="nav-trigger">&nbsp;</label>
 	<nav>
@@ -54,4 +53,4 @@
 			</li>
 		</ul>
 	</nav>
-	<div class="content">
+	<article class="content">

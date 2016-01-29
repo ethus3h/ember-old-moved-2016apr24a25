@@ -17,26 +17,26 @@ div.musicbig {
 .clearfloat, .post-revisions {
 	clear:both;
 }
-div.post-revisions, .single-post > .entry-footer, div.revision-header, div#revision-diffs {
+div.post-revisions, .single-post > .entry-footer, div.revision-header, #revision-diffs {
 	background-color:rgba(0,0,0,0.07);
 }
-div.revision-header, div#revision-diffs, div.post-revisions {
+div.revision-header, #revision-diffs, div.post-revisions {
 	padding:1rem;
 	font-size:1.1rem;
 }
 div.revision-header {
 	margin-bottom:1rem;
 }
-div#revision-diffs {
+#revision-diffs {
 	position: relative;
 	overflow: auto;
 }
-div#revision-diffs::before {
+#revision-diffs::before {
 	content: "";
 	display: block;
 	padding-top: 50%;
 }
-div#revision-diffs > div {
+#revision-diffs > div {
 	position: absolute;
 	padding:1rem;
 	top: 0;
@@ -44,10 +44,10 @@ div#revision-diffs > div {
 	bottom: 0;
 	right: 0;
 }
-div#revision-diffs > div > .diff {
+#revision-diffs > div > .diff {
 	padding-top: 2rem;
 }
-div.post-revisions, div#revision-diffs {
+div.post-revisions, #revision-diffs {
 	border-bottom:0.095rem solid rgba(0,0,0,0.5);
 }
 .post-navigation {
@@ -700,7 +700,7 @@ body .content::after
     border: .063rem solid white;
     background: none;
 }
-.headerbackground
+body::before
 {
     background-image: url(b.svg);
     background-repeat: no-repeat;
@@ -715,13 +715,13 @@ body .content::after
     -webkit-background-origin: padding-box;
     position: fixed;
     z-index: 2;
-
+	content: ' ';
     overflow: hidden;
 
     width: 100%;
     height: 4rem;
 }
-.footerbackground
+body::after
 {
     background-image: url(b.svg);
     background-repeat: no-repeat;
@@ -732,7 +732,7 @@ body .content::after
             background-origin: padding-box;
     -webkit-background-size: cover;
             background-size: cover;
-
+	content: ' ';
     -webkit-background-origin: padding-box;
     position: fixed;
     z-index: 2;
@@ -793,10 +793,8 @@ body nav::after
 
     transition: font-size .2s, right .2s, width .2s, opacity .2s;
 }
-.background
+body
 {
-    position: fixed;
-
     width: 100%;
     height: 100%;
 
@@ -863,7 +861,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     }
     .content,
     body .content::before,
-    .headerbackground,
+    body::before,
     body .content::after
     {
         margin-right: 0;
@@ -885,7 +883,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
         margin-top: 0;
     }
-    .footerbackground
+    body::after
     {
         bottom: -4rem;
 
@@ -928,7 +926,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     {
         transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
     }
-    .background,
+    body,
     .logo
     {
         transition: font-size .2s, left .2s, box-shadow .2s;
@@ -1064,12 +1062,12 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         max-width: calc(75% - 8rem);
     }
     .logo,
-    .background,
-    .headerbackground
+    body,
+    body::before
     {
         transition: font-size .2s, left .2s, width .2s, opacity .2s;
     }
-    .footerbackground
+    body::after
     {
         transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
     }
@@ -1079,17 +1077,15 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
 
         width: 75%;
     }
-    .background,
-    .headerbackground,
-    .footerbackground
+    body,
+    body::before,
+    body::after
     {
         left: 0;
 
         width: 125%;
     }
-    .logo,
-    .background
-    {
+    .logo    {
         position: fixed;
     }
     /* large screen, constrained width */
