@@ -136,9 +136,6 @@ display: none;
 	padding-bottom:1rem;
 	padding-right:1rem;
 }
-.content.content-area {
-	
-}
 table {
 	table-layout:fixed;
 	width:100%;
@@ -626,7 +623,7 @@ a.logolink:visited
 {
     color: rgb(1, 50, 32);
 }
-.content
+body article
 {
     font-family: wreatherweb;
     font-size: 1.45rem;
@@ -859,7 +856,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
              -o-box-shadow: 0 0 0 0 #fff;
     }
-    .content,
+    body article,
     body article::before,
     body::before,
     body article::after
@@ -870,7 +867,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
         transition: margin .2s, top .2s, bottom .2s;
     }
-    .content,
+    body article,
     body article::before,
     body article::after
     {
@@ -889,7 +886,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
         transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
     }
-    .content, body nav::before
+    body article, body nav::before
     {
     	left:0;
         max-width: calc(100%);
@@ -1054,7 +1051,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
 
              -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
     }
-    .content,
+    body article,
     body article::before,
     body article::after
     {
