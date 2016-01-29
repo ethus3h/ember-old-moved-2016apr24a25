@@ -68,6 +68,7 @@
 		<div class="contentbgborder"></div>
 		<div class="content">
 
+<?php get_sidebar(); ?>
 	<div id="primary" class="fm-wp-content content-area container col-lg-8 col-md-8">
 		<main id="main" class="site-main">
 
@@ -96,8 +97,8 @@
 
 		</main>
 	</div>
+		</div>
 
-<?php get_sidebar(); ?>
 		</div>
     </div>
 </body>

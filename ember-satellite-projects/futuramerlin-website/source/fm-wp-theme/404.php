@@ -53,3 +53,7 @@ get_header(); ?>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
+ 		</div>
+   </div>
+</body>
+</html>

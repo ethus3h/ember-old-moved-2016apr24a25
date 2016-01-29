@@ -12,6 +12,7 @@
 
 ?>
 
+<?php get_sidebar(); ?>
 	<div id="primary" class="content-area col-lg-8 col-md-8">
 		<main id="main" class="site-main">
 
@@ -30,5 +31,7 @@
 
 		</main>
 	</div>
-
-<?php get_sidebar(); ?>
+		</div>
+    </div>
+</body>
+</html>
