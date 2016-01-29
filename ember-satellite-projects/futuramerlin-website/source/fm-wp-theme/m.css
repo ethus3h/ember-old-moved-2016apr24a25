@@ -74,7 +74,7 @@ div.table-columns {
 	display:table;
 	vertical-align:top;
 }
-body .content::before,body .content::after {
+body article::before,body article::after {
 	max-width:100vw;
 }
 .fm-wp-content > main > article:not(.single-post) > .entry-content > .article-rest > .entry-footer
@@ -649,7 +649,7 @@ a.logolink:visited
 
     color: #2a1657;
 }
-body .content::before
+body article::before
 {
     position: fixed;
     z-index: -1;
@@ -674,7 +674,7 @@ body .content::before
     border: none;
     background-color: rgba(226, 218, 241, .7);
 }
-body .content::after
+body article::after
 {
     position: fixed;
     z-index: 3;
@@ -860,9 +860,9 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
              -o-box-shadow: 0 0 0 0 #fff;
     }
     .content,
-    body .content::before,
+    body article::before,
     body::before,
-    body .content::after
+    body article::after
     {
         margin-right: 0;
         margin-bottom: 0;
@@ -871,13 +871,13 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         transition: margin .2s, top .2s, bottom .2s;
     }
     .content,
-    body .content::before,
-    body .content::after
+    body article::before,
+    body article::after
     {
         bottom: 0;
     }
-    body .content::before,
-    body .content::after
+    body article::before,
+    body article::after
     {
         top: 4rem;
 
@@ -1055,8 +1055,8 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
              -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
     }
     .content,
-    body .content::before,
-    body .content::after
+    body article::before,
+    body article::after
     {
         left: 25%;
         max-width: calc(75% - 8rem);
