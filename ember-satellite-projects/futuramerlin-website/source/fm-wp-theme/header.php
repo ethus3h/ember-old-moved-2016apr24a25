@@ -36,7 +36,7 @@
 			<li class="nav-item nav-item-inactive news">
 				<a href="/news.htm">News</a>
 			</li>
-			<li class="nav-item nav-item-inactive blog">
+			<li class="nav-item nav-item-inactive blog nav-item-selected">
 				<a href="/blog.htm">Blog</a>
 			</li>
 			<li class="nav-item nav-item-inactive contact">
