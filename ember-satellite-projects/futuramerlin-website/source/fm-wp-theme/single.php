@@ -30,5 +30,5 @@ get_header(); ?>
 	</div><!-- #primary -->
 		</div>
     </div>
-</body>
+<?php wp_footer(); ?></body>
 </html>
