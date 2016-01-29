@@ -119,19 +119,26 @@ display: none;
 }
 #secondary > aside:hover > ul, #secondary > aside:hover > div {
     display: block;
-    position:absolute;
-    left:0rem;
+    position: fixed;
+	left: calc(25vw + 3.905rem);
 	background-color: rgba(226, 218, 241, 1);
 	z-index: 100;
 	margin-top:0.095rem;
 	overflow-y: auto;
-	max-height: calc(100vh - 14rem);
+	max-height: calc(100vh - 12.853rem);
 	font-size:1rem;
 	padding:1rem;
 	border: .095rem solid white;
 	border-top:none;
-	width:calc(75vw - 8.095rem);
+	width:calc(75vw - 8.595rem);
 }
+#secondary:hover {
+    position: fixed;
+    left: calc(25vw + 3.905rem);
+	top: 4.037rem;
+	width: calc(75vw - 8.63rem);
+}
+
 #secondary > aside:hover > div > a:last-of-type, #secondary > aside:hover > ul > li:last-of-type > a, #secondary > aside:hover > div > ul {
 	padding-bottom:1rem;
 	padding-right:1rem;
