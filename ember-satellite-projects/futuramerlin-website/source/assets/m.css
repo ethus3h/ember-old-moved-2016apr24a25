@@ -28,6 +28,23 @@ div.revision-header, #revision-diffs, div.post-revisions {
 div.revision-header {
 	margin-bottom:1rem;
 }
+div.toolbar, nav.toolbar, #secondary {
+	display: flex;
+	flex-wrap: wrap;
+	flex-grow: 1;
+	top: -0.975rem;
+	left: -0.937rem;
+	position: relative;
+	width: calc(100% + 1.905rem);
+	z-index:101;
+}
+div.button, #secondary > aside {
+    flex-grow: 1;
+}
+div.button:hover, #secondary > aside:hover {
+}
+div.button.selected, div.button.selected:hover, div.button:active, #secondary > aside:active {
+}
 #revision-diffs {
 	position: relative;
 	overflow: auto;
@@ -114,7 +131,7 @@ body > article::before,body > article::after {
 }
 .fm-wp-content > main > article:not(.single-post) > .entry-content > .article-rest > .entry-footer
 {
-display: none;
+	display: none;
 }
 .single-post > header.entry-header {
 	top:-1rem;
@@ -129,20 +146,7 @@ display: none;
 	background: -moz-linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 	background: linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 }
-#secondary {
-	display: flex;
-	flex-wrap: wrap;
-	flex-grow: 1;
-	top: -0.975rem;
-	left: -0.937rem;
-	position: relative;
-	width: calc(100% + 1.905rem);
-	z-index:101;
-}
-#secondary > aside {
-	background-color:rgba(226, 218, 241, 1);
-    flex-grow: 1;
-}
+
 #secondary > aside > p.bigemphasis {
     font-size:1.2rem;
     padding:.67rem;
@@ -162,8 +166,6 @@ display: none;
 	font-size:1rem;
 	padding:1rem;
 	border: .095rem solid white;
-/* 	border-top:none; */
-/* 	top: -0.095rem; */
 	width:calc(75vw - 8.595rem);
 	background: repeating-linear-gradient(52deg, rgba(255,255,255,0.44) 0, rgba(255,124,216,0.65) 50%, rgba(124,255,255,0.65) 76%, rgba(207,124,255,0.65) 100%);
 }
@@ -184,6 +186,7 @@ display: none;
 	padding-bottom:1rem;
 	padding-right:1rem;
 }
+
 table {
 	table-layout:fixed;
 	width:100%;
