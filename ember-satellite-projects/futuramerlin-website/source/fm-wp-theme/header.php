@@ -11,7 +11,7 @@
 <head>
     <title>Futuramerlin</title>
     <meta charset="utf-8">
-    <meta content="Futuramerlin" name="author">
+    <meta content="Blog — Futuramerlin" name="author">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
     name="viewport">
     <link href="/c/wp-content/themes/fm-wp-theme/m.css" rel="stylesheet" type="text/css">
