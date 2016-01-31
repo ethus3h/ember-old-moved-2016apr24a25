@@ -33,6 +33,92 @@ table {
 	table-layout:fixed;
 	width:100%;
 }
+audio {
+	display:block;
+	margin:0.667rem;
+}
+span.inlineheader
+{
+	font-weight:bold;
+}
+span.song-title, span.meta-nav, a.logolink
+{
+	font-style:italic;
+}
+p {
+	text-align:justify;
+	text-indent:1.45rem;
+}
+p.big
+{
+	font-size:2rem;
+}
+p.big-address
+{
+	text-align:center;
+}
+p.big-space-below
+{
+	padding-bottom:2rem;
+}
+h1, h2, h3, h4, h5, h6, p {
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
+}
+h1, p.bigemphasis
+{
+	font-weight:bold;
+	font-size:2rem;
+	position:relative;
+	padding:1rem;
+	display:block;
+	overflow:hidden;
+	text-indent: 0;
+}
+h1.entry-title
+{
+	font-weight:regular;
+	font-size:1.6rem;
+}
+ul.space-below {
+	padding-bottom: 1rem;
+}
+ul.no-bullets {
+	list-style:none;
+}
+ul.no-bullets > li::before {
+	list-style:none;
+	content: unset;
+	padding-right: unset;
+	display: unset;
+	text-align: unset;
+	position:unset;
+}
+ul.bold-1st-level > li {
+	font-weight:bold;
+}
+ul.bold-1st-level > li > ul {
+	font-weight:normal;
+}
+ul.hanging-indented > li {
+	padding-left:1rem;
+	text-indent:-1rem;
+}
+.centered
+{
+	text-align:center;
+}
+h1.title, .single-post > header > h1, h1.page-title
+{
+	top:-1rem;
+	left:-1rem;
+	width:calc(100% + 2rem);
+	background: -webkit-linear-gradient(0deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
+	background: -moz-linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
+	background: linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
+}
 
 div.musicthumbcontainer {
 	display:table-cell;
@@ -217,14 +303,6 @@ img.musicthumb {
 img.musicthumb:hover {
 	border-left: 0.188rem #FFF solid;
 }
-audio {
-	display:block;
-	margin:0.667rem;
-}
-span.inlineheader
-{
-	font-weight:bold;
-}
 span.byline
 {
 	display:none;
@@ -232,56 +310,6 @@ span.byline
 span.anoeyfuturamerlincommedium
 {
 	font-family:anoeyfuturamerlincommedium;
-}
-span.song-title, span.meta-nav, a.logolink
-{
-	font-style:italic;
-}
-p {
-	text-align:justify;
-	text-indent:1.45rem;
-}
-p.big
-{
-	font-size:2rem;
-}
-p.big-address
-{
-	text-align:center;
-}
-p.big-space-below
-{
-	padding-bottom:2rem;
-}
-h1, h2, h3, h4, h5, h6, p {
-	-webkit-hyphens: auto;
-	-moz-hyphens: auto;
-	-ms-hyphens: auto;
-	hyphens: auto;
-}
-h1, p.bigemphasis
-{
-	font-weight:bold;
-	font-size:2rem;
-	position:relative;
-	padding:1rem;
-	display:block;
-	overflow:hidden;
-	text-indent: 0;
-}
-h1.entry-title
-{
-	font-weight:regular;
-	font-size:1.6rem;
-}
-h1.title, .single-post > header > h1, h1.page-title
-{
-	top:-1rem;
-	left:-1rem;
-	width:calc(100% + 2rem);
-	background: -webkit-linear-gradient(0deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
-	background: -moz-linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
-	background: linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 }
 .single-post > header > h1 {
 	background: none;
@@ -399,34 +427,6 @@ nav > ul > li::before
 	display: unset;
 	text-align: unset;
     position: absolute;
-}
-ul.space-below {
-	padding-bottom: 1rem;
-}
-ul.no-bullets {
-	list-style:none;
-}
-ul.no-bullets > li::before {
-	list-style:none;
-	content: unset;
-	padding-right: unset;
-	display: unset;
-	text-align: unset;
-	position:unset;
-}
-ul.bold-1st-level > li {
-	font-weight:bold;
-}
-ul.bold-1st-level > li > ul {
-	font-weight:normal;
-}
-ul.hanging-indented > li {
-	padding-left:1rem;
-	text-indent:-1rem;
-}
-.centered
-{
-	text-align:center;
 }
 .comments-link { display: none !important; }
 .bbp-register-link { display: none !important; }
