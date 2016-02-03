@@ -293,7 +293,7 @@ figure > img, .featured-image > a > div > img, figure > a > img
 {
 	width: 100%;
 }
-figure.thumbnail-right, .featured-image, .alignright
+figure.thumbnail-right, .featured-image, *:not(.figcaption-empty-figure) > a > .alignright, .figcaption-empty-figure
 {
 	float:right;
 	margin-left: 1rem;
@@ -309,24 +309,12 @@ figure.thumbnail-right, .featured-image, .alignright
 figure.thumbnail-right > figcaption,
 .wp-caption.alignright > figcaption,
 figure.thumbnail-left > figcaption,
-.wp-caption.alignleft > figcaption
+.wp-caption.alignleft > figcaption, .figcaption-empty::after
 {
 	font-size:1rem;
 }
-/* all figures that don't have a figcaption as their last-child */
-figure.thumbnail-right,
-.wp-caption.alignright, .featured-image, .figcaption-empty
-{
-    content:"\aTap image to view.";
-    top:0.25rem;
-    left:0.5rem;
-    position:relative;
-    margin-right:0.5rem;
-    white-space:pre;
-    color:rgba(42,22,87,0.7);
-}
 figure.thumbnail-right > figcaption::after,
-.wp-caption.alignright > figcaption::after
+.wp-caption.alignright > figcaption::after, .figcaption-empty::after
 {
 	content:"\aTap image to view.";
 	top:0.25rem;
