@@ -52,8 +52,12 @@ h1, p.bigemphasis
     overflow:hidden;
     text-indent: 0;
 }
-a:not(.logolink) {
+a {
     color:#520f22;
+    text-decoration: none;
+}
+a:hover {
+    border-bottom: 0.063rem dotted #520f22;
 }
 
 
@@ -308,6 +312,18 @@ figure.thumbnail-left > figcaption,
 .wp-caption.alignleft > figcaption
 {
 	font-size:1rem;
+}
+/* all figures without last-child being a figcaption */
+figure.thumbnail-right > figcaption::after,
+.wp-caption.alignright > figcaption::after
+{
+    content:"\aTap image to view.";
+    top:0.25rem;
+    left:0.5rem;
+    position:relative;
+    margin-right:0.5rem;
+    white-space:pre;
+    color:rgba(42,22,87,0.7);
 }
 figure.thumbnail-right > figcaption::after,
 .wp-caption.alignright > figcaption::after
