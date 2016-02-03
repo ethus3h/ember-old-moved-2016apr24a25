@@ -313,9 +313,9 @@ figure.thumbnail-left > figcaption,
 {
 	font-size:1rem;
 }
-/* all figures without last-child being a figcaption */
-figure.thumbnail-right > figcaption::after,
-.wp-caption.alignright > figcaption::after
+/* all figures that don't have a figcaption as their last-child */
+figure.thumbnail-right,
+.wp-caption.alignright, .featured-image, .figcaption-empty
 {
     content:"\aTap image to view.";
     top:0.25rem;
