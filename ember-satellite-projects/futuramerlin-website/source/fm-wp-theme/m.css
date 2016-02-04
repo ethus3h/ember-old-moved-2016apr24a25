@@ -62,9 +62,9 @@ blockquote::after {
     padding-left: .75rem;
     padding-top: .75rem;
     content:"\201D";
-    right:calc(100% - 4rem);
-    top:calc(100% - 4rem);
-    float:right;
+    left:calc(100% - 2.5rem);
+    bottom:0;
+    position:absolute;
 }
 h1, h2, h3, h4, h5, h6, p {
     -webkit-hyphens: auto;
