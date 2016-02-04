@@ -73,12 +73,12 @@ blockquote {
     background-color:rgba(255,255,255,0.5);
     font-size:1.1rem;
 }
-blockquote::before, blockquote::after {
+blockquote:nth-child(2)::before, blockquote::after {
     font-size:4rem;
     font-weight:bold;
     height:2rem;
 }
-blockquote::before {
+blockquote:nth-child(2)::before {
     padding-right: .75rem;
     padding-bottom: .75rem;
     content:"\201C";
@@ -93,6 +93,13 @@ blockquote::after {
     right:.75rem;
     bottom:.75rem;
     position:absolute;
+}
+blockquote::before {
+    content:" ";
+    position:absolute;
+    height:calc(100% - 4rem);
+    width:1rem;
+    right:0;
 }
 div.musicthumbcontainer {
 	display:table-cell;
