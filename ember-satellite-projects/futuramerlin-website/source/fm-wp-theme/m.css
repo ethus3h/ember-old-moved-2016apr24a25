@@ -36,36 +36,6 @@ p.big-space-below
 {
     padding-bottom:2rem;
 }
-blockquote {
-    padding: .75rem;
-    border-top: .063rem solid #666;
-    border-bottom: .063rem solid #666;
-    position:relative;
-    overflow-y:hidden;
-}
-blockquote::before, blockquote::after {
-    font-size:4rem;
-    font-weight:bold;
-    /*position:absolute;*/
-    width:2rem;
-    height:2rem;
-}
-blockquote::before {
-    padding-right: .75rem;
-    padding-bottom: .75rem;
-    content:"\201C";
-    left:0;
-    top:0;
-    float:left;
-}
-blockquote::after {
-    padding-left: .75rem;
-    padding-top: .75rem;
-    content:"\201D";
-    left:calc(100% - 2.5rem);
-    bottom:0;
-    position:absolute;
-}
 h1, h2, h3, h4, h5, h6, p {
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
@@ -94,6 +64,36 @@ a:hover {
 /* End basic rules */
 
 
+blockquote {
+    padding: .75rem;
+    border-top: .063rem solid #666;
+    border-bottom: .063rem solid #666;
+    position:relative;
+    overflow-y:hidden;
+    background-color:rgba(255,255,255,0.5);
+    font-size:1.1rem;
+}
+blockquote::before, blockquote::after {
+    font-size:4rem;
+    font-weight:bold;
+    height:2rem;
+}
+blockquote::before {
+    padding-right: .75rem;
+    padding-bottom: .75rem;
+    content:"\201C";
+    left:0;
+    top:0;
+    float:left;
+}
+blockquote::after {
+    padding-left: .75rem;
+    padding-top: .75rem;
+    content:"\201D";
+    right:.75rem;
+    bottom:.75rem;
+    position:absolute;
+}
 div.musicthumbcontainer {
 	display:table-cell;
 	vertical-align:top;
