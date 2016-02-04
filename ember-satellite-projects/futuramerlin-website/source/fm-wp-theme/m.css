@@ -41,13 +41,14 @@ blockquote {
     border-top: .063rem solid #666;
     border-bottom: .063rem solid #666;
     position:relative;
+    overflow-y:hidden;
 }
 blockquote::before, blockquote::after {
     font-size:4rem;
     font-weight:bold;
     /*position:absolute;*/
-    /*width:4rem;*/
-    /*height:4rem;*/
+    width:2rem;
+    height:2rem;
 }
 blockquote::before {
     padding-right: .75rem;
