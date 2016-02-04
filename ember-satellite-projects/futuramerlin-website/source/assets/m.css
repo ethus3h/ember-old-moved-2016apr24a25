@@ -36,6 +36,35 @@ p.big-space-below
 {
     padding-bottom:2rem;
 }
+blockquote {
+    padding: .75rem;
+    border-top: .063rem solid #666;
+    border-bottom: .063rem solid #666;
+    position:relative;
+}
+blockquote::before, blockquote::after {
+    font-size:4rem;
+    font-weight:bold;
+    /*position:absolute;*/
+    /*width:4rem;*/
+    /*height:4rem;*/
+}
+blockquote::before {
+    padding-right: .75rem;
+    padding-bottom: .75rem;
+    content:"\201C";
+    left:0;
+    top:0;
+    float:left;
+}
+blockquote::after {
+    padding-left: .75rem;
+    padding-top: .75rem;
+    content:"\201D";
+    right:calc(100% - 4rem);
+    top:calc(100% - 4rem);
+    float:right;
+}
 h1, h2, h3, h4, h5, h6, p {
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
@@ -86,6 +115,9 @@ div.post-revisions, .single-post > .entry-footer, div.revision-header, #revision
 div.revision-header, #revision-diffs, div.post-revisions {
 	padding:1rem;
 	font-size:1.1rem;
+}
+div.post-revisions {
+    margin-top: 1rem;
 }
 div.revision-header {
 	margin-bottom:1rem;
@@ -323,6 +355,10 @@ figure.thumbnail-right > figcaption::after,
 	margin-right:0.5rem;
 	white-space:pre;
 	color:rgba(42,22,87,0.7);
+}
+.figcaption-empty::after {
+    content:"Tap image to view.";
+    top:0rem;
 }
 figure.thumbnail-left, .wp-caption.alignleft
 {
