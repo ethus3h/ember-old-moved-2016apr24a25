@@ -201,6 +201,9 @@ div.post-revisions, #revision-diffs {
 	padding:1rem;
 	font-size:1.1rem;
 }
+.tagcloud > a::after {
+    content: ' ';
+}
 div.entry-meta
 {
 	font-size:1rem;
@@ -402,9 +405,20 @@ figure.thumbnail-right > figcaption::after,
 	white-space:pre;
 	color:rgba(42,22,87,0.7);
 }
+.figcaption-empty {
+    height:1rem;
+}
 .figcaption-empty::after {
     content:"Tap image to view.";
-    top:0rem;
+    top: -0.25rem;
+}
+.figure-centered {
+    width:100%;
+    text-align: center;
+}
+.figure-centered > a > img {
+    width:auto;
+    max-width:100%;
 }
 figure.thumbnail-left, .wp-caption.alignleft
 {
@@ -1113,13 +1127,21 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
              -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
     }
+    /* small screen, constrained width */
+    @media only screen and (max-width: 721px) and (min-resolution: 192dpi),
+    not screen and (min-width: 361px) and (max-resolution: 191dpi)
+    {
+        p {
+            text-align:left;
+        }
+    }
 }
 @media only screen and (max-width: 640px) and (min-resolution: 192dpi),
 not screen and (min-width: 321px) and (max-resolution: 191dpi)
 {
     /* really small screen */
 
-	figure.thumbnail-right, featured-image, .wp-caption.alignright
+	figure.thumbnail-right, featured-image, .wp-caption.alignright, .figcaption-empty-figure
 	{
 		margin: 1rem;
 		left: 0.75rem;
@@ -1166,9 +1188,6 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
 		p {
 			text-align:left;
 			text-indent:0.75rem;
-		}
-		p.bigemphasis {
-			text-indent: 0;
 		}
 	}
 }
@@ -1246,9 +1265,6 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
 		p {
 			text-align:left;
 			text-indent:0.75rem;
-		}
-		p.bigemphasis {
-			text-indent: 0;
 		}
 	}
 }
