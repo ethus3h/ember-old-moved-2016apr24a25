@@ -229,6 +229,19 @@ div.revision-header {
 .pagination > div > ul > li::before {
     content:unset;
 }
+.pagination > div > ul > li:last-of-type {
+    position: relative;
+    padding: 1rem;
+}
+.wpsp-page-nav-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.wpsp-button {
+    border:none;
+}
 a.page-numbers, span.page-numbers {
     float:left;
     padding: 1rem 2rem;
