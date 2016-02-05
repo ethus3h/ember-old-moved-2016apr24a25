@@ -1,4 +1,4 @@
-/* To do: Fix zoomed-in media query bug. Fix buttons not showing the highlights correctly. Finish the content. Make the pages. Then I’ll be done! :D */
+/* To do: Fix zoomed-in media query bug. Fix entry-title not wrapping around entry-meta. Fix buttons not showing the highlights correctly. Finish the content. Make the pages. Then I’ll be done! :D */
 
 
 /* Basic rules */
@@ -201,9 +201,10 @@ div.post-revisions, #revision-diffs {
 	padding:1rem;
 	font-size:1.1rem;
 }
-.tagcloud > a::after {
-    content: ' ';
-}
+/*.tagcloud > a::after {
+    content: '\00a0';
+    display:inline-block;
+}*/
 div.entry-meta
 {
 	font-size:1rem;
