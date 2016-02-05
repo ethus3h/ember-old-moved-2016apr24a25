@@ -1,4 +1,4 @@
-/* To do: Fix zoomed-in media query bug. Fix entry-title not wrapping around entry-meta. Fix buttons not showing the highlights correctly. Finish the content. Make the pages. Then I’ll be done! :D */
+/* To do: Finish blog toolbar styling. Fix zoomed-in media query bug. Fix entry-title not wrapping around entry-meta. Fix buttons not showing the highlights correctly (use SVG instead of PNG). Finish the content. Make the pages. Then I’ll be done! :D */
 
 
 /* Basic rules */
@@ -131,13 +131,25 @@ figure > a {
 figure > a:hover {
     border-bottom:none;
 }
-figure > a > img {
+figure > a > img, .fm-wp-content > main > article:not(.single-post) > .entry-content > .featured-image > a img {
     transition: all 0.2s;
     border:0.063rem dotted transparent;
 }
-figure > a:hover > img {
+figure > a:hover > img, .fm-wp-content > main > article:not(.single-post) > .entry-content > .featured-image > a:hover img {
     border:0.063rem dotted #520f22;
     transition: all 0.2s;
+}
+.fm-wp-content > main > article:not(.single-post) {
+    border-top: 0.063rem dotted #fff;
+    margin-top: 1rem;
+}
+.fm-wp-content > main > article:not(.single-post):first-of-type {
+    border-top: 0;
+    margin-top: 0;
+}
+.fm-wp-content > main > article:not(.single-post):last-of-type {
+    border-bottom: 0.063rem solid #666;
+    padding-bottom: 1rem;
 }
 div.musicthumbcontainer {
 	display:table-cell;
@@ -155,14 +167,14 @@ div.musicbig {
 .clearfloat, .post-revisions {
 	clear:both;
 }
-div.post-revisions, .single-post > .entry-footer, div.revision-header, #revision-diffs {
+div.post-revisions, .single-post > .entry-footer, div.revision-header, #revision-diffs, .pagination {
 	background-color:rgba(0,0,0,0.07);
 }
-div.revision-header, #revision-diffs, div.post-revisions {
+div.revision-header, #revision-diffs, div.post-revisions, .pagination {
 	padding:1rem;
 	font-size:1.1rem;
 }
-div.post-revisions {
+div.post-revisions, .pagination {
     margin-top: 1rem;
 }
 div.revision-header {
@@ -187,6 +199,53 @@ div.revision-header {
 }
 #revision-diffs > div > .diff {
 	padding-top: 2rem;
+}
+.pagination::before {
+    content:'Page navigation:';
+    font-size:1.45rem;
+}
+.pagination > div {
+    padding:.5rem;
+}
+.pagination > div > ul {
+    display:inline-block;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-grow:1;
+    padding-left:0;
+    margin-top:0;
+    border-left: 0.063rem solid #fff;
+    border-top: 0.063rem solid #fff;
+}
+.pagination > div > ul > li {
+    display:inline;
+    flex-grow:1;
+    text-align: center;
+    border-right: 0.063rem solid #fff;
+    border-bottom: 0.063rem solid #fff;
+}
+.pagination > div > ul > li::before {
+    content:unset;
+}
+a.page-numbers, span.page-numbers {
+    float:left;
+    padding: 1rem 2rem;
+    transition:all .3s;
+    width:100%;
+    height:100%;
+}
+a.page-numbers {
+    background-color:rgba(255,255,255,0.5);
+    border: 0.063rem dotted transparent;
+}
+a.page-numbers:hover {
+    background-color:rgba(221,221,221,0.5);
+    border: 0.063rem dotted #520f22;
+}
+span.page-numbers.current {
+    background-color:rgba(225,240,195,0.5);
 }
 div.post-revisions, #revision-diffs {
 	border-bottom:0.095rem solid rgba(0,0,0,0.5);
@@ -256,6 +315,10 @@ div.table-columns {
 body > article::before,body > article::after {
 	max-width:100vw;
 }
+.fm-wp-content > main > article:not(.single-post) > .entry-content > .featured-image
+{
+    padding-bottom: 0;
+}
 .fm-wp-content > main > article:not(.single-post) > .entry-content > .article-rest > .entry-footer
 {
     display: none;
@@ -322,9 +385,13 @@ body > article::before,body > article::after {
 	transition: all 0.3s;
     display: block;
 }
-#secondary > aside:hover > div > a:last-of-type, #secondary > aside:hover > ul > li:last-of-type > a, #secondary > aside:hover > div > ul {
+#secondary > aside:hover > ul > li:last-of-type > a, #secondary > aside:hover > div > ul {
 	padding-bottom:1rem;
 	padding-right:1rem;
+}
+#secondary .cat_specific_rss {
+    padding-left: 0;
+    padding-top: 0.5rem;
 }
 table {
 	table-layout:fixed;
@@ -609,13 +676,14 @@ nav > ul
     display: block;
 
     -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     padding: .75rem;
 
     transition: color .2s, border .2s;
     text-decoration: none;
-       text-overflow: clip;
+    text-overflow: clip;
+    border-bottom:none;
 
     color: rgba(0, 0, 0, .9);
     color: #2a1657;

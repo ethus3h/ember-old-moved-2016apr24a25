@@ -12,7 +12,7 @@ tr '\n' ' ' < "../../built/$1" > "../../built/1.tmp";
 tr '\t' ' ' < "../../built/1.tmp" > "../../built/2.tmp";
 tr '\r' ' ' < "../../built/2.tmp" > "../../built/3.tmp";
 tr -s " " < "../../built/3.tmp" > "../../built/$1";
-perl -p -i -e 's/> </></g' "../../built/$1";
+# perl -p -i -e 's/> </></g' "../../built/$1";
 perl -p -i -e "s/nav-item-inactive $PAGE/nav-item-selected/g" "../../built/$1";
 perl -p -e "s/^((?!^<h1 class=\"title\">([^<]+)<\/h1>).)*$//g" "../content/$1" > "../../built/4.tmp";
 perl -p -i -e 's/^\s*//;s/\s*$//;s/\s+/ /;' "../../built/4.tmp"
