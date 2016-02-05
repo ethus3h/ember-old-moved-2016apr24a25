@@ -203,6 +203,14 @@ function raze_nav() {
 	            foreach ( $page_format as $page ) {
 	                    echo "<li>$page</li>";
 	            }
+	            echo '<li>
+				<form class="wpsp-page-nav-form" action="';
+				echo $_SERVER['REQUEST_URI'];
+				echo '" method="get">
+					<input class="wpsp-input-number" type="text" placeholder="Jump to" size="6" name="paged" />
+					<input class="wpsp-button" value="Go" type="submit" >
+				</form>';
+				echo '</li>';
 	           echo '</ul></div></div>';
 	 }
 }
