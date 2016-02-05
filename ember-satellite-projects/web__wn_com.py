@@ -143,10 +143,8 @@ urls = ['http://africaans.wn.com/',
 'http://www.atomicenergynews.com/',
 'http://www.australiadaily.com/',
 'http://www.australiaoil.com/',
-'http://www.backtothefuture.com',
 'http://www.baseballdaily.com',
 'http://www.basketballdaily.com',
-'http://www.basketballdaily.com/',
 'http://www.beijingglobe.com/',
 'http://www.berlinnews.com/',
 'http://www.biotechs.com',
@@ -304,10 +302,7 @@ urls = ['http://africaans.wn.com/',
 'http://www.worldscientist.com',
 'http://www.worldswimming.com',
 'http://www.worldtechnews.com/',
-'http://www.worldweather.com',
-'https://plus.google.com/+Wndotcom',
-'https://twitter.com/worldnewsdotcom',
-'https://www.facebook.com/WNLive']
+'http://www.worldweather.com']
 regex = [r'^https?:\/\/[^\/]*bbc\.co\.uk\/',
         r'^https?:\/\/[^\/]*bbc\.com\/']    
 videoregex = []
