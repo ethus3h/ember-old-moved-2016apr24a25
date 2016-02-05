@@ -53,11 +53,14 @@ h1, p.bigemphasis
     text-indent: 0;
 }
 a {
+    border-bottom: 0.063rem dotted transparent;
     color:#520f22;
     text-decoration: none;
+    transition:border-bottom .1s;
 }
 a:hover {
     border-bottom: 0.063rem dotted #520f22;
+    transition:border-bottom .1s;
 }
 
 
@@ -73,7 +76,7 @@ blockquote {
     background-color:rgba(255,255,255,0.5);
     font-size:1.1rem;
 }
-blockquote:nth-child(2)::before, blockquote::after {
+/*blockquote:nth-child(2)::before, blockquote::after {
     font-size:4rem;
     font-weight:bold;
     height:2rem;
@@ -100,6 +103,41 @@ blockquote::before {
     height:calc(100% - 4rem);
     width:1rem;
     right:0;
+}*/
+blockquote::before, blockquote::after {
+    font-size:4rem;
+    font-weight:bold;
+    height: 2rem;
+}
+blockquote::before {
+    padding-right: .75rem;
+    padding-bottom: .75rem;
+    content:"\201C";
+    left:0;
+    top:0;
+    float:left;
+}
+blockquote::after {
+    padding-left: .75rem;
+    padding-top: .75rem;
+    content:"\201D";
+    right:calc(100% - 4rem);
+    top:calc(100% - 4rem);
+    float:right;
+}
+figure > a {
+    border-bottom:none;
+}
+figure > a:hover {
+    border-bottom:none;
+}
+figure > a > img {
+    transition: all 0.2s;
+    border:0.063rem dotted transparent;
+}
+figure > a:hover > img {
+    border:0.063rem dotted #520f22;
+    transition: all 0.2s;
 }
 div.musicthumbcontainer {
 	display:table-cell;
