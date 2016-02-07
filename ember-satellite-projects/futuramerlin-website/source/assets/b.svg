@@ -9,8 +9,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1280"
-   height="1000"
+   width="2"
+   height="2"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -23,6 +23,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -39,13 +40,17 @@
      inkscape:window-height="1258"
      id="namedview2607"
      showgrid="false"
-     inkscape:zoom="0.76268095"
-     inkscape:cx="748.42255"
-     inkscape:cy="801.58716"
+     inkscape:zoom="256"
+     inkscape:cx="1"
+     inkscape:cy="1"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg2" />
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <defs
      id="defs4">
     <linearGradient
@@ -58,7 +63,7 @@
     </linearGradient>
     <filter
        id="a"
-       color-interpolation-filters="sRGB">
+       style="color-interpolation-filters:sRGB">
       <feGaussianBlur
          stdDeviation="15 15"
          result="blur"
@@ -72,18 +77,12 @@
        y1="500"
        x2="1280"
        y2="500"
-       gradientUnits="userSpaceOnUse" />
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(0.0015625,0.002)" />
   </defs>
   <path
      style="fill:url(#linearGradient9605);fill-opacity:1"
      inkscape:connector-curvature="0"
      id="path11"
-     d="m 0,0 1280,0 0,1000 -1280,0 z"
-     transform="matrix(1.02996,0,0,1.03855,-19.202,-19.287)" />
-  <path
-     style="fill:none;"
-     inkscape:connector-curvature="0"
-     id="path2605"
-     d="m 0,0 1280,0 0,1000 -1280,0 z"
-     transform="matrix(1.02996,0,0,1.03855,-19.202,-19.287)" />
+     d="M 0,0 2,0 2,2 0,2 Z" />
 </svg>
