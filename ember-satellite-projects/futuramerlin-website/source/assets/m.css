@@ -1051,16 +1051,14 @@ body
 {
     font-family: wreatherweb;
     font-size: 2rem;
-
+    left: 0;
     position: fixed;
     z-index: 2;
     top: .25rem;
-
     display: flex;
     flex-direction: row;
-
     width: 100%;
-
+    transition: left 2s, width 2s, font-size 2s;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
@@ -1164,18 +1162,13 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     {
         transition: left 2s, box-shadow 2s, width 2s, opacity 2s;
     }
-    body,
-    .logo
+    body
     {
         transition: all 2s;
     }
     .nav-trigger:checked + label
     {
         left: calc(50% + 1rem);
-    }
-    .nav-trigger:checked ~ .logo
-    {
-        transition: all 2s;
     }
     .nav-trigger:checked ~ nav > .logo > .logo-inner
     {
@@ -1226,8 +1219,6 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
     .logo
     {
         font-size: 1.2rem;
-
-        transition: all 2s;
     }
     .logo-inner
     {
@@ -1323,9 +1314,6 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     {
         transition: font-size 2s, left 2s, width 2s, opacity 2s;
     }
-    .logo {
-        transition: all 2s;
-    }
     body::after
     {
         transition: font-size 2s, left 2s, width 2s, opacity 2s, bottom 2s;
@@ -1333,7 +1321,6 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     .logo
     {
         left: 25%;
-
         width: 75%;
     }
     body,
@@ -1341,11 +1328,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     body::after
     {
         left: 0;
-
         width: 125%;
-    }
-    .logo    {
-        position: fixed;
     }
     /* large screen, constrained width */
 	@media only screen and (max-width: 1500px) and (min-resolution: 192dpi),
