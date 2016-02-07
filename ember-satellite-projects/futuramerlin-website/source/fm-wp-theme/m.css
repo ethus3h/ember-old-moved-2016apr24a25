@@ -1,4 +1,4 @@
-/* To do: Finish blog toolbar styling. Add "All Topics" link to Categories tab in blog. Fix "Telephones and Tags" header being indented unexpectedly in blog-test.htm. Fix zoomed-in media query bug. Fix entry-title not wrapping around entry-meta. Fix buttons not showing the highlights correctly (use SVG instead of PNG). Finish the content. Make the pages. Then I’ll be done! :D */
+/* To do: Finish blog toolbar styling. Add "All Topics" link to Categories tab in blog. Fix "Telephones and Tags" header being indented unexpectedly in blog-test.htm. Fix zoomed-in media query bug. Fix entry-title not wrapping around entry-meta. Fix blockquote end quotation mark not being inset. Fix buttons not showing the highlights correctly (use SVG instead of PNG). Finish the content. Make the pages. Then I’ll be done! :D */
 
 
 /* Basic rules */
@@ -889,7 +889,7 @@ body > article
     padding-bottom: 7rem;
     padding-left: 1rem;
 
-    transition: margin .2s, top .2s;
+    transition: all .2s;
 
     color: #2a1657;
 }
@@ -1082,8 +1082,8 @@ body
 {
     position: absolute;
     left: 50%;
-
-    transition: 1s ease;
+    top: 0;
+    transition: all 1s ease, top .2s;
     transform: translateX(-50%);
 }
 @media only screen and (max-width: 1100px) and (min-resolution: 192dpi),
@@ -1109,16 +1109,21 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
              -o-box-shadow: 0 0 0 0 #fff;
     }
-    body > article,
-    body > article::before,
-    body::before,
-    body > article::after
+    body > article
     {
         margin-right: 0;
         margin-bottom: 0;
         margin-left: 0;
 
-        transition: margin .2s, top .2s, bottom .2s;
+        transition: all .2s;
+    }
+    body > article::before,
+    body::before,
+    body > article::after {
+        margin-right: 0;
+        margin-bottom: 0;
+        margin-left: 0;
+        transition: margin .2s, top .2s, bottom .2s, height .2s;
     }
     body > article,
     body > article::before,
@@ -1143,7 +1148,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     {
     	left:0;
         max-width: calc(100%);
-        transition: width .2s, left .2s;
+        transition: all .2s;
     }
     body > nav::before
     {
@@ -1179,7 +1184,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     body,
     .logo
     {
-        transition: font-size .2s, left .2s, box-shadow .2s;
+        transition: all .2s;
     }
     .nav-trigger:checked + label
     {
@@ -1187,15 +1192,15 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     }
     .nav-trigger:checked ~ .logo
     {
-        transition: font-size .2s, box-shadow .2s;
+        transition: all .2s;
     }
-    .nav-trigger:checked ~ .logo > .logo-inner
+    .nav-trigger:checked ~ nav > .logo > .logo-inner
     {
         font-size: 1.2rem;
 
         left: calc(100%);
 
-        transition: .4s ease-out;
+        transition: all .4s ease-out, top .3s;
         transform: translateX(calc(-100% - 1rem));
     }
     .nav-trigger:checked ~ nav > ul
@@ -1239,7 +1244,7 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
     {
         font-size: 1.2rem;
 
-        transition: font-size .2s, left .2s, box-shadow .2s;
+        transition: all .2s;
     }
     .logo-inner
     {
@@ -1265,7 +1270,21 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
 
              -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
     }
-
+    .nav-trigger:checked ~ nav > .logo > .logo-inner
+    {
+        top: 3rem;
+        transition: all .4s ease-out, top .3s;
+    }
+    .nav-trigger:checked ~ article
+    {
+        top: 3rem;
+        transition: all .3s;
+    }
+    .nav-trigger:checked ~ article::before, .nav-trigger:checked ~ article::after
+    {
+        top: 7rem;
+        transition: margin .2s, top .2s, bottom .2s, height .2s, top .3s;
+    }
     /* really small screen, constrained width */
 	@media only screen and (max-width: 561px) and (min-resolution: 192dpi),
 	not screen and (min-width: 281px) and (max-resolution: 191dpi)
@@ -1316,11 +1335,13 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         left: 25%;
         max-width: calc(75% - 8rem);
     }
-    .logo,
     body,
     body::before
     {
         transition: font-size .2s, left .2s, width .2s, opacity .2s;
+    }
+    .logo {
+        transition: all .2s;
     }
     body::after
     {
