@@ -880,10 +880,7 @@ body > article
     top: 0;
     left: 25%;
 
-    margin-top: 4rem;
-    margin-right: 4rem;
-    margin-bottom: 4rem;
-    margin-left: 4rem;
+    margin: 4rem;
     padding-top: 1rem;
     padding-right: 1rem;
     padding-bottom: 7rem;
@@ -898,22 +895,17 @@ body > article::before
     position: fixed;
     z-index: -1;
     top: 0;
-    right: 0;
-    bottom: calc(100vh - 8rem);
-    left: 0;
+    left: 25%;
 	content: ' ';
     -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
-    min-height: calc(100% - 8rem);
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: calc(100% - 8rem);
     max-height: 100%;
-    margin-top: 4rem;
-    margin-right: 4rem;
-    margin-bottom: 4rem;
-    margin-left: 4rem;
+    margin: 4rem;
     padding: 0;
 
-    transition: margin 2s, top 2s, bottom 2s, height 2s;
+    transition: margin 2s,top 2s,bottom 2s,height 2s,top 2s, width 2s, left 2s;
 
     border: none;
     background-color: rgba(226, 218, 241, .7);
@@ -923,22 +915,17 @@ body > article::after
     position: fixed;
     z-index: 3;
     top: 0;
-    right: 0;
-    bottom: 100%;
-    left: 0;
+    left: 25%;
 	content: ' ';
     -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
-    min-height: calc(100% - 8rem);
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: calc(100% - 8rem);
     max-height: 100%;
-    margin-top: 4rem;
-    margin-right: 4rem;
-    margin-bottom: 4rem;
-    margin-left: 4rem;
+    margin: 4rem;
     padding: 0;
 
-    transition: margin 2s, top 2s, bottom 2s, height 2s;
+    transition: margin 2s,top 2s,bottom 2s,height 2s,top 2s, width 2s, left 2s;
     pointer-events: none;
 
     border: .063rem solid white;
@@ -1114,7 +1101,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         margin-right: 0;
         margin-bottom: 0;
         margin-left: 0;
-
+        width: 100%;
         transition: all 2s;
     }
     body > article::before,
@@ -1123,31 +1110,27 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         margin-right: 0;
         margin-bottom: 0;
         margin-left: 0;
-        transition: margin 2s, top 2s, bottom 2s, height 2s;
-    }
-    body > article,
-    body > article::before,
-    body > article::after
-    {
-        bottom: 0;
+        transition: margin 2s, top 2s, bottom 2s, height 2s, top 2s;
     }
     body > article::before,
     body > article::after
     {
         top: 4rem;
-
         margin-top: 0;
+        width:100%;
+        left:0;
+        height: calc(100% - 4rem);
     }
     body::after
     {
         bottom: -4rem;
 
-        transition: font-size 2s, left 2s, width 2s, opacity 2s, bottom 2s;
+        transition: all 2s;
     }
     body > article, body > nav::before
     {
     	left:0;
-        max-width: calc(100%);
+        max-width: 100%;
         transition: all 2s;
     }
     body > nav::before
@@ -1333,7 +1316,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     body > article::after
     {
         left: 25%;
-        max-width: calc(75% - 8rem);
+        width: calc(75% - 8rem);
     }
     body,
     body::before
