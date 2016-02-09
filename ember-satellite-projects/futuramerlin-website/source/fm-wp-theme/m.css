@@ -1051,25 +1051,13 @@ body
 {
     font-family: wreatherweb;
     font-size: 2rem;
-    left: 0;
-    position: fixed;
     z-index: 2;
-    top: .25rem;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    transition: left .2s, width .2s, font-size .2s;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-}
-.logo-inner
-{
     position: absolute;
     left: 50%;
     top: 0;
     transition: all .2s ease, top .2s;
     transform: translateX(-50%);
+    text-align:center;
 }
 @media only screen and (max-width: 1100px) and (min-resolution: 192dpi),
 not screen and (min-width: 551px) and (max-resolution: 191dpi)
@@ -1170,7 +1158,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     {
         left: calc(50% + 1rem);
     }
-    .nav-trigger:checked ~ nav > .logo > .logo-inner
+    .nav-trigger:checked ~ nav > .logo
     {
         font-size: 1.2rem;
 
@@ -1216,15 +1204,13 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
 		border: .095rem solid #ddd;
 		transition: width .2s, margin .2s, left .2s;
 	}
+
     .logo
     {
-        font-size: 1.2rem;
-    }
-    .logo-inner
-    {
         left: calc(100%);
-
+        font-size: 1.2rem;
         transform: translateX(calc(-100% - 1rem));
+        top:.5rem;
     }
     .nav-trigger:checked + label
     {
@@ -1244,19 +1230,19 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
 
              -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
     }
-    .nav-trigger:checked ~ nav > .logo > .logo-inner
+    .nav-trigger:checked ~ nav > .logo
     {
         top: 3rem;
         transition: all .2s ease-out, top .2s;
     }
     .nav-trigger:checked ~ article
     {
-        top: 3rem;
+        top: 2.5rem;
         transition: all .2s;
     }
     .nav-trigger:checked ~ article::before, .nav-trigger:checked ~ article::after
     {
-        top: 7rem;
+        top: 6.5rem;
         transition: margin .2s, top .2s, bottom .2s, height .2s, top .2s;
     }
     /* really small screen, constrained width */
@@ -1318,17 +1304,17 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     {
         transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
     }
-    .logo
-    {
-        left: 25%;
-        width: 75%;
-    }
     body,
     body::before,
     body::after
     {
         left: 0;
         width: 125%;
+    }
+    body > nav > .logo {
+        left:25%;
+        width:75vw;
+        transform:translateX(0);
     }
     /* large screen, constrained width */
 	@media only screen and (max-width: 1500px) and (min-resolution: 192dpi),
