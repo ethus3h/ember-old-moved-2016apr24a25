@@ -26,6 +26,10 @@ if [ -n "$title" ]; then
 	replace="s/<title>Futuramerlin<\/title>/<title>$title &mdash; Futuramerlin<\/title>/g";
 	perl -p -i -e "$replace" "../../built/$1";
 fi
+if [ $PAGE == "index" ]; then
+    replace="s/<p class=\"logo\">(((?!<\/p>)[\S\s])*)<\/p>/<h1 class=\"logo\">\1<\/h1>/g";
+    perl -p -i -e "$replace" "../../built/$1";
+fi
 perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../../built/$1";
 SLASHCOUNTTEMP="${1//[^\/]}";
 SLASHCOUNT=${#SLASHCOUNTTEMP}
