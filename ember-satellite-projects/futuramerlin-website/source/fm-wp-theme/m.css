@@ -1051,21 +1051,94 @@ body
 {
     font-family: wreatherweb;
     font-size: 2rem;
-    z-index: 2;
-    position: absolute;
-    top: 0;
-    transition: all .2s ease, top .2s;
-    left:50%;
-    transform:translateX(-50%);
-    padding-top:.5rem;
     font-weight: normal;
     text-align:center;
     text-indent: 0;
+    transition: all .2s ease;
+    z-index: 2;
+    position: fixed;
+    top: .25rem;
+    width:0;
+    min-width: max-content;
+    min-width: -moz-max-content;
+    min-width: -webkit-max-content;
+    left:0;
+    transform:translateX(0);
+}
+@media only screen and (min-width: 1101px) and (min-resolution: 192dpi),
+not screen and (max-width: 550px) and (max-resolution: 191dpi)
+{
+    /* Large screen */
+    /* TODO: fix this. It seems to match zoomed-in screen. */
+
+    label[for='nav-trigger']
+    {
+        position: fixed;
+        z-index: 3;
+        top: .938rem;
+        left: .938rem;
+
+        width: 1.875rem;
+        height: 1.875rem;
+
+        cursor: pointer;
+        transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
+
+        opacity: 0;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' version=\'1.1\' x=\'0px\' y=\'0px\' width=\'30px\' height=\'30px\' viewBox=\'0 0 30 30\' xml:space=\'preserve\'><rect style=\'fill:rgb(1,50,32);\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'24\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'12\' width=\'30\' height=\'6\'/></svg>');
+        background-size: contain;
+    }
+    nav > ul
+    {
+        left: 0;
+
+        -webkit-box-shadow: .250rem 0 .250rem -.16rem #fff;
+           -moz-box-shadow: .250rem 0 .250rem -.16rem #fff;
+                box-shadow: .250rem 0 .250rem -.16rem #fff;
+
+             -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
+    }
+    body > article,
+    body > article::before,
+    body > article::after
+    {
+        left: 25%;
+        width: calc(75% - 8rem);
+    }
+    body,
+    body::before
+    {
+        transition: font-size .2s, left .2s, width .2s, opacity .2s;
+    }
+    body::after
+    {
+        transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
+    }
+    body,
+    body::before,
+    body::after
+    {
+        left: 0;
+        width: 125%;
+    }
+    body > nav > .logo {
+        left:62.5%;
+        transform:translateX(-50%);
+    }
+    /* large screen, constrained width */
+    @media only screen and (max-width: 1500px) and (min-resolution: 192dpi),
+    not screen and (min-width: 751px) and (max-resolution: 191dpi)
+    {
+        p {
+            text-align:left;
+            text-indent:0.75rem;
+        }
+    }
 }
 @media only screen and (max-width: 1100px) and (min-resolution: 192dpi),
 not screen and (min-width: 551px) and (max-resolution: 191dpi)
 {
-    /* small screen */
+    /* medium screen */
 	#secondary > aside > ul, #secondary > aside > div {
 		display: none;
 		opacity: 0;
@@ -1073,6 +1146,10 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 		width:100%;
 		left:0;
 	}
+    body > nav > .logo {
+        left:50%;
+        transform:translateX(-50%);
+    }
     nav > ul
     {
         left: -25%;
@@ -1164,11 +1241,9 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     .nav-trigger:checked ~ nav > .logo
     {
         font-size: 1.2rem;
-
-        left: calc(100%);
-
-        transition: all .2s ease-out, top .2s;
         transform: translateX(calc(-100% - 1rem));
+        left: calc(100%);
+        top:.9rem;
     }
     .nav-trigger:checked ~ nav > ul
     {
@@ -1184,7 +1259,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
              -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
     }
-    /* small screen, constrained width */
+    /* medium screen, constrained width */
     @media only screen and (max-width: 721px) and (min-resolution: 192dpi),
     not screen and (min-width: 361px) and (max-resolution: 191dpi)
     {
@@ -1196,7 +1271,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 @media only screen and (max-width: 640px) and (min-resolution: 192dpi),
 not screen and (min-width: 321px) and (max-resolution: 191dpi)
 {
-    /* really small screen */
+    /* small screen */
 
 	figure.thumbnail-right, featured-image, .wp-caption.alignright, .figcaption-empty-figure
 	{
@@ -1208,12 +1283,12 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
 		transition: width .2s, margin .2s, left .2s;
 	}
 
-    .logo
+    body > nav > .logo
     {
-        left: calc(100%);
         font-size: 1.2rem;
+        left: calc(100%);
         transform: translateX(calc(-100% - 1rem));
-        top:.5rem;
+        top:.9rem;
     }
     .nav-trigger:checked + label
     {
@@ -1236,7 +1311,6 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
     .nav-trigger:checked ~ nav > .logo
     {
         top: 3rem;
-        transition: all .2s ease-out, top .2s;
     }
     .nav-trigger:checked ~ article
     {
@@ -1248,79 +1322,9 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
         top: 6.5rem;
         transition: margin .2s, top .2s, bottom .2s, height .2s, top .2s;
     }
-    /* really small screen, constrained width */
+    /* small screen, constrained width */
 	@media only screen and (max-width: 561px) and (min-resolution: 192dpi),
 	not screen and (min-width: 281px) and (max-resolution: 191dpi)
-	{
-		p {
-			text-align:left;
-			text-indent:0.75rem;
-		}
-	}
-}
-@media only screen and (min-width: 1101px) and (min-resolution: 192dpi),
-not screen and (max-width: 550px) and (max-resolution: 191dpi)
-{
-    /* Large screen */
-    /* TODO: fix this. It seems to match zoomed-in screen. */
-
-    label[for='nav-trigger']
-    {
-        position: fixed;
-        z-index: 3;
-        top: .938rem;
-        left: .938rem;
-
-        width: 1.875rem;
-        height: 1.875rem;
-
-        cursor: pointer;
-        transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
-
-        opacity: 0;
-        background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' version=\'1.1\' x=\'0px\' y=\'0px\' width=\'30px\' height=\'30px\' viewBox=\'0 0 30 30\' xml:space=\'preserve\'><rect style=\'fill:rgb(1,50,32);\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'24\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'12\' width=\'30\' height=\'6\'/></svg>');
-        background-size: contain;
-    }
-    nav > ul
-    {
-        left: 0;
-
-        -webkit-box-shadow: .250rem 0 .250rem -.16rem #fff;
-           -moz-box-shadow: .250rem 0 .250rem -.16rem #fff;
-                box-shadow: .250rem 0 .250rem -.16rem #fff;
-
-             -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
-    }
-    body > article,
-    body > article::before,
-    body > article::after
-    {
-        left: 25%;
-        width: calc(75% - 8rem);
-    }
-    body,
-    body::before
-    {
-        transition: font-size .2s, left .2s, width .2s, opacity .2s;
-    }
-    body::after
-    {
-        transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
-    }
-    body,
-    body::before,
-    body::after
-    {
-        left: 0;
-        width: 125%;
-    }
-    body > nav > .logo {
-        left:25%;
-        width:75vw;
-    }
-    /* large screen, constrained width */
-	@media only screen and (max-width: 1500px) and (min-resolution: 192dpi),
-	not screen and (min-width: 751px) and (max-resolution: 191dpi)
 	{
 		p {
 			text-align:left;
