@@ -76,6 +76,9 @@ a:hover {
 .breadcrumbs > span::after {
     content: ' \203A';
 }
+.top-of-page-widgets {
+    width: 100%;
+}
 blockquote {
     padding: .75rem;
     border-top: .063rem solid #666;
