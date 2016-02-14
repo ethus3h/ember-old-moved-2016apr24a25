@@ -28,5 +28,9 @@
 				</ul>
 			</aside>
 
-		<?php endif; // end sidebar widget area ?>
-	</div><!-- #secondary -->
+		<?php endif; // end top of page widget area ?>
+		<section class="top-of-page-widgets">
+		<?php if ( ! dynamic_sidebar( 'sidebar-5' ) ) : ?>
+
+		<?php endif; // end top of post widget area ?>	</section>
+		</div><!-- #secondary -->
