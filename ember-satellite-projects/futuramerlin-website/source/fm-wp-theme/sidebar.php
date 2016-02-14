@@ -30,7 +30,11 @@
 
 		<?php endif; // end top of page widget area ?>
 		<section class="top-of-page-widgets">
-		<?php if ( ! dynamic_sidebar( 'sidebar-5' ) ) : ?>
-
-		<?php endif; // end top of post widget area ?>	</section>
+		<?php 
+            if(!is_front_page() || !is_home())
+                { 
+                    if ( ! dynamic_sidebar( 'sidebar-5' )) {}
+                }
+        ?>
+        </section>
 		</div><!-- #secondary -->
