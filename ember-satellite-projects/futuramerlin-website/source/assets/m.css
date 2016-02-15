@@ -375,6 +375,7 @@ nav.horiztoolbar, #secondary {
 nav.horiztoolbar > ul > li, #secondary > aside
 {
     flex-grow: 1;
+    font-size:1rem;
 }
 nav.horiztoolbar > ul > li:first-of-type, #secondary > aside:first-of-type {
 
@@ -387,14 +388,6 @@ nav.horiztoolbar > ul, #secondary > aside > p.bigemphasis {
     padding:.67rem;
     text-align:center;
     font-weight:normal;
-}
-#secondary > aside:hover > ul > li:last-of-type, #secondary > aside:hover > div > ul {
-	padding-bottom:1rem;
-	padding-right:1rem;
-}
-#secondary .cat_specific_rss {
-    padding-left: 0;
-    padding-top: 0.5rem;
 }
 table {
 	table-layout:fixed;
