@@ -422,9 +422,17 @@ nav.horiztoolbar > ul > li:active > :not(.buttonName),
 #secondary > aside > .cat_specific_rss > .cat_show_image {
     margin-top: 1rem;
 }
-#secondary > aside.widget_archive > ul > li:last-of-type::before, #secondary > aside.widget_iclw > ul > li:last-of-type::before {
+#secondary > aside.widget_archive > ul > li:last-of-type::before,
+#secondary > aside#category_rss_widgets > div > ul > li.cat-item:last-of-type::before,
+#secondary > aside.widget_categories > ul > li:last-of-type::before {
     padding-bottom: 1rem;
-    padding-right: 1rem;
+}
+#secondary > aside.widget_tag_cloud > div.tagcloud::after {
+    min-width:1rem;
+    min-height:1rem;
+    padding-bottom: 1rem;
+    display:inline-block;
+    content: ' ';
 }
 table {
 	table-layout:fixed;
