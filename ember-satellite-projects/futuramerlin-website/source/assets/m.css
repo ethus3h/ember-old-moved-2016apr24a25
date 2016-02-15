@@ -371,11 +371,15 @@ nav.horiztoolbar, #secondary {
 	position: relative;
 	width: 100%;
 	z-index:101;
+    background-color:green;
 }
-nav.horiztoolbar > ul > li, #secondary > aside
+nav.horiztoolbar > ul > li > :not(.buttonName), #secondary > aside > :not(.bigemphasis)
 {
     flex-grow: 1;
     font-size:1rem;
+    position:fixed;
+    display:none;
+    background-color:orange;
 }
 nav.horiztoolbar > ul > li:first-of-type, #secondary > aside:first-of-type {
 
@@ -383,11 +387,15 @@ nav.horiztoolbar > ul > li:first-of-type, #secondary > aside:first-of-type {
 nav.horiztoolbar > ul > li:last-of-type, #secondary > aside:last-of-type {
 
 }
-nav.horiztoolbar > ul, #secondary > aside > p.bigemphasis {
+nav.horiztoolbar > ul > li > .buttonName, #secondary > aside > p.bigemphasis {
     font-size:1.2rem;
     padding:.67rem;
     text-align:center;
     font-weight:normal;
+    background-color:transparent;
+}
+nav.horiztoolbar > ul > li > .buttonName:hover, #secondary > aside > p.bigemphasis:hover {
+    background-color:#ff00ff;
 }
 table {
 	table-layout:fixed;
@@ -663,6 +671,7 @@ nav > ul
 .nav-item
 {
     width: 100%;
+    margin-bottom: .095rem;
 }
 .nav-item > a
 {
@@ -705,7 +714,7 @@ nav > ul
     -webkit-background-origin: padding-box;
 }
 .nav-item-inactive:active::before,
-.nav-item-inactive::before,
+.nav-item-inactive::before
 {
     position: absolute;
     top: 0;
@@ -725,7 +734,7 @@ nav > ul
 }
 .nav-item-inactive:active::before,
 .nav-item-inactive:hover:active::before,
-.nav-item-inactive:hover::before,
+.nav-item-inactive:hover::before
 {
     position: absolute;
     top: 0;
@@ -742,10 +751,6 @@ nav > ul
     border-right: .095rem solid #87769d;
     border-left: .095rem solid #87769d;
     background: none;
-}
-.nav-item
-{
-    margin-bottom: .095rem;
 }
 .nav-item-inactive
 {
@@ -1283,12 +1288,12 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
     {
         top: 3rem;
     }
-    .nav-trigger:checked ~ article
+    .nav-trigger:checked ~ main
     {
         top: 2.5rem;
         transition: all .2s;
     }
-    .nav-trigger:checked ~ article::before, .nav-trigger:checked ~ article::after
+    .nav-trigger:checked ~ main::before, .nav-trigger:checked ~ main::after
     {
         top: 6.5rem;
         transition: margin .2s, top .2s, bottom .2s, height .2s, top .2s;
