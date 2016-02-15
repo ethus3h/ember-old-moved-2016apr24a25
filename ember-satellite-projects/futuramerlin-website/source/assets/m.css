@@ -364,38 +364,67 @@ body > main::before,body > main::after {
 	background: -moz-linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 	background: linear-gradient(90deg, rgba(199,130,229,1) 0, rgba(199,130,229,1) 1%, rgba(162,130,229,0.9) 15%, rgba(129,145,226,0.78) 23%, rgba(129,134,226,0.66) 34%, rgba(142,129,226,0.44) 47%, rgba(130,152,229,0.34) 59%, rgba(0,150,255,0) 100%);
 }
+/* Style toolbar */
 nav.horiztoolbar, #secondary {
 	display: flex;
 	flex-wrap: wrap;
 	flex-grow: 1;
 	position: relative;
-	width: 100%;
+    top:-1rem;
+    left:-1rem;
+	width: calc(100% + 2rem);
 	z-index:101;
     background-color:green;
 }
-nav.horiztoolbar > ul > li > :not(.buttonName), #secondary > aside > :not(.bigemphasis)
-{
-    flex-grow: 1;
-    font-size:1rem;
-    position:fixed;
-    display:none;
-    background-color:orange;
-}
-nav.horiztoolbar > ul > li:first-of-type, #secondary > aside:first-of-type {
-
-}
-nav.horiztoolbar > ul > li:last-of-type, #secondary > aside:last-of-type {
-
-}
+/* Style toolbar buttons */
 nav.horiztoolbar > ul > li > .buttonName, #secondary > aside > p.bigemphasis {
-    font-size:1.2rem;
     padding:.67rem;
     text-align:center;
+    font-size:1.2rem;
     font-weight:normal;
     background-color:transparent;
 }
+/* Grow toolbar buttons as needed */
+nav.horiztoolbar > ul > li, #secondary > aside {
+    flex-grow: 1;
+}
+/* Style toolbar buttons when hovered or selected */
 nav.horiztoolbar > ul > li > .buttonName:hover, #secondary > aside > p.bigemphasis:hover {
     background-color:#ff00ff;
+}
+/* Style toolbar dropdowns */
+nav.horiztoolbar > ul > li > :not(.buttonName), #secondary > aside > :not(.bigemphasis)
+{
+    position:fixed;
+    box-sizing: border-box;
+    left:calc(25vw + 4rem);
+    width:calc(75vw - 8rem);
+    max-height: calc(100vh - 12.853rem);
+    display:none;
+    overflow-y: auto;
+    z-index: 100;
+    font-size:1rem;
+    background-color:orange;
+}
+/* Show toolbar dropdowns when hovered */
+nav.horiztoolbar > ul > li:hover > :not(.buttonName),
+#secondary > aside:hover > :not(.bigemphasis),
+nav.horiztoolbar > ul > li:active > :not(.buttonName),
+#secondary > aside:active > :not(.bigemphasis)
+{
+    display:block;
+}
+/* Fix spacing on toolbar dropdowns */
+#secondary > aside > ul, #secondary > aside > .tagcloud {
+    padding: 1rem;
+    margin-top: 0rem;
+}
+#secondary > aside > .cat_specific_rss > .cat_show_image {
+    margin-top: 1rem;
+}
+#secondary > aside.widget_archive > ul > li:last-of-type::before, #secondary > aside.widget_iclw > ul > li:last-of-type::before {
+    padding-bottom: 1rem;
+    padding-right: 1rem;
 }
 table {
 	table-layout:fixed;
