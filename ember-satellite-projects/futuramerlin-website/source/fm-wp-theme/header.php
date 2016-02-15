@@ -9,7 +9,7 @@
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Futuramerlin</title>
+    <title><?php wp_title( '—', true, 'right' ); ?></title>
     <meta charset="utf-8">
     <meta content="Blog — Futuramerlin" name="author">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
