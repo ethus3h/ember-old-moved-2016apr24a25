@@ -78,6 +78,8 @@ a:hover {
 }
 .top-of-page-widgets {
     width: 100%;
+    top: -1rem;
+    position: relative;
 }
 .edit-link {
     display:none;
