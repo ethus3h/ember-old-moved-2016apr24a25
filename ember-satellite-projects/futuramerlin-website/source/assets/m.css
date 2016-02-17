@@ -374,7 +374,6 @@ nav.horiztoolbar, #secondary {
     left:-1rem;
 	width: calc(100% + 2rem);
 	z-index:101;
-    background-color:green;
 }
 /* Style toolbar buttons */
 nav.horiztoolbar > ul > li > .buttonName, #secondary > aside > p.bigemphasis {
@@ -384,9 +383,15 @@ nav.horiztoolbar > ul > li > .buttonName, #secondary > aside > p.bigemphasis {
     font-weight:normal;
     background-color:transparent;
 }
-/* Grow toolbar buttons as needed */
 nav.horiztoolbar > ul > li, #secondary > aside {
     flex-grow: 1;
+    background-color:green;
+}
+nav.horiztoolbar > ul > li:first-of-type, #secondary > aside:first-of-type {
+    background-color:red;
+}
+nav.horiztoolbar > ul > li:last-of-type, #secondary > aside:last-of-type {
+    background-color:blue;
 }
 /* Style toolbar buttons when hovered or selected */
 nav.horiztoolbar > ul > li > .buttonName:hover, #secondary > aside > p.bigemphasis:hover {
