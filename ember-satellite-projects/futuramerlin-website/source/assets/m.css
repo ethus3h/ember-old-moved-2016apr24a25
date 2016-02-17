@@ -290,10 +290,6 @@ div.post-revisions, #revision-diffs {
 	padding:1rem;
 	font-size:1.1rem;
 }
-/*.tagcloud > a::after {
-    content: '\00a0';
-    display:inline-block;
-}*/
 div.entry-meta
 {
 	font-size:1rem;
@@ -1268,13 +1264,6 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
 not screen and (min-width: 551px) and (max-resolution: 191dpi)
 {
     /* medium screen */
-	#secondary > aside > ul, #secondary > aside > div {
-		display: none;
-		opacity: 0;
-		padding:1rem;
-		width:100%;
-		left:0;
-	}
     body > nav > .logo {
         left:50%;
         transform:translateX(-50%);
