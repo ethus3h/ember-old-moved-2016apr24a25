@@ -575,7 +575,7 @@ nav.horiztoolbar:active::after,
     min-height:1rem;
     padding-bottom: 1rem;
     display:inline-block;
-    content: ' ';
+    content: '\a\00a0';
 }
 table {
 	table-layout:fixed;
