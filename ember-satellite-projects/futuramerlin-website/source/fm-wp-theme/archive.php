@@ -99,9 +99,4 @@ get_header(); ?>
 
 		<?php endif; ?>
 
-		</main><!-- #main -->
-	</section><!-- #primary -->
-		</div>
-    </div>
-</body>
-</html>
+<?php get_footer(); ?>

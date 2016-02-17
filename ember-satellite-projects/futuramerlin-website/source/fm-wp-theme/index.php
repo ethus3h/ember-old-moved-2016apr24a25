@@ -42,11 +42,4 @@
 
 		<?php endif; ?>
 
-		</main>
-	</div>
-		</div>
-
-		</div>
-    </div>
-<?php get_footer(); ?></body>
-</html>
+<?php get_footer(); ?>
