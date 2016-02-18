@@ -1013,13 +1013,9 @@ body > main
     z-index: 1;
     top: 0;
     left: 25%;
-
+    padding:1rem;
+    padding-bottom:7rem;
     margin: 4rem;
-    padding-top: 1rem;
-    padding-right: 1rem;
-    padding-bottom: 7rem;
-    padding-left: 1rem;
-
     transition: all .2s;
 
     color: #2a1657;
@@ -1111,11 +1107,15 @@ body::after
     transition: font-size .2s, left .2s, width .2s, bottom .2s, opacity .2s;
 }
 body > nav > p:last-of-type {
-    position:relative;
+    position:fixed;
+    left:0;
     margin-top:calc(1rem / 3);
     z-index:1000;
     text-indent: .5rem;
     font-size:0.6rem;
+    font-family: wreatherweb;
+    width:25%;
+    transition: all .2s;
     color:#2a1657;
 }
 body > nav > ul > li:first-of-type {
@@ -1303,6 +1303,10 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
 
              -o-box-shadow: 0 0 0 0 #fff;
     }
+    body > nav > p:last-of-type {
+        left:-25%;
+        transition: all .2s;
+    }
     body > main
     {
         margin-right: 0;
@@ -1386,6 +1390,10 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         left: calc(100%);
         top:.9rem;
     }
+    .nav-trigger:checked ~ nav > p:last-of-type {
+        left:0;
+        transition: all .2s;
+    }
     .nav-trigger:checked ~ nav > ul
     {
         left: 0;
@@ -1414,7 +1422,7 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
 {
     /* small screen */
 
-	figure.thumbnail-right, featured-image, .wp-caption.alignright, .figcaption-empty-figure
+	figure.thumbnail-right, .featured-image, .wp-caption.alignright, .figcaption-empty-figure
 	{
 		margin: 1rem;
 		left: 0.75rem;
