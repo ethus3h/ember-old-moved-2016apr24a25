@@ -1,4 +1,4 @@
-/* To do: Add "All Topics" link to Categories tab in blog. Fix "Telephones and Tags" header being indented unexpectedly in blog-test.htm. Fix zoomed-in media query bug. Fix entry-title not wrapping around entry-meta. Fix blockquote end quotation mark not being inset. Fix buttons not showing the highlights correctly (use SVG instead of PNG). Finish the content. Make the pages. Then I’ll be done! :D */
+/* To do: Make Close button on blog menu dropdowns not collide with dropdown contents. Make first and last items in toolbar not draw their edge borders all the way down the toolbar when there are multiple rows of buttons on the toolbar. Make toolbar and pagination sticky / always visible (feature request) (probably not on mobile). Fix logo having a scrollbar in Chrome. Fix Chrome lines in the fancy buttons. Fix broken positioning / media queries in Safari. Add "All Topics" link to Categories tab in blog. Fix "Telephones and Tags" header being indented unexpectedly in blog-test.htm. Fix zoomed-in media query bug. Fix entry-title not wrapping around entry-meta. Fix blockquote end quotation mark not being inset. Fix buttons not showing the highlights correctly (use SVG instead of PNG). Finish the content. Make the pages. Then I’ll be done! :D */
 
 
 /* Basic rules */
@@ -236,6 +236,7 @@ div.revision-header {
     justify-content: space-between;
     flex-grow:1;
     padding-left:0;
+    padding-top:0;
     margin-top:0;
     border-left: 0.063rem solid #fff;
     border-top: 0.063rem solid #fff;
