@@ -20,12 +20,10 @@
 	<input class="nav-trigger" id="nav-trigger" type="checkbox">
 	<label for="nav-trigger">&nbsp;</label>
 	<nav>
-		<div class="logo">
-			<div class="logo-inner">
-				<span><a class="nodecorate logolink" href=
-				"/">futuramerlin</a></span>
-			</div>
-		</div>
+		<p class="logo">
+			<a class="nodecorate logolink" href=
+			"/">futuramerlin</a>
+		</p>
 		<ul>
 			<li class="nav-item nav-item-inactive index">
 				<a href="/">Home</a>

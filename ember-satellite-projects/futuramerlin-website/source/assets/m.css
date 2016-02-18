@@ -1189,6 +1189,9 @@ body
     min-width: -moz-max-content;
     min-width: -webkit-max-content;
     left:0;
+    padding:1rem;
+    padding-top:0;
+    overflow:auto;
     transform:translateX(0);
 }
 @media only screen and (min-width: 1101px) and (min-resolution: 192dpi),
