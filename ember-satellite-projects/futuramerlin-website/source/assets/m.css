@@ -687,7 +687,7 @@ figure.thumbnail-left > figcaption::after,
 {
 	content:"\aTap image to view.";
 	top:0.25rem;
-	right:0.5rem;
+	right:-0.5rem;
 	position:relative;
 	margin-left:0.5rem;
 	white-space:pre;
