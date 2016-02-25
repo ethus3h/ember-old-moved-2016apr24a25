@@ -43,5 +43,8 @@ mv -v ./"$CrystalLogID" ./"$CrystalLogID".log
 
 mv -v ./"$CrystalLogID.tmpd" ./"$CrystalLogID"
 
+#Clear the screen
+printf "\033c"
+
 echo "Done! The crystal has been extracted to:"
 echo "./$CrystalLogID"

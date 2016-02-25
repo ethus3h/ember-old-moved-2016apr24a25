@@ -1,4 +1,4 @@
-#!/bin/bash
+  #!/bin/bash
 
 # Do not run this script manually; use crystallise instead.
 
@@ -51,6 +51,9 @@ rm -rv "${@:2}"
 # rm -v "$CrystalID" ./"$CrystalID".tmp
 
 rm -v ./"$CrystalID".tmp
+
+#Clear the screen
+printf "\033c"
 
 echo "Done! The new crystal's address is:"
 echo "$CrystalID"
