@@ -1,4 +1,4 @@
-  #!/bin/bash
+#!/bin/bash
 
 # Do not run this script manually; use crystallise instead.
 
@@ -23,7 +23,7 @@ echo "The crystal will have the following address when it is ready: $CrystalID"
 
 printf "%s" "$passphrase" > ./"$CrystalID".tmp
 
-tar -cv --format pax -f ./"$CrystalID".pax $(pwd)/$CrystalID "$@"
+tar -cv --format pax -f ./"$CrystalID".pax "$@" $(pwd)/$CrystalID
 
 xz -k -C sha256 -9 -e -v ./"$CrystalID".pax
 
