@@ -5,7 +5,7 @@ export crystalliseVersion='2.0'
 
 # You need a file named config.txt in your home directory with a title, a collection identifier and a passphrase, each in its own line.
 
-#Requires ia (https://pypi.python.org/pypi/internetarchive) to be installed and configured. Requires wget.
+#Requires ia (https://pypi.python.org/pypi/internetarchive) to be installed and configured. Requires wget and hashdeep.
 
 #Script must be run as root.
 

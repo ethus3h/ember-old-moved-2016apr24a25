@@ -27,7 +27,15 @@ echo "The crystal will have the following address when it is ready: $CrystalID"
 
 printf "%s" "$crystallisePassphrase" > ./"$CrystalID".tmp
 
-tar -cv --format pax -f ./"$CrystalID".pax "$@" $(pwd)/$CrystalID
+echo "Building local index..."
+
+hashdeep -c md5,sha1,sha256 "$@" $(pwd)/$CrystalID | tee ./"$CrystalID.local.idx"
+
+echo "Building deep index..."
+
+hashdeep -c -r md5,sha1,sha256 "$@" $(pwd)/$CrystalID | tee ./"$CrystalID.deep.idx"
+
+tar -cv --format pax -f ./"$CrystalID".pax "$@" $(pwd)/$CrystalID ./"$CrystalID.local.idx" ./"$CrystalID.deep.idx"
 
 script /dev/null xz -k -C sha256 -9 -e -v ./"$CrystalID".pax
 
@@ -39,9 +47,29 @@ rm -v ./"$CrystalID".pax.xz
 
 mv ./"$CrystalID".pax.xz.gpg ./"$CrystalID".coal5
 
+echo "Computing checksum..."
+
+hashdeep -c md5,sha1,sha256 "$@" ./"$CrystalID".coal5 | tee ./"$CrystalID.checksums"
+
 echo "Sending..."
 
 script /dev/null ia upload "$CrystalID" --metadata="subject:Uploaded using Crystallise $crystalliseVersion; 1EA21BD8-DB7E-11E5-9733-728C37852114; $crystalTitle" --metadata="collection:$crystalCollection" --delete ./"$CrystalID".coal5
+
+echo "Retrieving remote XML index..."
+
+wget --save-headers --output-document - "https://archive.org/download/$CrystalID/$CrystalID"_files.xml | tee ./"$CrystalID.remote.xml"
+
+script /dev/null xz -C sha256 -9 -e -v ./"$CrystalID.remote.xml"
+
+echo "Retrieving remote JSON index..."
+
+wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee ./"$CrystalID.remote.json"
+
+script /dev/null xz -C sha256 -9 -e -v ./"$CrystalID.remote.json"
+
+echo "Copying indices..."
+
+rsync -av --progress --checksum ./"$CrystalID.local.idx" ./"$CrystalID.remote.deep.idx" ./"$CrystalID.checksums" ./"$CrystalID.remote.xml.xz" ./"$CrystalID.remote.json.xz" /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/
 
 echo "Uploaded to https://archive.org/download/$CrystalID"
 
