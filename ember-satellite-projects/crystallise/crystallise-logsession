@@ -10,6 +10,8 @@ set -e
 
 echo "Arguments: " "$@"
 
+echo "Configuration: "
+
 cat "$HOME"/config.txt
 
 crystalTitle=$(sed '1q;d' "$HOME"/config.txt)
