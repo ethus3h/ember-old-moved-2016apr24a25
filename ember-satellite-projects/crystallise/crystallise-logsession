@@ -44,4 +44,6 @@ rm -rv "${@:2}"
 #Upload log file and passphrase file
 crystallise-logsession "$CrystalID" "$CrystalID".tmp 2>&1 /dev/null
 
+rm -v "$CrystalID" "$CrystalID".tmp
+
 echo "Done!"
