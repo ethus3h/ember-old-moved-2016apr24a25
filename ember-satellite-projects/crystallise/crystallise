@@ -10,13 +10,14 @@ export version='2.0'
 #Script must be run as root.
 
 #Usage: crystallise <files>
+#The file(s) being crystallised must be within the current directory. The script tests for some simple cases of this, but not all of them.
 
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
 
 #Script should exit if any operation fails.
 set -e
 
-if [ "$1" == "" ] || [ "$1" == "." ] || [ "$1" == ".." ] || [ "$1" == "../"* ]; then
+if [ "$1" == "" ] || [ "$1" == "." ] || [ "$1" == ".." ] || [ "$1" =~ ^../ ]; then
     echo "Please specify file(s) within the current directory to crystallise."
     exit 1
 fi
