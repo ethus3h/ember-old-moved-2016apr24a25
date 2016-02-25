@@ -37,7 +37,7 @@ mv ./"$CrystalID".pax.xz.gpg ./"$CrystalID".coal5
 
 echo "Sending..."
 
-ia upload "$CrystalID" --verbose --metadata="subject:Uploaded using Crystallise $crystalliseVersion; 1EA21BD8-DB7E-11E5-9733-728C37852114; $title" --metadata="collection:$collection" --delete "$CrystalID".coal5
+ia upload "$CrystalID" --debug --metadata="subject:Uploaded using Crystallise $crystalliseVersion; 1EA21BD8-DB7E-11E5-9733-728C37852114; $title" --metadata="collection:$collection" --delete "$CrystalID".coal5
 
 echo "Uploaded to https://archive.org/download/$CrystalID"
 
