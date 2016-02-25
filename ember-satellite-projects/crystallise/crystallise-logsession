@@ -33,7 +33,7 @@ hashdeep -c md5,sha1,sha256 "$@" $(pwd)/$CrystalID | tee ./"$CrystalID.local.idx
 
 echo "Building deep index..."
 
-hashdeep -c -r md5,sha1,sha256 "$@" $(pwd)/$CrystalID | tee ./"$CrystalID.deep.idx"
+hashdeep -c md5,sha1,sha256 -r "$@" $(pwd)/$CrystalID | tee ./"$CrystalID.deep.idx"
 
 tar -cv --format pax -f ./"$CrystalID".pax "$@" $(pwd)/$CrystalID ./"$CrystalID.local.idx" ./"$CrystalID.deep.idx"
 
