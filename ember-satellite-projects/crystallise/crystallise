@@ -12,6 +12,8 @@ export crystalliseVersion='2.0'
 #Usage: crystallise <files>
 #The file(s) being crystallised must be within the current directory. The script tests for some simple cases of this, but not all of them.
 
+#TODO: Have decrystallise verify checksums.
+
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
 
 #Script should exit if any operation fails.
