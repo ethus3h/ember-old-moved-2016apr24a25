@@ -35,7 +35,7 @@ mkdir -v ./"$CrystalLogID.tmpd"
 
 mv -v ./"$CrystalLogID".pax ./"$CrystalLogID.tmpd"
 
-tar -xv --format pax -f ./"$CrystalLogID.tmpd"/"$CrystalLogID".pax "$@"
+tar -xvf ./"$CrystalLogID.tmpd"/"$CrystalLogID".pax "$@"
 
 rm -v ./"$CrystalLogID.tmpd"/"$CrystalLogID".pax
 
