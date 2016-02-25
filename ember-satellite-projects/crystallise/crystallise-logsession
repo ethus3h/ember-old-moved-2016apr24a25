@@ -25,11 +25,11 @@ printf "%s" "$passphrase" > ./"$CrystalID".tmp
 
 tar -cv --format pax -f ./"$CrystalID".pax "$@" $(pwd)/$CrystalID
 
-xz -k -C sha256 -9 -e -v ./"$CrystalID".pax
+script /dev/null xz -k -C sha256 -9 -e -v ./"$CrystalID".pax
 
 rm -v ./"$CrystalID".pax
 
-gpg --yes -c --cipher-algo AES256 --batch --passphrase-file "$CrystalID".tmp ./"$CrystalID".pax.xz
+gpg --yes -c -v --cipher-algo AES256 --batch --passphrase-file "$CrystalID".tmp ./"$CrystalID".pax.xz
 
 rm -v ./"$CrystalID".pax.xz
 
