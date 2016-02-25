@@ -31,8 +31,6 @@ rm -v ./"$CrystalLogID".pax.xz.gpg
 
 unxz ./"$CrystalLogID".pax.xz
 
-rm -v ./"$CrystalLogID".pax.xz
-
 mkdir -v ./"$CrystalLogID.tmpd"
 
 mv -v ./"$CrystalLogID".pax ./"$CrystalLogID.tmpd"
