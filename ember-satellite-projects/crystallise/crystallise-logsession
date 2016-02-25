@@ -10,18 +10,18 @@ set -e
 
 echo "Arguments: " "$@"
 
-title=$(sed '1q;d' "$HOME"/config.txt)
-export title
-collection=$(sed '2q;d' "$HOME"/config.txt)
-export collection
-passphrase=$(sed '3q;d' "$HOME"/config.txt)
-export passphrase
+crystalTitle=$(sed '1q;d' "$HOME"/config.txt)
+export crystalTitle
+crystalCollection=$(sed '2q;d' "$HOME"/config.txt)
+export crystalCollection
+crystallisePassphrase=$(sed '3q;d' "$HOME"/config.txt)
+export crystallisePassphrase
 
 export CrystalID="$1"
 
 echo "The crystal will have the following address when it is ready: $CrystalID"
 
-printf "%s" "$passphrase" > ./"$CrystalID".tmp
+printf "%s" "$crystallisePassphrase" > ./"$CrystalID".tmp
 
 tar -cv --format pax -f ./"$CrystalID".pax "$@" $(pwd)/$CrystalID
 
@@ -37,7 +37,7 @@ mv ./"$CrystalID".pax.xz.gpg ./"$CrystalID".coal5
 
 echo "Sending..."
 
-script /dev/null ia upload "$CrystalID" --metadata="subject:Uploaded using Crystallise $crystalliseVersion; 1EA21BD8-DB7E-11E5-9733-728C37852114; $title" --metadata="collection:$collection" --delete ./"$CrystalID".coal5
+script /dev/null ia upload "$CrystalID" --metadata="subject:Uploaded using Crystallise $crystalliseVersion; 1EA21BD8-DB7E-11E5-9733-728C37852114; $crystalTitle" --metadata="collection:$crystalCollection" --delete ./"$CrystalID".coal5
 
 echo "Uploaded to https://archive.org/download/$CrystalID"
 

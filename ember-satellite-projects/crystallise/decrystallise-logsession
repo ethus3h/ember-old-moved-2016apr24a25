@@ -10,14 +10,14 @@ set -e
 
 echo "Arguments: " "$@"
 
-passphrase=$(sed '3q;d' "$HOME"/config.txt)
-export passphrase
+crystallisePassphrase=$(sed '3q;d' "$HOME"/config.txt)
+export crystallisePassphrase
 
 export CrystalID="$1"
 
 echo "Crystal address: $CrystalID"
 
-printf "%s" "$passphrase" > ./"$CrystalLogID".tmp
+printf "%s" "$crystallisePassphrase" > ./"$CrystalLogID".tmp
 
 echo "Receiving..."
 
