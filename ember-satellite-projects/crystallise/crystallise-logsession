@@ -55,21 +55,15 @@ echo "Sending..."
 
 script /dev/null ia upload "$CrystalID" --metadata="subject:Uploaded using Crystallise $crystalliseVersion; 1EA21BD8-DB7E-11E5-9733-728C37852114; $crystalTitle" --metadata="collection:$crystalCollection" --delete ./"$CrystalID".coal5
 
-echo "Retrieving remote XML index..."
+echo "Retrieving remote index..."
 
-wget --save-headers --output-document - "https://archive.org/download/$CrystalID/$CrystalID"_files.xml | tee ./"$CrystalID.remote.xml"
+wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee ./"$CrystalID.json"
 
-script /dev/null xz -C sha256 -9 -e -v ./"$CrystalID.remote.xml"
-
-echo "Retrieving remote JSON index..."
-
-wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee ./"$CrystalID.remote.json"
-
-script /dev/null xz -C sha256 -9 -e -v ./"$CrystalID.remote.json"
+script /dev/null xz -C sha256 -9 -e -v ./"$CrystalID.json"
 
 echo "Copying indices..."
 
-rsync -av --progress --checksum ./"$CrystalID.local.idx" ./"$CrystalID.remote.deep.idx" ./"$CrystalID.checksums" ./"$CrystalID.remote.xml.xz" ./"$CrystalID.remote.json.xz" /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/
+rsync -av --progress --checksum ./"$CrystalID.local.idx" ./"$CrystalID.deep.idx" ./"$CrystalID.checksums" ./"$CrystalID.json.xz" /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/
 
 echo "Uploaded to https://archive.org/download/$CrystalID"
 
