@@ -25,6 +25,6 @@ fi
 CrystalID=Crystal-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 export CrystalID
 
-crystallise-logsession ./"$CrystalID" "$@" 2>&1 | tee -a "$CrystalID"
+crystallise-logsession "$CrystalID" "$@" 2>&1 | tee -a "$CrystalID"
 
 rsync -aq --checksum "$CrystalID" /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/"$CrystalID".log
