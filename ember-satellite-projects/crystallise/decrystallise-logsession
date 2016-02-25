@@ -21,7 +21,7 @@ printf "%s" "$passphrase" > ./"$CrystalLogID".tmp
 
 echo "Receiving..."
 
-wget -O ./"$CrystalLogID".pax.xz.gpg "https://archive.org/download/$CrystalID".coal5
+wget -O ./"$CrystalLogID".pax.xz.gpg "https://archive.org/download/$CrystalID"/$CrystalID".coal5
 
 gpg --yes --batch --passphrase-file ./"$CrystalLogID".tmp ./"$CrystalLogID".pax.xz.gpg
 
