@@ -6,9 +6,9 @@
 #Script should exit if any operation fails.
 set -e
 
-export title=sed '1q;d' "$HOME"/config.txt
-export collection=sed '2q;d' "$HOME"/config.txt
-export passphrase=sed '3q;d' "$HOME"/config.txt
+export title=$(sed '1q;d' "$HOME"/config.txt)
+export collection=$(sed '2q;d' "$HOME"/config.txt)
+export passphrase=$(sed '3q;d' "$HOME"/config.txt)
 
 export CrystalID="$1"
 

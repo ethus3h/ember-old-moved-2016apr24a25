@@ -12,6 +12,7 @@ export version='2.0'
 #Script should exit if any operation fails.
 set -e
 
-export CrystalID=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")
+CrystalID=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")
+export CrystalID
 
-crystallise-logsession "$CrystalID $@" 2>&1 | tee -a "$CrystalID"
+crystallise-logsession "$CrystalID" "$@" 2>&1 | tee -a "$CrystalID"
