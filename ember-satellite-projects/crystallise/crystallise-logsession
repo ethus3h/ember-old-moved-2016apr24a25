@@ -7,10 +7,10 @@
 set -e
 
 echo "Arguments: ""$@"
-a
-export collection=sed '2q;d' "$HOME"/config.txt
-export collection=sed '2q;d' "$HOME"/config.txt
-export passphrase=sed '3q;d' "$HOME"/config.txt
+
+export title=$(sed '1q;d' "$HOME"/config.txt)
+export collection=$(sed '2q;d' "$HOME"/config.txt)
+export passphrase=$(sed '3q;d' "$HOME"/config.txt)
 
 export CrystalID="$1"
 
@@ -30,7 +30,7 @@ rm -v ./"$CrystalID".pax.xz
 
 mv ./"$CrystalID".pax.xz.gpg ./"$CrystalID".coal5
 
-ia upload $CrystalID --metadata="subject:Uploaded using Crystallise 2.0; 1EA21BD8-DB7E-11E5-9733-728C37852114" --metadata="collection:$collection" --delete "$@"
+ia upload "$CrystalID" --metadata="subject:Uploaded using Crystallise 2.0; 1EA21BD8-DB7E-11E5-9733-728C37852114; $title" --metadata="collection:$collection" --delete "$@"
 
 echo 'Uploaded to https://archive.org/download/'$CrystalID
 
