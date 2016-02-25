@@ -30,4 +30,4 @@ export CrystalID
 crystallise-logsession "$CrystalID" "$@" 2>&1 | tee -a "$CrystalID"
 
 xz -C sha256 -9 -e "$CrystalID"
-rsync -aq --checksum "$CrystalID".xz /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/"$CrystalID".xz.log
+rsync -aq --checksum "$CrystalID".xz /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/"$CrystalID".log.xz
