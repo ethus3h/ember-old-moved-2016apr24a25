@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Do not run this script manually; use crystallise instead.
+
 #Script should run as root.
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
 
@@ -17,23 +19,25 @@ export passphrase
 
 export CrystalID="$1"
 
-echo "Crystal ID: $CrystalID"
+echo "Crystal Address: $CrystalID"
 
-printf "%s" "$passphrase" > "$CrystalID".tmp
+printf "%s" "$passphrase" > ./"$CrystalID".tmp
 
-tar -cv --format pax -f "$CrystalID".pax "$@"
+tar -cv --format pax -f ./"$CrystalID".pax "$@"
 
-xz -k -C sha256 -9 -e -v "$CrystalID".pax
+xz -k -C sha256 -9 -e -v ./"$CrystalID".pax
 
 rm -v ./"$CrystalID".pax
 
-gpg --yes -c --cipher-algo AES256 --batch --passphrase-file "$CrystalID".tmp "$CrystalID".pax.xz
+gpg --yes -c --cipher-algo AES256 --batch --passphrase-file "$CrystalID".tmp ./"$CrystalID".pax.xz
 
 rm -v ./"$CrystalID".pax.xz
 
 mv ./"$CrystalID".pax.xz.gpg ./"$CrystalID".coal5
 
-ia upload "$CrystalID" --metadata="subject:Uploaded using Crystallise 2.0; 1EA21BD8-DB7E-11E5-9733-728C37852114; $title" --metadata="collection:$collection" --delete "$CrystalID".coal5
+echo "Sending..."
+
+ia upload "$CrystalID" --metadata="subject:Uploaded using Crystallise $crystalliseVersion; 1EA21BD8-DB7E-11E5-9733-728C37852114; $title" --metadata="collection:$collection" --delete "$CrystalID".coal5
 
 echo "Uploaded to https://archive.org/download/$CrystalID"
 
@@ -44,6 +48,9 @@ rm -rv "${@:2}"
 #Upload log file and passphrase file
 # crystallise-logsession "$CrystalID" "$CrystalID".tmp 2>&1 /dev/null
 
-rm -v "$CrystalID" "$CrystalID".tmp
+# rm -v "$CrystalID" ./"$CrystalID".tmp
 
-echo "Done!"
+rm -v ./"$CrystalID".tmp
+
+echo "Done! The new crystal's address is:"
+echo "$CrystalID"

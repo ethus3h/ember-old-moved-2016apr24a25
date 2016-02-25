@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Do not run this script manually; use decrystallise instead.
+
+#Script should run as root.
+[ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
+
+#Script should exit if any operation fails.
+set -e
+
+echo "Arguments: " "$@"
+
+passphrase=$(sed '3q;d' "$HOME"/config.txt)
+export passphrase
+
+export CrystalID="$1"
+
+echo "Crystal Address: $CrystalID"
+
+printf "%s" "$passphrase" > ./"$CrystalLogID".tmp
+
+echo "Receiving..."
+
+wget -O ./"$CrystalLogID".pax.xz.gpg "https://archive.org/download/$CrystalID"
+
+gpg --yes --batch --passphrase-file ./"$CrystalLogID".tmp ./"$CrystalLogID".pax.xz.gpg
+
+rm -v ./"$CrystalLogID".tmp
+
+rm -v ./"$CrystalLogID".pax.xz.gpg
+
+unxz ./"$CrystalLogID".pax.xz
+
+rm -v ./"$CrystalLogID".pax.xz
+
+mkdir -v ./"$CrystalLogID.tmpd"
+
+mv -v ./"$CrystalLogID".pax ./"$CrystalLogID.tmpd"
+
+tar -xv --format pax -f ./"$CrystalLogID.tmpd"/"$CrystalLogID".pax "$@"
+
+rm -v ./"$CrystalLogID.tmpd"/"$CrystalLogID".pax
+
+mv -v ./"$CrystalLogID.tmpd" ./"$CrystalLogID"
+
+echo "Done! The crystal has been extracted to:"
+echo "./$CrystalLogID"

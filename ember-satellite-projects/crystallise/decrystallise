@@ -1,0 +1,16 @@
+#!/bin/bash
+# decrystallise
+
+# See crystallise for requirements.
+
+#Usage: decrystallise <crystal-address>
+
+[ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
+
+#Script should exit if any operation fails.
+set -e
+
+CrystalLogID=Decrystallised-$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")
+export CrystalLogID
+
+decrystallise-logsession "$@" 2>&1 | tee -a "$CrystalLogID"
