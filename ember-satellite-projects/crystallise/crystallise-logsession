@@ -49,7 +49,7 @@ mv ./"$CrystalID".pax.xz.gpg ./"$CrystalID".coal5
 
 echo "Computing checksum..."
 
-hashdeep -c md5,sha1,sha256 "$@" ./"$CrystalID".coal5 | tee ./"$CrystalID.checksums"
+hashdeep -c md5,sha1,sha256 "$CrystalID" ./"$CrystalID".coal5 | tee ./"$CrystalID.checksums"
 
 echo "Sending..."
 
