@@ -10,6 +10,8 @@ set -e
 
 echo "Arguments: " "$@"
 
+cat "$HOME"/config.txt
+
 crystalTitle=$(sed '1q;d' "$HOME"/config.txt)
 export crystalTitle
 crystalCollection=$(sed '2q;d' "$HOME"/config.txt)
