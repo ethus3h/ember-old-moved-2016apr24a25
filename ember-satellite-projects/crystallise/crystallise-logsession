@@ -12,7 +12,7 @@ export passphrase=$(sed '3q;d' "$HOME"/config.txt)
 
 export CrystalID="$1"
 
-printf "%s" "$passphrase" > "$CrystalID".tmp
+printf "$passphrase" > "$CrystalID".tmp
 
 tar -cv --format pax -f "$CrystalID".pax "$@"
 

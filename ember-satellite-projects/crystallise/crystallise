@@ -4,9 +4,13 @@
 export version='2.0'
 
 # You need a file named config.txt in your home directory with a title, a collection identifier and a passphrase, each in its own line.
+
 #Requires ia (https://pypi.python.org/pypi/internetarchive) to be installed and configured.
 
-#Script should run as root.
+#Script must be run as root.
+
+#Usage: crystallise <files>
+
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
 
 #Script should exit if any operation fails.
