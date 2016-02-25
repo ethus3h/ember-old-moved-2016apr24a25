@@ -7,7 +7,7 @@
 set -e
 
 echo "Arguments: ""$@"
-
+a
 export collection=sed '2q;d' "$HOME"/config.txt
 export collection=sed '2q;d' "$HOME"/config.txt
 export passphrase=sed '3q;d' "$HOME"/config.txt
