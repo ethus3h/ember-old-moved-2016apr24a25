@@ -19,7 +19,7 @@ export passphrase
 
 export CrystalID="$1"
 
-echo "Crystal Address: $CrystalID"
+echo "The crystal will have the following address when it is ready: $CrystalID"
 
 printf "%s" "$passphrase" > ./"$CrystalID".tmp
 
