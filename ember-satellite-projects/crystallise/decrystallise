@@ -10,7 +10,7 @@
 #Script should exit if any operation fails.
 set -e
 
-CrystalLogID=Decrystallised-$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")
+CrystalLogID=Decrystallised-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 export CrystalLogID
 
 decrystallise-logsession "$@" 2>&1 | tee -a "$CrystalLogID"
