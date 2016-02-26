@@ -29,7 +29,11 @@ export CrystalID
 
 crystallise-logsession "$CrystalID" "$@" 2>&1 | tee -a "$CrystalID"
 
-echo "Please wait for completion..."
+echo "Finishing; please wait for completion..."
 xz -C sha256 -9 -e "$CrystalID"
 rsync -aq --checksum "$CrystalID".xz /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/"$CrystalID".log.xz
-echo "Done."
+gpg --yes -c -q --cipher-algo AES256 --batch --passphrase-file "$CrystalID".tmp ./"$CrystalID".xz
+rm ./"$CrystalID".tmp
+mv ./"$CrystalID".xz.gpg ./"$CrystalID".coal5-log
+ia upload "$CrystalID" --metadata="subject:Uploaded using Crystallise $crystalliseVersion; Crystallise log; log; logs; 1EA21BD8-DB7E-11E5-9733-728C37852114; $crystalTitle" --metadata="collection:$crystalCollection" --delete ./"$CrystalID".coal5-log
+echo "Done!"
