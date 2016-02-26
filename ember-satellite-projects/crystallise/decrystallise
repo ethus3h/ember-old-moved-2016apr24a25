@@ -10,6 +10,11 @@
 #Script should exit if any operation fails.
 set -e
 
+if [ "$1" == "" ] || [[ "$1" =~ ^Crystal- ]]; then
+    echo "Please specify file(s) within the current directory to crystallise."
+    exit 1
+fi
+
 CrystalLogID=Decrystallised-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 export CrystalLogID
 
