@@ -33,10 +33,10 @@
 				<a href="/bio.htm">Bio</a>
 			</li>
 			<li class="nav-item nav-item-inactive news">
-				<a href="/news.htm">News</a>
+				<a href="/c/category/futuramerlin-news/">News</a>
 			</li>
 			<li class="nav-item nav-item-selected blog">
-				<a href="/blog.htm">Blog</a>
+				<a href="/c/">Blog</a>
 			</li>
 			<li class="nav-item nav-item-inactive contact">
 				<a href="/contact.htm">Contact</a>
