@@ -26,5 +26,5 @@ rsync -aq --checksum "$CrystalLogID".log.xz /Ember\ Media\ Library/Futuramerlin\
 gpg --yes -c -q --cipher-algo AES256 --batch --passphrase-file "$CrystalLogID".tmp ./"$CrystalLogID".log.xz
 rm ./"$CrystalLogID".tmp
 mv ./"$CrystalLogID".log.xz.gpg ./"$CrystalLogID".coal5-log
-ia upload "$CrystalLogID" --metadata="subject:Uploaded using Decrystallise $crystalliseVersion; Decrystallise log; log; logs; 1EA21BD8-DB7E-11E5-9733-728C37852114; $1" --metadata="collection:$crystalCollection" --delete ./"$CrystalLogID".coal5-log
+ia upload "$CrystalLogID" --retries=10 --metadata="subject:Uploaded using Decrystallise $crystalliseVersion; Decrystallise log; log; logs; 1EA21BD8-DB7E-11E5-9733-728C37852114; $1" --metadata="collection:$crystalCollection" --delete ./"$CrystalLogID".coal5-log
 echo "Done!"
