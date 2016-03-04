@@ -1,0 +1,30 @@
+#!/bin/bash
+# Crystallise
+
+#Script must be run as root.
+
+#Usage: crystallise-update
+
+[ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
+
+#Script should exit if any operation fails.
+set -e
+
+CrystalID=CrystalliseUpdate-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
+export CrystalID
+
+cp -v /usr/bin/crystallise-update /usr/bin/crystallise-update.old.$CrystalID
+crystallise /usr/bin/crystallise /usr/bin/crystallise-logsession /usr/bin/decrystallise /usr/bin/decrystallise-logsession /usr/bin/crystallise-update.old.$CrystalID
+mkdir -v ~/$CrystalID.tmp
+cd ~/$CrystalID.tmp
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-logsession
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/decrystallise
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/decrystallise-logsession
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-update
+chmod +x ./*
+cp -v ./* /usr/bin/
+cd ~
+crystallise ~/$CrystalID.tmp
+
+echo "Done!"
