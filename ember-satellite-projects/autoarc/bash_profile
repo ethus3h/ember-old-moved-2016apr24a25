@@ -1,0 +1,17 @@
+#!/bin/bash
+alias python=python3
+PATH="$PATH:/usr/local/bin:$HOME/.local/bin"
+a() { cd /home/grabbot/grabs/ && grab-site --no-dupespotter --concurrency=5 --wpull-args=--warc-move=/home/grabbot/warcdealer/\ --read-timeout=3600\ --connect-timeout=20\ --dns-timeout=20\ --retry-connrefused\ --retry-dns-error\ --max-redirect=128\ --phantomjs-scroll=50000\ --phantomjs-exe=/phantomjs-1.9.8-linux-x86_64/bin/phantomjs\ --content-on-error\ --tries=1024 "$@"; }
+export -f a;
+o() { cd /home/grabbot/grabs/ && grab-site --no-dupespotter --concurrency=5 --wpull-args=--warc-move=/home/grabbot/warcdealer/\ --read-timeout=3600\ --connect-timeout=20\ --dns-timeout=20\ --retry-connrefused\ --retry-dns-error\ --max-redirect=128\ --phantomjs-scroll=50000\ --phantomjs-exe=/phantomjs-1.9.8-linux-x86_64/bin/phantomjs\ --content-on-error\ --tries=1024 --1 "$@"; }
+export -f o;
+aq() { cd /home/grabbot/grabs/ && grab-site --no-dupespotter --concurrency=5 --wpull-args=--warc-move=/home/grabbot/warcdealer/\ --read-timeout=3600\ --connect-timeout=20\ --dns-timeout=20\ --retry-connrefused\ --retry-dns-error\ --max-redirect=128\ --phantomjs-scroll=50000\ --phantomjs-exe=/phantomjs-1.9.8-linux-x86_64/bin/phantomjs\ --content-on-error "$@"; }
+export -f aq;
+oq() { cd /home/grabbot/grabs/ && grab-site --no-dupespotter --concurrency=5 --wpull-args=--warc-move=/home/grabbot/warcdealer/\ --read-timeout=3600\ --connect-timeout=20\ --dns-timeout=20\ --retry-connrefused\ --retry-dns-error\ --max-redirect=128\ --phantomjs-scroll=50000\ --phantomjs-exe=/phantomjs-1.9.8-linux-x86_64/bin/phantomjs\ --content-on-error --1 "$@"; }
+export -f oq;
+ap() { cd /home/grabbot/grabs/ && grab-site --no-dupespotter --concurrency=5 --wpull-args=--warc-move=/home/grabbot/warcdealer/\ --read-timeout=3600\ --connect-timeout=20\ --dns-timeout=20\ --retry-connrefused\ --retry-dns-error\ --max-redirect=128\ --phantomjs-scroll=50000\ --phantomjs-exe=/phantomjs-1.9.8-linux-x86_64/bin/phantomjs\ --content-on-error\ --tries=1024\ --phantomjs "$@"; }
+export -f ap;
+op() { cd /home/grabbot/grabs/ && grab-site --no-dupespotter --concurrency=5 --wpull-args=--warc-move=/home/grabbot/warcdealer/\ --read-timeout=3600\ --connect-timeout=20\ --dns-timeout=20\ --retry-connrefused\ --retry-dns-error\ --max-redirect=128\ --phantomjs-scroll=50000\ --phantomjs-exe=/phantomjs-1.9.8-linux-x86_64/bin/phantomjs\ --content-on-error\ --tries=1024\ --phantomjs --1 "$@"; }
+export -f op;
+iu() { IUIDENTIFIER=$(python2 -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)"); ia upload $IUIDENTIFIER --metadata="subject:Uploaded using iu v3; E2C69226-CB9A-11E5-BB8D-DFF85FF10656" "$@"; echo 'https://archive.org/download/'$IUIDENTIFIER; }
+export -f iu;
