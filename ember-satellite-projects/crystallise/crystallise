@@ -1,11 +1,11 @@
 #!/bin/bash
 # Crystallise
 # Version:
-export crystalliseVersion='2.12.2'
+export crystalliseVersion='2.12.3'
 
 # You need a file named config.txt in your home directory with a title, a collection identifier, a passphrase, and your desired directory to contain temporary files, each in its own line.
 
-#Requires ia (https://pypi.python.org/pypi/internetarchive) to be installed and configured. Requires wget and hashdeep.
+#Requires ia (https://pypi.python.org/pypi/internetarchive) to be installed and configured. Requires wget and hashdeep. Currently only tested on OS X.
 
 #Script must be run as root.
 
