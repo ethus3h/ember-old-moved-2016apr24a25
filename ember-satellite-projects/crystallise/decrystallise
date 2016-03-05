@@ -18,13 +18,13 @@ fi
 CrystalLogID=Decrystallised-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 export CrystalLogID
 
-decrystallise-logsession "$@" 2>&1 | tee -a "$CrystalLogID"
+decrystallise-logsession "$@" 2>&1 | tee -a "$crystalTempdir/$CrystalLogID"
 
 echo "Finishing; please wait for completion..."
-xz -C sha256 -9 -e "$CrystalLogID".log
-rsync -aq --checksum "$CrystalLogID".log.xz /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/"$CrystalLogID".log.xz
-gpg --yes -c -q --cipher-algo AES256 --batch --passphrase-file "$CrystalLogID".tmp ./"$CrystalLogID".log.xz
-rm ./"$CrystalLogID".tmp
-mv ./"$CrystalLogID".log.xz.gpg ./"$CrystalLogID".coal5-log
-ia upload "$CrystalLogID" --retries=10 --metadata="subject:Uploaded using Decrystallise $crystalliseVersion" --metadata="subject:Decrystallise log" --metadata="subject:log" --metadata="subject:logs" --metadata="subject:1EA21BD8-DB7E-11E5-9733-728C37852114" --metadata="subject:$1" --metadata="collection:$crystalCollection" --delete ./"$CrystalLogID".coal5-log
+xz -C sha256 -9 -e "$crystalTempdir/$CrystalLogID".log
+rsync -aq --checksum "$crystalTempdir/$CrystalLogID".log.xz /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/"$CrystalLogID".log.xz
+gpg --yes -c -q --cipher-algo AES256 --batch --passphrase-file "$crystalTempdir/$CrystalLogID".tmp ./"$crystalTempdir/$CrystalLogID".log.xz
+rm "$crystalTempdir/$CrystalLogID".tmp
+mv "$crystalTempdir/$CrystalLogID".log.xz.gpg "$crystalTempdir/$CrystalLogID".coal5-log
+ia upload "$CrystalLogID" --retries=10 --metadata="subject:Uploaded using Decrystallise $crystalliseVersion" --metadata="subject:Decrystallise log" --metadata="subject:log" --metadata="subject:logs" --metadata="subject:1EA21BD8-DB7E-11E5-9733-728C37852114" --metadata="subject:$1" --metadata="collection:$crystalCollection" --delete "$crystalTempdir/$CrystalLogID".coal5-log
 echo "Done!"

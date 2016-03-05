@@ -12,6 +12,8 @@ echo "Arguments: " "$@"
 
 crystallisePassphrase=$(sed '3q;d' "$HOME"/config.txt)
 export crystallisePassphrase
+crystalTempdir=$(sed '4q;d' "$HOME"/config.txt)
+export crystalTempdir
 
 export CrystalID="$1"
 
@@ -25,32 +27,32 @@ printenv
 
 echo "Crystal address: $CrystalID"
 
-printf "%s" "$crystallisePassphrase" > ./"$CrystalLogID".tmp
+printf "%s" "$crystallisePassphrase" > "$crystalTempdir/$CrystalLogID".tmp
 
 echo "Receiving..."
 
-wget -O ./"$CrystalLogID".pax.xz.gpg "https://archive.org/download/$CrystalID/$CrystalID".coal5
+wget -O "$crystalTempdir/$CrystalLogID".pax.xz.gpg "https://archive.org/download/$CrystalID/$CrystalID".coal5
 
-gpg --yes --batch --passphrase-file ./"$CrystalLogID".tmp ./"$CrystalLogID".pax.xz.gpg
+gpg --yes --batch --passphrase-file "$crystalTempdir/$CrystalLogID".tmp "$crystalTempdir/$CrystalLogID".pax.xz.gpg
 
-rm -v ./"$CrystalLogID".pax.xz.gpg
+rm -v "$crystalTempdir/$CrystalLogID".pax.xz.gpg
 
-unxz ./"$CrystalLogID".pax.xz
+unxz "$crystalTempdir/$CrystalLogID".pax.xz
 
-mkdir -v ./"$CrystalLogID.tmpd"
+mkdir -v "$crystalTempdir/$CrystalLogID.tmpd"
 
-mv -v ./"$CrystalLogID".pax ./"$CrystalLogID.tmpd/"
+mv -v "$crystalTempdir/$CrystalLogID".pax "$crystalTempdir/$CrystalLogID.tmpd/"
 
-tar -xvf ./"$CrystalLogID.tmpd"/"$CrystalLogID".pax -C ./"$CrystalLogID.tmpd"/
+tar -xvf "$crystalTempdir/$CrystalLogID.tmpd"/"$CrystalLogID".pax -C "$crystalTempdir/$CrystalLogID.tmpd"/
 
-rm -v ./"$CrystalLogID.tmpd"/"$CrystalLogID".pax
+rm -v "$crystalTempdir/$CrystalLogID.tmpd"/"$CrystalLogID".pax
 
-mv -v ./"$CrystalLogID" ./"$CrystalLogID".log
+mv -v "$crystalTempdir/$CrystalLogID" "$crystalTempdir/$CrystalLogID".log
 
-mv -v ./"$CrystalLogID.tmpd" ./"$CrystalLogID"
+mv -v "$crystalTempdir/$CrystalLogID.tmpd" "$crystalTempdir/$CrystalLogID"
 
 #Clear the screen
 printf "\033c"
 
 echo "Done receiving! The crystal has been extracted to:"
-echo "./$CrystalLogID"
+echo "$crystalTempdir/$CrystalLogID"

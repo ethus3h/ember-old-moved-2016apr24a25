@@ -20,6 +20,8 @@ crystalCollection=$(sed '2q;d' "$HOME"/config.txt)
 export crystalCollection
 crystallisePassphrase=$(sed '3q;d' "$HOME"/config.txt)
 export crystallisePassphrase
+crystalTempdir=$(sed '4q;d' "$HOME"/config.txt)
+export crystalTempdir
 
 export CrystalID="$1"
 
@@ -33,45 +35,45 @@ printenv
 
 echo "The crystal will have the following address when it is ready: $CrystalID"
 
-printf "%s" "$crystallisePassphrase" > ./"$CrystalID".tmp
+printf "%s" "$crystallisePassphrase" > "$crystalTempdir/$CrystalID".tmp
 
 echo "Building local index..."
 
-hashdeep -c md5,sha1,sha256 -o fbcpsde "$@" $(pwd)/$CrystalID | tee ./"$CrystalID.local.idx"
+hashdeep -c md5,sha1,sha256 -o fbcpsde "$@" "$crystalTempdir/$CrystalID" | tee "$crystalTempdir/$CrystalID.local.idx"
 
 echo "Building deep index..."
 
-hashdeep -c md5,sha1,sha256 -o fbcpsde -r "$@" $(pwd)/$CrystalID | tee ./"$CrystalID.deep.idx"
+hashdeep -c md5,sha1,sha256 -o fbcpsde -r "$@" "$crystalTempdir/$CrystalID" | tee "$crystalTempdir/$CrystalID.deep.idx"
 
-tar -cv -P --format pax -f "./$CrystalID.pax" "$@" $(pwd)/$CrystalID ./"$CrystalID.local.idx" ./"$CrystalID.deep.idx" $(pwd)/"$CrystalID.local.idx" $(pwd)/"$CrystalID.deep.idx" ./"$CrystalID.tmp" $(pwd)/"$CrystalID.tmp"
+tar -cv -P --format pax -f "$crystalTempdir/$CrystalID.pax" "$@" "$crystalTempdir/$CrystalID" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.tmp" "$crystalTempdir/$CrystalID.tmp"
 
-script /dev/null "xz -k -C sha256 -9 -e -v ./$CrystalID.pax"
+script /dev/null "xz -k -C sha256 -9 -e -v $crystalTempdir/$CrystalID.pax"
 
-rm -v ./"$CrystalID".pax
+rm -v "$crystalTempdir/$CrystalID".pax
 
-gpg --yes -c -v --cipher-algo AES256 --batch --passphrase-file "$CrystalID".tmp ./"$CrystalID".pax.xz
+gpg --yes -c -v --cipher-algo AES256 --batch --passphrase-file "$crystalTempdir/$CrystalID".tmp "$crystalTempdir/$CrystalID".pax.xz
 
-rm -v ./"$CrystalID".pax.xz
+rm -v "$crystalTempdir/$CrystalID".pax.xz
 
-mv ./"$CrystalID".pax.xz.gpg ./"$CrystalID".coal5
+mv "$crystalTempdir/$CrystalID".pax.xz.gpg "$crystalTempdir/$CrystalID".coal5
 
 echo "Computing checksum..."
 
-hashdeep -c md5,sha1,sha256 -o fbcpsde ./"$CrystalID".coal5 | tee ./"$CrystalID.checksums"
+hashdeep -c md5,sha1,sha256 -o fbcpsde "$crystalTempdir/$CrystalID".coal5 | tee "$crystalTempdir/$CrystalID.checksums"
 
 echo "Sending..."
 
-script /dev/null "ia upload $CrystalID --retries=10 --metadata=subject:Uploaded using Crystallise $crystalliseVersion --metadata=subject:1EA21BD8-DB7E-11E5-9733-728C37852114 --metadata=subject:$crystalTitle --metadata=collection:$crystalCollection --delete ./$CrystalID.coal5"
+script /dev/null "ia upload $CrystalID --retries=10 --metadata=subject:Uploaded using Crystallise $crystalliseVersion --metadata=subject:1EA21BD8-DB7E-11E5-9733-728C37852114 --metadata=subject:$crystalTitle --metadata=collection:$crystalCollection --delete $crystalTempdir/$CrystalID.coal5"
 
 echo "Retrieving remote index..."
 
 wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee ./"$CrystalID.json"
 
-script /dev/null "xz -C sha256 -9 -e -v ./$CrystalID.json"
+script /dev/null "xz -C sha256 -9 -e -v $crystalTempdir/$CrystalID.json"
 
 echo "Copying indices..."
 
-rsync -av --progress --checksum ./"$CrystalID.local.idx" ./"$CrystalID.deep.idx" ./"$CrystalID.checksums" ./"$CrystalID.json.xz" /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/
+rsync -av --progress --checksum "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.checksums" "$crystalTempdir/$CrystalID.json.xz" /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/
 
 echo "Uploaded to https://archive.org/download/$CrystalID"
 

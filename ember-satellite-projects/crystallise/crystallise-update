@@ -21,10 +21,14 @@ wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-proj
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-logsession
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/decrystallise
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/decrystallise-logsession
-wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-update
 chmod +x ./*
 cp -v ./* /usr/bin/
 cd ~
 crystallise ~/$CrystalID.tmp
-
+mkdir -v ~/$CrystalID.tmp
+cd ~/$CrystalID.tmp
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-update
+chmod +x ./*
+cp -v ./* /usr/bin/
+cd ~
 echo "Done!"

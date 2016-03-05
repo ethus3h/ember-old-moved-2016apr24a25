@@ -1,9 +1,9 @@
 #!/bin/bash
 # Crystallise
 # Version:
-export crystalliseVersion='2.11'
+export crystalliseVersion='2.12'
 
-# You need a file named config.txt in your home directory with a title, a collection identifier and a passphrase, each in its own line.
+# You need a file named config.txt in your home directory with a title, a collection identifier, a passphrase, and your desired directory to contain temporary files, each in its own line.
 
 #Requires ia (https://pypi.python.org/pypi/internetarchive) to be installed and configured. Requires wget and hashdeep.
 
@@ -27,13 +27,13 @@ fi
 CrystalID=Crystal-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 export CrystalID
 
-crystallise-logsession "$CrystalID" "$@" 2>&1 | tee -a "$CrystalID"
+crystallise-logsession "$crystalTempdir/$CrystalID" "$@" 2>&1 | tee -a "$crystalTempdir/$CrystalID"
 
 echo "Finishing; please wait for completion..."
-xz -C sha256 -9 -e "$CrystalID"
-rsync -aq --checksum "$CrystalID".xz /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/"$CrystalID".log.xz
-gpg --yes -c -q --cipher-algo AES256 --batch --passphrase-file "$CrystalID".tmp ./"$CrystalID".xz
-rm ./"$CrystalID".tmp
-mv ./"$CrystalID".xz.gpg ./"$CrystalID".coal5-log
-ia upload "$CrystalID" --retries=10 --metadata="subject:Uploaded using Crystallise $crystalliseVersion" --metadata="subject:Crystallise log" --metadata="subject:log" --metadata="subject:logs" --metadata="subject:1EA21BD8-DB7E-11E5-9733-728C37852114" --metadata="subject:$crystalTitle" --metadata="collection:$crystalCollection" --delete ./"$CrystalID".coal5-log
+xz -C sha256 -9 -e "$crystalTempdir/$CrystalID"
+rsync -aq --checksum "$crystalTempdir/$CrystalID".xz /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/"$CrystalID".log.xz
+gpg --yes -c -q --cipher-algo AES256 --batch --passphrase-file "$crystalTempdir/$CrystalID".tmp "$crystalTempdir/$CrystalID".xz
+rm "$crystalTempdir/$CrystalID".tmp
+mv "$crystalTempdir/$CrystalID".xz.gpg "$crystalTempdir/$CrystalID".coal5-log
+ia upload "$CrystalID" --retries=10 --metadata="subject:Uploaded using Crystallise $crystalliseVersion" --metadata="subject:Crystallise log" --metadata="subject:log" --metadata="subject:logs" --metadata="subject:1EA21BD8-DB7E-11E5-9733-728C37852114" --metadata="subject:$crystalTitle" --metadata="collection:$crystalCollection" --delete "$crystalTempdir/$CrystalID".coal5-log
 echo "Done!"
