@@ -30,7 +30,7 @@ export crystalTempdir
 CrystalID=Crystal-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 export CrystalID
 
-crystallise-logsession "$crystalTempdir/$CrystalID" "$@" 2>&1 | tee -a "$crystalTempdir/$CrystalID"
+crystallise-logsession "$CrystalID" "$@" 2>&1 | tee -a "$crystalTempdir/$CrystalID"
 
 echo "Finishing; please wait for completion..."
 xz -C sha256 -9 -e "$crystalTempdir/$CrystalID"
