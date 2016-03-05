@@ -45,9 +45,15 @@ echo "Building deep index..."
 
 hashdeep -c md5,sha1,sha256 -o fbcpsde -r "$@" "$crystalTempdir/$CrystalID" | tee "$crystalTempdir/$CrystalID.deep.idx"
 
-tar -cv -P --format pax -f "$crystalTempdir/$@" "$crystalTempdir/$CrystalID" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.tmp" "$crystalTempdir/$CrystalID.tmp"
+tar -cv -P --format pax -f "$crystalTempdir/""$@" "$crystalTempdir/$CrystalID" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.tmp" "$crystalTempdir/$CrystalID.tmp"
 
-script /dev/null xz "-k -C sha256 -9 -e -v $crystalTempdir/$CrystalID.pax"
+crystalliseTempFunctionA() {
+    xz -k -C sha256 -9 -e -v "$crystalTempdir/$CrystalID".pax
+}
+
+export -f crystalliseTempFunctionA
+
+script /dev/null crystalliseTempFunctionA
 
 rm -v "$crystalTempdir/$CrystalID".pax
 
@@ -63,13 +69,25 @@ hashdeep -c md5,sha1,sha256 -o fbcpsde "$crystalTempdir/$CrystalID".coal5 | tee 
 
 echo "Sending..."
 
-script /dev/null ia "upload $CrystalID --retries=10 --metadata=subject:Uploaded using Crystallise $crystalliseVersion --metadata=subject:1EA21BD8-DB7E-11E5-9733-728C37852114 --metadata=subject:$crystalTitle --metadata=collection:$crystalCollection --delete $crystalTempdir/$CrystalID.coal5"
+crystalliseTempFunctionB() {
+    ia upload "$CrystalID" --retries=10 --metadata=subject:Uploaded using Crystallise "$crystalliseVersion" --metadata=subject:1EA21BD8-DB7E-11E5-9733-728C37852114 --metadata=subject:"$crystalTitle" --metadata=collection:"$crystalCollection" --delete "$crystalTempdir/$CrystalID".coal5
+}
+
+export -f crystalliseTempFunctionB
+
+script /dev/null crystalliseTempFunctionB
 
 echo "Retrieving remote index..."
 
 wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee ./"$CrystalID.json"
 
-script /dev/null xz "-C sha256 -9 -e -v $crystalTempdir/$CrystalID.json"
+crystalliseTempFunctionC() {
+    xz -C sha256 -9 -e -v "$crystalTempdir/$CrystalID".json
+}
+
+export -f crystalliseTempFunctionC
+
+script /dev/null crystalliseTempFunctionC
 
 echo "Copying indices..."
 
