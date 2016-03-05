@@ -41,8 +41,6 @@ unxz "$crystalTempdir/$CrystalLogID".pax.xz
 
 mkdir -v ./"$CrystalLogID.tmpd"
 
-mv -v "$crystalTempdir/$CrystalLogID".pax ./"$CrystalLogID.tmpd/"
-
 tar -xvf "$crystalTempdir/$CrystalLogID.tmpd"/"$CrystalLogID".pax -C ./"$CrystalLogID.tmpd"/
 
 rm -v "$crystalTempdir/$CrystalLogID.tmpd"/"$CrystalLogID".pax
