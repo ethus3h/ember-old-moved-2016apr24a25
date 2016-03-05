@@ -67,7 +67,7 @@ script /dev/null crystallise-internal-ia
 
 echo "Retrieving remote index..."
 
-wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee ./"$CrystalID.json"
+wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee "$crystalTempdir/$CrystalID.json"
 
 script /dev/null crystallise-internal-xz-b
 
