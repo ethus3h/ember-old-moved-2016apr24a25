@@ -12,8 +12,6 @@ echo "Arguments: " "$@"
 
 crystallisePassphrase=$(sed '3q;d' "$HOME"/config.txt)
 export crystallisePassphrase
-crystalTempdir=$(sed '4q;d' "$HOME"/config.txt)
-export crystalTempdir
 
 export CrystalID="$1"
 
@@ -45,7 +43,7 @@ tar -xvf "./$CrystalLogID".pax -C ./"$CrystalLogID.tmpd"/
 
 rm -v "./$CrystalLogID".pax
 
-rsync -av --checksum --delete "./$CrystalLogID" "$crystalTempdir/$CrystalLogID".log
+rsync -av --checksum --delete "./$CrystalLogID" "./$CrystalLogID".log
 
 mv -v ./"$CrystalLogID.tmpd" ./"$CrystalLogID"
 
