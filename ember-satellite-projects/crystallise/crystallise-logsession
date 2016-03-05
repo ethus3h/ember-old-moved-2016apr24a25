@@ -81,6 +81,9 @@ rsync -av --progress --checksum "$crystalTempdir/$CrystalID.local.idx" "$crystal
 
 echo "Uploaded to https://archive.org/download/$CrystalID"
 
+#Clear the screen
+printf "\033c"
+
 #Delete everything except log
 echo "Cleaning up..."
 yes | rm -rv "${@:2}"
