@@ -27,25 +27,25 @@ printenv
 
 echo "Crystal address: $CrystalID"
 
-printf "%s" "$crystallisePassphrase" > "$crystalTempdir/$CrystalLogID".tmp
+printf "%s" "$crystallisePassphrase" > "./$CrystalLogID".tmp
 
 echo "Receiving..."
 
-wget -O "$crystalTempdir/$CrystalLogID".pax.xz.gpg "https://archive.org/download/$CrystalID/$CrystalID".coal5
+wget -O "./$CrystalLogID".pax.xz.gpg "https://archive.org/download/$CrystalID/$CrystalID".coal5
 
-gpg --yes --batch --passphrase-file "$crystalTempdir/$CrystalLogID".tmp "$crystalTempdir/$CrystalLogID".pax.xz.gpg
+gpg --yes --batch --passphrase-file "./$CrystalLogID".tmp "./$CrystalLogID".pax.xz.gpg
 
-rm -v "$crystalTempdir/$CrystalLogID".pax.xz.gpg
+rm -v "./$CrystalLogID".pax.xz.gpg
 
-unxz "$crystalTempdir/$CrystalLogID".pax.xz
+unxz "./$CrystalLogID".pax.xz
 
 mkdir -v ./"$CrystalLogID.tmpd"
 
-tar -xvf "$crystalTempdir/$CrystalLogID".pax -C ./"$CrystalLogID.tmpd"/
+tar -xvf "./$CrystalLogID".pax -C ./"$CrystalLogID.tmpd"/
 
-rm -v "$crystalTempdir/$CrystalLogID".pax
+rm -v "./$CrystalLogID".pax
 
-mv -v "$crystalTempdir/$CrystalLogID" "$crystalTempdir/$CrystalLogID".log
+rsync -av --checksum --delete "./$CrystalLogID" "$crystalTempdir/$CrystalLogID".log
 
 mv -v ./"$CrystalLogID.tmpd" ./"$CrystalLogID"
 
@@ -53,4 +53,4 @@ mv -v ./"$CrystalLogID.tmpd" ./"$CrystalLogID"
 printf "\033c"
 
 echo "Done receiving! The crystal has been extracted to:"
-echo "$crystalTempdir/$CrystalLogID"
+echo "$CrystalLogID"
