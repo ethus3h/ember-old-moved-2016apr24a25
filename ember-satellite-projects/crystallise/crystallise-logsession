@@ -47,7 +47,11 @@ hashdeep -c md5,sha1,sha256 -o fbcpsde -r "$crystalTempdir/""$@" "$crystalTempdi
 
 tar -cv -P --format pax -f "$crystalTempdir/$CrystalID.pax" "$crystalTempdir/""$@" "$crystalTempdir/$CrystalID" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.tmp" "$crystalTempdir/$CrystalID.tmp"
 
-script /dev/null crystallise-internal-xz
+unset opt
+
+[[ $OSTYPE = *linux* ]] && (( opt++ ))
+
+script /dev/null ${opt+-c} crystallise-internal-xz
 
 rm -v "$crystalTempdir/$CrystalID".pax
 
@@ -63,13 +67,13 @@ hashdeep -c md5,sha1,sha256 -o fbcpsde "$crystalTempdir/$CrystalID".coal5 | tee 
 
 echo "Sending..."
 
-script /dev/null crystallise-internal-ia
+script /dev/null ${opt+-c} crystallise-internal-ia
 
 echo "Retrieving remote index..."
 
 wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee "$crystalTempdir/$CrystalID.json"
 
-script /dev/null crystallise-internal-xz-b
+script /dev/null ${opt+-c} crystallise-internal-xz-b
 
 echo "Copying indices..."
 
