@@ -14,11 +14,14 @@ CrystalID=CrystalliseUpdate-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date 
 export CrystalID
 
 cp -v /usr/bin/crystallise-update /usr/bin/crystallise-update.old.$CrystalID
-crystallise /usr/bin/crystallise /usr/bin/crystallise-logsession /usr/bin/decrystallise /usr/bin/decrystallise-logsession /usr/bin/crystallise-update.old.$CrystalID
+crystallise /usr/bin/crystallise /usr/bin/crystallise-logsession /usr/bin/crystallise-internal-xz /usr/bin/crystallise-internal-ia /usr/bin/crystallise-internal-xz-b /usr/bin/decrystallise /usr/bin/decrystallise-logsession /usr/bin/crystallise-update.old.$CrystalID
 mkdir -v ~/$CrystalID.tmp
 cd ~/$CrystalID.tmp
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-logsession
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-internal-xz
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-internal-ia
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-internal-xz-b
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/decrystallise
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/decrystallise-logsession
 chmod +x ./*
