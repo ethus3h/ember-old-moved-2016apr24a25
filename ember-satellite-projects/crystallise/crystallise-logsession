@@ -45,7 +45,7 @@ hashdeep -c md5,sha1,sha256 -o fbcpsde -r "$@" $(pwd)/$CrystalID | tee ./"$Cryst
 
 tar -cv -P --format pax -f ./"$CrystalID".pax "$@" $(pwd)/$CrystalID ./"$CrystalID.local.idx" ./"$CrystalID.deep.idx" $(pwd)/"$CrystalID.local.idx" $(pwd)/"$CrystalID.deep.idx" ./"$CrystalID.tmp" $(pwd)/"$CrystalID.tmp"
 
-script /dev/null xz -k -C sha256 -9 -e -v ./"$CrystalID".pax
+script /dev/null "xz -k -C sha256 -9 -e -v ./$CrystalID.pax"
 
 rm -v ./"$CrystalID".pax
 
@@ -61,13 +61,13 @@ hashdeep -c md5,sha1,sha256 -o fbcpsde ./"$CrystalID".coal5 | tee ./"$CrystalID.
 
 echo "Sending..."
 
-script /dev/null ia upload "$CrystalID" --retries=10 --metadata="subject:Uploaded using Crystallise $crystalliseVersion" --metadata="subject:1EA21BD8-DB7E-11E5-9733-728C37852114" --metadata="subject:$crystalTitle" --metadata="collection:$crystalCollection" --delete ./"$CrystalID".coal5
+script /dev/null "ia upload $CrystalID --retries=10 --metadata=subject:Uploaded using Crystallise $crystalliseVersion --metadata=subject:1EA21BD8-DB7E-11E5-9733-728C37852114 --metadata=subject:$crystalTitle --metadata=collection:$crystalCollection --delete ./$CrystalID.coal5"
 
 echo "Retrieving remote index..."
 
 wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee ./"$CrystalID.json"
 
-script /dev/null xz -C sha256 -9 -e -v ./"$CrystalID.json"
+script /dev/null "xz -C sha256 -9 -e -v ./$CrystalID.json"
 
 echo "Copying indices..."
 
