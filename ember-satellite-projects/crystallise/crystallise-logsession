@@ -77,7 +77,7 @@ echo "Uploaded to https://archive.org/download/$CrystalID"
 
 #Delete everything except log
 echo "Cleaning up..."
-rm -rv "${@:2}"
+yes | rm -rv "${@:2}"
 
 #Clear the screen
 printf "\033c"
