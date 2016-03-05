@@ -1,0 +1,6 @@
+#!/bin/bash
+crystalliseInternalXzB() {
+    xz -C sha256 -9 -e -v "$crystalTempdir/$CrystalID".json
+}
+
+export -f crystalliseInternalXzB

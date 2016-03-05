@@ -1,0 +1,6 @@
+#!/bin/bash
+crystalliseInternalXz() {
+    xz -k -C sha256 -9 -e -v "$crystalTempdir/$CrystalID".pax
+}
+
+export -f crystalliseInternalXz
