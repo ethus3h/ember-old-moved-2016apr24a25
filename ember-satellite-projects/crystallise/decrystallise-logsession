@@ -43,7 +43,7 @@ mkdir -v ./"$CrystalLogID.tmpd"
 
 tar -xvf "$crystalTempdir/$CrystalLogID".pax -C ./"$CrystalLogID.tmpd"/
 
-rm -v "$crystalTempdir/$CrystalLogID.tmpd"/"$CrystalLogID".pax
+rm -v "$crystalTempdir/$CrystalLogID".pax
 
 mv -v "$crystalTempdir/$CrystalLogID" "$crystalTempdir/$CrystalLogID".log
 
