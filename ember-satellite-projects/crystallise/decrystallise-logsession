@@ -43,9 +43,11 @@ tar -xvf "./$CrystalLogID".pax -C ./"$CrystalLogID.tmpd"/
 
 rm -v "./$CrystalLogID".pax
 
-rsync -av --checksum --delete "./$CrystalLogID" "./$CrystalLogID".log
+rsync -av --checksum "./$CrystalLogID" "./$CrystalLogID".log
 
-mv -v ./"$CrystalLogID.tmpd" ./"$CrystalLogID"
+rm -v "./$CrystalLogID"
+
+mv -v ./"$CrystalLogID.tmpd"/ ./"$CrystalLogID"
 
 #Clear the screen
 printf "\033c"
