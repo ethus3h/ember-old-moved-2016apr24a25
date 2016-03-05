@@ -47,6 +47,10 @@ hashdeep -c md5,sha1,sha256 -o fbcpsde -r "$@" "$crystalTempdir/$CrystalID" | te
 
 tar -cv -P --format pax -f "$crystalTempdir/""$@" "$crystalTempdir/$CrystalID" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.tmp" "$crystalTempdir/$CrystalID.tmp"
 
+SHELL="/bin/bash"
+
+export SHELL
+
 crystalliseTempFunctionA() {
     xz -k -C sha256 -9 -e -v "$crystalTempdir/$CrystalID".pax
 }
