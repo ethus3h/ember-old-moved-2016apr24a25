@@ -7,8 +7,7 @@
 
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
 
-#Script should exit if any operation fails.
-set -e
+#Script should NOT exit if any operation fails.
 
 CrystalID=CrystalliseUpdate-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 export CrystalID
@@ -18,7 +17,7 @@ crystallise /usr/bin/crystallise /usr/bin/crystallise-logsession /usr/bin/crysta
 mkdir -v ~/$CrystalID.tmp
 cd ~/$CrystalID.tmp
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise
-wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-rescue
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-update
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-logsession
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-internal-xz
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-internal-ia
@@ -31,7 +30,7 @@ cd ~
 crystallise ~/$CrystalID.tmp
 mkdir -v ~/$CrystalID.tmp
 cd ~/$CrystalID.tmp
-wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-update
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-rescue
 chmod +x ./*
 cp -v ./* /usr/bin/
 cd ~
