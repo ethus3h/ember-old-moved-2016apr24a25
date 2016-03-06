@@ -1,17 +1,12 @@
 #.htaccess for futuramerlin.com, version 2 (3 February 2015)
 Redirect 301 /Wreathe%20web/index.html http://futuramerlin.com/r.php?c=Wreathe&a=main
-# Redirect /site/2555.html http://www.futuramerlin.com/site/2720.html 
 Redirect 301 /home http://www.futuramerlin.com/site/400.html 
 Redirect 301 /nonpseudologin http://www.futuramerlin.com/site/3482.html
 Redirect 301 /login http://www.futuramerlin.com/site/3482.html
 Redirect 301 /c/2015/02/27/190-new-music-release-electric-dream-demos/ http://futuramerlin.com/c/2015/05/28/329-new-compilation-demo-released-infinite-universe-electric-dream-redux/
-#Redirect 301 /site/2720.html http://www.futuramerlin.com/site/400.html 
-#Redirect 301 /site/index.html http://www.futuramerlin.com/site/400.html 
-#Redirect 301 /site/1098.html http://www.futuramerlin.com/site/400.html 
-#Redirect 301 /site/4577.html http://www.futuramerlin.com/site/400.html 
 
 RewriteOptions inherit
-DirectoryIndex index.html
+DirectoryIndex index.htm
 ErrorDocument 404 /r.php?a=problem
 AddType application/octet-stream .iso
 AddType application/x-ms-win-installer .msi
@@ -35,17 +30,17 @@ Header unset Set-Cookie
 ExpiresActive On
 ExpiresDefault A604800
 ExpiresByType image/x-icon A2592000
-ExpiresByType application/x-javascript A604800
+ExpiresByType application/x-javascript A2592000
 ExpiresByType text/css A604800
-ExpiresByType image/gif A604800
-ExpiresByType image/png A604800
-ExpiresByType image/jpeg A604800
+ExpiresByType image/gif A2592000
+ExpiresByType image/png A2592000
+ExpiresByType image/jpeg A2592000
 ExpiresByType text/plain A604800
 ExpiresByType text/html A604800
 </ifModule>
-#<ifmodule mod_deflate.c>
-#AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript
-#</ifmodule>
+<ifModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript
+</ifModule>
 RewriteCond %{HTTP_HOST} ^.*$
 RewriteRule ^d\/s\/w\/Wreathe\%20web\/index\.html$ "http\:\/\/futuramerlin\.com\/r\.php\?c\=Wreathe\&a\=main" [R=301,L]
 RewriteCond %{HTTP_HOST} ^.*$
