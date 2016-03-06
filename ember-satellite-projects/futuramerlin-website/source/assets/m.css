@@ -1112,14 +1112,14 @@ body > nav > p:last-of-type {
     margin-top:calc(1rem / 3);
     z-index:1000;
     text-indent: .5rem;
-    font-size:0.75rem;
+    font-size:1.2rem;
     font-family: wreatherweb;
     width:25%;
     transition: all .2s;
     color:#2a1657;
 }
 body > nav > ul > li:first-of-type {
-    margin-top:1rem;
+    margin-top:2rem;
 }
 body > nav::before
 {
