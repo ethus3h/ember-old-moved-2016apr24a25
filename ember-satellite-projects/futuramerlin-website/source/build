@@ -7,7 +7,7 @@ echo "Preparing environment...";
 rm -r "../built";
 mkdir "../built/";
 echo "Copying assets...";
-cp -r ./assets/* "../built/";
+cp -r ./assets/* ./assets/.* "../built/";
 (
 	cd "content" || exit;
 	traversedirectory() {
