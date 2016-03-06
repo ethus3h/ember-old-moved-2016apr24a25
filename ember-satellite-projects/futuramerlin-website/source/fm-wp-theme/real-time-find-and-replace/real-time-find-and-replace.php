@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Modded Real-Time Find and Replace
-Version: 3.6
+Version: 3.6.1
 Plugin URI: 
 Description: 
 Author: Modded by Futuramerlin; Marios Alexandrou
