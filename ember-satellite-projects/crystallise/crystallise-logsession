@@ -20,7 +20,7 @@ export crystalTempdir
 
 echo "Time (log stage 1) from http://timeapi.org/: "
 
-wget --warc-file="$crystalTempdir/$CrystalID.time-start" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
+wget --delete-after --warc-file="$crystalTempdir/$CrystalID.time-start" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
 
 echo "Working in $crystalTempdir".
 
@@ -55,7 +55,7 @@ dig +short myip.opendns.com @resolver1.opendns.com
 
 echo "IP address from http://icanhazip.com/: "
 
-wget --warc-file="$crystalTempdir/$CrystalID.ip" -e robots=off http://icanhazip.com/;
+wget --delete-after --warc-file="$crystalTempdir/$CrystalID.ip" -e robots=off http://icanhazip.com/;
 
 echo "Time (log stage 2) locally:"
 
@@ -64,7 +64,7 @@ xxd -pu <<< "$(date +%z)"
 
 echo "Time (log stage 2) from http://timeapi.org/: "
 
-wget --warc-file="$crystalTempdir/$CrystalID.time-env" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
+wget --delete-after --warc-file="$crystalTempdir/$CrystalID.time-env" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
 
 echo "The crystal will have the following address when it is ready: $CrystalID"
 
@@ -104,7 +104,7 @@ script /dev/null ${opt+-c} crystallise-internal-ia
 
 echo "Retrieving remote index..."
 
-wget --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee "$crystalTempdir/$CrystalID.json"
+wget --delete-after --save-headers --output-document - "https://archive.org/metadata/$CrystalID/" | tee "$crystalTempdir/$CrystalID.json"
 
 script /dev/null ${opt+-c} crystallise-internal-xz-b
 
@@ -129,7 +129,7 @@ xxd -pu <<< "$(date +%z)"
 
 echo "Time (log stage 3) from http://timeapi.org/: "
 
-wget --warc-file="$crystalTempdir/$CrystalID.time-done" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
+wget --delete-after --warc-file="$crystalTempdir/$CrystalID.time-done" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
 
 #Clear the screen
 printf "\033c"

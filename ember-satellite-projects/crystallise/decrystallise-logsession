@@ -8,6 +8,15 @@
 #Script should exit if any operation fails.
 set -e
 
+echo "Time (decrystallise log stage 1) locally:"
+
+date +%Y.%m.%d.%H.%M.%S.%N
+xxd -pu <<< "$(date +%z)"
+
+echo "Time (decrystallise log stage 1) from http://timeapi.org/: "
+
+wget --delete-after --warc-file="./$CrystalLogID.time-start" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
+
 echo "Arguments: " "$@"
 
 crystallisePassphrase=$(sed '3q;d' "$HOME"/config.txt)
@@ -22,6 +31,25 @@ uname -ap
 echo "Environment variables: "
 
 printenv
+
+echo "Network environment: "
+
+echo "IP address from DNS: "
+
+dig +short myip.opendns.com @resolver1.opendns.com
+
+echo "IP address from http://icanhazip.com/: "
+
+wget --delete-after --warc-file="./$CrystalLogID.ip" -e robots=off http://icanhazip.com/;
+
+echo "Time (decrystallise log stage 2) locally:"
+
+date +%Y.%m.%d.%H.%M.%S.%N
+xxd -pu <<< "$(date +%z)"
+
+echo "Time (decrystallise log stage 2) from http://timeapi.org/: "
+
+wget --delete-after --warc-file="./$CrystalLogID.time-env" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
 
 echo "Crystal address: $CrystalID"
 
@@ -49,8 +77,18 @@ rm -v "./$CrystalLogID"
 
 mv -v ./"$CrystalLogID.tmpd"/ ./"$CrystalLogID"
 
+echo "Time (decrystallise log stage 3) locally:"
+
+date +%Y.%m.%d.%H.%M.%S.%N
+xxd -pu <<< "$(date +%z)"
+
+echo "Time (decrystallise log stage 3) from http://timeapi.org/: "
+
+wget --delete-after --warc-file="./$CrystalLogID.time-end" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
+
 #Clear the screen
 printf "\033c"
 
-echo "Done receiving! The crystal has been extracted to:"
-echo "$CrystalLogID"
+echo "Finishing $CrystalLogID..."
+
+echo "Please wait..."
