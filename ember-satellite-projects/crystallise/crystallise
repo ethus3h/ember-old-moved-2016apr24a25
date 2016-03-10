@@ -12,7 +12,7 @@ export crystalliseVersion='2.12.3'
 #Usage: crystallise <files>
 #The file(s) being crystallised must be within the current directory. The script tests for some simple cases of this, but not all of them.
 
-#TODO: Have decrystallise verify checksums.
+#TODO: Have decrystallise verify checksums. Get time/IP. Upload separate index file to IA.
 
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
 
