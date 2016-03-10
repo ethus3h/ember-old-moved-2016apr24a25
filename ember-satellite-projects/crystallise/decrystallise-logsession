@@ -67,13 +67,13 @@ unxz "./$CrystalLogID.pax.xz"
 
 mkdir -v "./$CrystalLogID.tmpd"
 
-tar -xvf "./$CrystalLogID.pax" -C "./$CrystalLogID.tmpd/"
+mkdir -v "./$CrystalLogID.tmpd/$CrystalID"
+
+tar -xvf "./$CrystalLogID.pax" -C "./$CrystalLogID.tmpd/$CrystalID/"
 
 rm -v "./$CrystalLogID.pax"
 
-rsync -av --checksum "./$CrystalLogID" "./$CrystalLogID.log"
-
-rm -v "./$CrystalLogID"
+mv -v "./$CrystalLogID" "./$CrystalLogID.log"
 
 mv -v "./$CrystalLogID.tmpd/" "./$CrystalLogID"
 
@@ -90,6 +90,9 @@ rm -v "./$CrystalLogID.deep.idx.xz.gpg"
 
 unxz "./$CrystalLogID.local.idx.xz"
 unxz "./$CrystalLogID.deep.idx.xz"
+
+mv -v "./$CrystalLogID.local.idx" "./$CrystalLogID/"
+mv -v "./$CrystalLogID.deep.idx" "./$CrystalLogID/"
 
 echo "Time (decrystallise log stage 3) locally:"
 
