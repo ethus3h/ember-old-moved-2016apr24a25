@@ -44,7 +44,7 @@ mv -v "./$CrystalLogID.time-env.warc.gz.xz.gpg" "./$CrystalLogID.coal5-tenv"
 mv -v "./$CrystalLogID.time-end.warc.gz.xz.gpg" "./$CrystalLogID.coal5-tend"
 ia upload "$CrystalLogID" --retries=10 --metadata="subject:Uploaded using Decrystallise $crystalliseVersion" --metadata="subject:Decrystallise log" --metadata="subject:log" --metadata="subject:logs" --metadata="subject:1EA21BD8-DB7E-11E5-9733-728C37852114" --metadata="subject:$1" --metadata="collection:$crystalCollection" --delete "./$CrystalLogID.coal5-log" "./$CrystalLogID.coal5-ts" "./$CrystalLogID.coal5-ip" "./$CrystalLogID.coal5-tenv" "./$CrystalLogID.coal5-tend"
 mkdir -v "./$CrystalLogID.coal5-meta"
-mv -v "./$CrystalLogID.*" "./$CrystalLogID.coal5-meta/"
+mv -v "./$CrystalLogID."* "./$CrystalLogID.coal5-meta/"
 
 #Clear the screen
 printf "\033c"
