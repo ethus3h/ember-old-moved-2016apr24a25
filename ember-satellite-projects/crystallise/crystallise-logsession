@@ -8,6 +8,22 @@
 #Script should exit if any operation fails.
 set -e
 
+echo "The crystal will have the following address when it is ready: $CrystalID"
+
+echo "Time (log stage 1) locally:"
+
+date +%Y.%m.%d.%H.%M.%S.%N
+xxd -pu <<< "$(date +%z)"
+
+crystalTempdir=$(sed '4q;d' "$HOME"/config.txt)
+export crystalTempdir
+
+echo "Time (log stage 1) from http://timeapi.org/: "
+
+wget --warc-file="$crystalTempdir/$CrystalID.time-start" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
+
+echo "Working in $crystalTempdir".
+
 echo "Arguments: " "$@"
 
 echo "Configuration: "
@@ -20,8 +36,6 @@ crystalCollection=$(sed '2q;d' "$HOME"/config.txt)
 export crystalCollection
 crystallisePassphrase=$(sed '3q;d' "$HOME"/config.txt)
 export crystallisePassphrase
-crystalTempdir=$(sed '4q;d' "$HOME"/config.txt)
-export crystalTempdir
 
 export CrystalID="$1"
 
@@ -32,6 +46,25 @@ uname -ap
 echo "Environment variables: "
 
 printenv
+
+echo "Network environment: "
+
+echo "IP address from DNS: "
+
+dig +short myip.opendns.com @resolver1.opendns.com
+
+echo "IP address from http://icanhazip.com/: "
+
+wget --warc-file="$crystalTempdir/$CrystalID.ip" -e robots=off http://icanhazip.com/;
+
+echo "Time (log stage 2) locally:"
+
+date +%Y.%m.%d.%H.%M.%S.%N
+xxd -pu <<< "$(date +%z)"
+
+echo "Time (log stage 2) from http://timeapi.org/: "
+
+wget --warc-file="$crystalTempdir/$CrystalID.time-env" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
 
 echo "The crystal will have the following address when it is ready: $CrystalID"
 
@@ -45,7 +78,7 @@ echo "Building deep index..."
 
 hashdeep -c md5,sha1,sha256 -o fbcpsde -r "$crystalTempdir/""$@" "$crystalTempdir/$CrystalID" | tee "$crystalTempdir/$CrystalID.deep.idx"
 
-tar -cv -P --format pax -f "$crystalTempdir/$CrystalID.pax" "$crystalTempdir/""$@" "$crystalTempdir/$CrystalID" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.tmp" "$crystalTempdir/$CrystalID.tmp"
+tar -cv -P --format pax -f "$crystalTempdir/$CrystalID.pax" "$crystalTempdir/""$@" "$crystalTempdir/$CrystalID" "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.tmp" "$crystalTempdir/$CrystalID.tmp" "$crystalTempdir/$CrystalID.time-start.warc.gz" "$crystalTempdir/$CrystalID.ip.warc.gz" "$crystalTempdir/$CrystalID.time-env.warc.gz"
 
 unset opt
 
@@ -79,7 +112,7 @@ echo "Copying indices..."
 
 rsync -av --progress --checksum "$crystalTempdir/$CrystalID.local.idx" "$crystalTempdir/$CrystalID.deep.idx" "$crystalTempdir/$CrystalID.checksums" "$crystalTempdir/$CrystalID.json.xz" /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/
 
-echo "Uploaded to https://archive.org/download/$CrystalID"
+echo "rsynced..."
 
 #Clear the screen
 printf "\033c"
@@ -87,9 +120,20 @@ printf "\033c"
 #Delete everything except log
 echo "Cleaning up..."
 yes | rm -rv "${@:2}"
+echo "Done cleaning up..."
+
+echo "Time (log stage 3) locally:"
+
+date +%Y.%m.%d.%H.%M.%S.%N
+xxd -pu <<< "$(date +%z)"
+
+echo "Time (log stage 3) from http://timeapi.org/: "
+
+wget --warc-file="$crystalTempdir/$CrystalID.time-done" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
 
 #Clear the screen
 printf "\033c"
 
-echo "Done sending! The new crystal's address is:"
-echo "$CrystalID"
+echo "Finishing $CrystalID..."
+
+echo "Please wait..."
