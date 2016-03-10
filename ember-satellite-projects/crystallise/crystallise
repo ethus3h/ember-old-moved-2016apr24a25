@@ -33,10 +33,10 @@ export CrystalID
 crystallise-logsession "$CrystalID" "$@" 2>&1 | tee -a "$crystalTempdir/$CrystalID"
 
 echo "Working..."
-xz -C -v sha256 -9 -e "$crystalTempdir/$CrystalID"
-xz -C -v -k sha256 -9 -e "$crystalTempdir/$CrystalID.time-done.warc.gz"
-xz -C -v sha256 -9 -e "$crystalTempdir/$CrystalID.local.idx"
-xz -C -v sha256 -9 -e "$crystalTempdir/$CrystalID.deep.idx"
+xz -C sha256 -v -9 -e "$crystalTempdir/$CrystalID"
+xz -C sha256 -v -9 -e -k "$crystalTempdir/$CrystalID.time-done.warc.gz"
+xz -C sha256 -v -9 -e "$crystalTempdir/$CrystalID.local.idx"
+xz -C sha256 -v -9 -e "$crystalTempdir/$CrystalID.deep.idx"
 rsync -av --progress --checksum "$crystalTempdir/$CrystalID".xz /Ember\ Media\ Library/Futuramerlin\ Projects/Data/Crystal\ Index/"$CrystalID".log.xz
 gpg --yes -c -v --cipher-algo AES256 --batch --passphrase-file "$crystalTempdir/$CrystalID".tmp "$crystalTempdir/$CrystalID.xz"
 gpg --yes -c -v --cipher-algo AES256 --batch --passphrase-file "$crystalTempdir/$CrystalID".tmp "$crystalTempdir/$CrystalID.time-done.warc.gz.xz"
