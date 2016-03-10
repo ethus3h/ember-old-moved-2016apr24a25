@@ -53,29 +53,43 @@ wget --delete-after --warc-file="./$CrystalLogID.time-env" -e robots=off "http:/
 
 echo "Crystal address: $CrystalID"
 
-printf "%s" "$crystallisePassphrase" > "./$CrystalLogID".tmp
+printf "%s" "$crystallisePassphrase" > "./$CrystalLogID.tmp"
 
 echo "Receiving..."
 
-wget -O "./$CrystalLogID".pax.xz.gpg "https://archive.org/download/$CrystalID/$CrystalID".coal5
+wget -O "./$CrystalLogID.pax.xz.gpg" "https://archive.org/download/$CrystalID/$CrystalID.coal5"
 
-gpg --yes --batch --passphrase-file "./$CrystalLogID".tmp "./$CrystalLogID".pax.xz.gpg
+gpg --yes --batch --passphrase-file "./$CrystalLogID.tmp" "./$CrystalLogID.pax.xz.gpg"
 
-rm -v "./$CrystalLogID".pax.xz.gpg
+rm -v "./$CrystalLogID.pax.xz.gpg"
 
-unxz "./$CrystalLogID".pax.xz
+unxz "./$CrystalLogID.pax.xz"
 
-mkdir -v ./"$CrystalLogID.tmpd"
+mkdir -v "./$CrystalLogID.tmpd"
 
-tar -xvf "./$CrystalLogID".pax -C ./"$CrystalLogID.tmpd"/
+tar -xvf "./$CrystalLogID.pax" -C "./$CrystalLogID.tmpd/"
 
-rm -v "./$CrystalLogID".pax
+rm -v "./$CrystalLogID.pax"
 
-rsync -av --checksum "./$CrystalLogID" "./$CrystalLogID".log
+rsync -av --checksum "./$CrystalLogID" "./$CrystalLogID.log"
 
 rm -v "./$CrystalLogID"
 
-mv -v ./"$CrystalLogID.tmpd"/ ./"$CrystalLogID"
+mv -v "./$CrystalLogID.tmpd/" "./$CrystalLogID"
+
+echo "Getting indices..."
+
+wget -O "./$CrystalLogID.local.idx.xz.gpg" "https://archive.org/download/$CrystalID/$CrystalID.coal5-idx-l"
+wget -O "./$CrystalLogID.deep.idx.xz.gpg" "https://archive.org/download/$CrystalID/$CrystalID.coal5-idx-d"
+
+gpg --yes --batch --passphrase-file "./$CrystalLogID.tmp" "./$CrystalLogID.local.idx.xz.gpg"
+gpg --yes --batch --passphrase-file "./$CrystalLogID.tmp" "./$CrystalLogID.deep.idx.xz.gpg"
+
+rm -v "./$CrystalLogID.local.idx.xz.gpg"
+rm -v "./$CrystalLogID.deep.idx.xz.gpg"
+
+unxz "./$CrystalLogID.local.idx.xz"
+unxz "./$CrystalLogID.deep.idx.xz"
 
 echo "Time (decrystallise log stage 3) locally:"
 
