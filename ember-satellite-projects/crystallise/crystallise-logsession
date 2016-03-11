@@ -12,7 +12,7 @@ echo "The crystal will have the following address when it is ready: $CrystalID"
 
 echo "Time (log stage 1) locally:"
 
-date +%Y.%m.%d.%H.%M.%S.%N
+date +%Y-%m-%d-%H-%M-%S-%N
 xxd -pu <<< "$(date +%z)"
 
 crystalTempdir=$(sed '4q;d' "$HOME"/config.txt)
@@ -59,7 +59,7 @@ wget --delete-after --warc-file="$crystalTempdir/$CrystalID.ip" -e robots=off ht
 
 echo "Time (log stage 2) locally:"
 
-date +%Y.%m.%d.%H.%M.%S.%N
+date +%Y-%m-%d-%H-%M-%S-%N
 xxd -pu <<< "$(date +%z)"
 
 echo "Time (log stage 2) from http://timeapi.org/: "
@@ -124,7 +124,7 @@ echo "Done cleaning up..."
 
 echo "Time (log stage 3) locally:"
 
-date +%Y.%m.%d.%H.%M.%S.%N
+date +%Y-%m-%d-%H-%M-%S-%N
 xxd -pu <<< "$(date +%z)"
 
 echo "Time (log stage 3) from http://timeapi.org/: "

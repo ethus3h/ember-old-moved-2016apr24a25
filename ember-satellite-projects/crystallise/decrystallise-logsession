@@ -10,7 +10,7 @@ set -e
 
 echo "Time (decrystallise log stage 1) locally:"
 
-date +%Y.%m.%d.%H.%M.%S.%N
+date +%Y-%m-%d-%H-%M-%S-%N
 xxd -pu <<< "$(date +%z)"
 
 echo "Time (decrystallise log stage 1) from http://timeapi.org/: "
@@ -44,7 +44,7 @@ wget --delete-after --warc-file="./$CrystalLogID.ip" -e robots=off http://icanha
 
 echo "Time (decrystallise log stage 2) locally:"
 
-date +%Y.%m.%d.%H.%M.%S.%N
+date +%Y-%m-%d-%H-%M-%S-%N
 xxd -pu <<< "$(date +%z)"
 
 echo "Time (decrystallise log stage 2) from http://timeapi.org/: "
@@ -96,7 +96,7 @@ mv -v "./$CrystalLogID.deep.idx" "./$CrystalLogID/"
 
 echo "Time (decrystallise log stage 3) locally:"
 
-date +%Y.%m.%d.%H.%M.%S.%N
+date +%Y-%m-%d-%H-%M-%S-%N
 xxd -pu <<< "$(date +%z)"
 
 echo "Time (decrystallise log stage 3) from http://timeapi.org/: "

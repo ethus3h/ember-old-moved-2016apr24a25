@@ -10,7 +10,7 @@
 #Script should NOT exit if any operation fails.
 set +e
 
-CrystalID=CrystalliseUpdate-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
+CrystalID=CrystalliseUpdate-$(date +%Y-%m-%d-%H-%M-%S-%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 export CrystalID
 
 echo "Please wait until the script says \"Done rescuing!\"..."
