@@ -15,7 +15,14 @@ xxd -pu <<< "$(date +%z)"
 
 echo "Time (decrystallise log stage 1) from http://timeapi.org/: "
 
+set +e
 wget --delete-after --warc-file="./$CrystalLogID.time-start" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
+set -e
+
+echo "Time (decrystallise log stage 1b) locally:"
+
+date +%Y-%m-%d-%H-%M-%S-%N
+xxd -pu <<< "$(date +%z)"
 
 echo "Arguments: " "$@"
 
@@ -40,7 +47,9 @@ dig +short myip.opendns.com @resolver1.opendns.com
 
 echo "IP address from http://icanhazip.com/: "
 
+set +e
 wget --delete-after --warc-file="./$CrystalLogID.ip" -e robots=off http://icanhazip.com/;
+set -e
 
 echo "Time (decrystallise log stage 2) locally:"
 
@@ -49,7 +58,14 @@ xxd -pu <<< "$(date +%z)"
 
 echo "Time (decrystallise log stage 2) from http://timeapi.org/: "
 
+set +e
 wget --delete-after --warc-file="./$CrystalLogID.time-env" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
+set -e
+
+echo "Time (decrystallise log stage 2b) locally:"
+
+date +%Y-%m-%d-%H-%M-%S-%N
+xxd -pu <<< "$(date +%z)"
 
 echo "Crystal address: $CrystalID"
 
@@ -101,7 +117,14 @@ xxd -pu <<< "$(date +%z)"
 
 echo "Time (decrystallise log stage 3) from http://timeapi.org/: "
 
+set +e
 wget --delete-after --warc-file="./$CrystalLogID.time-end" -e robots=off "http://www.timeapi.org/utc/now?\Y-\m-\d-\H-\M-\S-\6N-\z";
+set -e
+
+echo "Time (decrystallise log stage 1b) locally:"
+
+date +%Y-%m-%d-%H-%M-%S-%N
+xxd -pu <<< "$(date +%z)"
 
 #Clear the screen
 printf "\033c"
