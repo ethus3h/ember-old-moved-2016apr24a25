@@ -3,7 +3,7 @@
 
 # See crystallise for requirements.
 
-#Usage: decrystallise <crystal-address>
+#Usage: decrystallise <crystal-address> [--no-trim-extensions|--trim-extensions]
 
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
 
@@ -16,8 +16,10 @@ shopt -s extglob
 CrystalAddress="${1#https://archive.org/@(details|download)/}"
 #Remove trailing path(s) from identifier
 CrystalAddress="${CrystalAddress%%/*}"
-#Remove filename extensions
-CrystalAddress="${CrystalAddress%%\.coal5*}"
+if [ "$2" != "--no-trim-extensions" ]; then
+    #Remove filename extensions
+    CrystalAddress="${CrystalAddress%\.coal5*}"
+fi
 
 if [ "$CrystalAddress" == "" ] || [[ ! "$CrystalAddress" =~ ^Crystal- ]]; then
     echo "Please specify a crystal address to unpack."
