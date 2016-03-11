@@ -51,5 +51,10 @@ mv -v "./$CrystalLogID."!(coal5-meta) "./$CrystalLogID.coal5-meta/"
 #Clear the screen
 printf "\033c"
 
-echo "Done! The crystal has been extracted to:"
-echo "$(pwd)/$CrystalLogID"
+if [ -s "./$CrystalLogID.coal5-tend" ]; then
+    echo "Done! The crystal has been extracted to:"
+    echo "$(pwd)/$CrystalLogID"
+else
+    echo "Crystallisation failed! This is bad!"
+    exit 1
+fi
