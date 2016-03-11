@@ -51,8 +51,6 @@ cat > /usr/bin/crystallise-update-tmp.sh << EOF
 if cp -v ./* /usr/bin/; then
     cd ~
 
-    crystallise-update
-
     #Clear the screen
     printf "\033c"
 
