@@ -19,7 +19,7 @@ if [ "$CRYSTALADRESS" == "" ] || [[ ! "$CRYSTALADRESS" =~ ^Crystal- ]]; then
     exit 1
 fi
 
-CrystalLogID=Decrystallised-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
+CrystalLogID=Decrystallised-$(date +%Y-%m-%d-%H-%M-%S-%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 export CrystalLogID
 
 decrystallise-logsession "$CRYSTALADRESS" 2>&1 | tee -a "./$CrystalLogID"

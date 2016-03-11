@@ -15,6 +15,8 @@ export CrystalID
 
 echo "Please wait until the script says \"Done updating!\"..."
 
+pip install --upgrade git+https://github.com/ethus3h/internetarchive
+
 cp -v /usr/bin/crystallise-update /usr/bin/crystallise-update.old.$CrystalID
 crystallise /usr/bin/crystallise /usr/bin/crystallise-logsession /usr/bin/crystallise-internal-xz /usr/bin/crystallise-internal-ia /usr/bin/crystallise-internal-xz-b /usr/bin/decrystallise /usr/bin/decrystallise-logsession /usr/bin/crystallise-update.old.$CrystalID
 echo "Please wait; still updating..."
