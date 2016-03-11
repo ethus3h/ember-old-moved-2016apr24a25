@@ -91,8 +91,8 @@ rm -v "./$CrystalLogID.deep.idx.xz.gpg"
 unxz "./$CrystalLogID.local.idx.xz"
 unxz "./$CrystalLogID.deep.idx.xz"
 
-mv -v "./$CrystalLogID.local.idx" "./$CrystalLogID/"
-mv -v "./$CrystalLogID.deep.idx" "./$CrystalLogID/"
+mv -v "./$CrystalLogID.local.idx" "./$CrystalLogID/$CrystalID.local.idx"
+mv -v "./$CrystalLogID.deep.idx" "./$CrystalLogID/$CrystalID.deep.idx"
 
 echo "Time (decrystallise log stage 3) locally:"
 
