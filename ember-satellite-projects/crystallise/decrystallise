@@ -57,7 +57,7 @@ ia upload "$CrystalLogID" --retries=10 "./$CrystalLogID.coal5-tend"
 mkdir -v "./$CrystalLogID.coal5-meta"
 mv -v "./$CrystalLogID."!(coal5-meta) "./$CrystalLogID.coal5-meta/"
 
-if rm -v "./$CrystalLogID.coal5-tend"; then
+if rm -v "./$CrystalLogID.coal5-meta/$CrystalLogID.coal5-tend"; then
 
     #Clear the screen
     printf "\033c"
@@ -69,6 +69,6 @@ else
     #Clear the screen
     printf "\033c"
 
-    echo "Crystallisation failed! This is bad!"
+    echo "Decrystallisation failed! This is bad!"
     exit 1
 fi
