@@ -25,6 +25,8 @@ export CrystalLogID
 decrystallise-logsession "$CRYSTALADRESS" 2>&1 | tee -a "./$CrystalLogID"
 
 echo "Working..."
+#Script should not exit if an operation fails.
+unset -e
 xz -C sha256 -v -9 -e "./$CrystalLogID.log"
 xz -C sha256 -v -9 -e -k "./$CrystalLogID.time-start.warc.gz"
 xz -C sha256 -v -9 -e -k "./$CrystalLogID.ip.warc.gz"

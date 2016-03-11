@@ -33,6 +33,8 @@ export CrystalID
 crystallise-logsession "$CrystalID" "$@" 2>&1 | tee -a "$crystalTempdir/$CrystalID"
 
 echo "Working..."
+#Script should not exit if an operation fails.
+unset -e
 xz -C sha256 -v -9 -e "$crystalTempdir/$CrystalID"
 xz -C sha256 -v -9 -e -k "$crystalTempdir/$CrystalID.time-done.warc.gz"
 xz -C sha256 -v -9 -e "$crystalTempdir/$CrystalID.local.idx"
