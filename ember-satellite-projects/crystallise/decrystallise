@@ -12,7 +12,12 @@ set -e
 
 shopt -s extglob
 
+#Remove URL
 CrystalAddress="${1#https://archive.org/@(details|download)/}"
+#Remove trailing path(s) from identifier
+CrystalAddress="${CrystalAddress%%/*}"
+#Remove filename extensions
+CrystalAddress="${CrystalAddress%%\.coal5*}"
 
 if [ "$CrystalAddress" == "" ] || [[ ! "$CrystalAddress" =~ ^Crystal- ]]; then
     echo "Please specify a crystal address to unpack."
