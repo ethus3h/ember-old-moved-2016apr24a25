@@ -52,7 +52,7 @@ mv -v "./$CrystalLogID."!(coal5-meta) "./$CrystalLogID.coal5-meta/"
 #Clear the screen
 printf "\033c"
 
-if [ rm -v "./$CrystalLogID.coal5-tend" ]; then
+if rm -v "./$CrystalLogID.coal5-tend"; then
     echo "Done! The crystal has been extracted to:"
     echo "$(pwd)/$CrystalLogID"
 else
