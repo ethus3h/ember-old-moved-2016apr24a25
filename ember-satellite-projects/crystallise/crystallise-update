@@ -34,6 +34,8 @@ wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-proj
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/crystallise-internal-xz-b
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/decrystallise
 wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/decrystallise-logsession
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/quickliquid
+wget https://raw.githubusercontent.com/ethus3h/ember/master/ember-satellite-projects/crystallise/dequicklify
 chmod +x ./*
 cp -v ./* /usr/bin/
 cd ~

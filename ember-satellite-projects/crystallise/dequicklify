@@ -1,0 +1,3 @@
+#!/bin/bash
+
+IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)"); ia upload kyaaaaa --metadata="subject:Uploaded using iu v3; 9F227910-A541-11E5-8BD3-7B584224FF49" $IUIDENTIFIER/"$@"; echo 'https://archive.org/download/'$IUIDENTIFIER; }
