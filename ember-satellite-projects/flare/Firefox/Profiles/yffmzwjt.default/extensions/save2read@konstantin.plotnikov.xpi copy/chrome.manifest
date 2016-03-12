@@ -1,7 +1,0 @@
-content   save2read                 chrome/content/
-skin      save2read   classic/1.0   chrome/skin/
-locale    save2read   en-US         chrome/locale/en-US/
-
-
-overlay   chrome://browser/content/browser.xul   chrome://save2read/content/ff-overlay.xul
-style chrome://global/content/customizeToolbar.xul chrome://save2read/skin/overlay.css
