@@ -1,3 +1,13 @@
 #!/bin/bash
 
-IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)"); ia upload kyaaaaa --metadata="subject:Uploaded using iu v3; 9F227910-A541-11E5-8BD3-7B584224FF49" $IUIDENTIFIER/"$@"; echo 'https://archive.org/download/'$IUIDENTIFIER; }
+#Usage: quickliquid <files>
+
+IUIDENTIFIER="Liquid-"$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y-%m-%d-%H-%M-%S-%N)-$(xxd -pu <<< "$(date +%z)")
+
+crystalliseVersionA=$(sed '4q;d' /usr/bin/crystallise)
+crystalliseVersionB=${crystalliseVersionA%\'*}
+crystalliseVersion=${crystalliseVersionB##*\'}
+
+crystalTitle=$(sed '1q;d' "$HOME"/config.txt)
+
+ia upload "$IUIDENTIFIER" --metadata="subject:Uploaded using quickliquid for Crystallise $crystalliseVersion" --metadata="9F227910-A541-11E5-8BD3-7B584224FF49" --metadata="$crystalTitle" "$IUIDENTIFIER"/"$@"; echo "https://archive.org/download/$IUIDENTIFIER/"; }

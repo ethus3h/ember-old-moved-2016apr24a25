@@ -1,3 +1,23 @@
 #!/bin/bash
 
-IUIDENTIFIER=$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y.%m.%d.%H.%M.%S.%N)-$(xxd -pu <<< "$(date +%z)"); ia upload kyaaaaa --metadata="subject:Uploaded using iu v3; 9F227910-A541-11E5-8BD3-7B584224FF49" $IUIDENTIFIER/"$@"; echo 'https://archive.org/download/'$IUIDENTIFIER; }
+#Usage: dequicklify [--no-trim-extensions|--trim-extensions] <URL>
+
+#Remove URL
+CrystalAddress="${1#https://archive.org/@(details|download)/}"
+#Remove trailing path(s) from identifier
+CrystalAddress="${CrystalAddress%%/*}"
+if [ "$2" != "--no-trim-extensions" ]; then
+    #Remove filename extensions
+    CrystalAddress="${CrystalAddress%\.coal5*}"
+fi
+
+if [ "$CrystalAddress" == "" ]; then
+    echo "Please specify an item to retrieve."
+    exit 1
+fi
+
+dateNowLiquify="$(date +%Y-%m-%d-%H-%M-%S-%N)"
+
+mkdir "$CrystalAddress-dequicklified-$dateNowLiquify"
+cd "$CrystalAddress-dequicklified-$dateNowLiquify"
+wget --mirror --no-pare-e robots=off "https://archive.org/download/$CrystalAddress/";
