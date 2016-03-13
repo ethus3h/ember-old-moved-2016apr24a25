@@ -2,7 +2,7 @@
 
 #Usage: quickliquid <files>
 
-IUIDENTIFIER="Liquid-"$(python -c 'import uuid; print str(uuid.uuid4())')-$(date +%Y-%m-%d-%H-%M-%S-%N)-$(xxd -pu <<< "$(date +%z)")
+IUIDENTIFIER="Liquid-"$(date +%Y-%m-%d-%H-%M-%S-%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
 
 crystalliseVersionA=$(sed '4q;d' /usr/bin/crystallise)
 crystalliseVersionB=${crystalliseVersionA%\'*}
