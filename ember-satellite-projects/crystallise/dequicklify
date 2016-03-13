@@ -2,6 +2,8 @@
 
 #Usage: dequicklify [--no-trim-extensions|--trim-extensions] <URL>
 
+shopt -s extglob
+
 #Remove URL
 CrystalAddress="${1#https://archive.org/@(details|download)/}"
 #Remove trailing path(s) from identifier
