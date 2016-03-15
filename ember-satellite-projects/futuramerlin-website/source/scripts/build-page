@@ -5,6 +5,7 @@ shopt -s extglob
 PageA="${1/%\/index\.htm}"
 PageB="${PageA/%\.htm}"
 Page="$(basename "$PageB")";
+echo "Working on page: $Page"
 rm -rf "../../built/$1"
 mkdir -p "../../built/$1"
 rm -rf "../../built/$1"
@@ -29,9 +30,10 @@ if [ -n "$title" ]; then
 	replace="s/<title>Futuramerlin<\/title>/<title>$title &mdash; Futuramerlin<\/title>/g"
 	perl -p -i -e "$replace" "../../built/$1"
 fi
-if [ "$Page" == "index" ]; then
+if [ "$Page" == "." ]; then
     replace="s/<p class=\"logo\">(((?!<\/p>)[\S\s])*)<\/p>/<h1 class=\"logo\">\1<\/h1>/g"
     perl -p -i -e "$replace" "../../built/$1"
+    perl -p -i -e "s/nav-item-inactive index\"/nav-item-selected\"/g" "../../built/$1"
 fi
 perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../../built/$1"
 shopt -u extglob
