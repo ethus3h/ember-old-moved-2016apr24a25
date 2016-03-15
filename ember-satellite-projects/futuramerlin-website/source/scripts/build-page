@@ -1,45 +1,38 @@
 #!/bin/bash
 
-PAGE="$(basename "$1" | cut -d. -f1)";
-rm -rf "../../built/$1";
-mkdir -p "../../built/$1";
-rm -rf "../../built/$1";
-cp "../assets/1_start.html" "../../built/$1";
-cat "../content/$1" >> "../../built/$1";
-cat "../assets/2_end.html" >> "../../built/$1";
-html-minifier --output "../../built/$1" --remove-comments --use-short-doctype "../../built/$1";
-tr '\n' ' ' < "../../built/$1" > "../../built/1.tmp";
-tr '\t' ' ' < "../../built/1.tmp" > "../../built/2.tmp";
-tr '\r' ' ' < "../../built/2.tmp" > "../../built/3.tmp";
-tr -s " " < "../../built/3.tmp" > "../../built/$1";
-# perl -p -i -e 's/> </></g' "../../built/$1";
-perl -p -i -e "s/nav-item-inactive $PAGE\"/nav-item-selected\"/g" "../../built/$1";
-perl -p -e "s/^((?!^<h1 class=\"title\">([^<]+)<\/h1>).)*$//g" "../content/$1" > "../../built/4.tmp";
+shopt -s extglob
+
+PageA="${1/%index\.htm}"
+Page="${1/%\.htm}"
+rm -rf "../../built/$1"
+mkdir -p "../../built/$1"
+rm -rf "../../built/$1"
+cp "../assets/1_start.html" "../../built/$1"
+cat "../content/$1" >> "../../built/$1"
+cat "../assets/2_end.html" >> "../../built/$1"
+html-minifier --output "../../built/$1" --remove-comments --use-short-doctype "../../built/$1"
+tr '\n' ' ' < "../../built/$1" > "../../built/1.tmp"
+tr '\t' ' ' < "../../built/1.tmp" > "../../built/2.tmp"
+tr '\r' ' ' < "../../built/2.tmp" > "../../built/3.tmp"
+tr -s " " < "../../built/3.tmp" > "../../built/$1"
+perl -p -i -e "s/nav-item-inactive $Page\"/nav-item-selected\"/g" "../../built/$1"
+perl -p -e "s/^((?!^<h1 class=\"title\">([^<]+)<\/h1>).)*$//g" "../content/$1" > "../../built/4.tmp"
 perl -p -i -e 's/^\s*//;s/\s*$//;s/\s+/ /;' "../../built/4.tmp"
-perl -p -i -e "s/<h1 class=\"title\">([^<]+)<\/h1>.*/\\1/g" "../../built/4.tmp";
-title="$(cat ../../built/4.tmp)";
+perl -p -i -e "s/<h1 class=\"title\">([^<]+)<\/h1>.*/\\1/g" "../../built/4.tmp"
+title="$(cat ../../built/4.tmp)"
 ere_quote() {
     sed 's/[]\.|$(){}?+*^]/\\&/g' <<< "$*"
 }
-title="$(ere_quote $title)";
+title="$(ere_quote $title)"
 if [ -n "$title" ]; then
-	replace="s/<title>Futuramerlin<\/title>/<title>$title &mdash; Futuramerlin<\/title>/g";
-	perl -p -i -e "$replace" "../../built/$1";
+	replace="s/<title>Futuramerlin<\/title>/<title>$title &mdash; Futuramerlin<\/title>/g"
+	perl -p -i -e "$replace" "../../built/$1"
 fi
-if [ $PAGE == "index" ]; then
-    replace="s/<p class=\"logo\">(((?!<\/p>)[\S\s])*)<\/p>/<h1 class=\"logo\">\1<\/h1>/g";
-    perl -p -i -e "$replace" "../../built/$1";
+if [ "$Page" == "index" ]; then
+    replace="s/<p class=\"logo\">(((?!<\/p>)[\S\s])*)<\/p>/<h1 class=\"logo\">\1<\/h1>/g"
+    perl -p -i -e "$replace" "../../built/$1"
 fi
-perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../../built/$1";
-SLASHCOUNTTEMP="${1//[^\/]}";
-SLASHCOUNT=${#SLASHCOUNTTEMP}
-i=1;
-d="";
-while [[ (( $i < $SLASHCOUNT )) ]]; do
-	d=$d"..\/";
-	i=$((i+1));
-done;
-STRMATCH="s/href=\"([^:\"]+)\"/href=\"$d\1\"/g";
-STRMATCH="s/href=\"(..\/)?..\/(.\/)*\//href=\"\//g";
-perl -p -i -e "$STRMATCH" "../../built/$1";
-rm -f ../../built/*.tmp;
+perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../../built/$1"
+StrMatch="s/href=\"(..\/)?..\/(.\/)*\//href=\"\//g"
+perl -p -i -e "$StrMatch" "../../built/$1"
+rm -f ../../built/*.tmp
