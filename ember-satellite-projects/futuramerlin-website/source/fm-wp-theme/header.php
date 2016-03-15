@@ -9,9 +9,9 @@
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><?php wp_title( '—', true, 'right' ); ?></title>
+    <title><?php if(is_front_page()) { echo "Futuramerlin Blog"; } else { wp_title( '—', true, 'right' ); } ?></title>
     <meta charset="utf-8">
-    <meta content="Blog — Futuramerlin" name="author">
+    <meta content="Futuramerlin" name="author">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
     name="viewport">
     <link href="/m.css" rel="stylesheet" type="text/css">
