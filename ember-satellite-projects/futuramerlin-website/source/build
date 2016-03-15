@@ -5,7 +5,7 @@
 
 echo "Preparing environment...";
 rm -r "../built";
-mkdir "../built/";
+mkdir "../built";
 echo "Copying assets...";
 cp -r ./assets/* ./assets/.[^.]* "../built/";
 (
