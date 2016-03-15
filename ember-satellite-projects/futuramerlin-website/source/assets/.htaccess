@@ -1,13 +1,11 @@
-#.htaccess for futuramerlin.com, version 2 (3 February 2015)
-Redirect 301 /Wreathe%20web/index.html http://futuramerlin.com/r.php?c=Wreathe&a=main
-Redirect 301 /home http://www.futuramerlin.com/site/400.html 
-Redirect 301 /nonpseudologin http://www.futuramerlin.com/site/3482.html
-Redirect 301 /login http://www.futuramerlin.com/site/3482.html
+#.htaccess for futuramerlin.com, version 2.1 (2015 March 14a15)
+Redirect 301 /Wreathe%20web/index.html http://futuramerlin.com/ember/wreathe.htm
+Redirect 301 /home http://futuramerlin.com/
 Redirect 301 /c/2015/02/27/190-new-music-release-electric-dream-demos/ http://futuramerlin.com/c/2015/05/28/329-new-compilation-demo-released-infinite-universe-electric-dream-redux/
 
 RewriteOptions inherit
 DirectoryIndex index.htm
-ErrorDocument 404 /r.php?a=problem
+ErrorDocument 404 /e.htm
 AddType application/octet-stream .iso
 AddType application/x-ms-win-installer .msi
 AddType audio/x-flac .flac
