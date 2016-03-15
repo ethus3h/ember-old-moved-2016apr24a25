@@ -2,8 +2,9 @@
 
 shopt -s extglob
 
-PageA="${1/%index\.htm}"
-Page="${1/%\.htm}"
+PageA="${1/%\/index\.htm}"
+PageB="${PageA/%\.htm}"
+Page="$(basename "$PageB")";
 rm -rf "../../built/$1"
 mkdir -p "../../built/$1"
 rm -rf "../../built/$1"
@@ -33,6 +34,8 @@ if [ "$Page" == "index" ]; then
     perl -p -i -e "$replace" "../../built/$1"
 fi
 perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../../built/$1"
+shopt -u extglob
 StrMatch="s/href=\"(..\/)?..\/(.\/)*\//href=\"\//g"
 perl -p -i -e "$StrMatch" "../../built/$1"
+shopt -s extglob
 rm -f ../../built/*.tmp
