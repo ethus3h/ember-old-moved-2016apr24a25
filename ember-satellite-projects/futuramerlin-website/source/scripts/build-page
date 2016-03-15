@@ -40,6 +40,6 @@ while [[ (( $i < $SLASHCOUNT )) ]]; do
 	i=$((i+1));
 done;
 STRMATCH="s/href=\"([^:\"]+)\"/href=\"$d\1\"/g";
-STRMATCH="s/href=\"..\/(\/)\"/href=\"\1\"/g";
+STRMATCH="s/href=\"(..\/)?..\/(.\/)*\//href=\"\//g";
 perl -p -i -e "$STRMATCH" "../../built/$1";
 rm -f ../../built/*.tmp;
