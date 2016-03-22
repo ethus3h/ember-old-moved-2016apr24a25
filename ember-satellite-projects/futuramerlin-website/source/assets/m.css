@@ -832,7 +832,7 @@ nav > ul
 
     overflow-y: auto;
 
-    width: 25%;
+    width: 25vw;
     height: 100%;
 
     transition: left .2s;
@@ -1012,7 +1012,7 @@ body > main
     position: absolute;
     z-index: 1;
     top: 0;
-    left: 25%;
+    left: 25vw;
     padding:1rem;
     padding-bottom:7rem;
     margin: 4rem;
@@ -1025,7 +1025,7 @@ body > main::before
     position: fixed;
     z-index: -1;
     top: 0;
-    left: 25%;
+    left: 25vw;
 	content: ' ';
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -1045,7 +1045,7 @@ body > main::after
     position: fixed;
     z-index: 3;
     top: 0;
-    left: 25%;
+    left: 25vw;
 	content: ' ';
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -1114,7 +1114,7 @@ body > nav > p:last-of-type {
     text-indent: .5rem;
     font-size:1.2rem;
     font-family: wreatherweb;
-    width:25%;
+    width:25vw;
     transition: all .2s;
     color:#2a1657;
 }
@@ -1141,7 +1141,7 @@ body > nav::before
     overflow: hidden;
 
     height: 100%;
-    width: calc(25% + 4rem);
+    width: calc(25vw + 4rem);
 
     transition: font-size .2s, left .2s, width .2s, opacity .2s;
 }
@@ -1250,8 +1250,8 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     body > main::before,
     body > main::after
     {
-        left: 25%;
-        width: calc(75% - 8rem);
+        left: 25vw;
+        width: calc(75vw - 8rem);
     }
     body,
     body::before
@@ -1441,13 +1441,13 @@ not screen and (min-width: 321px) and (max-resolution: 191dpi)
     }
     .nav-trigger:checked + label
     {
-        left: calc(75% + 1rem);
+        left: calc(75vw + 1rem);
     }
     .nav-trigger:checked ~ nav > ul
     {
         left: 0;
 
-        width: 75%;
+        width: 75vw;
 
         transition: font-size .2s, left .2s, width .2s;
 
@@ -1519,7 +1519,7 @@ _::-webkit-full-page-media, _:future, :root body > main::before
     position: fixed;
     z-index: -1;
     top: 0;
-    left: 25%;
+    left: 25vw;
     content: ' ';
     height: 100%;
     width: 100%;
@@ -1530,8 +1530,8 @@ _::-webkit-full-page-media, _:future, :root body > main::after {
     display:none !important;
 }
 _::-webkit-full-page-media, _:future, :root .logo {
-    left: 25% !important;
-    width:75% !important;
+    left: 25vw !important;
+    width:75vw !important;
 }
 _::-webkit-full-page-media, _:future, :root body > nav > p:last-of-type {
     top: 0 !important;
