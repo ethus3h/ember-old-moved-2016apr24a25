@@ -1,0 +1,26 @@
+#!/bin/bash
+# Warcdealer
+# Version:
+export warcdealerVersion='2'
+
+#Requires ia (https://pypi.python.org/pypi/internetarchive) to be installed and to have been configured since being updated to version 1.0.2.
+
+#Script must be run as root.
+
+#Usage: warcdealer
+#The file(s) to be uploaded must be within the current directory.
+
+[ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
+
+#Script should exit if any operation fails.
+set -e
+
+WarcdealerPackID=Warcdlr-$(date +%Y-%m-%d-%H-%M-%S-%N)-$(xxd -pu <<< "$(date +%z)")-$(python -c 'import uuid; print str(uuid.uuid4())')
+
+echo "Working..."
+
+ls -a -B -l -R -e -i -O -P -T . | tee "./$WarcdealerPackID.listing"
+
+find . -name "*.warc" -o -name "*.warc.*" -o -name "$WarcdealerPackID.listing" -o -name "wpull.db" -o -name "*.megawarc*" -o -name "*.cdx" -exec ia upload "$WarcdealerPackID" --checksum --retries=10 --metadata="subject:Uploaded using Warcdealer $warcdealerVersion" --metadata="subject:002F9DCE-F064-11E5-99AD-6BFA56EF8172" --metadata="title:Warcdealer pack $WarcdealerPackID" --metadata="subject:$WarcdealerPackID" --metadata="collection:opensource" --delete '{}'
+
+echo "Done; sleeping 3 minutes..."
