@@ -1,7 +1,7 @@
 #!/bin/bash
 # Warcdealer
 # Version:
-export warcdealerVersion='2.0.9'
+export warcdealerVersion='2.0.10'
 
 #Requires ia (https://pypi.python.org/pypi/internetarchive) to be installed and to have been configured since being updated to version 1.0.2.
 
@@ -25,6 +25,8 @@ set +e
 
 find . -name "wpull.db" -o -name "*.cdx" -o -name "*.log" -exec xz -C sha256 -9 -e -v '{}' \;
 
-find . -name "*.warc" -o -name "*.warc.*" -o -name "$WarcdealerPackID.listing" -o -name "wpull.db.xz" -o -name "*.log.xz" -o -name "*.log" -o -name "wpull.db" -o -name "*.megawarc*" -o -name "*.cdx.xz" -o -name "*.cdx" -exec ia upload "$WarcdealerPackID" --checksum --retries=10 --metadata="subject:Uploaded using Warcdealer $warcdealerVersion" --metadata="subject:002F9DCE-F064-11E5-99AD-6BFA56EF8172" --metadata="title:Warcdealer pack $WarcdealerPackID" --metadata="subject:$WarcdealerPackID" --metadata="collection:opensource" --delete '{}' \;
+find . -name "*.warc" -o -name "*.gz" -o -name "*.xz" -o -name "*.log" -o -name "*.megawarc*" -o -name "*.pem" -exec ia upload "$WarcdealerPackID" --checksum --retries=10 --metadata="subject:Uploaded using Warcdealer $warcdealerVersion" --metadata="subject:002F9DCE-F064-11E5-99AD-6BFA56EF8172" --metadata="title:Warcdealer pack $WarcdealerPackID" --metadata="subject:$WarcdealerPackID" --metadata="collection:opensource" --delete '{}' \;
+
+ia upload "$WarcdealerPackID" --checksum --retries=10 --metadata="subject:Uploaded using Warcdealer $warcdealerVersion" --metadata="subject:002F9DCE-F064-11E5-99AD-6BFA56EF8172" --metadata="title:Warcdealer pack $WarcdealerPackID" --metadata="subject:$WarcdealerPackID" --metadata="collection:opensource" --delete "$WarcdealerPackID.listing"
 
 echo "Done; sleeping 3 minutes..."
