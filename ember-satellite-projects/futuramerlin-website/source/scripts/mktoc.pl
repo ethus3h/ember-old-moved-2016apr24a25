@@ -71,7 +71,7 @@ If you don't have this comment in your HTML input file, the top level
 table of contents will go right after the <body> tag.
 
 Each table of contents placed in the output file will be surrounded
-by a <div class="toc">. Each line of the table of contents is a simple
+by a <nav class="toc">. Each line of the table of contents is a simple
 <p> tag. You may want to put an entry into your CSS for those elements,
 for example (and you can make your own style up here):
     div.toc { margin: 1em 1.1em; }
@@ -225,9 +225,9 @@ sub getendtag {
 
 sub skipoldtoc {
     $savelineno = $$lineno;
-    until (/<\/div>/) {
+    until (/<\/nav>/) {
         $_ = <STDIN>;
-        die "line: $savelineno: missing end tag </div>$nl" if ! $_;
+        die "line: $savelineno: missing end tag </nav>$nl" if ! $_;
         $$lineno++;
     }
     $_ = <STDIN> if $_;
@@ -263,7 +263,7 @@ sub getheaders {
             setnl if (/\r\n/);
             $initnl = 1;
         }
-        skipoldtoc \$lineno if (/<div class="toc">/);
+        skipoldtoc \$lineno if (/<nav class="toc">/);
         if (/<h1/i) {
             getendtag "h1", \$lineno unless (/<\/h1/i);
             $curh1++;
@@ -344,7 +344,7 @@ sub printh1 {
     my $len = @$headers;
 
     return if ( !$len );
-    print "<div class=\"toc\">$nl";
+    print "<nav class=\"toc\">$nl";
     print $title if $title;
     foreach $h1 (@$headers) {
         my $val = $h1->{"val"};
@@ -354,7 +354,7 @@ sub printh1 {
         chomp $val;
         print "<p id=\"b_$num\"><a href=\"#a_$num\">$val<\/a><\/p>$nl";
     }
-    print "</div>$nl";
+    print "</nav>$nl";
 }
 
 # printh2
@@ -435,7 +435,7 @@ sub addtoc {
                 next;
             }
         }
-        skipoldtoc \$lineno if (/<div class="toc">/);
+        skipoldtoc \$lineno if (/<nav class="toc">/);
         if (/<h1/i) {
             getendtag "h1", \$lineno unless (/<\/h1/i);
             $curh1++;
@@ -501,7 +501,7 @@ sub cleanup {
 
     while (<STDIN>) {
         $lineno++;
-        skipoldtoc \$lineno if (/<div class="toc">/);
+        skipoldtoc \$lineno if (/<nav class="toc">/);
         if (/<h1/i) {
             getendtag "h1", \$lineno unless (/<\/h1/i);
             cleanold;
