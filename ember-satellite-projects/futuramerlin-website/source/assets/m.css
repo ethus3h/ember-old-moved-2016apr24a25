@@ -55,6 +55,9 @@ h1, p.bigemphasis
     overflow:hidden;
     text-indent: 0;
 }
+h2 {
+    font-size:1.8rem;
+}
 a {
     border-bottom: 0.063rem dotted transparent;
     color:#520f22;
@@ -65,7 +68,6 @@ a:hover {
     border-bottom: 0.063rem dotted #520f22;
     transition:border-bottom .2s;
 }
-
 
 /* End basic rules */
 
@@ -282,8 +284,37 @@ a.page-numbers:hover {
 span.page-numbers.current {
     background-color:rgba(225,240,195,0.5);
 }
+span.project-completion-complete {
+    text-shadow: #3FBF3F 0 0 0.063rem;
+}
+span.project-completion-needs-polishing {
+    text-shadow: #7FBF3F 0 0 0.063rem;
+}
+span.project-completion-advanced {
+    text-shadow: #BFBF3F 0 0 0.063rem;
+}
+span.project-completion-moderate {
+    text-shadow: #BF7F3F 0 0 0.063rem;
+}
+span.project-completion-begun {
+    text-shadow: #BF3F3F 0 0 0.063rem;
+}
+span.project-completion-none {
+    text-shadow: #000000 0 0 0.063rem;
+}
 div.post-revisions, #revision-diffs {
 	border-bottom:0.095rem solid rgba(0,0,0,0.5);
+}
+ul.small-text {
+    font-size:1.33rem;
+}
+ul.close-up-top {
+    margin-top:0;
+}
+li::after:not(:last-of-type) {
+    height: 0.5rem;
+    content:' ';
+    display:block;
 }
 .post-navigation {
 	font-size:1.1rem;
@@ -642,8 +673,12 @@ figure.thumbnail-right, .featured-image, *:not(.figcaption-empty-figure) > a > .
 }
 figure.floating-key
 {
-    position:fixed;
-    right: 5rem;
+/*    position:fixed;
+    right: 5rem;*/
+    font-size:1.33rem;
+}
+figure.floating-key > ul {
+    font-size:1.2rem;
 }
 figure.thumbnail-right > figcaption,
 .wp-caption.alignright > figcaption,
@@ -744,6 +779,9 @@ nav > ul > li
 {
     counter-increment: unset;
 	display: block;
+}
+nav > ul > li::after:not(.dummy) {
+    display:none;
 }
 nav > ul > li::before
 {
