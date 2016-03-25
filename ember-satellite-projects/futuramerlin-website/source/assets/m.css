@@ -299,7 +299,7 @@ span.project-completion-moderate {
 span.project-completion-begun {
     text-shadow: #BF3F3F 0 0 0.063rem;
 }
-span.project-completion-none {
+span.project-completion-not-started {
     text-shadow: #000000 0 0 0.063rem;
 }
 div.post-revisions, #revision-diffs {
