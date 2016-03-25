@@ -2,6 +2,7 @@
 #Requires html-minifier: https://www.npmjs.com/package/html-minifier
 #Requires html5-tidy: https://github.com/htacg/tidy-html5
 #Requires minifier: https://www.npmjs.com/package/minifier
+#Requires hypertoc: sudo cpan -f -i HTML::GenToc
 
 [ "$(whoami)" != "root" ] && exec sudo -- "$0" "$@"
 
