@@ -640,6 +640,10 @@ figure.thumbnail-right, .featured-image, *:not(.figcaption-empty-figure) > a > .
 	position:relative;
 	transition: width .2s, margin .2s, left .2s;
 }
+figure.floating-key
+{
+    position:fixed;
+}
 figure.thumbnail-right > figcaption,
 .wp-caption.alignright > figcaption,
 figure.thumbnail-left > figcaption,
