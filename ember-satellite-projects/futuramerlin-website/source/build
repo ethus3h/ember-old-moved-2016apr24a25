@@ -11,8 +11,6 @@ shopt -s extglob
 echo "Preparing environment..."
 rm -r "../built"
 mkdir "../built"
-echo '<nav id="toc">' > "../built/0h.tmp"
-echo '</nav>' > "../built/0f.tmp"
 echo "Copying assets..."
 cp -r ./assets/* ./assets/.[^.]* "../built/"
 (
