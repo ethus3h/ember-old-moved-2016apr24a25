@@ -45,6 +45,16 @@ h1, h2, h3, h4, h5, h6, p {
     -ms-hyphens: auto;
     hyphens: auto;
 }
+h2, h3, h4, h5, h6 {
+    border-top: 4rem solid transparent;
+}
+h2::before, h3::before, h4::before, h5::before, h6::before {
+    border-top: 0.063rem solid white;
+    top:-2rem;
+    content: ' ';
+    display:block;
+    position:relative;
+}
 h1, p.bigemphasis
 {
     font-weight:bold;
@@ -67,6 +77,13 @@ a {
 a:hover {
     border-bottom: 0.063rem dotted #520f22;
     transition:border-bottom .2s;
+}
+ol {
+    counter-reset: item;
+}
+ol > li::before {
+    content:counters(item,".") " ";
+    counter-increment: item;
 }
 
 /* End basic rules */
@@ -97,6 +114,25 @@ blockquote {
     overflow-y:hidden;
     background-color:rgba(255,255,255,0.5);
     font-size:1.1rem;
+}
+#toc {
+    background-color:rgba(0,0,0,0.07);
+    padding:0.5rem;
+    margin-left:1rem;
+    margin-right:1rem;
+    margin-top: 1rem;
+}
+#toc > h2 {
+    border-top: none;
+}
+#toc > h2::before {
+    display:none;
+}
+#toc > ol {
+    padding-left: 1rem;
+}
+#toc + figure {
+    margin-top: 4rem;
 }
 /*blockquote:nth-child(2)::before, blockquote::after {
     font-size:4rem;
@@ -186,7 +222,7 @@ div.musicbig {
 	right: 0;
 	margin-top:1rem;
 }
-.clearfloat, .post-revisions {
+.clearfloat, .post-revisions, .floating-key {
 	clear:both;
 }
 div.post-revisions, .single-post > .entry-footer, div.revision-header, #revision-diffs, .pagination {
@@ -757,15 +793,19 @@ ul.extra-padding-left {
 ul > li
 {
 	counter-increment: indentation;
-	display: table-row;
+}
+li {
+        display: table-row;
 }
 ul > li::before
 {
 	content: "•";
-	padding-right: 1rem;
-	display: table-cell;
-	text-align: right;
-	position:relative;
+}
+li::before {
+    display: table-cell;
+    padding-right: 1rem;
+    text-align: right;
+    position:relative;
 }
 nav > ul
 {
@@ -1294,7 +1334,7 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
     body > main::after
     {
         left: 25vw;
-        width: calc(75vw - 8rem);
+        width: calc(75% - 8rem);
     }
     body,
     body::before
