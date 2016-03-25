@@ -643,6 +643,7 @@ figure.thumbnail-right, .featured-image, *:not(.figcaption-empty-figure) > a > .
 figure.floating-key
 {
     position:fixed;
+    right: 5rem;
 }
 figure.thumbnail-right > figcaption,
 .wp-caption.alignright > figcaption,
