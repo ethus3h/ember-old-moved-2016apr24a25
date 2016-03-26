@@ -32,6 +32,9 @@ span.hatnote-emphasis {
 span.big-annotation {
     font-size:1.3rem;
 }
+.note-emphasis {
+    font-style:italic;
+}
 .important-word {
     font-weight:bold;
 }
@@ -174,7 +177,7 @@ figure.center-figure {
 figure.app-syntax {
     background-color:rgba(0,0,0,0.07);
 }
-.app-syntax code {
+.app-syntax > code:first-of-type {
     margin:1rem;
     display:inline-block;
 }
