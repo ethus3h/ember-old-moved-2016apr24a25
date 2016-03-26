@@ -49,6 +49,12 @@ p.space-above
 {
     padding-top:1rem;
 }
+code
+{
+    padding-right: .125rem;
+    padding-left: .125rem;
+    background: #ddd;
+}
 h1, h2, h3, h4, h5, h6, p {
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
@@ -100,6 +106,10 @@ ol > li::before {
     counter-increment: item;
 }
 
+#toc ol > li::before {
+    content:'\00A7' counters(item,".") " ";
+    color:rgba(42,22,87,0.9)
+}
 /* End basic rules */
 
 .breadcrumbs {
@@ -157,6 +167,10 @@ figure.center-figure {
 }
 figure.app-syntax {
     background-color:rgba(0,0,0,0.07);
+}
+.app-syntax code {
+    margin:1rem;
+    display:inline-block;
 }
 /*blockquote:nth-child(2)::before, blockquote::after {
     font-size:4rem;
@@ -337,7 +351,7 @@ h2::after, h3::after, h4::after, h5::after, h6::after {
     right:1rem;
     position:absolute;
 }
-h2:not(:first-of-type)::after {counter-increment: h2; content: "§" counter(h2) }
+h2:not(:first-of-type)::after {counter-increment: h2; content: "\00A7" counter(h2) }
 h3::after {counter-increment: h3; content: "§" counter(h2) "." counter(h3) }
 h4::after {counter-increment: h4; content: "§" counter(h2) "." counter(h3) "." counter(h4) }
 h5::after {counter-increment: h5; content: "§" counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) }
@@ -1647,12 +1661,6 @@ not screen and (min-width: 341px) and (max-resolution: 191dpi)
 			text-indent:0.75rem;
 		}
 	}
-}
-code
-{
-    padding: .125rem;
-
-    background: #ddd;
 }
 *,
 :before,
