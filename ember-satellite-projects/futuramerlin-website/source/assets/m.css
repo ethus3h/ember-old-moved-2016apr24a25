@@ -19,12 +19,18 @@ span.song-title, span.meta-nav, a.logolink
 {
     font-style:italic;
 }
-span.big-annotation {
-    font-size:1.3rem;
+span.hatnote-emphasis, span.big-annotation {
     background-color:rgba(0,0,0,0.07);
     padding:0.5rem;
     margin:1rem;
     display:table;
+}
+span.hatnote-emphasis {
+    font-weight:bold;
+    font-style:italic;
+}
+span.big-annotation {
+    font-size:1.3rem;
 }
 .important-word {
     font-weight:bold;
