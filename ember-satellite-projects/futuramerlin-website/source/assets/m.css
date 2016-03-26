@@ -19,6 +19,13 @@ span.song-title, span.meta-nav, a.logolink
 {
     font-style:italic;
 }
+span.big-annotation {
+    font-size:1.3rem;
+    background-color:rgba(0,0,0,0.07);
+    padding:0.5rem;
+    margin:1rem;
+    display:table;
+}
 p {
     text-align:justify;
     text-indent:1.45rem;
@@ -52,8 +59,11 @@ h2::before, h3::before, h4::before, h5::before, h6::before {
     border-top: 0.063rem solid white;
     top:-2rem;
     content: ' ';
-    display:block;
+    display:flex;
     position:relative;
+}
+figure + h2::before {
+    display:block;
 }
 h1, p.bigemphasis
 {
@@ -124,6 +134,9 @@ blockquote {
 }
 #toc > h2 {
     border-top: none;
+    padding-bottom:0.5rem;
+    border-bottom:0.063rem solid rgba(0,0,0,0.2);
+    margin-bottom:0.75rem;
 }
 #toc > h2::before {
     display:none;
@@ -320,22 +333,47 @@ a.page-numbers:hover {
 span.page-numbers.current {
     background-color:rgba(225,240,195,0.5);
 }
-span.project-completion-complete {
+.project-completion-complete::before, .project-completion-needs-polishing::before, .project-completion-advanced::before, .project-completion-moderate::before, .project-completion-begun::before, .project-completion-not-started::before {
+    border-bottom: 0.5rem solid transparent;
+    border-right: 0.5rem solid transparent;
+    background-clip:padding-box;
+    content: ' ';
+    padding-right:1rem;    
+}
+.project-completion-complete::before {
+    background-color: #3FBF3F;
+}
+.project-completion-needs-polishing::before {
+    background-color: #7FBF3F;
+}
+.project-completion-advanced::before {
+    background-color: #BFBF3F;
+}
+.project-completion-moderate::before {
+    background-color: #BF7F3F;
+}
+.project-completion-begun::before {
+    background-color: #BF3F3F;
+}
+.project-completion-not-started::before {
+    background-color: #000000;
+}
+.project-completion-complete > span:last-of-type {
     text-shadow: #3FBF3F 0 0 0.063rem;
 }
-span.project-completion-needs-polishing {
+.project-completion-needs-polishing > span:last-of-type {
     text-shadow: #7FBF3F 0 0 0.063rem;
 }
-span.project-completion-advanced {
+.project-completion-advanced > span:last-of-type {
     text-shadow: #BFBF3F 0 0 0.063rem;
 }
-span.project-completion-moderate {
+.project-completion-moderate > span:last-of-type {
     text-shadow: #BF7F3F 0 0 0.063rem;
 }
-span.project-completion-begun {
+.project-completion-begun > span:last-of-type {
     text-shadow: #BF3F3F 0 0 0.063rem;
 }
-span.project-completion-not-started {
+.project-completion-not-started > span:last-of-type {
     text-shadow: #000000 0 0 0.063rem;
 }
 div.post-revisions, #revision-diffs {
@@ -715,6 +753,7 @@ figure.floating-key
 }
 figure.floating-key > ul {
     font-size:1.2rem;
+    padding-left:0.5rem;
 }
 figure.thumbnail-right > figcaption,
 .wp-caption.alignright > figcaption,
@@ -1296,8 +1335,8 @@ body
     overflow:auto;
     transform:translateX(0);
 }
-@media only screen and (min-width: 1101px) and (min-resolution: 192dpi),
-not screen and (max-width: 550px) and (max-resolution: 191dpi)
+@media only screen and (min-width: 1801px) and (min-resolution: 192dpi),
+not screen and (max-width: 900px) and (max-resolution: 191dpi)
 {
     /* Large screen */
     /* TODO: fix this. It seems to match zoomed-in screen. */
@@ -1366,8 +1405,8 @@ not screen and (max-width: 550px) and (max-resolution: 191dpi)
         }
     }
 }
-@media only screen and (max-width: 1100px) and (min-resolution: 192dpi),
-not screen and (min-width: 551px) and (max-resolution: 191dpi)
+@media only screen and (max-width: 1800px) and (min-resolution: 192dpi),
+not screen and (min-width: 901px) and (max-resolution: 191dpi)
 {
     /* medium screen */
     body > nav > .logo {
@@ -1429,7 +1468,7 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
     }
     body > nav::before
     {
-        left: calc(-1 * (25% + 4rem));
+        left: calc(-1 * (25vw + 4rem));
     }
     body > nav::after
     {
@@ -1500,12 +1539,12 @@ not screen and (min-width: 551px) and (max-resolution: 191dpi)
         }
     }
 }
-@media only screen and (max-width: 640px) and (min-resolution: 192dpi),
-not screen and (min-width: 321px) and (max-resolution: 191dpi)
+@media only screen and (max-width: 680px) and (min-resolution: 192dpi),
+not screen and (min-width: 341px) and (max-resolution: 191dpi)
 {
     /* small screen */
 
-	figure.thumbnail-right, .featured-image, .wp-caption.alignright, .figcaption-empty-figure
+	figure.thumbnail-right, .featured-image, .wp-caption.alignright, .figcaption-empty-figure, figure.floating-key
 	{
 		margin: 1rem;
 		left: 0.75rem;
