@@ -35,6 +35,9 @@ if [ "$Page" == "." ]; then
     replace="s/<p class=\"logo\">(((?!<\/p>)[\S\s])*)<\/p>/<h1 class=\"logo\">\1<\/h1>/g"
     perl -p -i -e "$replace" "../../built/$1"
     perl -p -i -e "s/nav-item-inactive index\"/nav-item-selected\"/g" "../../built/$1"
+    perl -p -i -e "s/<nav>/<nav class=\"expanded\">/g" "../../built/$1"
+    perl -p -i -e "s/<label/<label class=\"expanded\"/g" "../../built/$1"
+    perl -p -i -e "s/<body>/<body class=\"expanded\">/g" "../../built/$1"
 fi
 perl -p -i -e "s/nav-item-inactive \w+/nav-item-inactive/g" "../../built/$1"
 shopt -u extglob

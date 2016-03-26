@@ -113,7 +113,7 @@ ol > li::before {
 /* End basic rules */
 
 .breadcrumbs {
-    font-size:1.1rem;
+    font-size:1.25rem;
     margin:.5rem;
 }
 .breadcrumbs::after {
@@ -443,7 +443,7 @@ li::after:not(:last-of-type) {
 }
 div.entry-meta
 {
-	font-size:1rem;
+	font-size:1.25rem;
 	text-align:right;
 	top:0;
 	right:0;
@@ -458,32 +458,29 @@ div.entry-meta
 	right:0;
 	padding-right:1rem;
 }
-.article-rest
-{
-	font-size:1.1rem;
-}
 .article-rest > .entry-footer
 {
-	max-height:3rem;
+	max-height:4.1rem;
 	overflow-y:auto;
 }
 .article-rest > .entry-footer > .tags-links
 {
-	font-size:0.8rem;
+	font-size:1rem;
 }
 .article-rest > .entry-footer > .tags-links::before
 {
-	content: "Tags:\00a0~\00a0";
-	padding:0.8rem;
+	content: "Tags:\00a0";
+	padding:1rem;
 }
 .article-rest > .entry-footer > .cat-links
 {
-	font-size:0.9rem;
+	font-size:1.2rem;
 }
 .article-rest > .entry-footer > .cat-links::before
 {
-	content: "Categories:\00a0~\00a0";
+	content: "Categories:\00a0";
 	padding:0.8rem;
+    padding-right:0.5rem;
 }
 div.table-columns {
 	display:table;
@@ -527,7 +524,7 @@ nav.horiztoolbar, #secondary {
 nav.horiztoolbar > ul > li > .buttonName, #secondary > aside > p.bigemphasis {
     padding:.67rem;
     text-align:center;
-    font-size:1.2rem;
+    font-size:1.6rem;
     font-weight:normal;
     background-color:transparent;
 }
@@ -653,7 +650,7 @@ nav.horiztoolbar > ul > li > :not(.buttonName), #secondary > aside > :not(.bigem
     display:none;
     overflow-y: auto;
     z-index: 100;
-    font-size:1rem;
+    font-size:1.45rem;
     background-color: rgb(226, 218, 241);
     border-left: .063rem solid white;
     border-right: .063rem solid white;
@@ -746,8 +743,8 @@ audio {
 }
 h1.entry-title
 {
-	font-weight:normal;
-	font-size:1.6rem;
+	font-weight:bold;
+	font-size:1.8rem;
 }
 h1.title, .single-post > header > h1, h1.page-title
 {
@@ -1394,85 +1391,78 @@ body
     overflow:auto;
     transform:translateX(0);
 }
-@media only screen and (min-width: 1801px) and (min-resolution: 192dpi),
-not screen and (max-width: 900px) and (max-resolution: 191dpi)
+label[for='nav-trigger']
 {
-    /* Large screen */
-    /* TODO: fix this. It seems to match zoomed-in screen. */
+    position: fixed;
+    z-index: 3;
+    top: .938rem;
+    left: .938rem;
 
-    label[for='nav-trigger']
-    {
-        position: fixed;
-        z-index: 3;
-        top: .938rem;
-        left: .938rem;
+    width: 1.875rem;
+    height: 1.875rem;
 
-        width: 1.875rem;
-        height: 1.875rem;
+    cursor: pointer;
+    transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
 
-        cursor: pointer;
-        transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
+    opacity: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' version=\'1.1\' x=\'0px\' y=\'0px\' width=\'30px\' height=\'30px\' viewBox=\'0 0 30 30\' xml:space=\'preserve\'><rect style=\'fill:rgb(1,50,32);\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'24\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'12\' width=\'30\' height=\'6\'/></svg>');
+    background-size: contain;
+}
+nav > ul
+{
+    left: 0;
 
-        opacity: 0;
-        background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' version=\'1.1\' x=\'0px\' y=\'0px\' width=\'30px\' height=\'30px\' viewBox=\'0 0 30 30\' xml:space=\'preserve\'><rect style=\'fill:rgb(1,50,32);\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'24\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'12\' width=\'30\' height=\'6\'/></svg>');
-        background-size: contain;
-    }
-    nav > ul
-    {
-        left: 0;
+    -webkit-box-shadow: .250rem 0 .250rem -.16rem #fff;
+       -moz-box-shadow: .250rem 0 .250rem -.16rem #fff;
+            box-shadow: .250rem 0 .250rem -.16rem #fff;
 
-        -webkit-box-shadow: .250rem 0 .250rem -.16rem #fff;
-           -moz-box-shadow: .250rem 0 .250rem -.16rem #fff;
-                box-shadow: .250rem 0 .250rem -.16rem #fff;
-
-             -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
-    }
-    body > main,
-    body > main::before,
-    body > main::after
-    {
-        left: 25vw;
-        width: calc(75% - 8rem);
-    }
-    body,
-    body::before
-    {
-        transition: font-size .2s, left .2s, width .2s, opacity .2s;
-    }
-    body::after
-    {
-        transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
-    }
-    body,
-    body::before,
-    body::after
-    {
-        left: 0;
-        width: 125%;
-    }
-    body > nav > .logo {
-        left:62.5%;
-        transform:translateX(-50%);
-    }
-    /* large screen, constrained width */
-    @media only screen and (max-width: 1500px) and (min-resolution: 192dpi),
-    not screen and (min-width: 751px) and (max-resolution: 191dpi)
-    {
-        p {
-            text-align:left;
-            text-indent:0.75rem;
-        }
+         -o-box-shadow: .250rem 0 .250rem -.16rem #fff;
+}
+body > main,
+body > main::before,
+body > main::after
+{
+    left: 25vw;
+    width: calc(75% - 8rem);
+}
+body,
+body::before
+{
+    transition: font-size .2s, left .2s, width .2s, opacity .2s;
+}
+body::after
+{
+    transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
+}
+body,
+body::before,
+body::after
+{
+    left: 0;
+    width: 125%;
+}
+body > nav > .logo {
+    left:62.5%;
+    transform:translateX(-50%);
+}
+/* large screen, constrained width */
+@media only screen and (max-width: 1500px) and (min-resolution: 192dpi),
+not screen and (min-width: 751px) and (max-resolution: 191dpi)
+{
+    p {
+        text-align:left;
+        text-indent:0.75rem;
     }
 }
 @media only screen and (max-width: 1800px) and (min-resolution: 192dpi),
 not screen and (min-width: 901px) and (max-resolution: 191dpi)
 {
     /* medium screen */
-    body > nav > .logo {
+    body:not(.expanded) > nav > .logo {
         left:50%;
         transform:translateX(-50%);
     }
-    nav > ul
+    body:not(.expanded) > nav > ul
     {
         left: -25%;
 
@@ -1484,11 +1474,11 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi)
 
              -o-box-shadow: 0 0 0 0 #fff;
     }
-    body > nav > p:last-of-type {
+    body:not(.expanded) > nav > p:last-of-type {
         left:-25%;
         transition: all .2s;
     }
-    body > main
+    body:not(.expanded) > main
     {
         margin-right: 0;
         margin-bottom: 0;
@@ -1496,16 +1486,16 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi)
         width: 100%;
         transition: all .2s;
     }
-    body > main::before,
-    body::before,
-    body > main::after {
+    body:not(.expanded) > main::before,
+    body:not(.expanded)::before,
+    body:not(.expanded) > main::after {
         margin-right: 0;
         margin-bottom: 0;
         margin-left: 0;
         transition: margin .2s, top .2s, bottom .2s, height .2s, top .2s;
     }
-    body > main::before,
-    body > main::after
+    body:not(.expanded) > main::before,
+    body:not(.expanded) > main::after
     {
         top: 4rem;
         margin-top: 0;
@@ -1513,28 +1503,28 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi)
         left:0;
         height: calc(100% - 4rem);
     }
-    body::after
+    body:not(.expanded)::after
     {
         bottom: -4rem;
 
         transition: all .2s;
     }
-    body > main, body > nav::before
+    body:not(.expanded) > main, body:not(.expanded) > nav::before
     {
     	left:0;
         max-width: 100%;
         transition: all .2s;
     }
-    body > nav::before
+    body:not(.expanded) > nav::before
     {
         left: calc(-1 * (25vw + 4rem));
     }
-    body > nav::after
+    body:not(.expanded) > nav::after
     {
     	right: -4rem;
     	transition: width .2s, right .2s;
     }
-    label[for='nav-trigger']
+    label[for='nav-trigger']:not(.expanded)
     {
         position: fixed;
         z-index: 3;
@@ -1552,34 +1542,33 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi)
         background-size: contain;
     }
     .nav-trigger + label,
-    nav > ul
+    nav:not(.expanded) > ul
     {
         transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
     }
-    body
+    body:not(.expanded)
     {
         transition: all .2s;
     }
-    .nav-trigger:checked + label
+    .nav-trigger:checked + label:not(.expanded)
     {
-        left: calc(50% + 1rem);
+        left: calc(25% + 1rem);
     }
-    .nav-trigger:checked ~ nav > .logo
+    .nav-trigger:checked ~ nav:not(.expanded) > .logo
     {
-        font-size: 1.2rem;
         transform: translateX(calc(-100% - 1rem));
         left: calc(100%);
         top:.9rem;
     }
-    .nav-trigger:checked ~ nav > p:last-of-type {
+    .nav-trigger:checked ~ nav:not(.expanded) > p:last-of-type {
         left:0;
         transition: all .2s;
     }
-    .nav-trigger:checked ~ nav > ul
+    .nav-trigger:checked ~ nav:not(.expanded) > ul
     {
         left: 0;
 
-        width: 50%;
+        width: 25%;
 
         transition: font-size .2s, left .2s, width .2s;
 
@@ -1593,8 +1582,18 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi)
     @media only screen and (max-width: 721px) and (min-resolution: 192dpi),
     not screen and (min-width: 361px) and (max-resolution: 191dpi)
     {
-        p {
+        body:not(.expanded) p {
             text-align:left;
+        }
+        .nav-trigger:checked ~ nav:not(.expanded) > .logo
+        {
+            font-size: 1.2rem;
+        }
+        .nav-trigger:checked ~ nav:not(.expanded) > ul {
+            width:50%;
+        }
+        .nav-trigger:checked + label:not(.expanded) {
+            left: calc(50% + 1rem);
         }
     }
 }
