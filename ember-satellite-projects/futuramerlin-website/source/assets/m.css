@@ -26,7 +26,7 @@ span.big-annotation {
     margin:1rem;
     display:table;
 }
-.significant-word {
+.important-word {
     font-weight:bold;
 }
 p {
@@ -57,6 +57,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 h2, h3, h4, h5, h6 {
     border-top: 4rem solid transparent;
+    position:relative; 
 }
 h2::before, h3::before, h4::before, h5::before, h6::before {
     border-top: 0.063rem solid white;
@@ -149,6 +150,13 @@ blockquote {
 }
 #toc + figure {
     margin-top: 4rem;
+}
+figure.center-figure {
+    padding:0.5rem;
+    margin:1rem;
+}
+figure.app-syntax {
+    background-color:rgba(0,0,0,0.07);
 }
 /*blockquote:nth-child(2)::before, blockquote::after {
     font-size:4rem;
@@ -318,6 +326,22 @@ div.revision-header {
 .wpsp-button {
     border:none;
 }
+/* Based on http://philarcher.org/diary/2013/headingnumbers/ */
+body {counter-reset: h2}
+h2:not(:first-of-type) {counter-reset: h3}
+h3 {counter-reset: h4}
+h4 {counter-reset: h5}
+h5 {counter-reset: h6}
+
+h2::after, h3::after, h4::after, h5::after, h6::after {
+    right:1rem;
+    position:absolute;
+}
+h2:not(:first-of-type)::after {counter-increment: h2; content: "§" counter(h2) }
+h3::after {counter-increment: h3; content: "§" counter(h2) "." counter(h3) }
+h4::after {counter-increment: h4; content: "§" counter(h2) "." counter(h3) "." counter(h4) }
+h5::after {counter-increment: h5; content: "§" counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) }
+h6::after {counter-increment: h6; content: "§" counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) }
 a.page-numbers, span.page-numbers {
     float:left;
     padding: 1rem 2rem;
@@ -1230,6 +1254,24 @@ body::after
     height: 4rem;
 
     transition: font-size .2s, left .2s, width .2s, bottom .2s, opacity .2s;
+}
+body > nav > a:last-of-type {
+    position:fixed;
+    bottom:1rem;
+    right:1rem;
+    width:2rem;
+    height:2rem;
+    line-height: 2rem;
+    text-align:center;
+    background-color:rgba(255,255,255,0.9);
+    color:#2a1657;
+    z-index:1000;
+    border: 0.063rem dotted transparent;
+    transition:all .2s;
+}
+body > nav > a:last-of-type:hover {
+    border: 0.063rem dotted #520f22;
+    transition:all .2s;
 }
 body > nav > p:last-of-type {
     position:fixed;
