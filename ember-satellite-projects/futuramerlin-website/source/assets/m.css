@@ -26,6 +26,9 @@ span.big-annotation {
     margin:1rem;
     display:table;
 }
+.significant-word {
+    font-weight:bold;
+}
 p {
     text-align:justify;
     text-indent:1.45rem;
@@ -333,7 +336,7 @@ a.page-numbers:hover {
 span.page-numbers.current {
     background-color:rgba(225,240,195,0.5);
 }
-.project-completion-complete::before, .project-completion-needs-polishing::before, .project-completion-advanced::before, .project-completion-moderate::before, .project-completion-begun::before, .project-completion-not-started::before {
+.project-completion-complete::before, .project-completion-needs-polishing::before, .project-completion-mostly-complete::before, .project-completion-partly-complete::before, .project-completion-begun::before, .project-completion-not-started::before {
     border-bottom: 0.5rem solid transparent;
     border-right: 0.5rem solid transparent;
     background-clip:padding-box;
@@ -346,10 +349,10 @@ span.page-numbers.current {
 .project-completion-needs-polishing::before {
     background-color: #7FBF3F;
 }
-.project-completion-advanced::before {
+.project-completion-mostly-complete::before {
     background-color: #BFBF3F;
 }
-.project-completion-moderate::before {
+.project-completion-partly-complete::before {
     background-color: #BF7F3F;
 }
 .project-completion-begun::before {
@@ -364,10 +367,10 @@ span.page-numbers.current {
 .project-completion-needs-polishing > span:last-of-type {
     text-shadow: #7FBF3F 0 0 0.063rem;
 }
-.project-completion-advanced > span:last-of-type {
+.project-completion-mostly-complete > span:last-of-type {
     text-shadow: #BFBF3F 0 0 0.063rem;
 }
-.project-completion-moderate > span:last-of-type {
+.project-completion-partly-complete > span:last-of-type {
     text-shadow: #BF7F3F 0 0 0.063rem;
 }
 .project-completion-begun > span:last-of-type {
