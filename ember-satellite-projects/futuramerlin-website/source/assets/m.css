@@ -148,8 +148,9 @@ ol > li::before {
     content: ' \203A';
 }
 div.breadcrumbs {
-    margin:.5rem;
-    padding: 0;
+    left: -1rem;
+    width: calc(100% + 2rem);
+    position: relative;
 }
 /* based on http://stackoverflow.com/questions/5379752/css-style-external-links and https://www.iconfinder.com/icons/298812/external_link_icon */
 a[href^="//"]:not([href*="futuramerlin.com"]):after,
