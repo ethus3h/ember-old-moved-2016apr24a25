@@ -151,6 +151,30 @@ div.breadcrumbs {
     margin:.5rem;
     padding: 0;
 }
+/* based on http://stackoverflow.com/questions/5379752/css-style-external-links and https://www.iconfinder.com/icons/298812/external_link_icon */
+a[href^="//"]:not([href*="futuramerlin.com"]):after,
+a[href^="ftp://"]:not([href*="futuramerlin.com"]):after,
+a[href^="http://"]:not([href*="futuramerlin.com"]):after,
+a[href^="https://"]:not([href*="futuramerlin.com"]):after,
+a[href^="irc://"]:not([href*="futuramerlin.com"]):after
+{
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1024"><path fill="%232a1657" d="M640 768H128V257.906L256 256V128H0v768h768V576H640v192zM384 128l128 128-192 192 128 128 192-192 128 128V128H384z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    -webkit-background-origin: padding-box;
+    background-origin: padding-box;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-background-size: contain;
+    background-size: contain;
+    content: ' ';
+    display:inline-block;
+    width:1rem;
+    height: 1rem;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+    margin-bottom: -0.15rem;
+}
 .top-of-page-widgets {
     width: 100%;
     top: -1rem;
@@ -1056,7 +1080,6 @@ nav > ul
     text-overflow: clip;
     border-bottom:none;
 
-    color: rgba(0, 0, 0, .9);
     color: #2a1657;
 
     -o-text-overflow: clip;
