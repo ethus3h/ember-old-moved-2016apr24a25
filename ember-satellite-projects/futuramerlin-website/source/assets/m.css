@@ -327,6 +327,12 @@ div.revision-header, #revision-diffs, div.post-revisions, .pagination {
 div.post-revisions, .pagination {
     margin-top: 1rem;
 }
+.post-revisions > h4 {
+    border-top:none;
+}
+.post-revisions > h4::before, .post-revisions > h4::after {
+    display:none;
+}
 div.revision-header {
 	margin-bottom:1rem;
 }
@@ -487,6 +493,7 @@ li::after:not(:last-of-type) {
 }
 .post-navigation .nav-next {
 	text-align:right;
+    font-size:1.35rem;
 }
 .entry-footer {
 	padding:1rem;
