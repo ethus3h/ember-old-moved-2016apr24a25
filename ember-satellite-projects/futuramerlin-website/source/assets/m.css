@@ -485,19 +485,16 @@ li::after:not(:last-of-type) {
     content:' ';
     display:block;
 }
-.post-navigation {
-	font-size:1.1rem;
-}
 .post-navigation .nav-next {
 	text-align:right;
 }
 .entry-footer {
 	padding:1rem;
-	font-size:1.1rem;
+	font-size:1.25rem;
 }
 div.entry-meta
 {
-	font-size:1.25rem;
+	font-size:1.35rem;
 	text-align:right;
 	top:0;
 	right:0;
@@ -506,7 +503,6 @@ div.entry-meta
 }
 .single-post > .entry-header > .entry-meta
 {
-	font-size:1.1rem;
 	text-align:right;
 	top:0;
 	right:0;
