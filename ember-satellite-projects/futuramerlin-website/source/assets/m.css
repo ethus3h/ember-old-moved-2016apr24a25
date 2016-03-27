@@ -136,14 +136,22 @@ ol > li::before {
 /* End basic rules */
 
 .breadcrumbs {
+    margin-left:1rem;
+    margin-right:1rem;
+    padding:.5rem;
     font-size:1.25rem;
-    margin:.5rem;
+    background:rgba(255,255,255,0.5);
+    text-indent:0;
 }
 .breadcrumbs::after {
     content: ' this page';
 }
 .breadcrumbs > span::after {
     content: ' \203A';
+}
+div.breadcrumbs {
+    margin:.5rem;
+    padding: 0;
 }
 .top-of-page-widgets {
     width: 100%;
@@ -1708,29 +1716,5 @@ body
     .logo {
         width:unset !important;
     }
-}
-/* Hacks to apply to Safari only */
-/* From https://github.com/4ae9b8/browserhacks/issues/155#issuecomment-156991330 */
-_::-webkit-full-page-media, _:future, :root body > main::before
-{
-    position: fixed;
-    z-index: -1;
-    top: 0;
-    left: 25vw;
-    content: ' ';
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    background-color: rgba(226, 218, 241, .7);
-}
-_::-webkit-full-page-media, _:future, :root body > main::after {
-    display:none !important;
-}
-_::-webkit-full-page-media, _:future, :root .logo {
-    left: 25vw !important;
-    width:75vw !important;
-}
-_::-webkit-full-page-media, _:future, :root body > nav > p:last-of-type {
-    top: 0 !important;
 }
 /* End ugly hacks */
