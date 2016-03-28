@@ -1072,8 +1072,6 @@ figure.alignright,
 }
 
 figure.floating-key {
-    /*    position:fixed;
-    right: 5rem;*/
     font-size: 1.33rem;
 }
 
@@ -1452,7 +1450,7 @@ body > main::after {
     background: none;
 }
 
-body::before {
+body > nav::before {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><path fill="%2386a6ca" d="M0 0h2v2H0z"/></svg>');
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -1465,11 +1463,11 @@ body::before {
     content: ' ';
     overflow: hidden;
     top: 0;
-    width: 100%;
+    width: 100vw;
     height: 4rem;
 }
 
-body::after {
+body > nav::after {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><path fill="%2386a6ca" d="M0 0h2v2H0z"/></svg>');
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -1482,7 +1480,7 @@ body::after {
     z-index: 2;
     bottom: 0;
     overflow: hidden;
-    width: 100%;
+    width: 100vw;
     height: 4rem;
     transition: font-size .2s, left .2s, width .2s, bottom .2s, opacity .2s;
 }
@@ -1524,7 +1522,7 @@ body > nav > ul > li:first-of-type {
     margin-top: 2rem;
 }
 
-body > nav::before {
+body::before {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><path fill="%2386a6ca" d="M0 0h2v2H0z"/></svg>');
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -1542,7 +1540,7 @@ body > nav::before {
     transition: font-size .2s, left .2s, width .2s, opacity .2s;
 }
 
-body > nav::after {
+body::after {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><path fill="%2386a6ca" d="M0 0h2v2H0z"/></svg>');
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -1552,7 +1550,7 @@ body > nav::after {
     background-size: cover;
     position: fixed;
     z-index: 2;
-    right: 0;
+    right: -0.191rem;
     content: ' ';
     overflow: hidden;
     height: 100%;
@@ -1593,6 +1591,7 @@ body {
     padding-top: 0;
     overflow: auto;
     transform: translateX(0);
+    hyphens: none;
 }
 
 label[for='nav-trigger'] {
@@ -1622,17 +1621,17 @@ body > main::after {
 }
 
 body,
-body::before {
+body > nav::before {
     transition: font-size .2s, left .2s, width .2s, opacity .2s;
 }
 
-body::after {
+body > nav::after {
     transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
 }
 
 body,
-body::before,
-body::after {
+body > nav::before,
+body > nav::after {
     left: 0;
     width: 125%;
 }
@@ -1676,7 +1675,7 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
         transition: all .2s;
     }
     body:not(.expanded) > main::before,
-    body:not(.expanded)::before,
+    body:not(.expanded) > nav::before,
     body:not(.expanded) > main::after {
         margin-right: 0;
         margin-bottom: 0;
@@ -1691,20 +1690,20 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
         left: 0;
         height: calc(100% - 4rem);
     }
-    body:not(.expanded)::after {
+    body:not(.expanded) > nav::after {
         bottom: -4rem;
         transition: all .2s;
     }
     body:not(.expanded) > main,
-    body:not(.expanded) > nav::before {
+    body:not(.expanded)::before {
         left: 0;
         max-width: 100%;
         transition: all .2s;
     }
-    body:not(.expanded) > nav::before {
+    body:not(.expanded)::before {
         left: calc(-1 * (25vw + 4rem));
     }
-    body:not(.expanded) > nav::after {
+    body:not(.expanded)::after {
         right: -4rem;
         transition: width .2s, right .2s;
     }
@@ -1762,6 +1761,13 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
     .nav-trigger:checked + label:not(.expanded) {
         left: calc(50% + 1rem);
     }
+    body:not(.expanded) > nav > p:last-of-type {
+        width:50vw;
+        left:-50vw;
+    }
+    .nav-trigger:checked ~ nav > p:last-of-type {
+        left:0;
+    }
 }
 
 @media only screen and (max-width: 680px) and (min-resolution: 192dpi), not screen and (min-width: 341px) and (max-resolution: 191dpi) {
@@ -1772,13 +1778,14 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
     .figcaption-empty-figure,
     figure.floating-key {
         margin: 1rem;
-        left: 0.75rem;
+        left:-1rem;
         width: 100%;
         padding: 0.5rem;
         border: .095rem solid #ddd;
         transition: width .2s, margin .2s, left .2s;
+        float: none;
     }
-    body > nav > .logo {
+    body:not(.expanded) > nav > .logo {
         font-size: 1.2rem;
         left: calc(100%);
         transform: translateX(calc(-100% - 1rem));
@@ -1793,8 +1800,12 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
         transition: font-size .2s, left .2s, width .2s;
         box-shadow: .250rem 0 .250rem -.16rem #fff;
     }
-    .nav-trigger:checked ~ nav > .logo {
-        top: 3rem;
+    .nav-trigger:checked ~ nav:not(.expanded) > .logo {
+        top: 3.4rem;
+    }
+    .nav-trigger:checked ~ nav::before {
+        height: 6.5rem;
+        transition: all 0.2s;
     }
     .nav-trigger:checked ~ main {
         top: 2.5rem;
@@ -1805,6 +1816,7 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
         top: 6.5rem;
         transition: margin .2s, top .2s, bottom .2s, height .2s, top .2s;
     }
+
 }
 /* small screen, constrained width */
 @media only screen and (max-width: 680px) and (min-resolution: 192dpi) and (max-width: 561px) and (min-resolution: 192dpi), not screen and (min-width: 341px) and (max-resolution: 191dpi) and (min-width: 281px) and (max-resolution: 191dpi) {

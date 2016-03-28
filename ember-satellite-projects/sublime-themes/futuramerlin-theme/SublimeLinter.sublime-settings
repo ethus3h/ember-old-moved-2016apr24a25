@@ -23,7 +23,7 @@
 			},
 			"csslint":
 			{
-				"@disable": true,
+				"@disable": false,
 				"args":
 				[
 				],
