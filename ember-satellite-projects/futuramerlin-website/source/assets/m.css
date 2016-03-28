@@ -121,15 +121,12 @@ h3::before,
 h4::before,
 h5::before,
 h6::before {
-    border-top: 0.063rem solid white;
     top: -2rem;
-    content: ' ';
-    display: flex;
-    position: relative;
-}
-
-figure + h2::before {
     width: 100%;
+    position: relative;
+    display: flex;
+    content: ' ';
+    border-top: 0.063rem solid white;
 }
 
 h1,
@@ -525,6 +522,7 @@ h6::after {
 }
 
 :not(#toc) > h2::after {
+    top:0;
     counter-increment: h2;
     content: "\00A7" counter(h2)
 }
@@ -1583,7 +1581,6 @@ body {
     z-index: 2;
     position: fixed;
     top: .25rem;
-    width: 0;
     min-width: max-content;
     left: 0;
     padding: 1rem;
