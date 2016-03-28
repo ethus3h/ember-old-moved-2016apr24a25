@@ -145,14 +145,18 @@ h2 {
 }
 
 a {
-    border-bottom: 0.063rem dotted transparent;
+    border-bottom: 0.063rem dashed rgba(42, 22, 87, 0.4);
     color: #520f22;
     text-decoration: none;
     transition: border-bottom .2s;
 }
 
+.nodecorate {
+        border-bottom: 0.063rem dotted transparent;
+}
+
 a:hover {
-    border-bottom: 0.063rem dotted #520f22;
+    border-bottom: 0.063rem dashed #520f22;
     transition: border-bottom .2s;
 }
 
@@ -1823,12 +1827,3 @@ body {
     width: 100%;
     height: 100%;
 }
-
-
-/* TODO: Things that shouldn't be necessary. */
-
-.logolink.nodecorate {
-    text-decoration: none !important;
-}
-
-/* End ugly hacks */
