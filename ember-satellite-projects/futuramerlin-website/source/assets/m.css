@@ -3,26 +3,45 @@
 
 /* Basic rules */
 
-span.inlineheader {
+/* Apply to multiple */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    -webkit-hyphens: auto;
+    -epub-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+/* Text segments */
+
+.inlineheader {
     font-weight: bold;
 }
 
-span.byline {
+.byline {
     display: none;
 }
 
-span.anoeyfuturamerlincommedium {
+.anoeyfuturamerlincommedium {
     font-family: anoeyfuturamerlincommedium;
 }
 
-span.song-title,
-span.meta-nav,
+.song-title,
+.meta-nav,
 a.logolink {
     font-style: italic;
 }
 
 span.hatnote-emphasis,
 span.big-annotation {
+    background-color: #fff;
     background-color: rgba(0, 0, 0, 0.07);
     padding: 0.5rem;
     margin: 1rem;
@@ -34,7 +53,7 @@ span.hatnote-emphasis {
     font-style: italic;
 }
 
-span.hatnote-emphasis-warning::before {
+.hatnote-emphasis-warning::before {
     display: table;
     float: left;
     padding: 1rem;
@@ -61,26 +80,29 @@ span.big-annotation {
     font-weight: bold;
 }
 
+/* Text blocks */
+
 p {
     text-align: justify;
     text-indent: 1.45rem;
 }
-
-p.big {
+.big {
     font-size: 2rem;
 }
 
-p.big-address {
+.big-address {
     text-align: center;
 }
 
-p.big-space-below {
+.big-space-below {
     padding-bottom: 2rem;
 }
 
-p.space-above {
+.space-above {
     padding-top: 1rem;
 }
+
+/* Code */
 
 code {
     padding-right: .125rem;
@@ -88,18 +110,7 @@ code {
     background: #ddd;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-}
+/* Headings */
 
 h2,
 h3,
@@ -123,7 +134,7 @@ h6::before {
 }
 
 figure + h2::before {
-    display: block;
+    width: 100%;
 }
 
 h1,
@@ -164,6 +175,7 @@ ol > li::before {
 
 #toc ol > li::before {
     content: '\00A7' counters(item, ".") " ";
+    color: #000;
     color: rgba(42, 22, 87, 0.9)
 }
 
@@ -173,6 +185,7 @@ ol > li::before {
 .breadcrumbs {
     padding: .5rem;
     font-size: 1.25rem;
+    background: #fff;
     background: rgba(255, 255, 255, 0.5);
     text-indent: 0;
 }
@@ -190,9 +203,6 @@ div.breadcrumbs {
     width: calc(100% + 2rem);
     position: relative;
 }
-
-
-/* based on http://stackoverflow.com/questions/5379752/css-style-external-links and https://www.iconfinder.com/icons/298812/external_link_icon */
 
 a[href^="//"]:not([href*="futuramerlin.com"]):after,
 a[href^="ftp://"]:not([href*="futuramerlin.com"]):after,
@@ -233,11 +243,13 @@ blockquote {
     border-bottom: .063rem solid #666;
     position: relative;
     overflow-y: hidden;
+    background-color: #fff;
     background-color: rgba(255, 255, 255, 0.5);
     font-size: 1.1rem;
 }
 
 #toc {
+    background-color: #fff;
     background-color: rgba(0, 0, 0, 0.07);
     padding: 0.5rem;
     margin-left: 1rem;
@@ -248,6 +260,7 @@ blockquote {
 #toc > h2 {
     border-top: none;
     padding-bottom: 0.5rem;
+    border-bottom:0.063rem solid #000;
     border-bottom: 0.063rem solid rgba(0, 0, 0, 0.2);
     margin-bottom: 0.75rem;
 }
@@ -260,16 +273,13 @@ blockquote {
     padding-left: 1rem;
 }
 
-#toc + figure {
-    margin-top: 4rem;
-}
-
-figure.center-figure {
+.center-figure {
     padding: 0.5rem;
     margin: 1rem;
 }
 
 figure.app-syntax {
+    background-color: #fff;
     background-color: rgba(0, 0, 0, 0.07);
 }
 
@@ -368,16 +378,14 @@ figure > a:hover > img,
     padding-bottom: 1rem;
 }
 
-div.musicthumbcontainer {
+.musicthumbcontainer {
     display: table-cell;
     vertical-align: top;
     width: 10.375rem;
     z-index: 110;
-    margin-right: 1rem;
-    margin-top: 1rem;
 }
 
-div.musicbig {
+.musicbig {
     display: none;
     right: 0;
     margin-top: 1rem;
@@ -394,6 +402,7 @@ div.post-revisions,
 div.revision-header,
 #revision-diffs,
 .pagination {
+    background-color: #fff;
     background-color: rgba(0, 0, 0, 0.07);
 }
 
@@ -457,7 +466,6 @@ div.revision-header {
 }
 
 .pagination > div > ul {
-    display: inline-block;
     list-style-type: none;
     display: flex;
     flex-wrap: wrap;
@@ -499,15 +507,15 @@ div.revision-header {
     border: none;
 }
 
-
-/* Based on http://philarcher.org/diary/2013/headingnumbers/ */
-
 body {
     counter-reset: h2
 }
 
 :not(#toc) > h2 {
-    counter-reset: h3
+    counter-reset: h3;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
 }
 
 h3 {
@@ -566,17 +574,20 @@ span.page-numbers {
 }
 
 a.page-numbers {
+    background-color: #fff;
     background-color: rgba(255, 255, 255, 0.5);
     border: 0.063rem dotted transparent;
 }
 
 a.page-numbers:hover {
+    background-color: #fff;
     background-color: rgba(221, 221, 221, 0.5);
     border: 0.063rem dotted #520f22;
 }
 
-span.page-numbers.current {
-    background-color: rgba(225, 240, 195, 0.5);
+.page-numbers.current {
+    background-color: #fff;
+background-color: rgba(225, 240, 195, 0.5);
 }
 
 .project-completion-complete::before,
@@ -642,14 +653,15 @@ span.page-numbers.current {
 
 div.post-revisions,
 #revision-diffs {
+    border-bottom: 0.095rem solid #000;
     border-bottom: 0.095rem solid rgba(0, 0, 0, 0.5);
 }
 
-ul.small-text {
+.small-text {
     font-size: 1.33rem;
 }
 
-ul.close-up-top {
+.close-up-top {
     margin-top: 0;
 }
 
@@ -718,7 +730,7 @@ body > main::after {
     max-width: 100vw;
 }
 
-.fm-wp-content > article:not(.single-post) > .entry-content > .featured-image > a > .thumb > img.wp-post-image {
+.fm-wp-content > article:not(.single-post) > .entry-content > .featured-image > a > .thumb > .wp-post-image {
     display: block;
 }
 
@@ -735,6 +747,7 @@ body > main::after {
     width: calc(100% + 2rem);
     display: flex;
     justify-content: space-between;
+    background: -o-linear-gradient(0deg, rgba(199, 130, 229, 1) 0, rgba(199, 130, 229, 1) 1%, rgba(162, 130, 229, 0.9) 15%, rgba(129, 145, 226, 0.78) 23%, rgba(129, 134, 226, 0.66) 34%, rgba(142, 129, 226, 0.44) 47%, rgba(130, 152, 229, 0.34) 59%, rgba(0, 150, 255, 0) 100%);
     background: -webkit-linear-gradient(0deg, rgba(199, 130, 229, 1) 0, rgba(199, 130, 229, 1) 1%, rgba(162, 130, 229, 0.9) 15%, rgba(129, 145, 226, 0.78) 23%, rgba(129, 134, 226, 0.66) 34%, rgba(142, 129, 226, 0.44) 47%, rgba(130, 152, 229, 0.34) 59%, rgba(0, 150, 255, 0) 100%);
     background: -moz-linear-gradient(90deg, rgba(199, 130, 229, 1) 0, rgba(199, 130, 229, 1) 1%, rgba(162, 130, 229, 0.9) 15%, rgba(129, 145, 226, 0.78) 23%, rgba(129, 134, 226, 0.66) 34%, rgba(142, 129, 226, 0.44) 47%, rgba(130, 152, 229, 0.34) 59%, rgba(0, 150, 255, 0) 100%);
     background: linear-gradient(90deg, rgba(199, 130, 229, 1) 0, rgba(199, 130, 229, 1) 1%, rgba(162, 130, 229, 0.9) 15%, rgba(129, 145, 226, 0.78) 23%, rgba(129, 134, 226, 0.66) 34%, rgba(142, 129, 226, 0.44) 47%, rgba(130, 152, 229, 0.34) 59%, rgba(0, 150, 255, 0) 100%);
@@ -999,20 +1012,20 @@ nav.horiztoolbar:active::after,
 #secondary > aside > ul,
 #secondary > aside > .tagcloud {
     padding: 1rem;
-    margin-top: 0rem;
+    margin-top: 0;
 }
 
 #secondary > aside > .cat_specific_rss > .cat_show_image {
     margin-top: 1rem;
 }
 
-#secondary > aside.widget_archive > ul > li:last-of-type::before,
-#secondary > aside#category_rss_widgets > div > ul > li.cat-item:last-of-type::before,
-#secondary > aside.widget_categories > ul > li:last-of-type::before {
+#secondary > .widget_archive > ul > li:last-of-type::before,
+#secondary > #category_rss_widgets > div > ul > .cat-item:last-of-type::before,
+#secondary > .widget_categories > ul > li:last-of-type::before {
     padding-bottom: 1rem;
 }
 
-#secondary > aside.widget_tag_cloud > div.tagcloud::after {
+#secondary > .widget_tag_cloud > div.tagcloud::after {
     min-width: 1rem;
     min-height: 1rem;
     padding-bottom: 1rem;
@@ -1043,19 +1056,17 @@ audio {
     margin: 0.667rem;
 }
 
-h1.entry-title {
+.entry-title {
     font-weight: bold;
     font-size: 1.8rem;
 }
 
-h1.title,
+.title,
 .single-post > header > h1,
-h1.page-title {
+.page-title {
     top: -1rem;
     left: -1rem;
     width: calc(100% + 2rem);
-    background: -webkit-linear-gradient(0deg, rgba(199, 130, 229, 1) 0, rgba(199, 130, 229, 1) 1%, rgba(162, 130, 229, 0.9) 15%, rgba(129, 145, 226, 0.78) 23%, rgba(129, 134, 226, 0.66) 34%, rgba(142, 129, 226, 0.44) 47%, rgba(130, 152, 229, 0.34) 59%, rgba(0, 150, 255, 0) 100%);
-    background: -moz-linear-gradient(90deg, rgba(199, 130, 229, 1) 0, rgba(199, 130, 229, 1) 1%, rgba(162, 130, 229, 0.9) 15%, rgba(129, 145, 226, 0.78) 23%, rgba(129, 134, 226, 0.66) 34%, rgba(142, 129, 226, 0.44) 47%, rgba(130, 152, 229, 0.34) 59%, rgba(0, 150, 255, 0) 100%);
     background: linear-gradient(90deg, rgba(199, 130, 229, 1) 0, rgba(199, 130, 229, 1) 1%, rgba(162, 130, 229, 0.9) 15%, rgba(129, 145, 226, 0.78) 23%, rgba(129, 134, 226, 0.66) 34%, rgba(142, 129, 226, 0.44) 47%, rgba(130, 152, 229, 0.34) 59%, rgba(0, 150, 255, 0) 100%);
 }
 

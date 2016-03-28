@@ -451,7 +451,7 @@
             <key>settings</key>
             <dict>
                 <key>foreground</key>
-                <string>#FF3333</string>
+                <string>#CCFF55</string>
             </dict>
         </dict><dict>
             <key>name</key>
