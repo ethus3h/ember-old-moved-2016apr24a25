@@ -1,6 +1,6 @@
 {
     "user": {
-        "debug": true,
+        "debug": false,
         "delay": 0.25,
         "error_color": "D02000",
         "gutter_theme": "Packages/SublimeLinter/gutter-themes/Circle/Circle.gutter-theme",
@@ -17,7 +17,7 @@
                 "args": [],
                 "errors": "",
                 "excludes": [],
-                "ignore": "ids,box-model,qualified-headings,regex-selectors,duplicate-background-images,box-sizing,unique-headings,adjoining-classes",
+                "ignore": "ids,box-model,qualified-headings,regex-selectors,fallback-colors,font-sizes,known-properties,duplicate-background-images,box-sizing,unique-headings,adjoining-classes",
                 "warnings": ""
             },
             "htmlhint": {
