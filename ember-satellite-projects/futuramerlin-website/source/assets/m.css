@@ -473,7 +473,7 @@ div.revision-header {
 }
 
 .pagination > div > ul > li::before {
-    content: unset;
+    content: none;
 }
 
 .pagination > div > ul > li:last-of-type {
@@ -1453,7 +1453,7 @@ body > main::after {
 }
 
 body::before {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><linearGradient id="a" osb:paint="solid"><stop offset="0" stop-color="%2386a6ca"/></linearGradient><linearGradient id="b" x2="1280" y1="500" y2="500" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="scale(.00156 .002)"/></defs><path fill="url(%23b)" d="M0 0h2v2H0z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><path fill="%2386a6ca" d="M0 0h2v2H0z"/></svg>');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;
@@ -1470,7 +1470,7 @@ body::before {
 }
 
 body::after {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><linearGradient id="a" osb:paint="solid"><stop offset="0" stop-color="%2386a6ca"/></linearGradient><linearGradient id="b" x2="1280" y1="500" y2="500" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="scale(.00156 .002)"/></defs><path fill="url(%23b)" d="M0 0h2v2H0z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><path fill="%2386a6ca" d="M0 0h2v2H0z"/></svg>');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;
@@ -1525,7 +1525,7 @@ body > nav > ul > li:first-of-type {
 }
 
 body > nav::before {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><linearGradient id="a" osb:paint="solid"><stop offset="0" stop-color="%2386a6ca"/></linearGradient><linearGradient id="b" x2="1280" y1="500" y2="500" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="scale(.00156 .002)"/></defs><path fill="url(%23b)" d="M0 0h2v2H0z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><path fill="%2386a6ca" d="M0 0h2v2H0z"/></svg>');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;
@@ -1543,7 +1543,7 @@ body > nav::before {
 }
 
 body > nav::after {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><linearGradient id="a" osb:paint="solid"><stop offset="0" stop-color="%2386a6ca"/></linearGradient><linearGradient id="b" x2="1280" y1="500" y2="500" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="scale(.00156 .002)"/></defs><path fill="url(%23b)" d="M0 0h2v2H0z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><path fill="%2386a6ca" d="M0 0h2v2H0z"/></svg>');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;
@@ -1563,7 +1563,7 @@ body > nav::after {
 body {
     width: 100%;
     height: 100%;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><linearGradient id="a" osb:paint="solid"><stop offset="0" stop-color="%2386a6ca"/></linearGradient><linearGradient id="b" x2="1280" y1="500" y2="500" xlink:href="%23a" gradientUnits="userSpaceOnUse" gradientTransform="scale(.00156 .002)"/></defs><path fill="url(%23b)" d="M0 0h2v2H0z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="2" height="2"><path fill="%2386a6ca" d="M0 0h2v2H0z"/></svg>');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center top;
@@ -1605,7 +1605,7 @@ label[for='nav-trigger'] {
     cursor: pointer;
     transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
     opacity: 0;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' version=\'1.1\' x=\'0px\' y=\'0px\' width=\'30px\' height=\'30px\' viewBox=\'0 0 30 30\' xml:space=\'preserve\'><rect style=\'fill:rgb(1,50,32);\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'24\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'12\' width=\'30\' height=\'6\'/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="%23013220" d="M0 0h30v6H0zm0 24h30v6H0zm0-12h30v6H0z"/></svg>');
     background-size: contain;
 }
 
@@ -1718,7 +1718,7 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
         cursor: pointer;
         transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
         opacity: 1;
-        background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' xmlns:xlink=\'http://www.w3.org/1999/xlink\' version=\'1.1\' x=\'0px\' y=\'0px\' width=\'30px\' height=\'30px\' viewBox=\'0 0 30 30\' xml:space=\'preserve\'><rect style=\'fill:rgb(1,50,32);\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'24\' width=\'30\' height=\'6\'/><rect style=\'fill:rgb(1,50,32);\' y=\'12\' width=\'30\' height=\'6\'/></svg>');
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="#013220" d="M0 0h30v6H0zm0 24h30v6H0zm0-12h30v6H0z"/></svg>');
         background-size: contain;
     }
     .nav-trigger + label,
