@@ -145,7 +145,7 @@ h2 {
 }
 
 a {
-    border-bottom: 0.063rem dashed rgba(42, 22, 87, 0.4);
+    border-bottom: 0.063rem dotted rgba(42, 22, 87, 0.4);
     color: #520f22;
     text-decoration: none;
     transition: border-bottom .2s;
@@ -156,7 +156,7 @@ a {
 }
 
 a:hover {
-    border-bottom: 0.063rem dashed #520f22;
+    border-bottom: 0.063rem solid #520f22;
     transition: border-bottom .2s;
 }
 
@@ -1718,7 +1718,7 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
         cursor: pointer;
         transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
         opacity: 1;
-        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="#013220" d="M0 0h30v6H0zm0 24h30v6H0zm0-12h30v6H0z"/></svg>');
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="%23013220" d="M0 0h30v6H0zm0 24h30v6H0zm0-12h30v6H0z"/></svg>');
         background-size: contain;
     }
     .nav-trigger + label,
