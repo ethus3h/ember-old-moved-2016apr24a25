@@ -754,6 +754,8 @@ nav.horiztoolbar > ul > li > .buttonName,
     font-size: 1.6rem;
     font-weight: normal;
     background-color: transparent;
+    /* Hack for iOS Safari; see https://developer.mozilla.org/en-US/docs/Web/Events/click#Safari_Mobile */
+    cursor:pointer;
 }
 
 nav.horiztoolbar > ul > li,
@@ -1825,18 +1827,8 @@ body {
 
 /* TODO: Things that shouldn't be necessary. */
 
-.nodecorate {
+.logolink.nodecorate {
     text-decoration: none !important;
 }
-
-
-@supports (-webkit-appearance:none) {
-    /* Hacks to apply to Safari and Chrome */
-    /* From http://browserhacks.com/ */
-    .logo {
-        width: unset !important;
-    }
-}
-
 
 /* End ugly hacks */
