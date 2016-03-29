@@ -1,265 +1,284 @@
 /* To do: Make Close button on blog menu dropdowns not collide with dropdown contents. Make first and last items in toolbar not draw their edge borders all the way down the toolbar when there are multiple rows of buttons on the toolbar. Make toolbar and pagination sticky / always visible (feature request) (probably not on mobile). Fix logo having a scrollbar in Chrome. Fix lines in the fancy buttons' backgrounds in Chrome (also slightly affects Firefox). Fix broken positioning / media queries in Safari. Add "All Topics" link to Categories tab in blog. Fix "Telephones and Tags" header being indented unexpectedly in blog-test.htm. Clear the floated images in blog-test.htm. Fix zoomed-in media query bug (? As of this writing, 2016 Feb. 17, I don't remember exactly what this was or how to reproduce it). Fix entry-title not wrapping around entry-meta. Fix blockquote end quotation mark not being inset. Fix buttons not showing the highlights correctly (use SVG instead of PNG). Fix header section labels overlapping with floats. Finish the content. Then I’ll be done! :D */
 
+/* General */
 
-/* Basic rules */
+    *,
+    ::before,
+    ::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-/* Apply to multiple */
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+    }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-    hyphens: auto;
-}
+    h1,h2,h3,h4,h5,h6,
+    p {
+        hyphens: auto;
+    }
+
+    h1, .bigemphasis {
+        font-weight: bold;
+        font-size: 2rem;
+        position: relative;
+        padding: 1rem;
+        display: block;
+        overflow: hidden;
+        text-indent: 0;
+    }
 
 /* Text segments */
 
-.inlineheader {
-    font-weight: bold;
-}
+    .inlineheader {
+        font-weight: bold;
+    }
 
-.byline {
-    display: none;
-}
+    .byline {
+        display: none;
+    }
 
-.anoeyfuturamerlincommedium {
-    font-family: anoeyfuturamerlincommedium;
-}
+    .anoeyfuturamerlincommedium {
+        font-family: anoeyfuturamerlincommedium;
+    }
 
-.song-title,
-.meta-nav,
-a.logolink {
-    font-style: italic;
-}
+    .song-title, .meta-nav, a.logolink {
+        font-style: italic;
+    }
 
-span.hatnote-emphasis,
-span.big-annotation {
-    background-color: rgba(0, 0, 0, 0.07);
-    padding: 0.5rem;
-    margin: 1rem;
-    display: table;
-}
+    span.hatnote-emphasis,
+    span.big-annotation {
+        background-color: rgba(0, 0, 0, 0.07);
+        padding: 0.5rem;
+        margin: 1rem;
+        display: table;
+    }
 
-span.hatnote-emphasis {
-    font-weight: bold;
-    font-style: italic;
-}
+    span.hatnote-emphasis {
+        font-weight: bold;
+        font-style: italic;
+    }
 
-.hatnote-emphasis-warning::before {
-    display: table;
-    float: left;
-    padding: 1rem;
-    padding-right: 1.5rem;
-    width: 2rem;
-    height: 2rem;
-    line-height: 2rem;
-    color: red;
-    text-align: center;
-    content: '\26A0';
-    text-indent: 0;
-    font-style: normal;
-}
+    .hatnote-emphasis-warning::before {
+        display: table;
+        float: left;
+        padding: 1rem;
+        padding-right: 1.5rem;
+        width: 2rem;
+        height: 2rem;
+        line-height: 2rem;
+        color: red;
+        text-align: center;
+        content: '\26A0';
+        text-indent: 0;
+        font-style: normal;
+    }
 
-span.big-annotation {
-    font-size: 1.3rem;
-}
+    span.big-annotation {
+        font-size: 1.3rem;
+    }
 
-.note-emphasis {
-    font-style: italic;
-}
+    .note-emphasis {
+        font-style: italic;
+    }
 
-.important-word {
-    font-weight: bold;
-}
+    .important-word {
+        font-weight: bold;
+    }
 
 /* Text blocks */
 
-p {
-    text-align: justify;
-    text-indent: 1.45rem;
-}
-.big {
-    font-size: 2rem;
-}
+    /* Misc — non-semantic — to do? */
 
-.big-address {
-    text-align: center;
-}
+        .big {
+            font-size: 2rem;
+        }
 
-.big-space-below {
-    padding-bottom: 2rem;
-}
+        .big-address {
+            text-align: center;
+        }
 
-.space-above {
-    padding-top: 1rem;
-}
+        .big-space-below {
+            padding-bottom: 2rem;
+        }
 
-/* Code */
+        .space-above {
+            padding-top: 1rem;
+        }
 
-code {
-    padding-right: .125rem;
-    padding-left: .125rem;
-    background: #ddd;
-}
+    /* Paragraph */
+        p {
+            text-align: justify;
+            text-indent: 1.45rem;
+        }
+
+    /* Code */
+
+        code {
+            padding-right: .125rem;
+            padding-left: .125rem;
+            background: #ddd;
+        }
+
+    /* Blockquote */
+
+        blockquote {
+            padding: .75rem;
+            border-top: .063rem solid #666;
+            border-bottom: .063rem solid #666;
+            position: relative;
+            overflow-y: hidden;
+            background-color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+
+/* Links */
+
+    a {
+        border-bottom: 0.063rem dotted rgba(42, 22, 87, 0.4);
+        color: #520f22;
+        text-decoration: none;
+        transition: border-bottom .2s;
+    }
+
+    .nodecorate {
+            border-bottom: 0.063rem dotted transparent;
+    }
+
+    a:hover {
+        border-bottom: 0.063rem solid #520f22;
+        transition: border-bottom .2s;
+    }
+
+    a[href^="//"]:not([href*="futuramerlin.com"]):after,
+    a[href^="ftp://"]:not([href*="futuramerlin.com"]):after,
+    a[href^="http://"]:not([href*="futuramerlin.com"]):after,
+    a[href^="https://"]:not([href*="futuramerlin.com"]):after,
+    a[href^="irc://"]:not([href*="futuramerlin.com"]):after {
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1024"><path fill="%232a1657" d="M640 768H128V257.906L256 256V128H0v768h768V576H640v192zM384 128l128 128-192 192 128 128 192-192 128 128V128H384z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        background-origin: padding-box;
+        background-clip: border-box;
+        background-size: contain;
+        content: ' ';
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+        margin-bottom: -0.15rem;
+    }
 
 /* Headings */
 
-h2,
-h3,
-h4,
-h5,
-h6 {
-    border-top: 4rem solid transparent;
-    position: relative;
-}
+    h2, h3, h4, h5, h6 {
+        border-top: 4rem solid transparent;
+        position: relative;
+    }
 
-h2::before,
-h3::before,
-h4::before,
-h5::before,
-h6::before {
-    top: -2rem;
-    width: 100%;
-    position: relative;
-    display: flex;
-    content: ' ';
-    border-top: 0.063rem solid white;
-}
+    h2::before,
+    h3::before,
+    h4::before,
+    h5::before,
+    h6::before {
+        top: -2rem;
+        width: 100%;
+        position: relative;
+        display: flex;
+        content: ' ';
+        border-top: 0.063rem solid white;
+    }
 
-h1,
-p.bigemphasis {
-    font-weight: bold;
-    font-size: 2rem;
-    position: relative;
-    padding: 1rem;
-    display: block;
-    overflow: hidden;
-    text-indent: 0;
-}
+    h2 {
+        font-size: 1.8rem;
+    }
 
-h2 {
-    font-size: 1.8rem;
-}
+/* Lists */
 
-a {
-    border-bottom: 0.063rem dotted rgba(42, 22, 87, 0.4);
-    color: #520f22;
-    text-decoration: none;
-    transition: border-bottom .2s;
-}
+    ol {
+        counter-reset: item;
+    }
 
-.nodecorate {
-        border-bottom: 0.063rem dotted transparent;
-}
+    ol > li::before {
+        content: counters(item, ".") " ";
+        counter-increment: item;
+    }
 
-a:hover {
-    border-bottom: 0.063rem solid #520f22;
-    transition: border-bottom .2s;
-}
+    #toc ol > li::before {
+        content: '\00A7' counters(item, ".") " ";
+        color: rgba(42, 22, 87, 0.9)
+    }
 
-ol {
-    counter-reset: item;
-}
+/* Page elements */
 
-ol > li::before {
-    content: counters(item, ".") " ";
-    counter-increment: item;
-}
+    /* Breadcrumbs */
+        .breadcrumbs {
+            padding: .5rem;
+            font-size: 1.25rem;
+            background: rgba(255, 255, 255, 0.5);
+            text-indent: 0;
+        }
+        .breadcrumbs::after {
+            content: ' this page';
+        }
+        .breadcrumbs > span::after {
+            content: ' \203A';
+        }
+        div.breadcrumbs {
+            left: -1rem;
+            width: calc(100% + 2rem);
+            position: relative;
+        }
+        .top-of-page-widgets {
+            width: 100%;
+            top: -1rem;
+            position: relative;
+        }
 
-#toc ol > li::before {
-    content: '\00A7' counters(item, ".") " ";
-    color: rgba(42, 22, 87, 0.9)
-}
+    /* Table of contents */
+
+        #toc {
+            background-color: rgba(0, 0, 0, 0.07);
+            padding: 0.5rem;
+            margin-left: 1rem;
+            margin-right: 1rem;
+            margin-top: 1rem;
+        }
+
+        #toc > h2 {
+            border-top: none;
+            padding-bottom: 0.5rem;
+            border-bottom: 0.063rem solid rgba(0, 0, 0, 0.2);
+            margin-bottom: 0.75rem;
+        }
+
+        #toc > h2::before {
+            content: none;
+        }
+
+        #toc > ol {
+            padding-left: 1rem;
+        }
+
+/* Things to hide */
+
+    .edit-link {
+        display: none;
+    }
 
 
-/* End basic rules */
 
-.breadcrumbs {
-    padding: .5rem;
-    font-size: 1.25rem;
-    background: rgba(255, 255, 255, 0.5);
-    text-indent: 0;
-}
 
-.breadcrumbs::after {
-    content: ' this page';
-}
 
-.breadcrumbs > span::after {
-    content: ' \203A';
-}
 
-div.breadcrumbs {
-    left: -1rem;
-    width: calc(100% + 2rem);
-    position: relative;
-}
 
-a[href^="//"]:not([href*="futuramerlin.com"]):after,
-a[href^="ftp://"]:not([href*="futuramerlin.com"]):after,
-a[href^="http://"]:not([href*="futuramerlin.com"]):after,
-a[href^="https://"]:not([href*="futuramerlin.com"]):after,
-a[href^="irc://"]:not([href*="futuramerlin.com"]):after {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1024"><path fill="%232a1657" d="M640 768H128V257.906L256 256V128H0v768h768V576H640v192zM384 128l128 128-192 192 128 128 192-192 128 128V128H384z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    background-origin: padding-box;
-    background-clip: border-box;
-    background-size: contain;
-    content: ' ';
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
-    margin-bottom: -0.15rem;
-}
 
-.top-of-page-widgets {
-    width: 100%;
-    top: -1rem;
-    position: relative;
-}
 
-.edit-link {
-    display: none;
-}
 
-blockquote {
-    padding: .75rem;
-    border-top: .063rem solid #666;
-    border-bottom: .063rem solid #666;
-    position: relative;
-    overflow-y: hidden;
-    background-color: rgba(255, 255, 255, 0.5);
-    font-size: 1.1rem;
-}
-
-#toc {
-    background-color: rgba(0, 0, 0, 0.07);
-    padding: 0.5rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-top: 1rem;
-}
-
-#toc > h2 {
-    border-top: none;
-    padding-bottom: 0.5rem;
-    border-bottom: 0.063rem solid rgba(0, 0, 0, 0.2);
-    margin-bottom: 0.75rem;
-}
-
-#toc > h2::before {
-    content: none;
-}
-
-#toc > ol {
-    padding-left: 1rem;
-}
 
 .center-figure {
     padding: 0.5rem;
@@ -752,7 +771,7 @@ nav.horiztoolbar,
 /* Style toolbar buttons */
 
 nav.horiztoolbar > ul > li > .buttonName,
-#secondary > aside > p.bigemphasis {
+#secondary > aside > .bigemphasis {
     padding: .67rem;
     text-align: center;
     font-size: 1.6rem;
@@ -1642,18 +1661,18 @@ body > nav > .logo {
 }
 
 
-/* large screen, constrained width */
+/* medium-large screen */
 
-@media only screen and (max-width: 1500px) and (min-resolution: 192dpi), not screen and (min-width: 751px) and (max-resolution: 191dpi) {
+@media only screen and (max-width: 2000px) and (min-resolution: 192dpi), only screen and (max-width: 1001px) and (max-resolution: 191dpi) {
     p {
         text-align: left;
         text-indent: 0.75rem;
     }
 }
 
-@media only screen and (max-width: 1800px) and (min-resolution: 192dpi),
-not screen and (min-width: 901px) and (max-resolution: 191dpi) {
-    /* medium screen */
+/* medium screen */
+
+@media only screen and (max-width: 1800px) and (min-resolution: 192dpi), only screen and (max-width: 901px) and (max-resolution: 191dpi) {
     body:not(.expanded) > nav > .logo {
         left: 50%;
         transform: translateX(-50%);
@@ -1747,8 +1766,8 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
     }
 }
 
-/* medium screen, constrained width */
-@media only screen and (max-width: 1800px) and (min-resolution: 192dpi) and (max-width: 721px) and (min-resolution: 192dpi), not screen and (min-width: 901px) and (max-resolution: 191dpi) and (min-width: 361px) and (max-resolution: 191dpi) {
+/* medium-small screen */
+@media only screen and (max-width: 721px) and (min-resolution: 192dpi), only screen and (max-width: 361px) and (max-resolution: 191dpi) {
     body:not(.expanded) p {
         text-align: left;
     }
@@ -1770,8 +1789,9 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
     }
 }
 
-@media only screen and (max-width: 680px) and (min-resolution: 192dpi), not screen and (min-width: 341px) and (max-resolution: 191dpi) {
-    /* small screen */
+/* small screen */
+
+@media only screen and (max-width: 680px) and (min-resolution: 192dpi), only screen and (max-width: 341px) and (max-resolution: 191dpi) {
     figure.thumbnail-right,
     .featured-image,
     .wp-caption.alignright,
@@ -1818,24 +1838,11 @@ not screen and (min-width: 901px) and (max-resolution: 191dpi) {
     }
 
 }
-/* small screen, constrained width */
-@media only screen and (max-width: 680px) and (min-resolution: 192dpi) and (max-width: 561px) and (min-resolution: 192dpi), not screen and (min-width: 341px) and (max-resolution: 191dpi) and (min-width: 281px) and (max-resolution: 191dpi) {
+
+/* extra-small screen */
+@media only screen and (max-width: 561px) and (min-resolution: 192dpi), only screen and (max-width: 281px) and (max-resolution: 191dpi) {
     p {
         text-align: left;
         text-indent: 0.75rem;
     }
-}
-
-*,
-::before,
-::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html,
-body {
-    width: 100%;
-    height: 100%;
 }
