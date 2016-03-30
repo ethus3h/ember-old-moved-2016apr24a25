@@ -1136,6 +1136,7 @@
                     border-right: .063rem solid white;
                     border-bottom: .063rem solid white;
                     box-shadow: 0 .5rem .75rem 0.063rem #fff;
+                    cursor: auto;
                 }
 
             /* Show toolbar dropdowns when selected */
@@ -1149,8 +1150,8 @@
 
             /* Style close button */
 
-                nav.horiztoolbar::after,
-                #secondary::after {
+                nav.horiztoolbar > ul > li::after,
+                #secondary > aside::after {
                     position: absolute;
                     top: calc(100% + 1rem);
                     right: 1rem;
@@ -1162,22 +1163,17 @@
                     text-align: center;
                     line-height: 2rem;
                     content: '\1F5D9';
+                    color: rgb(1, 50, 32);
+                    cursor: pointer;
                 }
 
             /* Show close button when a toolbar button is selected */
 
-                nav.horiztoolbar:hover::after,
-                #secondary:hover::after,
-                nav.horiztoolbar:active::after,
-                #secondary:active::after {
+                nav.horiztoolbar > ul > li:focus::after,
+                #secondary > aside:focus::after,
+                nav.horiztoolbar > ul > li:active::after,
+                #secondary > aside:active::after {
                     display: block;
-                }
-
-            /* Hide close button when clicked */
-
-                nav.horiztoolbar:active::after,
-                #secondary:active::after {
-                    display: none;
                 }
 
             /* Fix spacing on toolbar dropdowns */
