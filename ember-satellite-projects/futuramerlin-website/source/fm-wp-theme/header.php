@@ -24,7 +24,7 @@
 			"/">futuramerlin</a>
 		</p>
 		<ul>
-			<p>Navigation:</p>
+			<li>Navigation:</li>
 			<li class="nav-item nav-item-inactive index">
 				<a href="/">Home</a>
 			</li>
