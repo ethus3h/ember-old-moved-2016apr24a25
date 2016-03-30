@@ -447,7 +447,7 @@
         color: rgba(42, 22, 87, 0.9)
     }
 
-    li::after:not(:last-of-type) {
+    li:last-child::after {
         height: 0.5rem;
         content: ' ';
         display: block;
@@ -487,12 +487,7 @@
     }
 
     ul.no-bullets > li::before {
-        list-style: none;
-        content: unset;
-        padding-right: unset;
-        display: unset;
-        text-align: unset;
-        position: unset;
+        content: none;
     }
 
     ul.bold-1st-level > li {
@@ -1220,12 +1215,12 @@
             padding-left: 0;
             margin-top: 0;
             list-style: none;
-            counter-reset: unset;
+            counter-reset: none;
             display: block;
         }
 
         nav > ul > li {
-            counter-increment: unset;
+            counter-increment: none;
             display: block;
         }
 
@@ -1235,9 +1230,9 @@
 
         nav > ul > li::before {
             content: ' ';
-            padding-right: unset;
-            display: unset;
-            text-align: unset;
+            padding-right: 0;
+            display: inline;
+            text-align: start;
             position: absolute;
         }
 
@@ -1641,13 +1636,6 @@
         transition: font-size .2s, left .2s, width .2s, opacity .2s, bottom .2s;
     }
 
-    body,
-    body > nav::before,
-    body > nav::after {
-        left: 0;
-        width: 125%;
-    }
-
     body > nav > .logo {
         left: 62.5%;
         transform: translateX(-50%);
@@ -1776,7 +1764,7 @@
                 background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="%23013220" d="M0 0h30v6H0zm0 24h30v6H0zm0-12h30v6H0z"/></svg>');
                 background-size: contain;
             }
-            .nav-trigger + label,
+            .nav-trigger + label:not(.expanded),
             nav:not(.expanded) > ul {
                 transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
             }
@@ -1829,6 +1817,116 @@
     /* small screen */
 
         @media only screen and (max-width: 680px) and (min-resolution: 192dpi), only screen and (max-width: 341px) and (max-resolution: 191dpi) {
+            body.expanded > nav > .logo {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            body.expanded > nav > ul {
+                left: -25%;
+                width: 25%;
+                box-shadow: 0 0 0 0 #fff;
+            }
+            body.expanded > nav > p:last-of-type {
+                left: -25%;
+                transition: all .2s;
+            }
+            body.expanded > main {
+                margin-right: 0;
+                margin-bottom: 0;
+                margin-left: 0;
+                width: 100%;
+                transition: all .2s;
+            }
+            body.expanded > main::before,
+            body.expanded > nav::before,
+            body.expanded > main::after {
+                margin-right: 0;
+                margin-bottom: 0;
+                margin-left: 0;
+                transition: margin .2s, top .2s, bottom .2s, height .2s, top .2s;
+            }
+            body.expanded > main::before,
+            body.expanded > main::after {
+                top: 4rem;
+                margin-top: 0;
+                width: 100%;
+                left: 0;
+                height: calc(100% - 4rem);
+            }
+            body.expanded > nav::after {
+                bottom: -4rem;
+                transition: all .2s;
+            }
+            body.expanded > main,
+            body.expanded::before {
+                left: 0;
+                max-width: 100%;
+                transition: all .2s;
+            }
+            body.expanded::before {
+                left: calc(-1 * (25vw + 4rem));
+            }
+            body.expanded::after {
+                right: -4rem;
+                transition: width .2s, right .2s;
+            }
+            label[for='nav-trigger'].expanded {
+                position: fixed;
+                z-index: 3;
+                top: .938rem;
+                left: .938rem;
+                width: 1.875rem;
+                height: 1.875rem;
+                cursor: pointer;
+                transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
+                opacity: 1;
+                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"><path fill="%23013220" d="M0 0h30v6H0zm0 24h30v6H0zm0-12h30v6H0z"/></svg>');
+                background-size: contain;
+            }
+            .nav-trigger + label.expanded,
+            nav.expanded > ul {
+                transition: left .2s, box-shadow .2s, width .2s, opacity .2s;
+            }
+            body.expanded {
+                transition: all .2s;
+            }
+            .nav-trigger:checked + label.expanded {
+                left: calc(25% + 1rem);
+            }
+            .nav-trigger:checked ~ nav.expanded > .logo {
+                transform: translateX(calc(-100% - 1rem));
+                left: calc(100%);
+                top: .9rem;
+            }
+            .nav-trigger:checked ~ nav.expanded > p:last-of-type {
+                left: 0;
+                transition: all .2s;
+            }
+            .nav-trigger:checked ~ nav.expanded > ul {
+                left: 0;
+                width: 25%;
+                transition: font-size .2s, left .2s, width .2s;
+                box-shadow: .250rem 0 .250rem -.16rem #fff;
+            }
+                        body:not(.expanded) p {
+                text-align: left;
+            }
+            .nav-trigger:checked ~ nav.expanded > .logo {
+                font-size: 1.2rem;
+            }
+            .nav-trigger:checked ~ nav.expanded > ul {
+                width: 50%;
+            }
+            .nav-trigger:checked + label.expanded {
+                left: calc(50% + 1rem);
+            }
+            body.expanded > nav > p:last-of-type {
+                width:50vw;
+                left:-50vw;
+            }
+            .nav-trigger:checked ~ nav > p:last-of-type {
+                left:0;
+            }
             figure.thumbnail-right,
             .featured-image,
             .wp-caption.alignright,
@@ -1842,7 +1940,7 @@
                 transition: width .2s, margin .2s, left .2s;
                 float: none;
             }
-            body:not(.expanded) > nav > .logo {
+            body > nav > .logo {
                 font-size: 1.2rem;
                 left: calc(100%);
                 transform: translateX(calc(-100% - 1rem));
@@ -1882,4 +1980,11 @@
                 text-align: left;
                 text-indent: 0.75rem;
             }
+        }
+
+    /* For Microsoft Modern UI apps */
+        @-ms-viewport{
+            width: device-width;
+            height: device-height;
+            user-scalable: yes;
         }
