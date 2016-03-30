@@ -1,5 +1,18 @@
 /* To do list */
-    /* Make Close button on blog menu dropdowns not collide with dropdown contents. Make first and last items in toolbar not draw their edge borders all the way down the toolbar when there are multiple rows of buttons on the toolbar. Make toolbar and pagination sticky / always visible (feature request) (probably not on mobile). Fix logo having a scrollbar in Chrome. Fix lines in the fancy buttons' backgrounds in Chrome (also slightly affects Firefox). Fix broken positioning / media queries in Safari. Add "All Topics" link to Categories tab in blog. Fix entry-title not wrapping around entry-meta. Fix blockquote end quotation mark not being inset. Fix buttons not showing the highlights correctly (use SVG instead of PNG). Fix header section labels overlapping with header text. Clear the floated images in blog index pages, so they don't overlap with the next post summary. Fix zoomed-in media query bug (? As of this writing, 2016 Feb. 17, I don't remember exactly what this was or how to reproduce it). Fix "Telephones and Tags" header being indented unexpectedly in blog-test.htm (? As of this writing, 2016-March-30, I am not observing this behavior on the live blog (and don't have blog-test.htm handy to check)). */
+    /* 
+    * Make Close button on blog menu dropdowns not collide with dropdown contents.
+    * Make first and last items in toolbar not draw their edge borders all the way down the toolbar when there are multiple rows of buttons on the toolbar.
+    * Make toolbar and pagination sticky / always visible (feature request) (probably not on mobile).
+    * Fix lines in the fancy buttons' backgrounds in Chrome (also slightly affects Firefox).
+    * Add "All Topics" link to Categories tab in blog.
+    * Fix entry-title not wrapping around entry-meta.
+    * Fix blockquote end quotation mark not being inset.
+    * Fix buttons not showing the highlights correctly (use SVG instead of PNG). 
+    * Fix header section labels overlapping with header text.
+    * Clear the floated images in blog index pages, so they don't overlap with the next post summary.
+    * Fix zoomed-in media query bug (? As of this writing, 2016 Feb. 17, I don't remember exactly what this was or how to reproduce it).
+    * Fix "Telephones and Tags" header being indented unexpectedly in blog-test.htm (? As of this writing, 2016-March-30, I am not observing this behavior on the live blog (and don't have blog-test.htm handy to check)).
+    */
     /* Then, I’ll be done! :D */
 
 /* General */
@@ -550,13 +563,10 @@
         transition: width .2s, margin .2s, left .2s;
     }
 
-    figure.thumbnail-right::after,
-    .featured-image::after,
-    *:not(.figcaption-empty-figure) > a > .alignright::after,
-    figure.alignright::after,
-    .figcaption-empty-figure::after {
+    .content-area > article:not(.single-post) > .entry-content::after {
         content: ' ';
         clear: both;
+        display: block;
     }
 
     figure.floating-key {
@@ -1109,105 +1119,92 @@
 
             /* Style toolbar dropdowns */
 
-            nav.horiztoolbar > ul > li >:not(.buttonName),
-            #secondary > aside >:not(.bigemphasis) {
-                position: absolute;
-                box-sizing: border-box;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                max-height: calc(100vh - 12.853rem);
-                display: none;
-                overflow-y: auto;
-                z-index: 100;
-                font-size: 1.45rem;
-                background-color: rgb(226, 218, 241);
-                border-left: .063rem solid white;
-                border-right: .063rem solid white;
-                border-bottom: .063rem solid white;
-                box-shadow: 0 .5rem .75rem 0.063rem #fff;
-            }
+                nav.horiztoolbar > ul > li >:not(.buttonName),
+                #secondary > aside >:not(.bigemphasis) {
+                    position: absolute;
+                    box-sizing: border-box;
+                    top: 100%;
+                    left: 0;
+                    width: 100%;
+                    max-height: calc(100vh - 12.853rem);
+                    display: none;
+                    overflow-y: auto;
+                    z-index: 100;
+                    font-size: 1.45rem;
+                    background-color: rgb(226, 218, 241);
+                    border-left: .063rem solid white;
+                    border-right: .063rem solid white;
+                    border-bottom: .063rem solid white;
+                    box-shadow: 0 .5rem .75rem 0.063rem #fff;
+                }
 
+            /* Show toolbar dropdowns when selected */
 
-            /* Show toolbar dropdowns when hovered */
-
-            nav.horiztoolbar > ul > li:hover >:not(.buttonName),
-            #secondary > aside:hover >:not(.bigemphasis),
-            nav.horiztoolbar > ul > li:focus >:not(.buttonName),
-            #secondary > aside:focus >:not(.bigemphasis),
-            nav.horiztoolbar > ul > li:active >:not(.buttonName),
-            #secondary > aside:active >:not(.bigemphasis) {
-                display: block;
-            }
-
-            nav.horiztoolbar > ul > li:focus ~ li:hover >:not(.buttonName),
-            #secondary > aside:focus ~ aside:hover >:not(.bigemphasis),
-            nav.horiztoolbar > ul > li:hover ~ li:focus >:not(.buttonName),
-            #secondary > aside:hover ~ aside:focus >:not(.bigemphasis) {
-                display: none;
-            }
+                nav.horiztoolbar > ul > li:focus >:not(.buttonName),
+                #secondary > aside:focus >:not(.bigemphasis),
+                nav.horiztoolbar > ul > li:active >:not(.buttonName),
+                #secondary > aside:active >:not(.bigemphasis) {
+                    display: block;
+                }
 
             /* Style close button */
 
-            nav.horiztoolbar::after,
-            #secondary::after {
-                position: absolute;
-                top: calc(100% + 1rem);
-                right: 1rem;
-                width: 2rem;
-                height: 2rem;
-                display: none;
-                z-index: 100;
-                font-size: 2rem;
-                text-align: center;
-                line-height: 2rem;
-                content: '\1F5D9';
-            }
-
+                nav.horiztoolbar::after,
+                #secondary::after {
+                    position: absolute;
+                    top: calc(100% + 1rem);
+                    right: 1rem;
+                    width: 2rem;
+                    height: 2rem;
+                    display: none;
+                    z-index: 100;
+                    font-size: 2rem;
+                    text-align: center;
+                    line-height: 2rem;
+                    content: '\1F5D9';
+                }
 
             /* Show close button when a toolbar button is selected */
 
-            nav.horiztoolbar:hover::after,
-            #secondary:hover::after,
-            nav.horiztoolbar:active::after,
-            #secondary:active::after {
-                display: block;
-            }
-
+                nav.horiztoolbar:hover::after,
+                #secondary:hover::after,
+                nav.horiztoolbar:active::after,
+                #secondary:active::after {
+                    display: block;
+                }
 
             /* Hide close button when clicked */
 
-            nav.horiztoolbar:active::after,
-            #secondary:active::after {
-                display: none;
-            }
-
+                nav.horiztoolbar:active::after,
+                #secondary:active::after {
+                    display: none;
+                }
 
             /* Fix spacing on toolbar dropdowns */
 
-            #secondary > aside > ul,
-            #secondary > aside > .tagcloud {
-                padding: 1rem;
-                margin-top: 0;
-            }
+                #secondary > aside > ul,
+                #secondary > aside > .tagcloud {
+                    padding: 1rem;
+                    margin-top: 0;
+                }
 
-            #secondary > aside > .cat_specific_rss > .cat_show_image {
-                margin-top: 1rem;
-            }
+                #secondary > aside > .cat_specific_rss > .cat_show_image {
+                    margin-top: 1rem;
+                }
 
-            #secondary > .widget_archive > ul > li:last-of-type::before,
-            #secondary > #category_rss_widgets > div > ul > .cat-item:last-of-type::before,
-            #secondary > .widget_categories > ul > li:last-of-type::before {
-                padding-bottom: 1rem;
-            }
+                #secondary > .widget_archive > ul > li:last-of-type::before,
+                #secondary > #category_rss_widgets > div > ul > .cat-item:last-of-type::before,
+                #secondary > .widget_categories > ul > li:last-of-type::before {
+                    padding-bottom: 1rem;
+                }
 
-            #secondary > .widget_tag_cloud > div.tagcloud::after {
-                min-width: 1rem;
-                min-height: 1rem;
-                padding-bottom: 1rem;
-                display: inline-block;
-                content: '\a\00a0';
-            }
+                #secondary > .widget_tag_cloud > div.tagcloud::after {
+                    min-width: 1rem;
+                    min-height: 1rem;
+                    padding-bottom: 1rem;
+                    display: inline-block;
+                    content: '\a\00a0';
+                }
 
     /* Music showcase */
 
