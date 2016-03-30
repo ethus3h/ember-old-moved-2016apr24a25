@@ -742,7 +742,7 @@
         }
 
         #revision-diffs::before {
-            content: "";
+            content: none;
             display: block;
             padding-top: 50%;
         }
