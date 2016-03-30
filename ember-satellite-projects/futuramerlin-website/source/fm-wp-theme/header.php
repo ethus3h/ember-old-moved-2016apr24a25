@@ -23,8 +23,8 @@
 			<a class="nodecorate logolink" href=
 			"/">futuramerlin</a>
 		</p>
-		<p>Navigation:</p>
 		<ul>
+			<p>Navigation:</p>
 			<li class="nav-item nav-item-inactive index">
 				<a href="/">Home</a>
 			</li>

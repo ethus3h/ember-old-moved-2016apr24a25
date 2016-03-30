@@ -1131,6 +1131,12 @@
                 display: block;
             }
 
+            nav.horiztoolbar > ul > li:focus ~ li:hover >:not(.buttonName),
+            #secondary > aside:focus ~ aside:hover >:not(.bigemphasis),
+            nav.horiztoolbar > ul > li:hover ~ li:focus >:not(.buttonName),
+            #secondary > aside:hover ~ aside:focus >:not(.bigemphasis) {
+                display: none;
+            }
 
             /* Style close button */
 
@@ -1150,12 +1156,10 @@
             }
 
 
-            /* Show close button when toolbar dropdowns are open */
+            /* Show close button when a toolbar button is selected */
 
             nav.horiztoolbar:hover::after,
             #secondary:hover::after,
-            nav.horiztoolbar:focus::after,
-            #secondary:focus::after,
             nav.horiztoolbar:active::after,
             #secondary:active::after {
                 display: block;
@@ -1354,15 +1358,9 @@
             background-size: auto 50%, auto 50%, auto 100%, auto 100%, auto auto, auto 100%;
         }
 
-        body > nav > ul > li:first-of-type {
-            margin-top: 2rem;
-        }
-
-        body > nav > p:last-of-type {
-            position: fixed;
+        body > nav > ul > p {
             left: 0;
-            margin-top: calc(1rem / 3);
-            z-index: 1000;
+            margin-bottom: calc(1rem / 3);
             text-indent: .5rem;
             font-size: 1.2rem;
             font-family: wreatherweb;
@@ -1641,6 +1639,18 @@
         transform: translateX(-50%);
     }
 
+    @viewport{
+        width: device-width;
+        height: device-height;
+        user-scalable: yes;
+    }
+
+    @-ms-viewport{
+        width: device-width;
+        height: device-height;
+        user-scalable: yes;
+    }
+
 /* Things to hide */
 
     .edit-link {
@@ -1707,7 +1717,7 @@
                 width: 25%;
                 box-shadow: 0 0 0 0 #fff;
             }
-            body:not(.expanded) > nav > p:last-of-type {
+            body:not(.expanded) > nav > ul > p {
                 left: -25%;
                 transition: all .2s;
             }
@@ -1779,7 +1789,7 @@
                 left: calc(100%);
                 top: .9rem;
             }
-            .nav-trigger:checked ~ nav:not(.expanded) > p:last-of-type {
+            .nav-trigger:checked ~ nav:not(.expanded) > ul > p {
                 left: 0;
                 transition: all .2s;
             }
@@ -1805,11 +1815,11 @@
             .nav-trigger:checked + label:not(.expanded) {
                 left: calc(50% + 1rem);
             }
-            body:not(.expanded) > nav > p:last-of-type {
+            body:not(.expanded) > nav > ul > p {
                 width:50vw;
                 left:-50vw;
             }
-            .nav-trigger:checked ~ nav > p:last-of-type {
+            .nav-trigger:checked ~ nav > ul > p {
                 left:0;
             }
         }
@@ -1826,7 +1836,7 @@
                 width: 25%;
                 box-shadow: 0 0 0 0 #fff;
             }
-            body.expanded > nav > p:last-of-type {
+            body.expanded > nav > ul > p {
                 left: -25%;
                 transition: all .2s;
             }
@@ -1898,7 +1908,7 @@
                 left: calc(100%);
                 top: .9rem;
             }
-            .nav-trigger:checked ~ nav.expanded > p:last-of-type {
+            .nav-trigger:checked ~ nav.expanded > ul > p {
                 left: 0;
                 transition: all .2s;
             }
@@ -1920,11 +1930,11 @@
             .nav-trigger:checked + label.expanded {
                 left: calc(50% + 1rem);
             }
-            body.expanded > nav > p:last-of-type {
+            body.expanded > nav > ul > p {
                 width:50vw;
                 left:-50vw;
             }
-            .nav-trigger:checked ~ nav > p:last-of-type {
+            .nav-trigger:checked ~ nav > ul > p {
                 left:0;
             }
             figure.thumbnail-right,
@@ -1980,11 +1990,4 @@
                 text-align: left;
                 text-indent: 0.75rem;
             }
-        }
-
-    /* For Microsoft Modern UI apps */
-        @-ms-viewport{
-            width: device-width;
-            height: device-height;
-            user-scalable: yes;
         }
