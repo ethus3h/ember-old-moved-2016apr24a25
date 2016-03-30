@@ -1627,8 +1627,9 @@
     body > main,
     body > main::before,
     body > main::after {
-        left: 25vw;
+        margin-left: calc(25vw + 4rem);
         width: calc(75% - 8rem);
+        left: 0;
     }
 
     body,
