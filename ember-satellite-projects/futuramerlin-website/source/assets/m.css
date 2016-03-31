@@ -531,13 +531,13 @@
     }
 
     figure > a > img,
-    .fm-wp-content > article:not(.single-post) > .entry-content > .featured-image > a img {
+    .fm-wp-content > article:not(.single-post) > .entry-content > .featured-image > a img, .featured-image > a img {
         transition: all 0.2s;
         border: 0.063rem dotted transparent;
     }
 
     figure > a:hover > img,
-    .fm-wp-content > article:not(.single-post) > .entry-content > .featured-image > a:hover img {
+    .fm-wp-content > article:not(.single-post) > .entry-content > .featured-image > a:hover img, .featured-image > a img:hover {
         border: 0.063rem dotted #520f22;
         transition: all 0.2s;
     }
@@ -1789,7 +1789,6 @@
             .nav-trigger:checked ~ nav:not(.expanded) > .logo {
                 transform: translateX(calc(-100% - 1rem));
                 left: calc(100%);
-                top: .9rem;
             }
             .nav-trigger:checked ~ nav:not(.expanded) > ul > li:first-of-type {
                 left: 0;
