@@ -1133,7 +1133,6 @@
                     left: 8vw;
                     width: calc(100% - 16vw);
                     max-height: calc(100vh - 12.853rem);
-                    padding-top: 1.5rem;
                     display: none;
                     overflow-y: auto;
                     z-index: 100;
@@ -1155,46 +1154,12 @@
                     display: block;
                 }
 
-            /* Style close information */
-
-                nav.horiztoolbar > ul > li::after,
-                #secondary > aside::after {
-                    position: absolute;
-                    top: calc(100% + .75rem);
-                    right: 1rem;
-                    left: 1rem;
-                    height: 1rem;
-                    display: none;
-                    z-index: 100;
-                    font-size: 1rem;
-                    text-align: center;
-                    content: 'Tap outside the menu to close it.';
-                    font-style: italic;
-                    color: rgb(1, 50, 32);
-                    cursor: auto;
-                    pointer-events: none;
-                }
-
-            /* Show close info when a toolbar button is selected */
-
-                nav.horiztoolbar > ul > li:focus::after,
-                #secondary > aside:focus::after,
-                nav.horiztoolbar > ul > li:active::after,
-                #secondary > aside:active::after {
-                    display: block;
-                }
-
             /* Fix spacing on toolbar dropdowns */
 
                 #secondary > aside > ul,
                 #secondary > aside > .tagcloud {
                     padding: 1rem;
-                    padding-top: 2.5rem;
                     margin-top: 0;
-                }
-
-                #secondary > aside > .cat_specific_rss > .cat_show_image {
-                    margin-top: 1rem;
                 }
 
                 #secondary > .widget_archive > ul > li:last-of-type::before,
