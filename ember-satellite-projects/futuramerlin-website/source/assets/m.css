@@ -251,6 +251,7 @@
             top: 0;
             right: 0;
             padding-right: 1rem;
+            padding-top: 0rem;
         }
 
         .article-rest > .entry-footer {
@@ -444,6 +445,10 @@
         background: linear-gradient(90deg, rgba(199, 130, 229, 1) 0, rgba(199, 130, 229, 1) 1%, rgba(162, 130, 229, 0.9) 15%, rgba(129, 145, 226, 0.78) 23%, rgba(129, 134, 226, 0.66) 34%, rgba(142, 129, 226, 0.44) 47%, rgba(130, 152, 229, 0.34) 59%, rgba(0, 150, 255, 0) 100%);
     }
 
+    .single-post > header.entry-header > h1 {
+        background: none;
+    }
+
 /* Lists */
 
     ol {
@@ -534,6 +539,7 @@
     .fm-wp-content > article:not(.single-post) > .entry-content > .featured-image > a img, .featured-image > a img {
         transition: all 0.2s;
         border: 0.063rem dotted transparent;
+        display: block;
     }
 
     figure > a:hover > img,
