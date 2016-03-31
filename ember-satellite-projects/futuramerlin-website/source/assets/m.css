@@ -1130,9 +1130,10 @@
                     position: absolute;
                     box-sizing: border-box;
                     top: 100%;
-                    left: 0;
-                    width: 100%;
+                    left: 8vw;
+                    width: calc(100% - 16vw);
                     max-height: calc(100vh - 12.853rem);
+                    padding-top: 1.5rem;
                     display: none;
                     overflow-y: auto;
                     z-index: 100;
@@ -1154,26 +1155,27 @@
                     display: block;
                 }
 
-            /* Style close button */
+            /* Style close information */
 
                 nav.horiztoolbar > ul > li::after,
                 #secondary > aside::after {
                     position: absolute;
-                    top: calc(100% + 1rem);
+                    top: calc(100% + .75rem);
                     right: 1rem;
-                    width: 2rem;
-                    height: 2rem;
+                    left: 1rem;
+                    height: 1rem;
                     display: none;
                     z-index: 100;
-                    font-size: 2rem;
+                    font-size: 1rem;
                     text-align: center;
-                    line-height: 2rem;
-                    content: '\1F5D9';
+                    content: 'Tap outside the menu to close it.';
+                    font-style: italic;
                     color: rgb(1, 50, 32);
-                    cursor: pointer;
+                    cursor: auto;
+                    pointer-events: none;
                 }
 
-            /* Show close button when a toolbar button is selected */
+            /* Show close info when a toolbar button is selected */
 
                 nav.horiztoolbar > ul > li:focus::after,
                 #secondary > aside:focus::after,
@@ -1187,6 +1189,7 @@
                 #secondary > aside > ul,
                 #secondary > aside > .tagcloud {
                     padding: 1rem;
+                    padding-top: 2.5rem;
                     margin-top: 0;
                 }
 
