@@ -9,7 +9,7 @@
     * Fix blockquote end quotation mark not being inset.
     * Fix buttons not showing the highlights correctly (use SVG instead of PNG). 
     * Fix header section labels overlapping with header text.
-    * Clear the floated images in blog index pages, so they don't overlap with the next post summary.
+    * Make category page post featured image thumbnail links have the same dotted border on hover as the main blog home page.
     * Fix zoomed-in media query bug (? As of this writing, 2016 Feb. 17, I don't remember exactly what this was or how to reproduce it).
     * Fix "Telephones and Tags" header being indented unexpectedly in blog-test.htm (? As of this writing, 2016-March-30, I am not observing this behavior on the live blog (and don't have blog-test.htm handy to check)).
     */
