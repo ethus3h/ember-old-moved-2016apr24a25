@@ -1224,7 +1224,7 @@
             bottom: 0;
             left: 0;
             overflow-y: auto;
-            width: 25vw;
+            width: calc(25vw + .095rem);
             height: 100%;
             transition: left .2s;
             border-right: 0.063rem solid white;
