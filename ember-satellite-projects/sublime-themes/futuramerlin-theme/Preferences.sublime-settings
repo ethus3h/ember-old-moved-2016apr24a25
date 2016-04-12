@@ -2,8 +2,9 @@
 	"always_show_minimap_viewport": true,
 	"color_scheme": "Packages/sublime-themes/lavendersl-2016mar27.tmTheme",
 	"dpi_scale": 2.0,
+	"draw_white_space": "all",
 	"font_face": "Courier",
-	"font_size": 14,
+	"font_size": 8,
 	"ignored_packages":
 	[
 		"Vintage"
@@ -13,6 +14,5 @@
 	"theme": "Futuramerlin.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"update-check": false,
-	"word_wrap": "true",
-	"draw_white_space":"all",
+	"word_wrap": "true"
 }
