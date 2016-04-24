@@ -1,2 +1,2 @@
 #!/bin/bash
-xz -k -C sha256 -9 -e -v "$crystalTempdir/$CrystalID".pax
+xz -k -C sha256 -9 -v "$crystalTempdir/$CrystalID".pax
